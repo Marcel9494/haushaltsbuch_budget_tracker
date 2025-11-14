@@ -10,10 +10,17 @@ const Map<String, String> de = {
   'forgot_password': 'Passwort vergessen?',
   'login_with_google': 'Mit Google anmelden',
   'no_account_yet': 'Noch kein Konto? Zur Registrierung',
+  'reset_password': 'Passwort zurücksetzen',
+  'new_password': 'Neues Passwort',
+  'confirm_new_password': 'Passwort bestätigen',
+  'send_link': 'Link senden',
+  'reset_email_sent': 'E-Mail zum Zurücksetzen des Passworts wurde gesendet.',
+  'to_login': 'Zum Login',
   // Error Messages
   'empty_email_error': 'Bitte geben Sie eine E-Mail Adresse ein.',
   'invalid_email_error': 'Bitte geben Sie eine gültige E-Mail Adresse ein.',
   'empty_password_error': 'Bitte geben Sie ein Passwort ein.',
   'short_password_error': 'Passwort muss mindestens 6 Zeichen lang sein.',
+  'passwords_do_not_match_error': 'Passwörter stimmen nicht überein.',
   'unknown_error': 'Ein unbekannter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.',
 };

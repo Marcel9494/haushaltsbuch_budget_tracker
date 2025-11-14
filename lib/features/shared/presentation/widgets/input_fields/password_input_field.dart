@@ -4,10 +4,12 @@ import '../../../../../l10n/app_localizations.dart';
 
 class PasswordInputField extends StatefulWidget {
   final TextEditingController passwordController;
+  final String text;
 
   const PasswordInputField({
     super.key,
     required this.passwordController,
+    this.text = 'password',
   });
 
   @override
@@ -39,8 +41,8 @@ class _PasswordInputFieldState extends State<PasswordInputField> {
       validator: (passwordInput) => _checkPasswordInput(),
       decoration: InputDecoration(
         border: OutlineInputBorder(),
-        labelText: t.translate('password'),
-        hintText: '${t.translate('password')}...',
+        labelText: t.translate(widget.text),
+        hintText: '${t.translate(widget.text)}...',
         prefixIcon: const Icon(Icons.lock_rounded),
         suffixIcon: IconButton(
           onPressed: () {

@@ -1,28 +1,29 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:haushaltsbuch_budget_tracker/core/utils/app_flushbar.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/consts/animation_consts.dart';
 import '../../../../core/consts/route_consts.dart';
-import '../../../../core/utils/app_flushbar.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../shared/presentation/widgets/buttons/animated_loading_button.dart';
-import '../../../shared/presentation/widgets/input_fields/email_input_field.dart';
+import '../../../shared/presentation/widgets/input_fields/password_input_field.dart';
 import '../widgets/deco/title_text.dart';
 
-class ForgotPasswordPage extends StatefulWidget {
-  const ForgotPasswordPage({super.key});
+class ResetPasswordPage extends StatefulWidget {
+  const ResetPasswordPage({super.key});
 
   @override
-  State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
+  State<ResetPasswordPage> createState() => _ResetPasswordPageState();
 }
 
-class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
+class _ResetPasswordPageState extends State<ResetPasswordPage> {
   final GlobalKey<FormState> _forgotPasswordFormKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
-  final RoundedLoadingButtonController _forgotPasswordButtonController = RoundedLoadingButtonController();
+  final TextEditingController _newPasswordController = TextEditingController();
+  final TextEditingController _confirmNewPasswordController = TextEditingController();
+  final RoundedLoadingButtonController _resetPasswordButtonController = RoundedLoadingButtonController();
   double _cardOpacity = 0.0;
 
   @override
@@ -36,38 +37,41 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     });
   }
 
-  Future<void> _sendEmail() async {
+  Future<void> _resetPassword() async {
     final t = AppLocalizations.of(context);
     if (_forgotPasswordFormKey.currentState!.validate() == false) {
-      _forgotPasswordButtonController.error();
+      _resetPasswordButtonController.error();
       Future.delayed(const Duration(milliseconds: buttonResetAnimationInMs), () {
-        _forgotPasswordButtonController.reset();
+        _resetPasswordButtonController.reset();
+      });
+      return;
+    } else if (_newPasswordController.text.trim() != _confirmNewPasswordController.text.trim()) {
+      AppFlushbar.show(context, message: t.translate('passwords_do_not_match_error'));
+      _resetPasswordButtonController.error();
+      Future.delayed(const Duration(milliseconds: buttonResetAnimationInMs), () {
+        _resetPasswordButtonController.reset();
       });
       return;
     }
 
     try {
-      await Supabase.instance.client.auth.resetPasswordForEmail(
-        _emailController.text.trim(),
-        redirectTo: 'haushaltsbuch://password-reset-callback',
+      await Supabase.instance.client.auth.updateUser(
+        UserAttributes(password: _newPasswordController.text.trim()),
       );
     } catch (e) {
       AppFlushbar.show(context, message: t.translate('unknown_error'));
-      _forgotPasswordButtonController.error();
+      _resetPasswordButtonController.error();
       Timer(const Duration(milliseconds: buttonResetAnimationInMs), () {
-        _forgotPasswordButtonController.reset();
+        _resetPasswordButtonController.reset();
       });
       return;
     }
 
-    _forgotPasswordButtonController.success();
+    _resetPasswordButtonController.success();
 
-    AppFlushbar.show(
-      context,
-      message: t.translate('reset_email_sent'),
-      icon: Icons.check_circle_rounded,
-      iconColor: Colors.green,
-    );
+    Future.delayed(const Duration(milliseconds: buttonResetAnimationInMs), () {
+      Navigator.pushNamed(context, loginRoute);
+    });
   }
 
   @override
@@ -92,14 +96,16 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        TitleText(text: t.translate('reset_password')),
+                        TitleText(text: t.translate('new_password')),
                         SizedBox(height: 24),
-                        EmailInputField(emailController: _emailController),
+                        PasswordInputField(passwordController: _newPasswordController, text: 'new_password'),
+                        SizedBox(height: 24),
+                        PasswordInputField(passwordController: _confirmNewPasswordController, text: 'confirm_new_password'),
                         SizedBox(height: 24),
                         AnimatedLoadingButton(
-                          controller: _forgotPasswordButtonController,
-                          text: t.translate('send_link'),
-                          onPressed: () => _sendEmail(),
+                          controller: _resetPasswordButtonController,
+                          text: t.translate('reset_password'),
+                          onPressed: () => _resetPassword(),
                         ),
                         SizedBox(height: 24),
                         GestureDetector(
