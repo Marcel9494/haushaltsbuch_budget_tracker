@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:haushaltsbuch_budget_tracker/features/auth/presentation/pages/forgot_password_page.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/consts/route_consts.dart';
@@ -96,9 +98,31 @@ class MyApp extends StatelessWidget {
       navigatorKey: navigatorKey,
       home: const RegisterPage(),
       routes: {
-        registerRoute: (context) => const RegisterPage(),
-        loginRoute: (context) => const LoginPage(),
-        homeRoute: (context) => const HomePage(),
+        forgotPasswordRoute: (context) => const ForgotPasswordPage(),
+      },
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          case registerRoute:
+            return PageTransition(
+              type: PageTransitionType.fade,
+              settings: settings,
+              child: RegisterPage(),
+            );
+          case loginRoute:
+            return PageTransition(
+              type: PageTransitionType.fade,
+              settings: settings,
+              child: LoginPage(),
+            );
+          case homeRoute:
+            return PageTransition(
+              type: PageTransitionType.fade,
+              settings: settings,
+              child: HomePage(),
+            );
+          default:
+            return null;
+        }
       },
     );
   }

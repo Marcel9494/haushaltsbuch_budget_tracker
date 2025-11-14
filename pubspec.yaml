@@ -39,6 +39,7 @@ dependencies:
   auth_buttons: ^3.0.3
   another_flushbar: ^1.12.32
   email_validator: ^2.1.17
+  page_transition: ^2.2.1
   flutter_localization: ^0.3.3
 
 dev_dependencies:
