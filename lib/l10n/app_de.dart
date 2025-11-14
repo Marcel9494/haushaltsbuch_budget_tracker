@@ -16,6 +16,12 @@ const Map<String, String> de = {
   'send_link': 'Link senden',
   'reset_email_sent': 'E-Mail zum Zurücksetzen des Passworts wurde gesendet.',
   'to_login': 'Zum Login',
+  'home': 'Home',
+  'bookings': 'Buchungen',
+  'accounts': 'Konten',
+  'statistics': 'Statistiken',
+  'budgets': 'Budgets',
+  'goals': 'Ziele',
   // Error Messages
   'empty_email_error': 'Bitte geben Sie eine E-Mail Adresse ein.',
   'invalid_email_error': 'Bitte geben Sie eine gültige E-Mail Adresse ein.',
