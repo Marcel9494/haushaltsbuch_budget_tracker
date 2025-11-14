@@ -6,6 +6,10 @@ const Map<String, String> de = {
   'password': 'Passwort',
   'or': 'Oder',
   'already_have_account': 'Bereits registriert? Zum Login',
+  'login': 'Login',
+  'forgot_password': 'Passwort vergessen?',
+  'login_with_google': 'Mit Google anmelden',
+  'no_account_yet': 'Noch kein Konto? Zur Registrierung',
   // Error Messages
   'empty_email_error': 'Bitte geben Sie eine E-Mail Adresse ein.',
   'invalid_email_error': 'Bitte geben Sie eine gültige E-Mail Adresse ein.',

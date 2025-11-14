@@ -9,12 +9,11 @@ import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/consts/animation_consts.dart';
+import '../../../../core/consts/route_consts.dart';
 import '../../../../core/utils/app_flushbar.dart';
-import '../../../../core/utils/page_transitions.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../shared/presentation/widgets/buttons/animated_loading_button.dart';
 import '../widgets/deco/title_text.dart';
-import 'login_page.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -79,6 +78,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
     return Scaffold(
+      appBar: AppBar(),
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
@@ -113,7 +113,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         GoogleSignInButton(text: t.translate('register_with_google')),
                         SizedBox(height: 20),
                         GestureDetector(
-                          onTap: () => Navigator.of(context).push(PageTransitions.slideFromRight(const LoginPage())),
+                          onTap: () => Navigator.pushNamed(context, loginRoute),
                           child: Text(t.translate('already_have_account')),
                         ),
                       ],
