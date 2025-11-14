@@ -8,6 +8,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'core/consts/route_consts.dart';
 import 'features/auth/presentation/pages/login_page.dart';
 import 'features/auth/presentation/pages/register_page.dart';
+import 'features/auth/presentation/pages/reset_password_page.dart';
 import 'features/home/presentation/pages/home_page.dart';
 import 'l10n/app_localizations.dart';
 
@@ -38,6 +39,11 @@ void main() async {
         MaterialPageRoute(
           builder: (_) => const HomePage(),
         ),
+      );
+    } else if (event == AuthChangeEvent.passwordRecovery) {
+      // Benutzer wurde über Passwort-Reset-Link reingebracht
+      navigatorKey.currentState!.push(
+        MaterialPageRoute(builder: (_) => const ResetPasswordPage()),
       );
     }
   });
