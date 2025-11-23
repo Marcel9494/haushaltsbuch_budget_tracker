@@ -1,4 +1,5 @@
 const Map<String, String> de = {
+  'app_name': 'Haushaltsbuch - Budget Tracker',
   'create_account': 'Konto erstellen',
   'register': 'Registrieren',
   'register_with_google': 'Mit Google registrieren',
@@ -22,6 +23,10 @@ const Map<String, String> de = {
   'statistics': 'Statistiken',
   'budgets': 'Budgets',
   'goals': 'Ziele',
+  'categories': 'Kategorien',
+  'household_members': 'Haushaltsmitglieder',
+  'premium': 'Premium',
+  'settings': 'Einstellungen',
   'create_booking': 'Buchung erstellen',
   'title': 'Titel',
   'amount': 'Betrag',
