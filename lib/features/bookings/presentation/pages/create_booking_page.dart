@@ -213,13 +213,16 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
                         GoalInputField(goalController: _goalController),
                         // TODO implementieren, wenn Haushaltsmitglieder hinzugefügt werden: PersonInputField(personController: _personController),
                         SizedBox(height: 30.0),
-                        AnimatedLoadingButton(
-                          text: t.translate('create_booking'),
-                          controller: _createBookingButtonController,
-                          onPressed: () => _createBooking(context),
-                          horizontalPadding: 12.0,
-                          buttonColor: Colors.cyanAccent,
-                          textColor: Colors.black87,
+                        Hero(
+                          tag: 'create_booking_fab',
+                          child: AnimatedLoadingButton(
+                            text: t.translate('create_booking'),
+                            controller: _createBookingButtonController,
+                            onPressed: () => _createBooking(context),
+                            horizontalPadding: 12.0,
+                            buttonColor: Colors.cyanAccent,
+                            textColor: Colors.black87,
+                          ),
                         ),
                         SizedBox(height: 30.0),
                       ],
