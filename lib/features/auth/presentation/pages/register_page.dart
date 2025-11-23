@@ -56,7 +56,11 @@ class _RegisterPageState extends State<RegisterPage> {
         password: _passwordController.text.trim(),
       );
     } on AuthException catch (e) {
-      AppFlushbar.show(context, message: e.message);
+      if (e.code == 'user_already_exists') {
+        AppFlushbar.show(context, message: t.translate('email_already_exists'));
+      } else {
+        AppFlushbar.show(context, message: e.message);
+      }
       _registerButtonController.error();
       Timer(const Duration(milliseconds: buttonResetAnimationInMs), () {
         _registerButtonController.reset();
