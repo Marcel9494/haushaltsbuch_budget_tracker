@@ -9,6 +9,7 @@ import 'core/consts/route_consts.dart';
 import 'features/auth/presentation/pages/login_page.dart';
 import 'features/auth/presentation/pages/register_page.dart';
 import 'features/auth/presentation/pages/reset_password_page.dart';
+import 'features/bookings/presentation/pages/create_booking_page.dart';
 import 'features/home/presentation/pages/home_page.dart';
 import 'l10n/app_localizations.dart';
 
@@ -59,7 +60,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Haushaltsbuch - Budget Tracker',
       debugShowCheckedModeBanner: false,
-      locale: const Locale('de'),
+      locale: const Locale('de', 'DE'),
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: const [
         AppLocalizations.delegate,
@@ -99,12 +100,45 @@ class MyApp extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
         ),
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            foregroundColor: Colors.cyanAccent,
+          ),
+        ),
+        datePickerTheme: DatePickerThemeData(
+          todayForegroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.selected)) {
+              return Colors.black87;
+            }
+            return Colors.white70;
+          }),
+          todayBackgroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.selected)) {
+              return Colors.cyanAccent;
+            }
+            return null;
+          }),
+          dayOverlayColor: WidgetStateProperty.all(Colors.cyanAccent.withAlpha(100)),
+          dayBackgroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.selected)) {
+              return Colors.cyanAccent;
+            }
+            return null;
+          }),
+          yearBackgroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.selected)) {
+              return Colors.cyanAccent;
+            }
+            return null;
+          }),
+        ),
       ),
       themeMode: ThemeMode.system,
       navigatorKey: navigatorKey,
       home: const RegisterPage(),
       routes: {
         forgotPasswordRoute: (context) => const ForgotPasswordPage(),
+        createBookingRoute: (context) => const CreateBookingPage(),
       },
       onGenerateRoute: (settings) {
         switch (settings.name) {

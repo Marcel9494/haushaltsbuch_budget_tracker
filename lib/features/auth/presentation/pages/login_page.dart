@@ -57,7 +57,11 @@ class _LoginPageState extends State<LoginPage> {
         password: _passwordController.text.trim(),
       );
     } on AuthException catch (e) {
-      AppFlushbar.show(context, message: e.message);
+      if (e.code == 'invalid_credentials') {
+        AppFlushbar.show(context, message: t.translate('invalid_login_credentials'));
+      } else {
+        AppFlushbar.show(context, message: e.message);
+      }
       _loginButtonController.error();
       Timer(const Duration(milliseconds: buttonResetAnimationInMs), () {
         _loginButtonController.reset();

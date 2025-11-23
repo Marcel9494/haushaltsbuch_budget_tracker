@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/consts/route_consts.dart';
 import '../../../../l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
@@ -22,6 +23,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
     return Scaffold(
+      appBar: AppBar(),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         iconSize: 22.0,
@@ -36,6 +38,18 @@ class _HomePageState extends State<HomePage> {
         selectedItemColor: Colors.cyanAccent,
         unselectedItemColor: Colors.white,
         onTap: _onItemTapped,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.pushNamed(context, createBookingRoute),
+        backgroundColor: Colors.cyanAccent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(48.0),
+        ),
+        child: Icon(
+          Icons.add_rounded,
+          color: Colors.black87,
+          size: 26.0,
+        ),
       ),
     );
   }
