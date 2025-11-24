@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:haushaltsbuch_budget_tracker/core/consts/route_consts.dart';
 
 import '../../../../core/utils/slow_hero_animation.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -81,7 +82,7 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               leading: FaIcon(FontAwesomeIcons.gear),
               title: Text(t.translate('settings')),
-              onTap: () {},
+              onTap: () => Navigator.pushNamed(context, settingsRoute),
             ),
           ],
         ),

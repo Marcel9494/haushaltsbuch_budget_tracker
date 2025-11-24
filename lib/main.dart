@@ -11,6 +11,7 @@ import 'features/auth/presentation/pages/register_page.dart';
 import 'features/auth/presentation/pages/reset_password_page.dart';
 import 'features/bookings/presentation/pages/create_booking_page.dart';
 import 'features/home/presentation/pages/home_page.dart';
+import 'features/settings/presentation/pages/settings_page.dart';
 import 'l10n/app_localizations.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -139,6 +140,7 @@ class MyApp extends StatelessWidget {
       routes: {
         forgotPasswordRoute: (context) => const ForgotPasswordPage(),
         createBookingRoute: (context) => const CreateBookingPage(),
+        settingsRoute: (context) => const SettingsPage(),
       },
       onGenerateRoute: (settings) {
         switch (settings.name) {
