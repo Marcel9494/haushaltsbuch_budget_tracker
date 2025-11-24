@@ -22,7 +22,8 @@ class AppLocalizations {
   }
 
   static const supportedLocales = [
-    Locale('de'),
+    Locale('de', 'DE'),
+    Locale('en', 'US'),
   ];
 }
 
