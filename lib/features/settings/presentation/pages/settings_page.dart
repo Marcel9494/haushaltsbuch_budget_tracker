@@ -99,9 +99,10 @@ class _SettingsPageState extends State<SettingsPage> {
                 onTap: () {},
               ),
               SettingsCard(
-                leading: Icon(Icons.delete_forever_rounded),
+                leading: Icon(Icons.delete_forever_rounded, color: Colors.redAccent),
                 title: t.translate('delete_all_data'),
                 onTap: () {},
+                color: Colors.redAccent,
               ),
             ],
           ),

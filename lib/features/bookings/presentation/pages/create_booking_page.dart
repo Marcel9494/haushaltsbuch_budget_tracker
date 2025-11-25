@@ -185,7 +185,7 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
                                 padding: EdgeInsets.only(right: _bookingType == BookingType.transfer ? 12.0 : 0.0),
                                 child: AccountInputField(
                                   accountController: _debitAccountController,
-                                  text: 'debit_account',
+                                  text: _bookingType == BookingType.transfer ? 'debit_account' : 'account',
                                   showSuffixIcon: _bookingType == BookingType.transfer ? false : true,
                                 ),
                               ),
