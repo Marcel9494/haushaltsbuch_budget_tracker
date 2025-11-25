@@ -4,12 +4,14 @@ class SettingsCard extends StatelessWidget {
   final Widget leading;
   final String title;
   final VoidCallback? onTap;
+  final Color color;
 
   const SettingsCard({
     super.key,
     required this.leading,
     required this.title,
     required this.onTap,
+    this.color = Colors.white,
   });
 
   @override
@@ -19,10 +21,14 @@ class SettingsCard extends StatelessWidget {
       child: Card(
         child: ListTile(
           leading: leading,
-          title: Text(title),
-          trailing: const Icon(
+          title: Text(
+            title,
+            style: TextStyle(color: color),
+          ),
+          trailing: Icon(
             Icons.keyboard_arrow_right_rounded,
             size: 24.0,
+            color: color,
           ),
         ),
       ),
