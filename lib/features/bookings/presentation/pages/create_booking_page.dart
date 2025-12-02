@@ -71,7 +71,7 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
       }
 
       final amount = double.tryParse(
-        _amountController.text.replaceAll(",", ".").replaceAll('€', '').trim(),
+        _amountController.text.replaceAll('.', '').replaceAll(',', '.').replaceAll('€', '').trim(),
       );
 
       final DateTime parsedDate =

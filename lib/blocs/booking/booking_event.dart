@@ -9,3 +9,13 @@ class CreateBooking extends BookingEvent {
     required this.booking,
   });
 }
+
+class LoadMonthlyBookings extends BookingEvent {
+  final DateTime selectedDate;
+  final String userId;
+
+  LoadMonthlyBookings({
+    required this.selectedDate,
+    required this.userId,
+  });
+}

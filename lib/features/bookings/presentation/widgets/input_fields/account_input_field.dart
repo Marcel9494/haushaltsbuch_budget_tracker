@@ -25,7 +25,7 @@ class _AccountInputFieldState extends State<AccountInputField> {
   late FocusNode _focusNode;
   final List<String> _accounts = [
     'Geldbeutel',
-    'Girkonto',
+    'Girokonto',
     'Sparkonto',
     'Aktiendepot',
     'Krediktkarte',

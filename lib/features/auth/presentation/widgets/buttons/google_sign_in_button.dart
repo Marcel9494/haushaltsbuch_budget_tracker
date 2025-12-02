@@ -19,7 +19,6 @@ class GoogleSignInButton extends StatelessWidget {
       await Supabase.instance.client.auth.signInWithOAuth(
         OAuthProvider.google,
         redirectTo: 'io.supabase.flutter://login-callback/',
-        authScreenLaunchMode: LaunchMode.inAppWebView,
       );
     } catch (e) {
       AppFlushbar.show(context, message: t.translate('unknown_error'));

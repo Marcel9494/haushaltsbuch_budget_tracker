@@ -74,6 +74,11 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       darkTheme: ThemeData.dark().copyWith(
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
+          elevation: 0,
+        ),
         textSelectionTheme: const TextSelectionThemeData(
           cursorColor: Colors.cyanAccent,
           selectionColor: Color(0x5526C6DA),
