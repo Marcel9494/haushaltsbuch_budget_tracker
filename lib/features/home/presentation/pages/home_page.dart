@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:haushaltsbuch_budget_tracker/core/consts/route_consts.dart';
+import 'package:haushaltsbuch_budget_tracker/features/home/presentation/widgets/date_navigation.dart';
 
+import '../../../../blocs/booking/booking_bloc.dart';
 import '../../../../core/utils/slow_hero_animation.dart';
+import '../../../../data/repositories/booking_repository.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../bookings/presentation/pages/booking_list_page.dart';
 import '../../../bookings/presentation/pages/create_booking_page.dart';
+import 'home_content_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,7 +20,28 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  DateTime _currentSelectedDate = DateTime.now();
   int _selectedPageIndex = 0;
+  List<Widget> get _pages => [
+        HomeContentPage(),
+        BlocProvider(
+          create: (context) => BookingBloc(BookingRepository()),
+          child: BookingListPage(
+            key: ValueKey(_currentSelectedDate),
+            currentSelectedDate: _currentSelectedDate,
+          ),
+        ),
+        HomeContentPage(),
+        HomeContentPage(),
+        HomeContentPage(),
+      ];
+  final List<String> _pageTitle = [
+    'home',
+    'bookings',
+    'accounts',
+    'budgets',
+    'goals',
+  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -26,7 +53,19 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(t.translate(_pageTitle[_selectedPageIndex]), style: TextStyle(fontSize: 20.0)),
+        actions: [
+          DateNavigation(
+            initialDate: _currentSelectedDate,
+            onDateChanged: (newDate) {
+              setState(() {
+                _currentSelectedDate = newDate;
+              });
+            },
+          ),
+        ],
+      ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -41,27 +80,42 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               leading: Icon(Icons.home_rounded),
               title: Text(t.translate('home')),
-              onTap: () {},
+              onTap: () => {
+                _onItemTapped(0),
+                Navigator.pop(context),
+              },
             ),
             ListTile(
               leading: Icon(Icons.menu_book_rounded),
               title: Text(t.translate('bookings')),
-              onTap: () {},
+              onTap: () => {
+                _onItemTapped(1),
+                Navigator.pop(context),
+              },
             ),
             ListTile(
               leading: FaIcon(FontAwesomeIcons.buildingColumns, size: 22.0),
               title: Text(t.translate('accounts')),
-              onTap: () {},
+              onTap: () => {
+                _onItemTapped(2),
+                Navigator.pop(context),
+              },
             ),
             ListTile(
               leading: Icon(Icons.account_balance_wallet_rounded),
               title: Text(t.translate('budgets')),
-              onTap: () {},
+              onTap: () => {
+                _onItemTapped(3),
+                Navigator.pop(context),
+              },
             ),
             ListTile(
               leading: FaIcon(FontAwesomeIcons.bullseye),
               title: Text(t.translate('goals')),
-              onTap: () {},
+              onTap: () => {
+                _onItemTapped(4),
+                Navigator.pop(context),
+              },
             ),
             ListTile(
               leading: FaIcon(FontAwesomeIcons.grip),
@@ -102,6 +156,7 @@ class _HomePageState extends State<HomePage> {
         unselectedItemColor: Colors.white,
         onTap: _onItemTapped,
       ),
+      body: _pages[_selectedPageIndex],
       floatingActionButton: FloatingActionButton(
         heroTag: 'create_booking_fab',
         onPressed: () => Navigator.push(
