@@ -16,10 +16,14 @@ import '../widgets/list_views/monthly_booking_list.dart';
 
 class BookingListPage extends StatefulWidget {
   final DateTime currentSelectedDate;
+  final PeriodOfTimeType currentPeriodOfTimeType;
+  final ValueChanged<PeriodOfTimeType>? onPeriodOfTimeChanged;
 
   const BookingListPage({
     super.key,
     required this.currentSelectedDate,
+    required this.currentPeriodOfTimeType,
+    required this.onPeriodOfTimeChanged,
   });
 
   @override
@@ -28,7 +32,7 @@ class BookingListPage extends StatefulWidget {
 
 class _BookingListPageState extends State<BookingListPage> {
   final BookingRepository _bookingRepository = BookingRepository();
-  PeriodOfTimeType _periodOfTimeType = PeriodOfTimeType.monthly;
+  late PeriodOfTimeType _periodOfTimeType = widget.currentPeriodOfTimeType;
   late BookingBloc _bookingBloc;
   bool _showUpcomingBookings = false;
   List<Booking> _pastBookings = [];
@@ -82,8 +86,9 @@ class _BookingListPageState extends State<BookingListPage> {
             if (state is BookingLoading) {
               return CircularLoadingIndicator();
             } else if (state is BookingListLoaded) {
-              final double monthlyRevenue = _bookingRepository.calculateMonthlyRevenue(state.bookings);
-              final double monthlyExpenses = _bookingRepository.calculateMonthlyExpenses(state.bookings);
+              // TODO hier weitermachen und jährliche Gesamtbeträge anzeigen implementieren Refactoring nötig?
+              final double revenue = _bookingRepository.calculateRevenue(state.bookings);
+              final double expenses = _bookingRepository.calculateExpenses(state.bookings);
               final int daysInMonth = DateTime(widget.currentSelectedDate.year, widget.currentSelectedDate.month + 1, 0).day;
               _prepareBookingList(state.bookings);
               return Column(
@@ -93,21 +98,21 @@ class _BookingListPageState extends State<BookingListPage> {
                     children: [
                       BookingListOverviewCard(
                         title: 'revenue',
-                        amount: monthlyRevenue,
+                        amount: revenue,
                         daysInMonth: daysInMonth,
                         color: Colors.green,
                       ),
                       BookingListOverviewCard(
                         title: 'expenses',
-                        amount: monthlyExpenses,
+                        amount: expenses,
                         daysInMonth: daysInMonth,
                         color: Colors.redAccent,
                       ),
                       BookingListOverviewCard(
                         title: 'balance',
-                        amount: monthlyRevenue - monthlyExpenses,
+                        amount: revenue - expenses,
                         daysInMonth: daysInMonth,
-                        color: monthlyRevenue - monthlyExpenses >= 0 ? Colors.green : Colors.redAccent,
+                        color: revenue - expenses >= 0 ? Colors.green : Colors.redAccent,
                       ),
                     ],
                   ),
@@ -157,12 +162,13 @@ class _BookingListPageState extends State<BookingListPage> {
                             setState(() {
                               _periodOfTimeType = newPeriodOfTimeType;
                             });
+                            widget.onPeriodOfTimeChanged?.call(newPeriodOfTimeType);
                           },
                         ),
                       ),
                     ],
                   ),
-                  _upcomingBookings.isNotEmpty
+                  _upcomingBookings.isNotEmpty && _periodOfTimeType == PeriodOfTimeType.monthly
                       ? TextButton(
                           onPressed: () {
                             setState(() {
@@ -184,23 +190,23 @@ class _BookingListPageState extends State<BookingListPage> {
                           ),
                         )
                       : SizedBox.shrink(),
-                  _pastBookings.isNotEmpty
-                      ? _periodOfTimeType == PeriodOfTimeType.monthly
+                  _periodOfTimeType == PeriodOfTimeType.monthly
+                      ? _pastBookings.isNotEmpty
                           ? Expanded(
                               child: MonthlyBookingList(
                                 bookings: _combinedBookings,
                                 pastStartIndex: _pastStartIndex,
                               ),
                             )
-                          : YearlyBookingList(bookings: _combinedBookings)
-                      : EmptyList(
-                          text: 'no_bookings',
-                          icon: FaIcon(
-                            FontAwesomeIcons.book,
-                            size: 42.0,
-                            color: Colors.white70,
-                          ),
-                        ),
+                          : EmptyList(
+                              text: 'no_bookings',
+                              icon: FaIcon(
+                                FontAwesomeIcons.book,
+                                size: 42.0,
+                                color: Colors.white70,
+                              ),
+                            )
+                      : YearlyBookingList(bookings: _combinedBookings, currentSelectedYear: widget.currentSelectedDate.year)
                 ],
               );
             } else if (state is BookingError) {

@@ -21,6 +21,11 @@ class BookingListLoaded extends BookingState {
   BookingListLoaded(this.bookings);
 }
 
+class YearlyBookingListLoaded extends BookingState {
+  final Map<int, List<Booking>> yearlyBookings;
+  YearlyBookingListLoaded(this.yearlyBookings);
+}
+
 class BookingError extends BookingState {
   final String message;
   BookingError(this.message);

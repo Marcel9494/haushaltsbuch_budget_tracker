@@ -19,3 +19,13 @@ class LoadMonthlyBookings extends BookingEvent {
     required this.userId,
   });
 }
+
+class LoadYearlyBookings extends BookingEvent {
+  final int selectedYear;
+  final String userId;
+
+  LoadYearlyBookings({
+    required this.selectedYear,
+    required this.userId,
+  });
+}

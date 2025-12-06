@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:haushaltsbuch_budget_tracker/core/consts/route_consts.dart';
-import 'package:haushaltsbuch_budget_tracker/features/home/presentation/widgets/date_navigation.dart';
+import 'package:haushaltsbuch_budget_tracker/features/home/presentation/widgets/month_navigation.dart';
+import 'package:haushaltsbuch_budget_tracker/features/home/presentation/widgets/year_navigation.dart';
 
 import '../../../../blocs/booking/booking_bloc.dart';
 import '../../../../core/utils/slow_hero_animation.dart';
+import '../../../../data/enums/period_of_time_type.dart';
 import '../../../../data/repositories/booking_repository.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../bookings/presentation/pages/booking_list_page.dart';
@@ -21,7 +23,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   DateTime _currentSelectedDate = DateTime.now();
+  PeriodOfTimeType _currentPeriodOfTime = PeriodOfTimeType.monthly;
   int _selectedPageIndex = 0;
+
   List<Widget> get _pages => [
         HomeContentPage(),
         BlocProvider(
@@ -29,6 +33,12 @@ class _HomePageState extends State<HomePage> {
           child: BookingListPage(
             key: ValueKey(_currentSelectedDate),
             currentSelectedDate: _currentSelectedDate,
+            currentPeriodOfTimeType: _currentPeriodOfTime,
+            onPeriodOfTimeChanged: (newPeriodOfTime) {
+              setState(() {
+                _currentPeriodOfTime = newPeriodOfTime;
+              });
+            },
           ),
         ),
         HomeContentPage(),
@@ -56,14 +66,23 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text(t.translate(_pageTitle[_selectedPageIndex]), style: TextStyle(fontSize: 20.0)),
         actions: [
-          DateNavigation(
-            initialDate: _currentSelectedDate,
-            onDateChanged: (newDate) {
-              setState(() {
-                _currentSelectedDate = newDate;
-              });
-            },
-          ),
+          _currentPeriodOfTime == PeriodOfTimeType.monthly
+              ? MonthNavigation(
+                  initialDate: _currentSelectedDate,
+                  onDateChanged: (newDate) {
+                    setState(() {
+                      _currentSelectedDate = newDate;
+                    });
+                  },
+                )
+              : YearNavigation(
+                  initialYear: _currentSelectedDate.year,
+                  onYearChanged: (newYear) {
+                    setState(() {
+                      _currentSelectedDate = DateTime(newYear, 1, 1);
+                    });
+                  },
+                ),
         ],
       ),
       drawer: Drawer(
