@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../features/bookings/data/enums/booking_type.dart';
@@ -21,7 +22,23 @@ class BookingRepository {
     return (monthlyBookings as List).map((data) => Booking.fromMap(data)).toList();
   }
 
-  double calculateMonthlyRevenue(List<Booking> bookings) {
+  Future<Map<int, List<Booking>>> loadYearlyBookings(int selectedYear, String userId) async {
+    final startOfYear = DateTime(selectedYear, 1, 1);
+    final endOfYear = DateTime(selectedYear + 1, 1, 1);
+    final yearlyBookings = await Supabase.instance.client
+        .from('bookings')
+        .select()
+        .gte('booking_date', startOfYear)
+        .lt('booking_date', endOfYear)
+        .order('booking_date', ascending: false);
+    final List<Booking> allBookings = (yearlyBookings as List).map((data) => Booking.fromMap(data)).toList();
+    final Map<int, List<Booking>> monthlyBookings = groupBy(allBookings, (booking) {
+      return booking.bookingDate.month;
+    });
+    return monthlyBookings;
+  }
+
+  double calculateRevenue(List<Booking> bookings) {
     double totalRevenue = 0;
     for (Booking booking in bookings) {
       if (booking.bookingType == BookingType.income) {
@@ -44,7 +61,7 @@ class BookingRepository {
     return totalRevenue;
   }
 
-  double calculateMonthlyExpenses(List<Booking> bookings) {
+  double calculateExpenses(List<Booking> bookings) {
     double totalExpenses = 0;
     for (Booking booking in bookings) {
       if (booking.bookingType == BookingType.expense) {
