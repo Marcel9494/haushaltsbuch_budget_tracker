@@ -1,24 +1,77 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:intl/intl.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:haushaltsbuch_budget_tracker/data/enums/period_of_time_type.dart';
+import 'package:haushaltsbuch_budget_tracker/features/bookings/presentation/widgets/deco/booking_list_actions.dart';
+import 'package:haushaltsbuch_budget_tracker/features/bookings/presentation/widgets/deco/booking_list_daily_header.dart';
+import 'package:haushaltsbuch_budget_tracker/features/bookings/presentation/widgets/deco/booking_list_overview.dart';
 
+import '../../../../../blocs/booking/booking_bloc.dart';
 import '../../../../../core/consts/animation_consts.dart';
-import '../../../../../core/utils/currency_formatter.dart';
 import '../../../../../data/models/booking.dart';
-import '../../../../../data/repositories/booking_repository.dart';
 import '../../../../../l10n/app_localizations.dart';
+import '../../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
+import '../../../../shared/presentation/widgets/deco/empty_list.dart';
 import '../cards/booking_card.dart';
 
-class MonthlyBookingList extends StatelessWidget {
-  final List<Booking> bookings;
-  final int pastStartIndex;
-  final BookingRepository _bookingRepository = BookingRepository();
+class MonthlyBookingList extends StatefulWidget {
+  final DateTime currentSelectedDate;
+  PeriodOfTimeType periodOfTimeType;
+  final ValueChanged<PeriodOfTimeType>? onPeriodOfTimeChanged;
 
   MonthlyBookingList({
     super.key,
-    required this.bookings,
-    required this.pastStartIndex,
+    required this.currentSelectedDate,
+    required this.periodOfTimeType,
+    required this.onPeriodOfTimeChanged,
   });
+
+  @override
+  State<MonthlyBookingList> createState() => _MonthlyBookingListState();
+}
+
+class _MonthlyBookingListState extends State<MonthlyBookingList> {
+  late BookingBloc _bookingBloc;
+  bool _showUpcomingBookings = false;
+  List<Booking> _pastBookings = [];
+  List<Booking> _upcomingBookings = [];
+  List<Booking> _combinedBookings = [];
+  int _pastStartIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _bookingBloc = context.read<BookingBloc>();
+    _loadMonthlyBookings(widget.currentSelectedDate);
+  }
+
+  void _loadMonthlyBookings(DateTime selectedDate) {
+    _bookingBloc.add(
+      LoadMonthlyBookings(
+        selectedDate: selectedDate,
+        userId: 'a39f32da-0876-4119-abf4-f636c2a8ad12',
+      ),
+    );
+  }
+
+  void _prepareBookingList(List<Booking> bookings) {
+    _pastBookings = bookings.where((b) => b.bookingDate.isBefore(DateTime.now())).toList()..sort((a, b) => b.bookingDate.compareTo(a.bookingDate));
+    _upcomingBookings = bookings.where((b) => b.bookingDate.isAfter(DateTime.now())).toList()..sort((a, b) => b.bookingDate.compareTo(a.bookingDate));
+    _pastStartIndex = _showUpcomingBookings ? _upcomingBookings.length : 0;
+    _combinedBookings = [
+      if (_showUpcomingBookings) ..._upcomingBookings,
+      ..._pastBookings,
+    ];
+  }
+
+  @override
+  void didUpdateWidget(covariant MonthlyBookingList oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.currentSelectedDate != widget.currentSelectedDate) {
+      _loadMonthlyBookings(widget.currentSelectedDate);
+    }
+  }
 
   bool _isSameDay(DateTime a, DateTime b) {
     return a.year == b.year && a.month == b.month && a.day == b.day;
@@ -27,129 +80,110 @@ class MonthlyBookingList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
-    return AnimationLimiter(
-      child: ListView.builder(
-        shrinkWrap: true,
-        itemCount: bookings.length,
-        itemBuilder: (context, index) {
-          final bookingDate = bookings[index].bookingDate;
-          bool showHeader = false;
-
-          if (index == 0) {
-            showHeader = true;
-          } else {
-            final previousBooking = bookings[index - 1];
-            showHeader = !_isSameDay(
-              bookingDate,
-              previousBooking.bookingDate,
-            );
-          }
-          final bool isDividerPosition = index == pastStartIndex && index != 0;
-          final double revenue = _bookingRepository.calculateDailyRevenue(bookings, bookings[index].bookingDate);
-          final double expenses = _bookingRepository.calculateDailyExpenses(bookings, bookings[index].bookingDate);
-          final blockContent = Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return BlocBuilder<BookingBloc, BookingState>(
+      builder: (context, state) {
+        if (state is BookingLoading) {
+          return CircularLoadingIndicator();
+        } else if (state is BookingListLoaded) {
+          _prepareBookingList(state.bookings);
+          return Column(
             children: [
-              isDividerPosition
-                  ? Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+              BookingListOverview(
+                bookings: state.bookings,
+                averageDivider: DateTime(widget.currentSelectedDate.year, widget.currentSelectedDate.month + 1, 0).day,
+                averageText: 'per_day',
+              ),
+              BookingListActions(
+                periodOfTimeType: widget.periodOfTimeType,
+                onPeriodOfTimeChanged: widget.onPeriodOfTimeChanged,
+              ),
+              _upcomingBookings.isNotEmpty
+                  ? TextButton(
+                      onPressed: () {
+                        setState(() {
+                          _showUpcomingBookings = !_showUpcomingBookings;
+                        });
+                      },
                       child: Row(
                         children: [
-                          const Expanded(child: Divider(indent: 10.0, endIndent: 18.0)),
-                          Text(t.translate('past_bookings')),
-                          const Expanded(child: Divider(indent: 18.0, endIndent: 10.0)),
+                          Icon(
+                            _showUpcomingBookings ? Icons.keyboard_arrow_down_rounded : Icons.keyboard_arrow_up_rounded,
+                            color: Colors.white70,
+                          ),
+                          SizedBox(width: 4.0),
+                          Text(
+                            t.translate('upcoming_bookings'),
+                            style: TextStyle(color: Colors.white70),
+                          ),
                         ],
                       ),
                     )
-                  : const SizedBox.shrink(),
-              showHeader
-                  ? Padding(
-                      padding: const EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 6.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Row(
+                  : SizedBox.shrink(),
+              state.bookings.isEmpty
+                  ? EmptyList(
+                      text: 'no_bookings',
+                      icon: FaIcon(
+                        FontAwesomeIcons.book,
+                        size: 42.0,
+                        color: Colors.white70,
+                      ),
+                    )
+                  : Expanded(
+                      child: AnimationLimiter(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: _combinedBookings.length,
+                          itemBuilder: (context, index) {
+                            final bookingDate = _combinedBookings[index].bookingDate;
+                            final bool showHeader = index == 0
+                                ? true
+                                : !_isSameDay(
+                                    bookingDate,
+                                    _combinedBookings[index - 1].bookingDate,
+                                  );
+                            final bool isDividerPosition = index == _pastStartIndex && index != 0;
+                            final blockContent = Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                                  decoration: BoxDecoration(
-                                    color: Colors.black54,
-                                    border: Border.all(color: Colors.grey, width: 0.5),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Text(
-                                    DateFormat('dd.', Localizations.localeOf(context).languageCode).format(bookingDate),
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  DateFormat('MMM yyyy', Localizations.localeOf(context).languageCode).format(bookingDate),
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.white70,
-                                  ),
-                                ),
+                                isDividerPosition
+                                    ? Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 12.0),
+                                        child: Row(
+                                          children: [
+                                            const Expanded(child: Divider(indent: 10.0, endIndent: 18.0)),
+                                            Text(t.translate('past_bookings')),
+                                            const Expanded(child: Divider(indent: 18.0, endIndent: 10.0)),
+                                          ],
+                                        ),
+                                      )
+                                    : const SizedBox.shrink(),
+                                showHeader
+                                    ? BookingListDailyHeader(bookings: _combinedBookings, bookingDate: bookingDate, index: index)
+                                    : const SizedBox.shrink(),
+                                BookingCard(booking: _combinedBookings[index]),
                               ],
-                            ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 2.0),
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                  formatCurrency(revenue, 'EUR'),
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.greenAccent,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                            );
+                            return AnimationConfiguration.staggeredList(
+                              position: index,
+                              duration: const Duration(milliseconds: listAnimationDurationInMs),
+                              child: SlideAnimation(
+                                verticalOffset: 40.0,
+                                child: FadeInAnimation(
+                                  child: blockContent,
                                 ),
                               ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 2.0),
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                  formatCurrency(expenses, 'EUR'),
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.redAccent,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+                            );
+                          },
+                        ),
                       ),
-                    )
-                  : const SizedBox.shrink(),
-              BookingCard(booking: bookings[index]),
+                    ),
             ],
           );
-
-          return AnimationConfiguration.staggeredList(
-            position: index,
-            duration: const Duration(milliseconds: listAnimationDurationInMs),
-            child: SlideAnimation(
-              verticalOffset: 40.0,
-              child: FadeInAnimation(
-                child: blockContent,
-              ),
-            ),
-          );
-        },
-      ),
+        } else if (state is BookingError) {
+          return Center(child: Text(state.message));
+        }
+        return SizedBox.shrink();
+      },
     );
   }
 }

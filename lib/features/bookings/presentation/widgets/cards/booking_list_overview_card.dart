@@ -6,14 +6,16 @@ import '../../../../../l10n/app_localizations.dart';
 class BookingListOverviewCard extends StatefulWidget {
   final String title;
   final double amount;
-  final int daysInMonth;
+  final int averageDivider;
+  final String averageText;
   final Color color;
 
   const BookingListOverviewCard({
     super.key,
     required this.title,
     required this.amount,
-    required this.daysInMonth,
+    required this.averageDivider,
+    required this.averageText,
     required this.color,
   });
 
@@ -89,8 +91,9 @@ class _BookingListOverviewCardState extends State<BookingListOverviewCard> with 
                     child: AnimatedSwitcher(
                       duration: const Duration(milliseconds: 400),
                       child: Text(
-                        '\u00D8 ${formatCurrency(widget.amount / widget.daysInMonth, 'EUR')} ${t.translate('per_day')}',
+                        '\u00D8 ${formatCurrency(widget.amount / widget.averageDivider, 'EUR')} ${t.translate(widget.averageText)}',
                         key: ValueKey(widget.amount),
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(color: Colors.grey),
                       ),
                     ),

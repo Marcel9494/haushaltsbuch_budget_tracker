@@ -6,18 +6,22 @@ import 'package:intl/intl.dart';
 
 import '../../../../../blocs/booking/booking_bloc.dart';
 import '../../../../../core/consts/animation_consts.dart';
-import '../../../../../data/models/booking.dart';
+import '../../../../../data/enums/period_of_time_type.dart';
 import '../../../../../data/repositories/booking_repository.dart';
 import '../../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
+import '../deco/booking_list_actions.dart';
+import '../deco/booking_list_overview.dart';
 
 class YearlyBookingList extends StatefulWidget {
-  final List<Booking> bookings;
   final int currentSelectedYear;
+  PeriodOfTimeType periodOfTimeType;
+  final ValueChanged<PeriodOfTimeType>? onPeriodOfTimeChanged;
 
-  const YearlyBookingList({
+  YearlyBookingList({
     super.key,
-    required this.bookings,
     required this.currentSelectedYear,
+    required this.periodOfTimeType,
+    required this.onPeriodOfTimeChanged,
   });
 
   @override
@@ -25,25 +29,6 @@ class YearlyBookingList extends StatefulWidget {
 }
 
 class _YearlyBookingListState extends State<YearlyBookingList> {
-  final BookingRepository _bookingRepository = BookingRepository();
-  late BookingBloc _bookingBloc;
-
-  @override
-  void initState() {
-    super.initState();
-    _bookingBloc = context.read<BookingBloc>();
-    //_loadYearlyBookings(2025);
-  }
-
-  void _loadYearlyBookings(int selectedYear) {
-    _bookingBloc.add(
-      LoadYearlyBookings(
-        selectedYear: selectedYear,
-        userId: 'a39f32da-0876-4119-abf4-f636c2a8ad12',
-      ),
-    );
-  }
-
   List<String> getAllMonthNames(String locale) {
     List<String> months = [];
     DateTime date = DateTime(DateTime.now().year, 1, 1);
@@ -65,31 +50,44 @@ class _YearlyBookingListState extends State<YearlyBookingList> {
       child: BlocBuilder<BookingBloc, BookingState>(
         builder: (context, state) {
           if (state is BookingLoading) {
-            return Expanded(child: CircularLoadingIndicator());
+            return CircularLoadingIndicator();
           } else if (state is YearlyBookingListLoaded) {
-            return Expanded(
-              child: AnimationLimiter(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: months.length,
-                  itemBuilder: (context, index) {
-                    final monthlyBookings = state.yearlyBookings[index + 1] ?? [];
-                    return AnimationConfiguration.staggeredList(
-                      position: index,
-                      duration: const Duration(milliseconds: listAnimationDurationInMs),
-                      child: SlideAnimation(
-                        verticalOffset: 40.0,
-                        child: FadeInAnimation(
-                          child: BookingMonthOverviewCard(
-                            bookings: monthlyBookings,
-                            currentMonth: months[index],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
+            return Column(
+              children: [
+                BookingListOverview(
+                  bookings: state.yearlyBookings.values.expand((list) => list).toList(),
+                  averageDivider: 12,
+                  averageText: 'per_month',
                 ),
-              ),
+                BookingListActions(
+                  periodOfTimeType: widget.periodOfTimeType,
+                  onPeriodOfTimeChanged: widget.onPeriodOfTimeChanged,
+                ),
+                Expanded(
+                  child: AnimationLimiter(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: months.length,
+                      itemBuilder: (context, index) {
+                        final monthlyBookings = state.yearlyBookings[index + 1] ?? [];
+                        return AnimationConfiguration.staggeredList(
+                          position: index,
+                          duration: const Duration(milliseconds: listAnimationDurationInMs),
+                          child: SlideAnimation(
+                            verticalOffset: 40.0,
+                            child: FadeInAnimation(
+                              child: BookingMonthOverviewCard(
+                                bookings: monthlyBookings,
+                                currentMonth: months[index],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ],
             );
           } else if (state is BookingError) {
             return Center(child: Text(state.message));
