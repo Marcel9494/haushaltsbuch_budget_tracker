@@ -4,10 +4,12 @@ import '../../../../../l10n/app_localizations.dart';
 
 class TitleInputField extends StatefulWidget {
   final TextEditingController titleController;
+  final String text;
 
   const TitleInputField({
     super.key,
     required this.titleController,
+    this.text = 'title',
   });
 
   @override
@@ -27,7 +29,7 @@ class _TitleInputFieldState extends State<TitleInputField> {
     final t = AppLocalizations.of(context);
     String titleInput = widget.titleController.text.trim();
     if (titleInput.isEmpty) {
-      return t.translate('empty_title_error');
+      return t.translate('empty_${widget.text}_error');
     }
     return null;
   }
@@ -46,7 +48,7 @@ class _TitleInputFieldState extends State<TitleInputField> {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Text(t.translate('title'), style: TextStyle(fontSize: 16.0)),
+          child: Text(t.translate(widget.text), style: TextStyle(fontSize: 16.0)),
         ),
         TextFormField(
           controller: widget.titleController,
@@ -71,7 +73,7 @@ class _TitleInputFieldState extends State<TitleInputField> {
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(color: Colors.grey, width: 0.3),
             ),
-            hintText: '${t.translate('title')}...',
+            hintText: '${t.translate(widget.text)}...',
             prefixIcon: const Icon(Icons.title_rounded, size: 22.0),
             suffixIcon: IconButton(
               onPressed: () {

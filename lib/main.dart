@@ -6,6 +6,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/consts/route_consts.dart';
+import 'features/accounts/presentation/pages/create_account_page.dart';
 import 'features/auth/presentation/pages/login_page.dart';
 import 'features/auth/presentation/pages/register_page.dart';
 import 'features/auth/presentation/pages/reset_password_page.dart';
@@ -36,7 +37,8 @@ void main() async {
     final session = data.session;
     final event = data.event;
 
-    if (event == AuthChangeEvent.signedIn && session != null) {
+    print(event);
+    if (event == AuthChangeEvent.signedIn || event == AuthChangeEvent.initialSession) {
       navigatorKey.currentState?.pushReplacement(
         MaterialPageRoute(
           builder: (_) => const HomePage(),
@@ -138,6 +140,15 @@ class MyApp extends StatelessWidget {
             return null;
           }),
         ),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+            foregroundColor: Colors.cyanAccent,
+            side: BorderSide(color: Colors.grey),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ),
       ),
       themeMode: ThemeMode.system,
       navigatorKey: navigatorKey,
@@ -145,6 +156,7 @@ class MyApp extends StatelessWidget {
       routes: {
         forgotPasswordRoute: (context) => const ForgotPasswordPage(),
         createBookingRoute: (context) => const CreateBookingPage(),
+        createAccountRoute: (context) => const CreateAccountPage(),
         settingsRoute: (context) => const SettingsPage(),
       },
       onGenerateRoute: (settings) {

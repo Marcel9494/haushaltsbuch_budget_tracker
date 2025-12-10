@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../../l10n/app_localizations.dart';
-import '../../../data/enums/amount_type.dart';
-import '../../../data/enums/booking_type.dart';
-import '../bottom_sheets/show_amount_type_bottom_sheet.dart';
-import '../buttons/grid_item_button.dart';
+import '../../../../bookings/data/enums/amount_type.dart';
+import '../../../../bookings/data/enums/booking_type.dart';
+import '../../../../bookings/presentation/widgets/bottom_sheets/show_amount_type_bottom_sheet.dart';
+import '../../../../bookings/presentation/widgets/buttons/grid_item_button.dart';
 
 class AmountInputField extends StatefulWidget {
   final TextEditingController amountController;

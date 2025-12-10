@@ -5,11 +5,14 @@ import 'package:haushaltsbuch_budget_tracker/core/consts/route_consts.dart';
 import 'package:haushaltsbuch_budget_tracker/features/home/presentation/widgets/month_navigation.dart';
 import 'package:haushaltsbuch_budget_tracker/features/home/presentation/widgets/year_navigation.dart';
 
+import '../../../../blocs/account/account_bloc.dart';
 import '../../../../blocs/booking/booking_bloc.dart';
 import '../../../../core/utils/slow_hero_animation.dart';
 import '../../../../data/enums/period_of_time_type.dart';
+import '../../../../data/repositories/account_repository.dart';
 import '../../../../data/repositories/booking_repository.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../accounts/presentation/pages/account_list_page.dart';
 import '../../../bookings/presentation/pages/booking_list_page.dart';
 import '../../../bookings/presentation/pages/create_booking_page.dart';
 import 'home_content_page.dart';
@@ -41,7 +44,10 @@ class _HomePageState extends State<HomePage> {
             },
           ),
         ),
-        HomeContentPage(),
+        BlocProvider(
+          create: (context) => AccountBloc(AccountRepository()),
+          child: AccountListPage(),
+        ),
         HomeContentPage(),
         HomeContentPage(),
       ];
