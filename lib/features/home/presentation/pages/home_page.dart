@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:haushaltsbuch_budget_tracker/core/consts/route_consts.dart';
-import 'package:haushaltsbuch_budget_tracker/features/home/presentation/widgets/month_navigation.dart';
-import 'package:haushaltsbuch_budget_tracker/features/home/presentation/widgets/year_navigation.dart';
+import 'package:haushaltsbuch_budget_tracker/features/home/presentation/widgets/navigation/month_navigation.dart';
+import 'package:haushaltsbuch_budget_tracker/features/home/presentation/widgets/navigation/year_navigation.dart';
 
 import '../../../../blocs/account/account_bloc.dart';
 import '../../../../blocs/booking/booking_bloc.dart';
 import '../../../../core/utils/slow_hero_animation.dart';
 import '../../../../data/enums/period_of_time_type.dart';
 import '../../../../data/repositories/account_repository.dart';
-import '../../../../data/repositories/booking_repository.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../accounts/presentation/pages/account_list_page.dart';
 import '../../../bookings/presentation/pages/booking_list_page.dart';
@@ -25,31 +24,70 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late BookingBloc _bookingBloc;
   DateTime _currentSelectedDate = DateTime.now();
   PeriodOfTimeType _currentPeriodOfTime = PeriodOfTimeType.monthly;
   int _selectedPageIndex = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    _bookingBloc = context.read<BookingBloc>();
+    _loadMonthlyBookings(_currentSelectedDate);
+  }
+
+  void _loadMonthlyBookings(DateTime selectedDate) {
+    _bookingBloc.add(
+      LoadMonthlyBookings(
+        selectedDate: selectedDate,
+        userId: 'a39f32da-0876-4119-abf4-f636c2a8ad12',
+      ),
+    );
+  }
+
   List<Widget> get _pages => [
-        HomeContentPage(),
-        BlocProvider(
-          create: (context) => BookingBloc(BookingRepository()),
-          child: BookingListPage(
-            key: ValueKey(_currentSelectedDate),
-            currentSelectedDate: _currentSelectedDate,
-            currentPeriodOfTimeType: _currentPeriodOfTime,
-            onPeriodOfTimeChanged: (newPeriodOfTime) {
-              setState(() {
-                _currentPeriodOfTime = newPeriodOfTime;
-              });
-            },
-          ),
+        HomeContentPage(
+          key: ValueKey(_currentSelectedDate),
+          currentSelectedDate: _currentSelectedDate,
+          currentPeriodOfTimeType: _currentPeriodOfTime,
+          onPeriodOfTimeChanged: (newPeriodOfTime) {
+            setState(() {
+              _currentPeriodOfTime = newPeriodOfTime;
+            });
+          },
+        ),
+        BookingListPage(
+          key: ValueKey(_currentSelectedDate),
+          currentSelectedDate: _currentSelectedDate,
+          currentPeriodOfTimeType: _currentPeriodOfTime,
+          onPeriodOfTimeChanged: (newPeriodOfTime) {
+            setState(() {
+              _currentPeriodOfTime = newPeriodOfTime;
+            });
+          },
         ),
         BlocProvider(
           create: (context) => AccountBloc(AccountRepository()),
           child: AccountListPage(),
         ),
-        HomeContentPage(),
-        HomeContentPage(),
+        HomeContentPage(
+          currentSelectedDate: _currentSelectedDate,
+          currentPeriodOfTimeType: _currentPeriodOfTime,
+          onPeriodOfTimeChanged: (newPeriodOfTime) {
+            setState(() {
+              _currentPeriodOfTime = newPeriodOfTime;
+            });
+          },
+        ),
+        HomeContentPage(
+          currentSelectedDate: _currentSelectedDate,
+          currentPeriodOfTimeType: _currentPeriodOfTime,
+          onPeriodOfTimeChanged: (newPeriodOfTime) {
+            setState(() {
+              _currentPeriodOfTime = newPeriodOfTime;
+            });
+          },
+        ),
       ];
   final List<String> _pageTitle = [
     'home',
@@ -78,6 +116,7 @@ class _HomePageState extends State<HomePage> {
                   onDateChanged: (newDate) {
                     setState(() {
                       _currentSelectedDate = newDate;
+                      _loadMonthlyBookings(_currentSelectedDate);
                     });
                   },
                 )

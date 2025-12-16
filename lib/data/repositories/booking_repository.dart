@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:haushaltsbuch_budget_tracker/data/helper_models/booking_category_stats.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../features/bookings/data/enums/booking_type.dart';
@@ -20,6 +21,32 @@ class BookingRepository {
         .lt('booking_date', endOfMonth)
         .order('booking_date', ascending: false);
     return (monthlyBookings as List).map((data) => Booking.fromMap(data)).toList();
+  }
+
+  List<BookingCategoryStats> calculateMonthlyBookingsByCategory(List<Booking> bookings, BookingType selectedBookingType) {
+    final Map<String, double> categoryAmount = {};
+    for (final booking in bookings) {
+      if (booking.bookingType == selectedBookingType) {
+        categoryAmount[booking.category] = (categoryAmount[booking.category] ?? 0) + booking.amount;
+      }
+    }
+
+    final double totalAmount = categoryAmount.values.fold(0, (sum, value) => sum + value);
+    final List<BookingCategoryStats> bookingCategoryStats = categoryAmount.entries.map((entry) {
+      final double percentage = totalAmount == 0 ? 0 : (entry.value / totalAmount) * 100;
+
+      return BookingCategoryStats(
+        category: entry.key,
+        totalAmount: entry.value,
+        percentage: percentage,
+      );
+    }).toList();
+
+    bookingCategoryStats.sort(
+      (a, b) => b.percentage.compareTo(a.percentage),
+    );
+
+    return bookingCategoryStats;
   }
 
   Future<Map<int, List<Booking>>> loadYearlyBookings(int selectedYear, String userId) async {

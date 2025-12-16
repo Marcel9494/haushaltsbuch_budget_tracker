@@ -18,6 +18,7 @@ const Map<String, String> de = {
   'reset_email_sent': 'E-Mail zum Zurücksetzen des Passworts wurde gesendet.',
   'to_login': 'Zum Login',
   'home': 'Home',
+  'overview': 'Übersicht',
   'bookings': 'Buchungen',
   'accounts': 'Konten',
   'statistics': 'Statistiken',
