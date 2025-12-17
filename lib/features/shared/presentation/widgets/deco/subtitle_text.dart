@@ -13,7 +13,7 @@ class SubtitleText extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 6.0),
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Text(
         t.translate(text),
         style: TextStyle(

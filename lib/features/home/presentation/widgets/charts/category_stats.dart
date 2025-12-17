@@ -57,48 +57,48 @@ class _CategoryStatsState extends State<CategoryStats> with TickerProviderStateM
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: SizedBox(
-            width: double.infinity,
-            child: SegmentedButton<BookingType>(
-              segments: <ButtonSegment<BookingType>>[
-                ButtonSegment<BookingType>(
-                  value: BookingType.expense,
-                  label: Text(t.translate('expenses')),
-                  icon: Icon(Icons.remove_rounded),
-                ),
-                ButtonSegment<BookingType>(
-                  value: BookingType.income,
-                  label: Text(t.translate('revenue')),
-                  icon: Icon(Icons.add_rounded),
-                ),
-              ],
-              selected: <BookingType>{_selectedBookingType},
-              onSelectionChanged: (Set<BookingType> newBookingTypeSelection) {
-                setState(() {
-                  _selectedBookingType = newBookingTypeSelection.first;
-                });
-                _bookingCategoryStats = _bookingRepository.calculateMonthlyBookingsByCategory(widget.bookings, _selectedBookingType);
-              },
-              showSelectedIcon: false,
-              style: ButtonStyle(
-                shape: WidgetStateProperty.all(
-                  RoundedRectangleBorder(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(16),
-                      topRight: Radius.circular(16),
-                      bottomLeft: Radius.circular(4),
-                      bottomRight: Radius.circular(4),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Expanded(
+                child: SegmentedButton<BookingType>(
+                  segments: const [
+                    ButtonSegment(
+                      value: BookingType.expense,
+                      label: Text('Ausgaben'),
+                      icon: Icon(Icons.remove_rounded),
                     ),
+                    ButtonSegment(
+                      value: BookingType.income,
+                      label: Text('Einnahmen'),
+                      icon: Icon(Icons.add_rounded),
+                    ),
+                  ],
+                  selected: {_selectedBookingType},
+                  onSelectionChanged: (newSelection) {
+                    setState(() {
+                      _selectedBookingType = newSelection.first;
+                    });
+                    _bookingCategoryStats = _bookingRepository.calculateMonthlyBookingsByCategory(widget.bookings, _selectedBookingType);
+                  },
+                  showSelectedIcon: false,
+                  style: ButtonStyle(
+                    side: WidgetStateProperty.all(BorderSide.none),
+                    shape: WidgetStateProperty.all(
+                      const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                      ),
+                    ),
+                    backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+                      if (states.contains(WidgetState.selected)) {
+                        return Colors.cyanAccent.withAlpha(60);
+                      }
+                      return Colors.transparent;
+                    }),
                   ),
                 ),
-                backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
-                  if (states.contains(WidgetState.selected)) {
-                    return Colors.cyanAccent.withAlpha(60);
-                  }
-                  return null;
-                }),
               ),
-            ),
+            ],
           ),
         ),
         Card(
@@ -138,7 +138,7 @@ class _CategoryStatsState extends State<CategoryStats> with TickerProviderStateM
                           borderData: FlBorderData(show: false),
                           sectionsSpace: 6.0,
                           centerSpaceRadius: 40.0,
-                          sections: showingSections(_bookingCategoryStats), // : showingSections(zeroStats(_bookingCategoryStats)),
+                          sections: showingSections(_bookingCategoryStats), // TODO : showingSections(zeroStats(_bookingCategoryStats)),
                         ),
                         duration: const Duration(milliseconds: 1000),
                         curve: Curves.easeOutBack,
@@ -146,37 +146,6 @@ class _CategoryStatsState extends State<CategoryStats> with TickerProviderStateM
                     ),
                   ),
                 ),
-                /*const Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Indicator(
-                            color: Colors.cyanAccent,
-                            text: 'First',
-                            isSquare: true,
-                          ),
-                          SizedBox(height: 4),
-                          Indicator(
-                            color: Colors.blueAccent,
-                            text: 'Second',
-                            isSquare: true,
-                          ),
-                          SizedBox(height: 4),
-                          Indicator(
-                            color: Colors.purple,
-                            text: 'Third',
-                            isSquare: true,
-                          ),
-                          SizedBox(height: 4),
-                          Indicator(
-                            color: Colors.green,
-                            text: 'Fourth',
-                            isSquare: true,
-                          ),
-                          SizedBox(height: 18),
-                        ],
-                      ),
-                      const SizedBox(width: 28),*/
               ],
             ),
           ),

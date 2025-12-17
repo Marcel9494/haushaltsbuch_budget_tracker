@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _bookingBloc = context.read<BookingBloc>();
-    _loadMonthlyBookings(_currentSelectedDate);
+    onPeriodOfTimeChanged(_currentPeriodOfTime);
   }
 
   void _loadMonthlyBookings(DateTime selectedDate) {
@@ -45,15 +45,33 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void _loadYearlyBookings(int selectedYear) {
+    _bookingBloc.add(
+      LoadYearlyBookings(
+        selectedYear: selectedYear,
+        userId: 'a39f32da-0876-4119-abf4-f636c2a8ad12',
+      ),
+    );
+  }
+
+  void onPeriodOfTimeChanged(PeriodOfTimeType newPeriodOfTime) {
+    setState(() {
+      _currentPeriodOfTime = newPeriodOfTime;
+      if (_currentPeriodOfTime == PeriodOfTimeType.monthly) {
+        _loadMonthlyBookings(_currentSelectedDate);
+      } else {
+        _loadYearlyBookings(_currentSelectedDate.year);
+      }
+    });
+  }
+
   List<Widget> get _pages => [
         HomeContentPage(
           key: ValueKey(_currentSelectedDate),
           currentSelectedDate: _currentSelectedDate,
           currentPeriodOfTimeType: _currentPeriodOfTime,
           onPeriodOfTimeChanged: (newPeriodOfTime) {
-            setState(() {
-              _currentPeriodOfTime = newPeriodOfTime;
-            });
+            onPeriodOfTimeChanged(newPeriodOfTime);
           },
         ),
         BookingListPage(
@@ -61,9 +79,7 @@ class _HomePageState extends State<HomePage> {
           currentSelectedDate: _currentSelectedDate,
           currentPeriodOfTimeType: _currentPeriodOfTime,
           onPeriodOfTimeChanged: (newPeriodOfTime) {
-            setState(() {
-              _currentPeriodOfTime = newPeriodOfTime;
-            });
+            onPeriodOfTimeChanged(newPeriodOfTime);
           },
         ),
         BlocProvider(
@@ -125,6 +141,7 @@ class _HomePageState extends State<HomePage> {
                   onYearChanged: (newYear) {
                     setState(() {
                       _currentSelectedDate = DateTime(newYear, 1, 1);
+                      _loadYearlyBookings(_currentSelectedDate.year);
                     });
                   },
                 ),

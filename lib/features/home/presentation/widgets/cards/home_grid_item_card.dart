@@ -42,6 +42,12 @@ class _HomeGridItemCardState extends State<HomeGridItemCard> with TickerProvider
   }
 
   @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
     return FadeTransition(
