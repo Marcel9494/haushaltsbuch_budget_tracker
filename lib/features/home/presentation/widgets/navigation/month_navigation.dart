@@ -1,36 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 
-import '../../../../l10n/app_localizations.dart';
+import '../../../../../core/utils/date_formatter.dart';
+import '../../../../../l10n/app_localizations.dart';
 
-class YearNavigation extends StatefulWidget {
-  final int initialYear;
-  final ValueChanged<int> onYearChanged;
+class MonthNavigation extends StatefulWidget {
+  final DateTime initialDate;
+  final ValueChanged<DateTime> onDateChanged;
 
-  const YearNavigation({
+  const MonthNavigation({
     super.key,
-    required this.initialYear,
-    required this.onYearChanged,
+    required this.initialDate,
+    required this.onDateChanged,
   });
 
   @override
-  State<YearNavigation> createState() => _YearNavigationState();
+  State<MonthNavigation> createState() => _MonthNavigationState();
 }
 
-class _YearNavigationState extends State<YearNavigation> {
-  late int _selectedYear;
+class _MonthNavigationState extends State<MonthNavigation> {
+  late DateTime _selectedDate;
 
   @override
   void initState() {
     super.initState();
-    _selectedYear = widget.initialYear;
+    _selectedDate = widget.initialDate;
   }
 
-  void _changeYear(int offset) {
+  void _changeMonth(int offset) {
     setState(() {
-      _selectedYear = _selectedYear + offset;
+      _selectedDate = DateTime(_selectedDate.year, _selectedDate.month + offset, 1);
     });
-    widget.onYearChanged(_selectedYear);
+    widget.onDateChanged(_selectedDate);
   }
 
   @override
@@ -41,13 +42,13 @@ class _YearNavigationState extends State<YearNavigation> {
       children: [
         IconButton(
           icon: const Icon(Icons.keyboard_arrow_left_rounded),
-          onPressed: () => _changeYear(-1),
+          onPressed: () => _changeMonth(-1),
         ),
         GestureDetector(
           onTap: () async {
-            int? pickedDate = await showYearPicker(
+            DateTime? pickedDate = await showMonthPicker(
               context: context,
-              initialDate: DateTime(_selectedYear, 1, 1),
+              initialDate: _selectedDate,
               firstDate: DateTime(2000),
               lastDate: DateTime(2100),
               monthPickerDialogSettings: MonthPickerDialogSettings(
@@ -73,16 +74,16 @@ class _YearNavigationState extends State<YearNavigation> {
             );
             if (pickedDate != null) {
               setState(() {
-                _selectedYear = pickedDate;
+                _selectedDate = DateTime(pickedDate.year, pickedDate.month, 1);
               });
-              widget.onYearChanged(_selectedYear);
+              widget.onDateChanged(_selectedDate);
             }
           },
           child: Container(
             alignment: Alignment.center,
             width: 84.0,
             child: Text(
-              _selectedYear.toString(),
+              formatMonthYear(context, _selectedDate),
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(fontSize: 15),
             ),
@@ -90,7 +91,7 @@ class _YearNavigationState extends State<YearNavigation> {
         ),
         IconButton(
           icon: const Icon(Icons.keyboard_arrow_right_rounded),
-          onPressed: () => _changeYear(1),
+          onPressed: () => _changeMonth(1),
         ),
       ],
     );

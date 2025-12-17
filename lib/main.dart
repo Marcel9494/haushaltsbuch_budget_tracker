@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:haushaltsbuch_budget_tracker/features/auth/presentation/pages/forgot_password_page.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'blocs/booking/booking_bloc.dart';
 import 'core/consts/route_consts.dart';
+import 'data/repositories/booking_repository.dart';
 import 'features/accounts/presentation/pages/create_account_page.dart';
 import 'features/auth/presentation/pages/login_page.dart';
 import 'features/auth/presentation/pages/register_page.dart';
@@ -34,14 +37,16 @@ void main() async {
   );
 
   Supabase.instance.client.auth.onAuthStateChange.listen((data) async {
-    final session = data.session;
     final event = data.event;
 
     print(event);
     if (event == AuthChangeEvent.signedIn || event == AuthChangeEvent.initialSession) {
       navigatorKey.currentState?.pushReplacement(
         MaterialPageRoute(
-          builder: (_) => const HomePage(),
+          builder: (_) => BlocProvider(
+            create: (context) => BookingBloc(BookingRepository()),
+            child: HomePage(),
+          ),
         ),
       );
     } else if (event == AuthChangeEvent.passwordRecovery) {
@@ -149,6 +154,19 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
+        tabBarTheme: TabBarThemeData(
+          labelColor: Colors.cyanAccent,
+          unselectedLabelColor: Colors.white,
+          labelStyle: const TextStyle(fontWeight: FontWeight.w600),
+          unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w400),
+          indicator: const UnderlineTabIndicator(
+            borderSide: BorderSide(
+              color: Colors.cyanAccent,
+              width: 3.0,
+            ),
+          ),
+          indicatorSize: TabBarIndicatorSize.tab,
+        ),
       ),
       themeMode: ThemeMode.system,
       navigatorKey: navigatorKey,
@@ -177,7 +195,10 @@ class MyApp extends StatelessWidget {
             return PageTransition(
               type: PageTransitionType.fade,
               settings: settings,
-              child: HomePage(),
+              child: BlocProvider(
+                create: (context) => BookingBloc(BookingRepository()),
+                child: HomePage(),
+              ),
             );
           default:
             return null;

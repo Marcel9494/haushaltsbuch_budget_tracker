@@ -20,6 +20,14 @@ class LoadMonthlyBookings extends BookingEvent {
   });
 }
 
+class LoadMonthlyBookingsByCategory extends BookingEvent {
+  final List<Booking> bookings;
+
+  LoadMonthlyBookingsByCategory({
+    required this.bookings,
+  });
+}
+
 class LoadYearlyBookings extends BookingEvent {
   final int selectedYear;
   final String userId;

@@ -32,28 +32,11 @@ class MonthlyBookingList extends StatefulWidget {
 }
 
 class _MonthlyBookingListState extends State<MonthlyBookingList> {
-  late BookingBloc _bookingBloc;
   bool _showUpcomingBookings = false;
   List<Booking> _pastBookings = [];
   List<Booking> _upcomingBookings = [];
   List<Booking> _combinedBookings = [];
   int _pastStartIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _bookingBloc = context.read<BookingBloc>();
-    _loadMonthlyBookings(widget.currentSelectedDate);
-  }
-
-  void _loadMonthlyBookings(DateTime selectedDate) {
-    _bookingBloc.add(
-      LoadMonthlyBookings(
-        selectedDate: selectedDate,
-        userId: 'a39f32da-0876-4119-abf4-f636c2a8ad12',
-      ),
-    );
-  }
 
   void _prepareBookingList(List<Booking> bookings) {
     _pastBookings = bookings.where((b) => b.bookingDate.isBefore(DateTime.now())).toList()..sort((a, b) => b.bookingDate.compareTo(a.bookingDate));
@@ -63,14 +46,6 @@ class _MonthlyBookingListState extends State<MonthlyBookingList> {
       if (_showUpcomingBookings) ..._upcomingBookings,
       ..._pastBookings,
     ];
-  }
-
-  @override
-  void didUpdateWidget(covariant MonthlyBookingList oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.currentSelectedDate != widget.currentSelectedDate) {
-      _loadMonthlyBookings(widget.currentSelectedDate);
-    }
   }
 
   bool _isSameDay(DateTime a, DateTime b) {

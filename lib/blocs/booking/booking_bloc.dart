@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 
+import '../../data/helper_models/booking_category_stats.dart';
 import '../../data/models/booking.dart';
 import '../../data/repositories/booking_repository.dart';
 

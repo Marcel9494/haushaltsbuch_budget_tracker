@@ -21,6 +21,11 @@ class BookingListLoaded extends BookingState {
   BookingListLoaded(this.bookings);
 }
 
+class BookingsByCategoryListLoaded extends BookingState {
+  final List<BookingCategoryStats> bookingCategoryStats;
+  BookingsByCategoryListLoaded(this.bookingCategoryStats);
+}
+
 class YearlyBookingListLoaded extends BookingState {
   final Map<int, List<Booking>> yearlyBookings;
   YearlyBookingListLoaded(this.yearlyBookings);
