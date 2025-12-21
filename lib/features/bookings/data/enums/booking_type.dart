@@ -15,7 +15,7 @@ enum BookingType {
       };
 }
 
-extension AmountTypeExtension on BookingType {
+extension BookingTypeExtension on BookingType {
   String get name {
     switch (this) {
       case BookingType.undefined:

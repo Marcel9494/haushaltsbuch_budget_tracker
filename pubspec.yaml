@@ -46,6 +46,7 @@ dependencies:
   country_flags: ^4.1.0
   month_picker_dialog: ^6.7.0
   flutter_staggered_animations: ^1.1.1
+  animations: ^2.1.1
   fl_chart: ^1.1.1
   intl: ^0.20.2
 

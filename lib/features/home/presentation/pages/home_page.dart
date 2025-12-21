@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -7,7 +8,6 @@ import 'package:haushaltsbuch_budget_tracker/features/home/presentation/widgets/
 
 import '../../../../blocs/account/account_bloc.dart';
 import '../../../../blocs/booking/booking_bloc.dart';
-import '../../../../core/utils/slow_hero_animation.dart';
 import '../../../../data/enums/period_of_time_type.dart';
 import '../../../../data/repositories/account_repository.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -201,7 +201,9 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               leading: FaIcon(FontAwesomeIcons.grip),
               title: Text(t.translate('categories')),
-              onTap: () {},
+              onTap: () => {
+                Navigator.popAndPushNamed(context, categoryListRoute),
+              },
             ),
             ListTile(
               leading: FaIcon(FontAwesomeIcons.solidAddressBook),
@@ -238,21 +240,24 @@ class _HomePageState extends State<HomePage> {
         onTap: _onItemTapped,
       ),
       body: _pages[_selectedPageIndex],
-      floatingActionButton: FloatingActionButton(
-        heroTag: 'create_booking_fab',
-        onPressed: () => Navigator.push(
-          context,
-          slowHeroRoute(CreateBookingPage()),
-        ),
-        backgroundColor: Colors.cyanAccent,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(48.0),
-        ),
-        child: Icon(
-          Icons.add_rounded,
-          color: Colors.black87,
-          size: 26.0,
-        ),
+      floatingActionButton: OpenContainer(
+        transitionDuration: const Duration(milliseconds: 500),
+        transitionType: ContainerTransitionType.fade,
+        openBuilder: (context, _) => CreateBookingPage(),
+        closedElevation: 6,
+        closedShape: const CircleBorder(),
+        closedColor: Colors.cyanAccent,
+        closedBuilder: (context, openContainer) {
+          return FloatingActionButton(
+            onPressed: openContainer,
+            backgroundColor: Colors.cyanAccent,
+            child: const Icon(
+              Icons.add_rounded,
+              color: Colors.black87,
+              size: 26.0,
+            ),
+          );
+        },
       ),
     );
   }

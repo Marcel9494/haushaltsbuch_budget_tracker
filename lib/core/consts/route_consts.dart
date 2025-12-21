@@ -4,4 +4,6 @@ const forgotPasswordRoute = 'forgot_password';
 const homeRoute = 'home';
 const createBookingRoute = 'create_booking';
 const createAccountRoute = 'create_account';
+const createCategoryRoute = 'create_category';
+const categoryListRoute = 'category_list';
 const settingsRoute = 'settings';

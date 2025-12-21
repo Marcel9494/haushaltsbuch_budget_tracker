@@ -64,7 +64,7 @@ class _CategorieInputFieldState extends State<CategorieInputField> {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Text(t.translate('categorie'), style: TextStyle(fontSize: 16.0)),
+          child: Text(t.translate('category'), style: TextStyle(fontSize: 16.0)),
         ),
         TextFormField(
           controller: widget.categorieController,
@@ -88,7 +88,7 @@ class _CategorieInputFieldState extends State<CategorieInputField> {
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(color: Colors.grey, width: 0.3),
             ),
-            hintText: '${t.translate('categorie')}...',
+            hintText: '${t.translate('category')}...',
             prefixIcon: Padding(
               padding: const EdgeInsets.only(left: 16, right: 12, top: 12),
               child: const FaIcon(FontAwesomeIcons.grip, size: 22.0),
@@ -119,7 +119,7 @@ class _CategorieInputFieldState extends State<CategorieInputField> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                '${t.translate('select_categorie')}:',
+                                '${t.translate('select_category')}:',
                                 style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                               ),
                               IconButton(
@@ -160,7 +160,7 @@ class _CategorieInputFieldState extends State<CategorieInputField> {
                             child: Align(
                               alignment: Alignment.center,
                               child: AddButton(
-                                text: t.translate('create_categorie'),
+                                text: t.translate('create_category'),
                                 onPressed: () {},
                               ),
                             ),

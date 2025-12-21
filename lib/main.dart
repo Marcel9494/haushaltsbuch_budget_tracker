@@ -14,6 +14,7 @@ import 'features/auth/presentation/pages/login_page.dart';
 import 'features/auth/presentation/pages/register_page.dart';
 import 'features/auth/presentation/pages/reset_password_page.dart';
 import 'features/bookings/presentation/pages/create_booking_page.dart';
+import 'features/categories/presentation/pages/category_list_page.dart';
 import 'features/home/presentation/pages/home_page.dart';
 import 'features/settings/presentation/pages/settings_page.dart';
 import 'l10n/app_localizations.dart';
@@ -175,6 +176,7 @@ class MyApp extends StatelessWidget {
         forgotPasswordRoute: (context) => const ForgotPasswordPage(),
         createBookingRoute: (context) => const CreateBookingPage(),
         createAccountRoute: (context) => const CreateAccountPage(),
+        categoryListRoute: (context) => const CategoryListPage(),
         settingsRoute: (context) => const SettingsPage(),
       },
       onGenerateRoute: (settings) {
