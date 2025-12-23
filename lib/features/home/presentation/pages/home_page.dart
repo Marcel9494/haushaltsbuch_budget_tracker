@@ -8,6 +8,7 @@ import 'package:haushaltsbuch_budget_tracker/features/home/presentation/widgets/
 import 'package:haushaltsbuch_budget_tracker/features/home/presentation/widgets/navigation/year_navigation.dart';
 
 import '../../../../blocs/account/account_bloc.dart';
+import '../../../../blocs/account/account_event.dart';
 import '../../../../blocs/booking/booking_bloc.dart';
 import '../../../../blocs/category/category_bloc.dart';
 import '../../../../data/enums/period_of_time_type.dart';
@@ -28,6 +29,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late BookingBloc _bookingBloc;
   late CategoryBloc _categoryBloc;
+  late AccountBloc _accountBloc;
   DateTime _currentSelectedDate = DateTime.now();
   PeriodOfTimeType _currentPeriodOfTime = PeriodOfTimeType.monthly;
   int _selectedPageIndex = 0;
@@ -37,8 +39,10 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _bookingBloc = context.read<BookingBloc>();
     _categoryBloc = context.read<CategoryBloc>();
+    _accountBloc = context.read<AccountBloc>();
     onPeriodOfTimeChanged(_currentPeriodOfTime);
     _loadCategories();
+    _loadAccounts();
   }
 
   void _loadMonthlyBookings(DateTime selectedDate) {
@@ -72,6 +76,10 @@ class _HomePageState extends State<HomePage> {
 
   void _loadCategories() {
     _categoryBloc.add(LoadCategories());
+  }
+
+  void _loadAccounts() {
+    _accountBloc.add(LoadAccounts());
   }
 
   List<Widget> get _pages => [
@@ -253,8 +261,11 @@ class _HomePageState extends State<HomePage> {
         transitionDuration: const Duration(milliseconds: 500),
         transitionType: ContainerTransitionType.fade,
         openBuilder: (context, _) {
-          return BlocProvider.value(
-            value: _categoryBloc,
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider.value(value: _categoryBloc),
+              BlocProvider.value(value: _accountBloc),
+            ],
             child: CreateBookingPage(),
           );
         },

@@ -7,9 +7,11 @@ import 'package:haushaltsbuch_budget_tracker/features/auth/presentation/pages/fo
 import 'package:page_transition/page_transition.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'blocs/account/account_bloc.dart';
 import 'blocs/booking/booking_bloc.dart';
 import 'blocs/category/category_bloc.dart';
 import 'core/consts/route_consts.dart';
+import 'data/repositories/account_repository.dart';
 import 'data/repositories/booking_repository.dart';
 import 'features/accounts/presentation/pages/create_account_page.dart';
 import 'features/auth/presentation/pages/login_page.dart';
@@ -48,12 +50,9 @@ void main() async {
         MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
-              BlocProvider(
-                create: (context) => BookingBloc(BookingRepository()),
-              ),
-              BlocProvider(
-                create: (context) => CategoryBloc(CategoryRepository()),
-              ),
+              BlocProvider(create: (context) => BookingBloc(BookingRepository())),
+              BlocProvider(create: (context) => CategoryBloc(CategoryRepository())),
+              BlocProvider(create: (context) => AccountBloc(AccountRepository())),
             ],
             child: HomePage(),
           ),
@@ -208,12 +207,9 @@ class MyApp extends StatelessWidget {
               settings: settings,
               child: MultiBlocProvider(
                 providers: [
-                  BlocProvider(
-                    create: (context) => BookingBloc(BookingRepository()),
-                  ),
-                  BlocProvider(
-                    create: (context) => CategoryBloc(CategoryRepository()),
-                  ),
+                  BlocProvider(create: (context) => BookingBloc(BookingRepository())),
+                  BlocProvider(create: (context) => CategoryBloc(CategoryRepository())),
+                  BlocProvider(create: (context) => AccountBloc(AccountRepository())),
                 ],
                 child: HomePage(),
               ),

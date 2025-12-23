@@ -16,6 +16,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../blocs/booking/booking_bloc.dart';
 import '../../../../core/consts/animation_consts.dart';
 import '../../../../core/utils/app_flushbar.dart';
+import '../../../../data/models/account.dart';
 import '../../../../data/models/booking.dart';
 import '../../../../data/models/category.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -39,6 +40,8 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
   AmountType _amountType = AmountType.variable;
   RepetitionType _repetitionType = RepetitionType.none;
   late Category _selectedCategory;
+  late Account _selectedDebitAccount;
+  late Account _selectedTargetAccount;
   final GlobalKey<FormState> _createBookingFormKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
@@ -88,8 +91,8 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
         bookingDate: parsedDate, // TODO
         repetitionType: _repetitionType, // TODO
         categoryId: _bookingType == BookingType.transfer ? null : _selectedCategory.id,
-        debitAccount: _debitAccountController.text.trim(),
-        targetAccount: _bookingType == BookingType.transfer ? _targetAccountController.text.trim() : null,
+        debitAccountId: _selectedDebitAccount.id!,
+        targetAccountId: _bookingType == BookingType.transfer ? _selectedTargetAccount.id : null,
         goal: _goalController.text.trim(),
         person: _personController.text.trim(),
         isBooked: true, // TODO
@@ -199,6 +202,11 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
                                   accountController: _debitAccountController,
                                   text: _bookingType == BookingType.transfer ? 'debit_account' : 'account',
                                   showSuffixIcon: _bookingType == BookingType.transfer ? false : true,
+                                  onAccountChanged: (Account newDebitAccount) {
+                                    setState(() {
+                                      _selectedDebitAccount = newDebitAccount;
+                                    });
+                                  },
                                 ),
                               ),
                             ),
@@ -216,6 +224,11 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
                                         accountController: _targetAccountController,
                                         text: 'target_account',
                                         showSuffixIcon: _bookingType == BookingType.transfer ? false : true,
+                                        onAccountChanged: (Account newTargetAccount) {
+                                          setState(() {
+                                            _selectedTargetAccount = newTargetAccount;
+                                          });
+                                        },
                                       ),
                                     ),
                                   )
