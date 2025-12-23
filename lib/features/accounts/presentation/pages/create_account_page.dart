@@ -56,7 +56,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
       );
 
       final Account newAccount = Account(
-        uid: supabase.auth.currentUser!.id,
+        userId: supabase.auth.currentUser!.id,
         name: _nameController.text.trim(),
         balance: amount!,
         accountType: _accountTypeController.text,

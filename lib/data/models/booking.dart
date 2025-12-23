@@ -1,10 +1,11 @@
 import '../../features/bookings/data/enums/amount_type.dart';
 import '../../features/bookings/data/enums/booking_type.dart';
 import '../../features/bookings/data/enums/repetition_type.dart';
+import 'category.dart';
 
 class Booking {
   final String? id;
-  final String? uid;
+  final String? userId;
   final DateTime? createdAt;
   final BookingType bookingType;
   final String title;
@@ -13,7 +14,8 @@ class Booking {
   final DateTime bookingDate;
   final RepetitionType repetitionType;
   final String? repetitionId;
-  final String category;
+  final String? categoryId;
+  final Category? category;
   final String debitAccount;
   final String? targetAccount;
   final String goal;
@@ -22,7 +24,7 @@ class Booking {
 
   Booking({
     this.id,
-    this.uid,
+    this.userId,
     this.createdAt,
     required this.bookingType,
     required this.title,
@@ -31,7 +33,8 @@ class Booking {
     required this.bookingDate,
     required this.repetitionType,
     this.repetitionId,
-    required this.category,
+    this.category,
+    this.categoryId,
     required this.debitAccount,
     required this.targetAccount,
     required this.goal,
@@ -42,7 +45,7 @@ class Booking {
   factory Booking.fromMap(Map<String, dynamic> map) {
     return Booking(
       id: map['id'],
-      uid: map['uid'],
+      userId: map['user_id'],
       createdAt: map['created_at'] != null ? DateTime.parse(map['created_at']) : null,
       bookingType: BookingType.fromString(map['booking_type']),
       title: map['title'],
@@ -51,7 +54,8 @@ class Booking {
       bookingDate: DateTime.parse(map['booking_date']),
       repetitionType: RepetitionType.fromString(map['repetition_type']),
       repetitionId: map['repetition_id'],
-      category: map['category'],
+      categoryId: map['category_id'],
+      category: map['categories'] != null ? Category.fromMap(map['categories']) : null,
       debitAccount: map['debit_account'],
       targetAccount: map['target_account'],
       goal: map['goal'],
@@ -62,7 +66,7 @@ class Booking {
 
   Map<String, dynamic> toMap() {
     return {
-      'uid': uid,
+      'user_id': userId,
       'booking_type': bookingType.name,
       'title': title,
       'amount': amount,
@@ -70,7 +74,7 @@ class Booking {
       'booking_date': bookingDate.toIso8601String(),
       'repetition_type': repetitionType.name,
       'repetition_id': repetitionId,
-      'category': category,
+      'category_id': categoryId,
       'debit_account': debitAccount,
       'target_account': targetAccount,
       'goal': goal,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:haushaltsbuch_budget_tracker/features/bookings/data/enums/booking_type.dart';
+import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 
 import '../../../../../core/utils/currency_formatter.dart';
 import '../../../../../data/models/booking.dart';
@@ -15,6 +16,7 @@ class BookingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
     return Card(
       child: ClipPath(
         clipper: ShapeBorderClipper(
@@ -34,7 +36,7 @@ class BookingCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        booking.category,
+                        booking.bookingType == BookingType.transfer ? t.translate('transfer') : booking.category!.categoryName,
                         overflow: TextOverflow.ellipsis,
                       ),
                       SizedBox(height: 4.0),

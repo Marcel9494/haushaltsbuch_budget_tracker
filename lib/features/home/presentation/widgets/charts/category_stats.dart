@@ -47,7 +47,7 @@ class _CategoryStatsState extends State<CategoryStats> with TickerProviderStateM
   @override
   void initState() {
     super.initState();
-    _bookingCategoryStats = _bookingRepository.calculateMonthlyBookingsByCategory(widget.bookings, _selectedBookingType);
+    _bookingCategoryStats = _bookingRepository.calculateBookingsByCategory(widget.bookings, _selectedBookingType);
   }
 
   @override
@@ -62,15 +62,15 @@ class _CategoryStatsState extends State<CategoryStats> with TickerProviderStateM
             children: [
               Expanded(
                 child: SegmentedButton<BookingType>(
-                  segments: const [
+                  segments: [
                     ButtonSegment(
                       value: BookingType.expense,
-                      label: Text('Ausgaben'),
+                      label: Text(t.translate('expenses')),
                       icon: Icon(Icons.remove_rounded),
                     ),
                     ButtonSegment(
                       value: BookingType.income,
-                      label: Text('Einnahmen'),
+                      label: Text(t.translate('revenue')),
                       icon: Icon(Icons.add_rounded),
                     ),
                   ],
@@ -79,7 +79,7 @@ class _CategoryStatsState extends State<CategoryStats> with TickerProviderStateM
                     setState(() {
                       _selectedBookingType = newSelection.first;
                     });
-                    _bookingCategoryStats = _bookingRepository.calculateMonthlyBookingsByCategory(widget.bookings, _selectedBookingType);
+                    _bookingCategoryStats = _bookingRepository.calculateBookingsByCategory(widget.bookings, _selectedBookingType);
                   },
                   showSelectedIcon: false,
                   style: ButtonStyle(
@@ -138,7 +138,7 @@ class _CategoryStatsState extends State<CategoryStats> with TickerProviderStateM
                           borderData: FlBorderData(show: false),
                           sectionsSpace: 6.0,
                           centerSpaceRadius: 40.0,
-                          sections: showingSections(_bookingCategoryStats), // TODO : showingSections(zeroStats(_bookingCategoryStats)),
+                          sections: _bookingCategoryStats.isNotEmpty ? showingSections(_bookingCategoryStats) : showingEmptySections(),
                         ),
                         duration: const Duration(milliseconds: 1000),
                         curve: Curves.easeOutBack,
@@ -202,17 +202,21 @@ class _CategoryStatsState extends State<CategoryStats> with TickerProviderStateM
     });
   }
 
-  List<BookingCategoryStats> zeroStats(
-    List<BookingCategoryStats> stats,
-  ) {
-    return stats
-        .map(
-          (e) => BookingCategoryStats(
-            category: e.category,
-            totalAmount: 0,
-            percentage: 0,
-          ),
-        )
-        .toList();
+  List<PieChartSectionData> showingEmptySections() {
+    final t = AppLocalizations.of(context);
+    return List.generate(1, (i) {
+      return PieChartSectionData(
+        color: _pieCategoryColors[0],
+        value: 100.0,
+        title: t.translate('empty_bookings'),
+        radius: 50.0,
+        titleStyle: TextStyle(
+          fontSize: 16.0,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+          shadows: [Shadow(color: Colors.black, blurRadius: 2)],
+        ),
+      );
+    });
   }
 }

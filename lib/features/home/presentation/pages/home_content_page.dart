@@ -161,6 +161,8 @@ class _HomeContentPageState extends State<HomeContentPage> {
               ],
             ),
           );
+        } else if (state is BookingError) {
+          return Center(child: Text(state.message));
         }
         return SizedBox.shrink();
       },
