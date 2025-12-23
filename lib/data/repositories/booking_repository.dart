@@ -16,37 +16,11 @@ class BookingRepository {
     final endOfMonth = DateTime(selectedDate.year, selectedDate.month + 1, 1);
     final monthlyBookings = await Supabase.instance.client
         .from('bookings')
-        .select()
+        .select('*, categories(*)')
         .gte('booking_date', startOfMonth)
         .lt('booking_date', endOfMonth)
         .order('booking_date', ascending: false);
     return (monthlyBookings as List).map((data) => Booking.fromMap(data)).toList();
-  }
-
-  List<BookingCategoryStats> calculateMonthlyBookingsByCategory(List<Booking> bookings, BookingType selectedBookingType) {
-    final Map<String, double> categoryAmount = {};
-    for (final booking in bookings) {
-      if (booking.bookingType == selectedBookingType) {
-        categoryAmount[booking.category] = (categoryAmount[booking.category] ?? 0) + booking.amount;
-      }
-    }
-
-    final double totalAmount = categoryAmount.values.fold(0, (sum, value) => sum + value);
-    final List<BookingCategoryStats> bookingCategoryStats = categoryAmount.entries.map((entry) {
-      final double percentage = totalAmount == 0 ? 0 : (entry.value / totalAmount) * 100;
-
-      return BookingCategoryStats(
-        category: entry.key,
-        totalAmount: entry.value,
-        percentage: percentage,
-      );
-    }).toList();
-
-    bookingCategoryStats.sort(
-      (a, b) => b.percentage.compareTo(a.percentage),
-    );
-
-    return bookingCategoryStats;
   }
 
   Future<Map<int, List<Booking>>> loadYearlyBookings(int selectedYear, String userId) async {
@@ -54,7 +28,7 @@ class BookingRepository {
     final endOfYear = DateTime(selectedYear + 1, 1, 1);
     final yearlyBookings = await Supabase.instance.client
         .from('bookings')
-        .select()
+        .select('*, categories(*)')
         .gte('booking_date', startOfYear)
         .lt('booking_date', endOfYear)
         .order('booking_date', ascending: false);
@@ -63,6 +37,28 @@ class BookingRepository {
       return booking.bookingDate.month;
     });
     return monthlyBookings;
+  }
+
+  List<BookingCategoryStats> calculateBookingsByCategory(List<Booking> bookings, BookingType selectedBookingType) {
+    final Map<String, double> categoryAmount = {};
+    for (final booking in bookings) {
+      if (booking.bookingType == selectedBookingType && booking.bookingType != BookingType.transfer) {
+        categoryAmount[booking.category!.categoryName] = (categoryAmount[booking.category!.categoryName] ?? 0) + booking.amount;
+      }
+    }
+
+    final double totalAmount = categoryAmount.values.fold(0, (sum, value) => sum + value);
+    final List<BookingCategoryStats> bookingCategoryStats = categoryAmount.entries.map((entry) {
+      final double percentage = totalAmount == 0 ? 0 : (entry.value / totalAmount) * 100;
+      return BookingCategoryStats(
+        category: entry.key,
+        totalAmount: entry.value,
+        percentage: percentage,
+      );
+    }).toList();
+
+    bookingCategoryStats.sort((a, b) => b.percentage.compareTo(a.percentage));
+    return bookingCategoryStats;
   }
 
   double calculateRevenue(List<Booking> bookings) {

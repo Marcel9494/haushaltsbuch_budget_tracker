@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:haushaltsbuch_budget_tracker/data/repositories/category_repository.dart';
 import 'package:haushaltsbuch_budget_tracker/features/auth/presentation/pages/forgot_password_page.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'blocs/booking/booking_bloc.dart';
+import 'blocs/category/category_bloc.dart';
 import 'core/consts/route_consts.dart';
 import 'data/repositories/booking_repository.dart';
 import 'features/accounts/presentation/pages/create_account_page.dart';
@@ -44,8 +46,15 @@ void main() async {
     if (event == AuthChangeEvent.signedIn || event == AuthChangeEvent.initialSession) {
       navigatorKey.currentState?.pushReplacement(
         MaterialPageRoute(
-          builder: (_) => BlocProvider(
-            create: (context) => BookingBloc(BookingRepository()),
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) => BookingBloc(BookingRepository()),
+              ),
+              BlocProvider(
+                create: (context) => CategoryBloc(CategoryRepository()),
+              ),
+            ],
             child: HomePage(),
           ),
         ),
@@ -197,8 +206,15 @@ class MyApp extends StatelessWidget {
             return PageTransition(
               type: PageTransitionType.fade,
               settings: settings,
-              child: BlocProvider(
-                create: (context) => BookingBloc(BookingRepository()),
+              child: MultiBlocProvider(
+                providers: [
+                  BlocProvider(
+                    create: (context) => BookingBloc(BookingRepository()),
+                  ),
+                  BlocProvider(
+                    create: (context) => CategoryBloc(CategoryRepository()),
+                  ),
+                ],
                 child: HomePage(),
               ),
             );

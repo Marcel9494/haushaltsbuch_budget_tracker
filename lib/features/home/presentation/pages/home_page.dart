@@ -2,12 +2,14 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:haushaltsbuch_budget_tracker/blocs/category/category_event.dart';
 import 'package:haushaltsbuch_budget_tracker/core/consts/route_consts.dart';
 import 'package:haushaltsbuch_budget_tracker/features/home/presentation/widgets/navigation/month_navigation.dart';
 import 'package:haushaltsbuch_budget_tracker/features/home/presentation/widgets/navigation/year_navigation.dart';
 
 import '../../../../blocs/account/account_bloc.dart';
 import '../../../../blocs/booking/booking_bloc.dart';
+import '../../../../blocs/category/category_bloc.dart';
 import '../../../../data/enums/period_of_time_type.dart';
 import '../../../../data/repositories/account_repository.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -25,6 +27,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late BookingBloc _bookingBloc;
+  late CategoryBloc _categoryBloc;
   DateTime _currentSelectedDate = DateTime.now();
   PeriodOfTimeType _currentPeriodOfTime = PeriodOfTimeType.monthly;
   int _selectedPageIndex = 0;
@@ -33,7 +36,9 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _bookingBloc = context.read<BookingBloc>();
+    _categoryBloc = context.read<CategoryBloc>();
     onPeriodOfTimeChanged(_currentPeriodOfTime);
+    _loadCategories();
   }
 
   void _loadMonthlyBookings(DateTime selectedDate) {
@@ -63,6 +68,10 @@ class _HomePageState extends State<HomePage> {
         _loadYearlyBookings(_currentSelectedDate.year);
       }
     });
+  }
+
+  void _loadCategories() {
+    _categoryBloc.add(LoadCategories());
   }
 
   List<Widget> get _pages => [
@@ -243,7 +252,12 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: OpenContainer(
         transitionDuration: const Duration(milliseconds: 500),
         transitionType: ContainerTransitionType.fade,
-        openBuilder: (context, _) => CreateBookingPage(),
+        openBuilder: (context, _) {
+          return BlocProvider.value(
+            value: _categoryBloc,
+            child: CreateBookingPage(),
+          );
+        },
         closedElevation: 6,
         closedShape: const CircleBorder(),
         closedColor: Colors.cyanAccent,

@@ -17,6 +17,7 @@ import '../../../../blocs/booking/booking_bloc.dart';
 import '../../../../core/consts/animation_consts.dart';
 import '../../../../core/utils/app_flushbar.dart';
 import '../../../../data/models/booking.dart';
+import '../../../../data/models/category.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/enums/amount_type.dart';
 import '../../data/enums/booking_type.dart';
@@ -37,6 +38,7 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
   BookingType _bookingType = BookingType.expense;
   AmountType _amountType = AmountType.variable;
   RepetitionType _repetitionType = RepetitionType.none;
+  late Category _selectedCategory;
   final GlobalKey<FormState> _createBookingFormKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
@@ -78,14 +80,14 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
           DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).parse(_dateController.text);
 
       final Booking newBooking = Booking(
-        uid: supabase.auth.currentUser!.id,
+        userId: supabase.auth.currentUser!.id,
         bookingType: _bookingType, // TODO
         title: _titleController.text.trim(),
         amount: amount!,
         amountType: _amountType, // TODO
         bookingDate: parsedDate, // TODO
         repetitionType: _repetitionType, // TODO
-        category: _categorieController.text.trim(),
+        categoryId: _bookingType == BookingType.transfer ? null : _selectedCategory.id,
         debitAccount: _debitAccountController.text.trim(),
         targetAccount: _bookingType == BookingType.transfer ? _targetAccountController.text.trim() : null,
         goal: _goalController.text.trim(),
@@ -177,7 +179,17 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
                           },
                         ),
                         TitleInputField(titleController: _titleController),
-                        CategorieInputField(categorieController: _categorieController),
+                        _bookingType == BookingType.transfer
+                            ? SizedBox.shrink()
+                            : CategorieInputField(
+                                categorieController: _categorieController,
+                                bookingType: _bookingType,
+                                onCategorieChanged: (Category newCategory) {
+                                  setState(() {
+                                    _selectedCategory = newCategory;
+                                  });
+                                },
+                              ),
                         Row(
                           children: [
                             Expanded(

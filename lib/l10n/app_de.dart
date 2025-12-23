@@ -53,7 +53,8 @@ const Map<String, String> de = {
   'select_account': 'Konto auswählen',
   'debit_account': 'Abbuchungskonto',
   'target_account': 'Zielkonto',
-  'select_account_type': 'Kategorietyp auswählen',
+  'account_type': 'Kontotyp',
+  'select_account_type': 'Kontotyp auswählen',
   'amount_type': 'Betragstyp',
   'variable': 'Variabel',
   'fix': 'Fix',
@@ -84,6 +85,7 @@ const Map<String, String> de = {
   'upcoming_bookings': 'Bevorstehende Buchungen',
   'past_bookings': 'Vergangene Buchungen',
   'no_bookings': 'Keine Buchungen vorhanden.',
+  'empty_bookings': 'Noch keine Buchungen',
   // Sprachen
   'de': 'Deutsch',
   'en': 'Englisch',
