@@ -1,6 +1,7 @@
 import '../../features/bookings/data/enums/amount_type.dart';
 import '../../features/bookings/data/enums/booking_type.dart';
 import '../../features/bookings/data/enums/repetition_type.dart';
+import 'account.dart';
 import 'category.dart';
 
 class Booking {
@@ -16,8 +17,10 @@ class Booking {
   final String? repetitionId;
   final String? categoryId;
   final Category? category;
-  final String debitAccount;
-  final String? targetAccount;
+  final String debitAccountId;
+  final Account? debitAccount;
+  final String? targetAccountId;
+  final Account? targetAccount;
   final String goal;
   final String person;
   final bool isBooked;
@@ -35,8 +38,10 @@ class Booking {
     this.repetitionId,
     this.category,
     this.categoryId,
-    required this.debitAccount,
-    required this.targetAccount,
+    this.debitAccount,
+    required this.debitAccountId,
+    this.targetAccount,
+    required this.targetAccountId,
     required this.goal,
     required this.person,
     required this.isBooked,
@@ -56,8 +61,10 @@ class Booking {
       repetitionId: map['repetition_id'],
       categoryId: map['category_id'],
       category: map['categories'] != null ? Category.fromMap(map['categories']) : null,
-      debitAccount: map['debit_account'],
-      targetAccount: map['target_account'],
+      debitAccount: map['debit_account'] != null ? Account.fromMap(map['debit_account']) : null,
+      debitAccountId: map['debit_account_id'],
+      targetAccount: map['target_account'] != null ? Account.fromMap(map['target_account']) : null,
+      targetAccountId: map['target_account_id'],
       goal: map['goal'],
       person: map['person'],
       isBooked: map['is_booked'],
@@ -75,8 +82,8 @@ class Booking {
       'repetition_type': repetitionType.name,
       'repetition_id': repetitionId,
       'category_id': categoryId,
-      'debit_account': debitAccount,
-      'target_account': targetAccount,
+      'debit_account_id': debitAccountId,
+      'target_account_id': targetAccountId,
       'goal': goal,
       'person': person,
       'is_booked': isBooked,

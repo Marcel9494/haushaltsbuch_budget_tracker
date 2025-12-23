@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:haushaltsbuch_budget_tracker/features/bookings/presentation/widgets/cards/booking_month_overview_card.dart';
+import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../blocs/booking/booking_bloc.dart';
@@ -43,6 +44,7 @@ class _YearlyBookingListState extends State<YearlyBookingList> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
     final List<String> months = getAllMonthNames('de_DE');
     return BlocProvider(
       create: (_) => BookingBloc(BookingRepository())
@@ -90,7 +92,12 @@ class _YearlyBookingListState extends State<YearlyBookingList> {
               ],
             );
           } else if (state is BookingError) {
-            return Center(child: Text(state.message));
+            return Center(
+              child: Text(
+                t.translate(state.message),
+                textAlign: TextAlign.center,
+              ),
+            );
           }
           return SizedBox.shrink();
         },

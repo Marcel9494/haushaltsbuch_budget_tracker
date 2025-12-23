@@ -155,7 +155,12 @@ class _MonthlyBookingListState extends State<MonthlyBookingList> {
             ],
           );
         } else if (state is BookingError) {
-          return Center(child: Text(state.message));
+          return Center(
+            child: Text(
+              t.translate(state.message),
+              textAlign: TextAlign.center,
+            ),
+          );
         }
         return SizedBox.shrink();
       },
