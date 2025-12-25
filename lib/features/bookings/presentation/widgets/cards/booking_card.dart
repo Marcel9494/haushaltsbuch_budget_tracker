@@ -54,7 +54,6 @@ class BookingCard extends StatelessWidget {
                   color: Colors.white30,
                   margin: const EdgeInsets.symmetric(horizontal: 12.0),
                 ),
-                // TODO hier weitermachen und Bottom Overflow Pixel Warnung beheben
                 Expanded(
                   flex: 2,
                   child: Column(
@@ -64,10 +63,12 @@ class BookingCard extends StatelessWidget {
                       SizedBox(height: 4.0),
                       Row(
                         children: [
-                          Text(
-                            booking.debitAccount!.name,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(color: Colors.grey),
+                          Expanded(
+                            child: Text(
+                              booking.debitAccount!.name,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: Colors.grey),
+                            ),
                           ),
                           booking.targetAccount != null
                               ? Padding(
@@ -76,10 +77,12 @@ class BookingCard extends StatelessWidget {
                                 )
                               : SizedBox.shrink(),
                           booking.targetAccount != null
-                              ? Text(
-                                  booking.targetAccount!.name,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(color: Colors.grey),
+                              ? Expanded(
+                                  child: Text(
+                                    booking.targetAccount!.name,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
                                 )
                               : SizedBox.shrink(),
                         ],

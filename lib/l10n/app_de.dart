@@ -86,6 +86,10 @@ const Map<String, String> de = {
   'past_bookings': 'Vergangene Buchungen',
   'no_bookings': 'Keine Buchungen vorhanden.',
   'empty_bookings': 'Noch keine Buchungen',
+  'assets': 'Vermögen',
+  'debts': 'Schulden',
+  'net_assets': 'Nettovermögen',
+  'no_accounts': 'Keine Konten vorhanden.',
   // Sprachen
   'de': 'Deutsch',
   'en': 'Englisch',

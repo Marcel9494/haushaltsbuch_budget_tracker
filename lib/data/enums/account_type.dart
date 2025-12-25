@@ -42,4 +42,25 @@ extension AmountTypeExtension on AccountType {
         return 'Sonstiges';
     }
   }
+
+  String get pluralName {
+    switch (this) {
+      case AccountType.none:
+        return 'Kein Kontotyp ausgewählt';
+      case AccountType.account:
+        return 'Konten';
+      case AccountType.capitalInvestment:
+        return 'Kapitalanlagen';
+      case AccountType.cash:
+        return 'Bargeld';
+      case AccountType.card:
+        return 'Karten';
+      case AccountType.insurance:
+        return 'Versicherungen';
+      case AccountType.credit:
+        return 'Kredite';
+      case AccountType.other:
+        return 'Sonstiges';
+    }
+  }
 }

@@ -59,7 +59,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
                   children: [
                     HomeGridItemCard(
                       icon: FaIcon(FontAwesomeIcons.piggyBank, size: 20.0),
-                      title: 'Vermögen',
+                      title: 'net_assets',
                       stat: 100000,
                       subtitle: 'Aktuelles Vermögen',
                     ),
