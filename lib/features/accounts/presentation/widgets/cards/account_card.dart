@@ -22,11 +22,18 @@ class AccountCard extends StatelessWidget {
           decoration: BoxDecoration(
             border: Border(right: BorderSide(color: account.balance >= 0 ? Colors.green : Colors.redAccent, width: 3.5)),
           ),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(10.0, 6.0, 0.0, 6.0),
-            child: ListTile(
-              title: Text(account.name),
-              trailing: Text(formatCurrency(account.balance, 'EUR')),
+          child: ListTile(
+            title: Text(
+              account.name,
+              style: TextStyle(color: Colors.white),
+            ),
+            trailing: Text(
+              formatCurrency(account.balance, 'EUR'),
+              style: TextStyle(
+                fontSize: 14.0,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),

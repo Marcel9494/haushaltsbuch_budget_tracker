@@ -4,6 +4,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:haushaltsbuch_budget_tracker/data/repositories/account_repository.dart';
 import 'package:haushaltsbuch_budget_tracker/features/accounts/presentation/pages/create_account_page.dart';
+import 'package:haushaltsbuch_budget_tracker/features/accounts/presentation/widgets/cards/account_list_overview_card.dart';
 import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 
 import '../../../../blocs/account/account_bloc.dart';
@@ -14,6 +15,7 @@ import '../../../../core/utils/slow_hero_animation.dart';
 import '../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../../../shared/presentation/widgets/deco/empty_list.dart';
 import '../widgets/cards/account_card.dart';
+import '../widgets/deco/account_list_header.dart';
 
 class AccountListPage extends StatefulWidget {
   const AccountListPage({super.key});
@@ -24,6 +26,9 @@ class AccountListPage extends StatefulWidget {
 
 class _AccountListPageState extends State<AccountListPage> {
   AccountBloc _accountBloc = AccountBloc(AccountRepository());
+  final AccountRepository _accountRepository = AccountRepository();
+  late double assets;
+  late double debts;
 
   @override
   void initState() {
@@ -47,8 +52,33 @@ class _AccountListPageState extends State<AccountListPage> {
           if (state is AccountLoading) {
             return CircularLoadingIndicator();
           } else if (state is AccountListLoaded) {
+            assets = _accountRepository.calculateAssets(state.accounts);
+            debts = _accountRepository.calculateDebts(state.accounts);
             return Column(
               children: [
+                Row(
+                  children: [
+                    AccountListOverviewCard(
+                      title: 'assets',
+                      amount: assets,
+                      icon: FaIcon(FontAwesomeIcons.piggyBank, size: 22.0),
+                      color: Colors.green,
+                    ),
+                    AccountListOverviewCard(
+                      title: 'debts',
+                      amount: debts,
+                      icon: FaIcon(FontAwesomeIcons.cashRegister, size: 22.0),
+                      color: Colors.redAccent,
+                    ),
+                    AccountListOverviewCard(
+                      title: 'net_assets',
+                      amount: assets - debts,
+                      icon: FaIcon(FontAwesomeIcons.coins, size: 22.0),
+                      color: assets - debts >= 0 ? Colors.green : Colors.redAccent,
+                    ),
+                  ],
+                ),
+                SizedBox(height: 4.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -67,12 +97,6 @@ class _AccountListPageState extends State<AccountListPage> {
                     ),
                   ],
                 ),
-                /* TODO hier weitermachen bei Kontoliste implementieren und => implementieren AccountListOverview( + AccountCard verbessern
-                bookings: state.accounts,
-                averageDivider: DateTime(widget.currentSelectedDate.year, widget.currentSelectedDate.month + 1, 0).day,
-                averageText: 'per_day',
-              ),*/
-
                 state.accounts.isEmpty
                     ? EmptyList(
                         text: 'no_accounts',
@@ -88,20 +112,11 @@ class _AccountListPageState extends State<AccountListPage> {
                             shrinkWrap: true,
                             itemCount: state.accounts.length,
                             itemBuilder: (context, index) {
-                              final accountType = state.accounts[index].accountType;
-                              /*final bool showHeader = index == 0
-                                ? true
-                                : !_isSameAccountType(
-                                    bookingDate,
-                                    _combinedBookings[index - 1].bookingDate,
-                                  );*/
-
+                              final bool showHeader = index == 0 ? true : state.accounts[index - 1].accountType != state.accounts[index].accountType;
                               final blockContent = Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  /*showHeader
-                                    ? AccountListHeader(bookings: state.accounts, bookingDate: bookingDate, index: index)
-                                    : const SizedBox.shrink(),*/
+                                  showHeader ? AccountListHeader(accounts: state.accounts, index: index) : const SizedBox.shrink(),
                                   AccountCard(account: state.accounts[index]),
                                 ],
                               );

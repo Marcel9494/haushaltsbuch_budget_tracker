@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:haushaltsbuch_budget_tracker/blocs/category/category_event.dart';
 import 'package:haushaltsbuch_budget_tracker/core/consts/route_consts.dart';
+import 'package:haushaltsbuch_budget_tracker/features/budgets/presentation/pages/budget_list_page.dart';
+import 'package:haushaltsbuch_budget_tracker/features/goals/presentation/pages/goal_list_page.dart';
 import 'package:haushaltsbuch_budget_tracker/features/home/presentation/widgets/navigation/month_navigation.dart';
 import 'package:haushaltsbuch_budget_tracker/features/home/presentation/widgets/navigation/year_navigation.dart';
 
@@ -37,9 +39,11 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
     _bookingBloc = context.read<BookingBloc>();
     _categoryBloc = context.read<CategoryBloc>();
     _accountBloc = context.read<AccountBloc>();
+
     onPeriodOfTimeChanged(_currentPeriodOfTime);
     _loadCategories();
     _loadAccounts();
@@ -103,24 +107,8 @@ class _HomePageState extends State<HomePage> {
           create: (context) => AccountBloc(AccountRepository()),
           child: AccountListPage(),
         ),
-        HomeContentPage(
-          currentSelectedDate: _currentSelectedDate,
-          currentPeriodOfTimeType: _currentPeriodOfTime,
-          onPeriodOfTimeChanged: (newPeriodOfTime) {
-            setState(() {
-              _currentPeriodOfTime = newPeriodOfTime;
-            });
-          },
-        ),
-        HomeContentPage(
-          currentSelectedDate: _currentSelectedDate,
-          currentPeriodOfTimeType: _currentPeriodOfTime,
-          onPeriodOfTimeChanged: (newPeriodOfTime) {
-            setState(() {
-              _currentPeriodOfTime = newPeriodOfTime;
-            });
-          },
-        ),
+        BudgetListPage(),
+        GoalListPage(),
       ];
   final List<String> _pageTitle = [
     'home',
@@ -143,25 +131,27 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text(t.translate(_pageTitle[_selectedPageIndex]), style: TextStyle(fontSize: 20.0)),
         actions: [
-          _currentPeriodOfTime == PeriodOfTimeType.monthly
-              ? MonthNavigation(
-                  initialDate: _currentSelectedDate,
-                  onDateChanged: (newDate) {
-                    setState(() {
-                      _currentSelectedDate = newDate;
-                      _loadMonthlyBookings(_currentSelectedDate);
-                    });
-                  },
-                )
-              : YearNavigation(
-                  initialYear: _currentSelectedDate.year,
-                  onYearChanged: (newYear) {
-                    setState(() {
-                      _currentSelectedDate = DateTime(newYear, 1, 1);
-                      _loadYearlyBookings(_currentSelectedDate.year);
-                    });
-                  },
-                ),
+          _selectedPageIndex == 2 || _selectedPageIndex == 4
+              ? SizedBox.shrink()
+              : _currentPeriodOfTime == PeriodOfTimeType.monthly
+                  ? MonthNavigation(
+                      initialDate: _currentSelectedDate,
+                      onDateChanged: (newDate) {
+                        setState(() {
+                          _currentSelectedDate = newDate;
+                          _loadMonthlyBookings(_currentSelectedDate);
+                        });
+                      },
+                    )
+                  : YearNavigation(
+                      initialYear: _currentSelectedDate.year,
+                      onYearChanged: (newYear) {
+                        setState(() {
+                          _currentSelectedDate = DateTime(newYear, 1, 1);
+                          _loadYearlyBookings(_currentSelectedDate.year);
+                        });
+                      },
+                    ),
         ],
       ),
       drawer: Drawer(

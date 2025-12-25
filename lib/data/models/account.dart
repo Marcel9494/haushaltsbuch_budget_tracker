@@ -1,8 +1,10 @@
+import '../enums/account_type.dart';
+
 class Account {
   final String? id;
   final String? userId;
   final String name;
-  final String accountType;
+  final AccountType accountType;
   final double balance;
 
   Account({
@@ -18,7 +20,7 @@ class Account {
       id: map['id'],
       userId: map['user_id'],
       name: map['name'],
-      accountType: map['account_type'],
+      accountType: AccountType.fromString(map['account_type']),
       balance: map['balance'],
     );
   }
@@ -27,7 +29,7 @@ class Account {
     return {
       'user_id': userId,
       'name': name,
-      'account_type': accountType,
+      'account_type': accountType.name,
       'balance': balance,
     };
   }

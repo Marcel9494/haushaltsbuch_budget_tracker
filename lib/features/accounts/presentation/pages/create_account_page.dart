@@ -59,7 +59,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
         userId: supabase.auth.currentUser!.id,
         name: _nameController.text.trim(),
         balance: amount!,
-        accountType: _accountTypeController.text,
+        accountType: _accountType,
       );
 
       contextForAccount.read<AccountBloc>().add(CreateAccount(account: newAccount));
