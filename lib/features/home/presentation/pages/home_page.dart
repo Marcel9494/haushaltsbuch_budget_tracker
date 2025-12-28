@@ -12,9 +12,12 @@ import 'package:haushaltsbuch_budget_tracker/features/home/presentation/widgets/
 import '../../../../blocs/account/account_bloc.dart';
 import '../../../../blocs/account/account_event.dart';
 import '../../../../blocs/booking/booking_bloc.dart';
+import '../../../../blocs/budget/budget_bloc.dart';
+import '../../../../blocs/budget/budget_event.dart';
 import '../../../../blocs/category/category_bloc.dart';
 import '../../../../data/enums/period_of_time_type.dart';
 import '../../../../data/repositories/account_repository.dart';
+import '../../../../data/repositories/budget_repository.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../accounts/presentation/pages/account_list_page.dart';
 import '../../../bookings/presentation/pages/booking_list_page.dart';
@@ -32,6 +35,7 @@ class _HomePageState extends State<HomePage> {
   late BookingBloc _bookingBloc;
   late CategoryBloc _categoryBloc;
   late AccountBloc _accountBloc;
+  late BudgetBloc _budgetBloc;
   DateTime _currentSelectedDate = DateTime.now();
   PeriodOfTimeType _currentPeriodOfTime = PeriodOfTimeType.monthly;
   int _selectedPageIndex = 0;
@@ -43,10 +47,12 @@ class _HomePageState extends State<HomePage> {
     _bookingBloc = context.read<BookingBloc>();
     _categoryBloc = context.read<CategoryBloc>();
     _accountBloc = context.read<AccountBloc>();
+    _budgetBloc = context.read<BudgetBloc>();
 
     onPeriodOfTimeChanged(_currentPeriodOfTime);
     _loadCategories();
     _loadAccounts();
+    _loadBudgets();
   }
 
   void _loadMonthlyBookings(DateTime selectedDate) {
@@ -86,6 +92,10 @@ class _HomePageState extends State<HomePage> {
     _accountBloc.add(LoadAccounts());
   }
 
+  void _loadBudgets() {
+    _budgetBloc.add(LoadBudgets());
+  }
+
   List<Widget> get _pages => [
         HomeContentPage(
           key: ValueKey(_currentSelectedDate),
@@ -107,7 +117,10 @@ class _HomePageState extends State<HomePage> {
           create: (context) => AccountBloc(AccountRepository()),
           child: AccountListPage(),
         ),
-        BudgetListPage(),
+        BlocProvider(
+          create: (context) => BudgetBloc(BudgetRepository()),
+          child: BudgetListPage(),
+        ),
         GoalListPage(),
       ];
   final List<String> _pageTitle = [

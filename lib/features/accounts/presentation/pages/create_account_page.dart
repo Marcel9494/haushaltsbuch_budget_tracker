@@ -119,11 +119,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        AmountInputField(
-                          amountController: _amountController,
-                          bookingType: BookingType.transfer,
-                          onAmountTypeChanged: (_) {},
-                        ),
+                        TitleInputField(titleController: _nameController, text: 'account_name'),
                         AccountTypeInputField(
                           accountTypeController: _accountTypeController,
                           accountType: _accountType,
@@ -133,7 +129,11 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                             });
                           },
                         ),
-                        TitleInputField(titleController: _nameController, text: 'account_name'),
+                        AmountInputField(
+                          amountController: _amountController,
+                          bookingType: BookingType.transfer,
+                          onAmountTypeChanged: (_) {},
+                        ),
                         SizedBox(height: 30.0),
                         Hero(
                           tag: 'create_account_fab',
