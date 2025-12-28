@@ -9,10 +9,12 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'blocs/account/account_bloc.dart';
 import 'blocs/booking/booking_bloc.dart';
+import 'blocs/budget/budget_bloc.dart';
 import 'blocs/category/category_bloc.dart';
 import 'core/consts/route_consts.dart';
 import 'data/repositories/account_repository.dart';
 import 'data/repositories/booking_repository.dart';
+import 'data/repositories/budget_repository.dart';
 import 'features/accounts/presentation/pages/create_account_page.dart';
 import 'features/auth/presentation/pages/login_page.dart';
 import 'features/auth/presentation/pages/register_page.dart';
@@ -44,7 +46,6 @@ void main() async {
   Supabase.instance.client.auth.onAuthStateChange.listen((data) async {
     final event = data.event;
 
-    print(event);
     if (event == AuthChangeEvent.signedIn || event == AuthChangeEvent.initialSession) {
       navigatorKey.currentState?.pushReplacement(
         MaterialPageRoute(
@@ -53,6 +54,7 @@ void main() async {
               BlocProvider(create: (context) => BookingBloc(BookingRepository())),
               BlocProvider(create: (context) => CategoryBloc(CategoryRepository())),
               BlocProvider(create: (context) => AccountBloc(AccountRepository())),
+              BlocProvider(create: (context) => BudgetBloc(BudgetRepository())),
             ],
             child: HomePage(),
           ),
@@ -210,6 +212,7 @@ class MyApp extends StatelessWidget {
                   BlocProvider(create: (context) => BookingBloc(BookingRepository())),
                   BlocProvider(create: (context) => CategoryBloc(CategoryRepository())),
                   BlocProvider(create: (context) => AccountBloc(AccountRepository())),
+                  BlocProvider(create: (context) => BudgetBloc(BudgetRepository())),
                 ],
                 child: HomePage(),
               ),

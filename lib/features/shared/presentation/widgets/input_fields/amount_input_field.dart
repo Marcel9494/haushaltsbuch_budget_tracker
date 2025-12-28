@@ -11,12 +11,14 @@ class AmountInputField extends StatefulWidget {
   final TextEditingController amountController;
   final BookingType bookingType;
   final ValueChanged<AmountType> onAmountTypeChanged;
+  final String text;
 
   const AmountInputField({
     super.key,
     required this.amountController,
     required this.bookingType,
     required this.onAmountTypeChanged,
+    this.text = 'amount',
   });
 
   @override
@@ -54,7 +56,7 @@ class _AmountInputFieldState extends State<AmountInputField> {
     final t = AppLocalizations.of(context);
     String amountInput = widget.amountController.text.trim();
     if (amountInput.isEmpty) {
-      return t.translate('empty_amount_error');
+      return t.translate('empty_${widget.text}_error');
     }
     return null;
   }
@@ -170,7 +172,7 @@ class _AmountInputFieldState extends State<AmountInputField> {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Text(t.translate('amount'), style: TextStyle(fontSize: 16.0)),
+          child: Text(t.translate(widget.text), style: TextStyle(fontSize: 16.0)),
         ),
         TextFormField(
           controller: widget.amountController,
@@ -194,7 +196,7 @@ class _AmountInputFieldState extends State<AmountInputField> {
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(color: Colors.grey, width: 0.3),
             ),
-            hintText: '${t.translate('amount')}...',
+            hintText: '${t.translate(widget.text)}...',
             prefixIcon: Padding(
               padding: const EdgeInsets.only(left: 16, right: 12, top: 12),
               child: const FaIcon(FontAwesomeIcons.moneyBill1, size: 22.0),
@@ -262,7 +264,7 @@ class _AmountInputFieldState extends State<AmountInputField> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            '${t.translate('enter_amount')}:',
+                            '${t.translate('enter_${widget.text}')}:',
                             style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                           ),
                           IconButton(
