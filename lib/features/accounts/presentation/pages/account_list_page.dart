@@ -118,6 +118,7 @@ class _AccountListPageState extends State<AccountListPage> {
                                 children: [
                                   showHeader ? AccountListHeader(accounts: state.accounts, index: index) : const SizedBox.shrink(),
                                   AccountCard(account: state.accounts[index]),
+                                  state.accounts.length - 1 == index ? SizedBox(height: 54.0) : SizedBox.shrink(),
                                 ],
                               );
                               return AnimationConfiguration.staggeredList(

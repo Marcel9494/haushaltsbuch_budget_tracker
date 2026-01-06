@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:haushaltsbuch_budget_tracker/blocs/category/category_bloc.dart';
 
 import '../../../../blocs/budget/budget_bloc.dart';
 import '../../../../blocs/budget/budget_event.dart';
-import '../../../../blocs/budget/budget_state.dart';
-import '../../../../core/consts/animation_consts.dart';
-import '../../../../core/utils/slow_hero_animation.dart';
+import '../../../../data/enums/period_of_time_type.dart';
 import '../../../../data/repositories/budget_repository.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
-import '../../../shared/presentation/widgets/deco/empty_list.dart';
-import '../widgets/cards/budget_card.dart';
-import 'create_budget_page.dart';
+import '../widgets/list_views/monthly_budget_list.dart';
+import '../widgets/list_views/yearly_budget_list.dart';
 
 class BudgetListPage extends StatefulWidget {
-  const BudgetListPage({super.key});
+  final DateTime currentSelectedDate;
+  final PeriodOfTimeType currentPeriodOfTimeType;
+  final ValueChanged<PeriodOfTimeType>? onPeriodOfTimeChanged;
+
+  const BudgetListPage({
+    super.key,
+    required this.currentSelectedDate,
+    required this.currentPeriodOfTimeType,
+    required this.onPeriodOfTimeChanged,
+  });
 
   @override
   State<BudgetListPage> createState() => _BudgetListPageState();
@@ -25,6 +26,7 @@ class BudgetListPage extends StatefulWidget {
 
 class _BudgetListPageState extends State<BudgetListPage> {
   BudgetBloc _budgetBloc = BudgetBloc(BudgetRepository());
+  BudgetRepository budgetRepository = BudgetRepository();
 
   @override
   void initState() {
@@ -35,118 +37,32 @@ class _BudgetListPageState extends State<BudgetListPage> {
 
   void _loadBudgets() {
     _budgetBloc.add(
-      LoadBudgets(),
+      LoadMonthlyBudgets(widget.currentSelectedDate),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context);
     return Scaffold(
-      body: BlocBuilder<BudgetBloc, BudgetState>(
-        builder: (context, state) {
-          if (state is BudgetLoading) {
-            return CircularLoadingIndicator();
-          } else if (state is BudgetListLoaded) {
-            if (state.budgets.isEmpty) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Hero(
-                    tag: 'create_budget_fab',
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      child: OutlinedButton.icon(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            slowHeroRoute(
-                              BlocProvider.value(
-                                value: context.read<CategoryBloc>(),
-                                child: CreateBudgetPage(),
-                              ),
-                            ),
-                          );
-                        },
-                        icon: Icon(Icons.add_rounded),
-                        label: Text(t.translate('create_budget')),
-                      ),
-                    ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          widget.currentPeriodOfTimeType == PeriodOfTimeType.monthly
+              ? Expanded(
+                  child: MonthlyBudgetList(
+                    currentSelectedDate: widget.currentSelectedDate,
+                    currentPeriodOfTimeType: widget.currentPeriodOfTimeType,
+                    onPeriodOfTimeChanged: widget.onPeriodOfTimeChanged,
                   ),
-                ],
-              );
-            } else {
-              return Column(
-                children: [
-                  SizedBox(height: 4.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Hero(
-                        tag: 'create_budget_fab',
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: OutlinedButton.icon(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                slowHeroRoute(
-                                  BlocProvider.value(
-                                    value: context.read<CategoryBloc>(),
-                                    child: CreateBudgetPage(),
-                                  ),
-                                ),
-                              );
-                            },
-                            icon: Icon(Icons.add_rounded),
-                            label: Text(t.translate('create_budget')),
-                          ),
-                        ),
-                      ),
-                    ],
+                )
+              : Expanded(
+                  child: YearlyBudgetList(
+                    currentSelectedYear: widget.currentSelectedDate.year,
+                    currentPeriodOfTimeType: widget.currentPeriodOfTimeType,
+                    onPeriodOfTimeChanged: widget.onPeriodOfTimeChanged,
                   ),
-                  state.budgets.isEmpty
-                      ? EmptyList(
-                          text: 'no_budgets',
-                          icon: FaIcon(
-                            FontAwesomeIcons.book,
-                            size: 42.0,
-                            color: Colors.white70,
-                          ),
-                        )
-                      : Expanded(
-                          child: AnimationLimiter(
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: state.budgets.length,
-                              itemBuilder: (context, index) {
-                                return AnimationConfiguration.staggeredList(
-                                  position: index,
-                                  duration: const Duration(milliseconds: listAnimationDurationInMs),
-                                  child: SlideAnimation(
-                                    verticalOffset: 40.0,
-                                    child: FadeInAnimation(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          BudgetCard(budget: state.budgets[index]),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                ],
-              );
-            }
-          } else if (state is BudgetError) {
-            return Center(child: Text(state.message));
-          }
-          return SizedBox.shrink();
-        },
+                )
+        ],
       ),
     );
   }

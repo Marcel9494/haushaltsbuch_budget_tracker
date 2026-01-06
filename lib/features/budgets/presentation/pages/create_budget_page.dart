@@ -19,6 +19,7 @@ import '../../../bookings/data/enums/booking_type.dart';
 import '../../../bookings/presentation/widgets/input_fields/categorie_input_field.dart';
 import '../../../shared/presentation/widgets/buttons/animated_loading_button.dart';
 import '../../../shared/presentation/widgets/input_fields/amount_input_field.dart';
+import '../widgets/buttons/budget_period_selection_button.dart';
 
 class CreateBudgetPage extends StatefulWidget {
   const CreateBudgetPage({super.key});
@@ -29,6 +30,7 @@ class CreateBudgetPage extends StatefulWidget {
 
 class _CreateBudgetPageState extends State<CreateBudgetPage> {
   late Category _selectedCategory;
+  late double _currentBudgetAmount = 0.0;
   final GlobalKey<FormState> _createBudgetFormKey = GlobalKey<FormState>();
   final TextEditingController _categoryController = TextEditingController();
   final TextEditingController _budgetAmountController = TextEditingController();
@@ -129,8 +131,15 @@ class _CreateBudgetPageState extends State<CreateBudgetPage> {
                           amountController: _budgetAmountController,
                           bookingType: BookingType.transfer,
                           onAmountTypeChanged: (_) {},
-                          text: 'budget_amount',
+                          onAmountChanged: (double newBudgetAmount) {
+                            setState(() {
+                              _currentBudgetAmount = newBudgetAmount;
+                            });
+                          },
+                          text: 'monthly_budget',
                         ),
+                        SizedBox(height: 30.0),
+                        BudgetPeriodSelectionButton(currentBudgetAmount: _currentBudgetAmount),
                         SizedBox(height: 30.0),
                         Hero(
                           tag: 'create_budget_fab',

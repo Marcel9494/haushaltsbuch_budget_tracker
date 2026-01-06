@@ -10,6 +10,18 @@ class CreateBudget extends BudgetEvent {
   });
 }
 
-class LoadBudgets extends BudgetEvent {
-  LoadBudgets();
+class LoadMonthlyBudgets extends BudgetEvent {
+  final DateTime currentSelectedDate;
+
+  LoadMonthlyBudgets(
+    this.currentSelectedDate,
+  );
+}
+
+class LoadYearlyBudgets extends BudgetEvent {
+  final int selectedYear;
+
+  LoadYearlyBudgets({
+    required this.selectedYear,
+  });
 }

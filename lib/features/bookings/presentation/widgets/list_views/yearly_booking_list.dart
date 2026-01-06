@@ -15,13 +15,13 @@ import '../deco/booking_list_overview.dart';
 
 class YearlyBookingList extends StatefulWidget {
   final int currentSelectedYear;
-  PeriodOfTimeType periodOfTimeType;
+  PeriodOfTimeType currentPeriodOfTimeType;
   final ValueChanged<PeriodOfTimeType>? onPeriodOfTimeChanged;
 
   YearlyBookingList({
     super.key,
     required this.currentSelectedYear,
-    required this.periodOfTimeType,
+    required this.currentPeriodOfTimeType,
     required this.onPeriodOfTimeChanged,
   });
 
@@ -62,7 +62,7 @@ class _YearlyBookingListState extends State<YearlyBookingList> {
                   averageText: 'per_month',
                 ),
                 BookingListActions(
-                  periodOfTimeType: widget.periodOfTimeType,
+                  periodOfTimeType: widget.currentPeriodOfTimeType,
                   onPeriodOfTimeChanged: widget.onPeriodOfTimeChanged,
                 ),
                 Expanded(
@@ -81,6 +81,7 @@ class _YearlyBookingListState extends State<YearlyBookingList> {
                               child: BookingMonthOverviewCard(
                                 bookings: monthlyBookings,
                                 currentMonth: months[index],
+                                index: index,
                               ),
                             ),
                           ),

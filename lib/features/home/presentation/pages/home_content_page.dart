@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:haushaltsbuch_budget_tracker/features/shared/presentation/widgets/deco/subtitle_text.dart';
-import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 
 import '../../../../blocs/booking/booking_bloc.dart';
 import '../../../../data/enums/period_of_time_type.dart';
@@ -34,7 +33,6 @@ class _HomeContentPageState extends State<HomeContentPage> {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context);
     // TODO einbauen, wenn AccountBloc steht mit MultiBloc... Widgets
     return BlocBuilder<BookingBloc, BookingState>(
       builder: (context, state) {

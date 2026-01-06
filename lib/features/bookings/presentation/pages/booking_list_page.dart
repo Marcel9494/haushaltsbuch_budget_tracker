@@ -31,14 +31,14 @@ class _BookingListPageState extends State<BookingListPage> {
               ? Expanded(
                   child: MonthlyBookingList(
                     currentSelectedDate: widget.currentSelectedDate,
-                    periodOfTimeType: widget.currentPeriodOfTimeType,
+                    currentPeriodOfTimeType: widget.currentPeriodOfTimeType,
                     onPeriodOfTimeChanged: widget.onPeriodOfTimeChanged,
                   ),
                 )
               : Expanded(
                   child: YearlyBookingList(
                     currentSelectedYear: widget.currentSelectedDate.year,
-                    periodOfTimeType: widget.currentPeriodOfTimeType,
+                    currentPeriodOfTimeType: widget.currentPeriodOfTimeType,
                     onPeriodOfTimeChanged: widget.onPeriodOfTimeChanged,
                   ),
                 )
