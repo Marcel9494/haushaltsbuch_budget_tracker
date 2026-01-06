@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:haushaltsbuch_budget_tracker/core/utils/currency_formatter.dart';
 
 import '../../../../../l10n/app_localizations.dart';
 import '../../../../bookings/data/enums/amount_type.dart';
@@ -11,6 +12,7 @@ class AmountInputField extends StatefulWidget {
   final TextEditingController amountController;
   final BookingType bookingType;
   final ValueChanged<AmountType> onAmountTypeChanged;
+  final ValueChanged<double>? onAmountChanged;
   final String text;
 
   const AmountInputField({
@@ -18,6 +20,7 @@ class AmountInputField extends StatefulWidget {
     required this.amountController,
     required this.bookingType,
     required this.onAmountTypeChanged,
+    this.onAmountChanged,
     this.text = 'amount',
   });
 
@@ -156,6 +159,9 @@ class _AmountInputFieldState extends State<AmountInputField> {
     }
 
     widget.amountController.text = _formatAmountNumber(text.replaceAll('.', ''));
+    if (widget.onAmountChanged != null) {
+      widget.onAmountChanged!(parseAmount(widget.amountController.text));
+    }
   }
 
   @override

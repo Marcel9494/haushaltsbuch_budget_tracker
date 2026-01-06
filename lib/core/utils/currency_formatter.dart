@@ -9,3 +9,8 @@ String formatCurrency(double amount, String currencyCode) {
   );
   return format.format(amount);
 }
+
+double parseAmount(String amount) {
+  final cleaned = amount.replaceAll('€', '').replaceAll('.', '').replaceAll(',', '.').trim();
+  return double.parse(cleaned);
+}

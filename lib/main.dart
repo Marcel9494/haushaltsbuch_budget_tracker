@@ -165,6 +165,11 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.cyanAccent,
+          ),
+        ),
         tabBarTheme: TabBarThemeData(
           labelColor: Colors.cyanAccent,
           unselectedLabelColor: Colors.white,

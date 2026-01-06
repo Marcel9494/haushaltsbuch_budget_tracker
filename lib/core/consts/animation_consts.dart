@@ -4,3 +4,4 @@ const fadeInAnimationDelayInMs = 200;
 const listAnimationDurationInMs = 600;
 const createBookingPageAnimationDurationInMs = 800;
 const createBookingPageReverseAnimationDurationInMs = 400;
+const statisticAnimationDurationInMs = 1000;

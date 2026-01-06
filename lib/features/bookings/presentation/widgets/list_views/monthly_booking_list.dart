@@ -17,13 +17,13 @@ import '../cards/booking_card.dart';
 
 class MonthlyBookingList extends StatefulWidget {
   final DateTime currentSelectedDate;
-  PeriodOfTimeType periodOfTimeType;
+  PeriodOfTimeType currentPeriodOfTimeType;
   final ValueChanged<PeriodOfTimeType>? onPeriodOfTimeChanged;
 
   MonthlyBookingList({
     super.key,
     required this.currentSelectedDate,
-    required this.periodOfTimeType,
+    required this.currentPeriodOfTimeType,
     required this.onPeriodOfTimeChanged,
   });
 
@@ -69,7 +69,7 @@ class _MonthlyBookingListState extends State<MonthlyBookingList> {
                 averageText: 'per_day',
               ),
               BookingListActions(
-                periodOfTimeType: widget.periodOfTimeType,
+                periodOfTimeType: widget.currentPeriodOfTimeType,
                 onPeriodOfTimeChanged: widget.onPeriodOfTimeChanged,
               ),
               _upcomingBookings.isNotEmpty
@@ -136,6 +136,7 @@ class _MonthlyBookingListState extends State<MonthlyBookingList> {
                                     ? BookingListDailyHeader(bookings: _combinedBookings, bookingDate: bookingDate, index: index)
                                     : const SizedBox.shrink(),
                                 BookingCard(booking: _combinedBookings[index]),
+                                _combinedBookings.length - 1 == index ? SizedBox(height: 42.0) : SizedBox.shrink(),
                               ],
                             );
                             return AnimationConfiguration.staggeredList(

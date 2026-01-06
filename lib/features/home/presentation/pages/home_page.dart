@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _loadBudgets() {
-    _budgetBloc.add(LoadBudgets());
+    _budgetBloc.add(LoadMonthlyBudgets(_currentSelectedDate));
   }
 
   List<Widget> get _pages => [
@@ -119,7 +119,13 @@ class _HomePageState extends State<HomePage> {
         ),
         BlocProvider(
           create: (context) => BudgetBloc(BudgetRepository()),
-          child: BudgetListPage(),
+          child: BudgetListPage(
+            currentSelectedDate: _currentSelectedDate,
+            currentPeriodOfTimeType: _currentPeriodOfTime,
+            onPeriodOfTimeChanged: (newPeriodOfTime) {
+              onPeriodOfTimeChanged(newPeriodOfTime);
+            },
+          ),
         ),
         GoalListPage(),
       ];
