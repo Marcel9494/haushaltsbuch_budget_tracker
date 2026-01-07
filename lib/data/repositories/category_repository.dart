@@ -21,6 +21,26 @@ class CategoryRepository {
     return (categories as List).map((data) => Category.fromMap(data)).toList();
   }
 
+  Future<Category> updateCategory(Category category) async {
+    try {
+      final SupabaseClient supabase = Supabase.instance.client;
+      final updatedCategory = await supabase
+          .from('categories')
+          .update(category.toMap())
+          .eq('id', category.id!)
+          .eq('user_id', supabase.auth.currentUser!.id)
+          .select()
+          .single();
+      return Category.fromMap(updatedCategory);
+    } on PostgrestException catch (e) {
+      // Postgresql Fehlercode für unique_violation
+      if (e.code == '23505') {
+        throw Exception('duplicated_category');
+      }
+      rethrow;
+    }
+  }
+
   Future<Category> deleteCategory(String categoryId) async {
     final SupabaseClient supabase = Supabase.instance.client;
     final deletedCategory =

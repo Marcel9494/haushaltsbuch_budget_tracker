@@ -5,5 +5,6 @@ const homeRoute = 'home';
 const createBookingRoute = 'create_booking';
 const createAccountRoute = 'create_account';
 const createCategoryRoute = 'create_category';
+const updateCategoryRoute = 'update_category';
 const categoryListRoute = 'category_list';
 const settingsRoute = 'settings';

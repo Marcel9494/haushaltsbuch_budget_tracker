@@ -12,6 +12,7 @@ import 'blocs/booking/booking_bloc.dart';
 import 'blocs/budget/budget_bloc.dart';
 import 'blocs/category/category_bloc.dart';
 import 'core/consts/route_consts.dart';
+import 'core/page_arguments/update_category_page_arguments.dart';
 import 'data/repositories/account_repository.dart';
 import 'data/repositories/booking_repository.dart';
 import 'data/repositories/budget_repository.dart';
@@ -21,6 +22,7 @@ import 'features/auth/presentation/pages/register_page.dart';
 import 'features/auth/presentation/pages/reset_password_page.dart';
 import 'features/bookings/presentation/pages/create_booking_page.dart';
 import 'features/categories/presentation/pages/category_list_page.dart';
+import 'features/categories/presentation/pages/update_category_page.dart';
 import 'features/home/presentation/pages/home_page.dart';
 import 'features/settings/presentation/pages/settings_page.dart';
 import 'l10n/app_localizations.dart';
@@ -221,6 +223,14 @@ class MyApp extends StatelessWidget {
                 ],
                 child: HomePage(),
               ),
+            );
+          case updateCategoryRoute:
+            final args = settings.arguments as UpdateCategoryPageArguments;
+            return MaterialPageRoute<String>(
+              builder: (context) => UpdateCategoryPage(
+                category: args.category,
+              ),
+              settings: settings,
             );
           default:
             return null;
