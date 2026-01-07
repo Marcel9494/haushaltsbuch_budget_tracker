@@ -10,5 +10,5 @@ Haushaltsbuch - Budget Tracker
   - Email Authentication
   - Google Authentication
   - Postgres Database
-- SQL
+- SQL (Schema Entwurf, CRUD Operationen)
 - Git & Github
