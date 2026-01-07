@@ -14,6 +14,14 @@ class LoadCategories extends CategoryEvent {
   LoadCategories();
 }
 
+class UpdateCategory extends CategoryEvent {
+  final Category category;
+
+  UpdateCategory({
+    required this.category,
+  });
+}
+
 class DeleteCategory extends CategoryEvent {
   final String categoryId;
 
