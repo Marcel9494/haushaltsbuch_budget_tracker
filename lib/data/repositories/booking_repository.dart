@@ -45,6 +45,9 @@ class BookingRepository {
     final Map<String, double> categoryAmount = {};
     for (final booking in bookings) {
       if (booking.bookingType == selectedBookingType && booking.bookingType != BookingType.transfer) {
+        if (booking.category == null) {
+          break;
+        }
         categoryAmount[booking.category!.categoryName] = (categoryAmount[booking.category!.categoryName] ?? 0) + booking.amount;
       }
     }

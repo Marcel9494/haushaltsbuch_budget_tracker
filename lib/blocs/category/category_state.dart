@@ -16,6 +16,11 @@ class CategoryListLoaded extends CategoryState {
   CategoryListLoaded(this.categories);
 }
 
+class CategoryDeleted extends CategoryState {
+  final Category category;
+  CategoryDeleted(this.category);
+}
+
 class CategoryError extends CategoryState {
   final String message;
   CategoryError(this.message);

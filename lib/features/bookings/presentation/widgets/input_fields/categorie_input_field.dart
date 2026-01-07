@@ -43,7 +43,7 @@ class _CategorieInputFieldState extends State<CategorieInputField> {
     final t = AppLocalizations.of(context);
     String categorieInput = widget.categorieController.text.trim();
     if (categorieInput.isEmpty) {
-      return t.translate('empty_categorie_error');
+      return t.translate('empty_category_error');
     }
     return null;
   }
