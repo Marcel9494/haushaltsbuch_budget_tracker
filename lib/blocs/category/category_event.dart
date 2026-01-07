@@ -13,3 +13,11 @@ class CreateCategory extends CategoryEvent {
 class LoadCategories extends CategoryEvent {
   LoadCategories();
 }
+
+class DeleteCategory extends CategoryEvent {
+  final String categoryId;
+
+  DeleteCategory({
+    required this.categoryId,
+  });
+}

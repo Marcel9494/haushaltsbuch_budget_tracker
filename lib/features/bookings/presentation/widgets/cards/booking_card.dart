@@ -36,7 +36,11 @@ class BookingCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        booking.bookingType == BookingType.transfer ? t.translate('transfer') : booking.category!.categoryName,
+                        booking.bookingType == BookingType.transfer
+                            ? t.translate('transfer')
+                            : booking.category == null
+                                ? t.translate('deleted_category')
+                                : booking.category!.categoryName,
                         overflow: TextOverflow.ellipsis,
                       ),
                       SizedBox(height: 4.0),

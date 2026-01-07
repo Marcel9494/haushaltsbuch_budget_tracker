@@ -186,9 +186,15 @@ class _YearlyBudgetListState extends State<YearlyBudgetList> with TickerProvider
                                         BlocSelector<BookingBloc, BookingState, List<Booking>>(
                                           selector: (state) {
                                             if (state is YearlyBookingListLoaded) {
-                                              return state.yearlyBookings.values.expand((list) => list).toList()
-                                                ..sort((a, b) =>
-                                                    a.category!.categoryName.toLowerCase().compareTo(b.category!.categoryName.toLowerCase()));
+                                              final bookings = state.yearlyBookings.values.expand((list) => list).toList();
+
+                                              bookings.sort((a, b) {
+                                                if (a.categoryId == null || b.categoryId == null) {
+                                                  return 0;
+                                                }
+                                                return a.category!.categoryName.toLowerCase().compareTo(b.category!.categoryName.toLowerCase());
+                                              });
+                                              return bookings;
                                             }
                                             return const [];
                                           },
