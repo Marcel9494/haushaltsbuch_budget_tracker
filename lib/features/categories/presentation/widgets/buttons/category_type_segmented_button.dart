@@ -1,45 +1,48 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../l10n/app_localizations.dart';
-import '../../../data/enums/category_type.dart';
 
-class CategoryTypeSegmentedButton extends StatefulWidget {
-  CategoryType categoryType;
-  final ValueChanged<CategoryType> onChanged;
+class TypeSegmentedButton<T> extends StatefulWidget {
+  T type;
+  final ValueChanged<T> onChanged;
+  final T leftValue;
+  final T rightValue;
 
-  CategoryTypeSegmentedButton({
+  TypeSegmentedButton({
     super.key,
-    required this.categoryType,
+    required this.type,
     required this.onChanged,
+    required this.leftValue,
+    required this.rightValue,
   });
 
   @override
-  State<CategoryTypeSegmentedButton> createState() => _CategoryTypeSegmentedButtonState();
+  State<TypeSegmentedButton<T>> createState() => _TypeSegmentedButtonState<T>();
 }
 
-class _CategoryTypeSegmentedButtonState extends State<CategoryTypeSegmentedButton> {
+class _TypeSegmentedButtonState<T> extends State<TypeSegmentedButton<T>> {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
     return SizedBox(
       width: double.infinity,
-      child: SegmentedButton<CategoryType>(
-        segments: <ButtonSegment<CategoryType>>[
-          ButtonSegment<CategoryType>(
-            value: CategoryType.expenses,
+      child: SegmentedButton<T>(
+        segments: <ButtonSegment<T>>[
+          ButtonSegment<T>(
+            value: widget.leftValue,
             label: Text(t.translate('expense')),
             icon: Icon(Icons.remove_rounded),
           ),
-          ButtonSegment<CategoryType>(
-            value: CategoryType.revenue,
+          ButtonSegment<T>(
+            value: widget.rightValue,
             label: Text(t.translate('income')),
             icon: Icon(Icons.add_rounded),
           ),
         ],
-        selected: <CategoryType>{widget.categoryType},
-        onSelectionChanged: (Set<CategoryType> newCategoryTypeSelection) {
+        selected: <T>{widget.type},
+        onSelectionChanged: (Set<T> newCategoryTypeSelection) {
           setState(() {
-            widget.categoryType = newCategoryTypeSelection.first;
+            widget.type = newCategoryTypeSelection.first;
           });
           widget.onChanged(newCategoryTypeSelection.first);
         },

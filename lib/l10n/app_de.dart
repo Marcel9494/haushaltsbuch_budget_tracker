@@ -112,6 +112,10 @@ const Map<String, String> de = {
   'average': 'Durchschnitt',
   'maximum': 'Maximum',
   'save': 'Speichern',
+  'goal_name': 'Zielname',
+  'goal_amount': 'Zielbetrag',
+  'start_date': 'Startdatum',
+  'end_date': 'Enddatum',
   // Sprachen
   'de': 'Deutsch',
   'en': 'Englisch',

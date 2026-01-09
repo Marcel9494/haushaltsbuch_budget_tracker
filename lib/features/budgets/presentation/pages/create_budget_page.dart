@@ -10,6 +10,7 @@ import '../../../../blocs/budget/budget_event.dart';
 import '../../../../blocs/budget/budget_state.dart';
 import '../../../../core/consts/animation_consts.dart';
 import '../../../../core/consts/route_consts.dart';
+import '../../../../core/page_arguments/home_page_arguments.dart';
 import '../../../../core/utils/app_flushbar.dart';
 import '../../../../data/models/budget.dart';
 import '../../../../data/models/category.dart';
@@ -94,7 +95,7 @@ class _CreateBudgetPageState extends State<CreateBudgetPage> {
             if (state is BudgetCreated) {
               _createBudgetButtonController.success();
               Future.delayed(Duration(milliseconds: 1000), () {
-                Navigator.popAndPushNamed(context, homeRoute);
+                Navigator.popAndPushNamed(context, homeRoute, arguments: HomePageArguments(3));
               });
             } else if (state is BudgetError) {
               AppFlushbar.show(context, message: t.translate(state.message));

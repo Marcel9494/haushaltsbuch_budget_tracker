@@ -25,7 +25,12 @@ import '../../../bookings/presentation/pages/create_booking_page.dart';
 import 'home_content_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final int currentPageIndex;
+
+  const HomePage({
+    super.key,
+    required this.currentPageIndex,
+  });
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -43,6 +48,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
+    _selectedPageIndex = widget.currentPageIndex;
 
     _bookingBloc = context.read<BookingBloc>();
     _categoryBloc = context.read<CategoryBloc>();

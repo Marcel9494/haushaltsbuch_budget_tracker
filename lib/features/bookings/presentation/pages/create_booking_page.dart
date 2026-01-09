@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:haushaltsbuch_budget_tracker/core/consts/route_consts.dart';
+import 'package:haushaltsbuch_budget_tracker/core/page_arguments/home_page_arguments.dart';
 import 'package:haushaltsbuch_budget_tracker/data/repositories/booking_repository.dart';
 import 'package:haushaltsbuch_budget_tracker/features/bookings/presentation/widgets/input_fields/categorie_input_field.dart';
 import 'package:haushaltsbuch_budget_tracker/features/bookings/presentation/widgets/input_fields/goal_input_field.dart';
@@ -75,7 +76,7 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
         return;
       }
 
-      final amount = double.tryParse(
+      final double? amount = double.tryParse(
         _amountController.text.replaceAll('.', '').replaceAll(',', '.').replaceAll('€', '').trim(),
       );
 
@@ -131,7 +132,7 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
             if (state is BookingCreated) {
               _createBookingButtonController.success();
               Future.delayed(Duration(milliseconds: 1000), () {
-                Navigator.popAndPushNamed(context, homeRoute);
+                Navigator.popAndPushNamed(context, homeRoute, arguments: HomePageArguments(1));
               });
             } else if (state is BookingError) {
               AppFlushbar.show(context, message: t.translate(state.message));
