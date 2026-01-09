@@ -11,11 +11,14 @@ import 'blocs/account/account_bloc.dart';
 import 'blocs/booking/booking_bloc.dart';
 import 'blocs/budget/budget_bloc.dart';
 import 'blocs/category/category_bloc.dart';
+import 'blocs/goal/goal_bloc.dart';
 import 'core/consts/route_consts.dart';
+import 'core/page_arguments/home_page_arguments.dart';
 import 'core/page_arguments/update_category_page_arguments.dart';
 import 'data/repositories/account_repository.dart';
 import 'data/repositories/booking_repository.dart';
 import 'data/repositories/budget_repository.dart';
+import 'data/repositories/goal_repository.dart';
 import 'features/accounts/presentation/pages/create_account_page.dart';
 import 'features/auth/presentation/pages/login_page.dart';
 import 'features/auth/presentation/pages/register_page.dart';
@@ -23,6 +26,8 @@ import 'features/auth/presentation/pages/reset_password_page.dart';
 import 'features/bookings/presentation/pages/create_booking_page.dart';
 import 'features/categories/presentation/pages/category_list_page.dart';
 import 'features/categories/presentation/pages/update_category_page.dart';
+import 'features/goals/presentation/pages/create_goal_page.dart';
+import 'features/goals/presentation/pages/goal_list_page.dart';
 import 'features/home/presentation/pages/home_page.dart';
 import 'features/settings/presentation/pages/settings_page.dart';
 import 'l10n/app_localizations.dart';
@@ -57,8 +62,9 @@ void main() async {
               BlocProvider(create: (context) => CategoryBloc(CategoryRepository())),
               BlocProvider(create: (context) => AccountBloc(AccountRepository())),
               BlocProvider(create: (context) => BudgetBloc(BudgetRepository())),
+              BlocProvider(create: (context) => GoalBloc(GoalRepository())),
             ],
-            child: HomePage(),
+            child: HomePage(currentPageIndex: 0),
           ),
         ),
       );
@@ -193,7 +199,9 @@ class MyApp extends StatelessWidget {
         forgotPasswordRoute: (context) => const ForgotPasswordPage(),
         createBookingRoute: (context) => const CreateBookingPage(),
         createAccountRoute: (context) => const CreateAccountPage(),
+        createGoalRoute: (context) => const CreateGoalPage(),
         categoryListRoute: (context) => const CategoryListPage(),
+        goalListRoute: (context) => const GoalListPage(),
         settingsRoute: (context) => const SettingsPage(),
       },
       onGenerateRoute: (settings) {
@@ -211,6 +219,7 @@ class MyApp extends StatelessWidget {
               child: LoginPage(),
             );
           case homeRoute:
+            final args = settings.arguments as HomePageArguments;
             return PageTransition(
               type: PageTransitionType.fade,
               settings: settings,
@@ -220,8 +229,11 @@ class MyApp extends StatelessWidget {
                   BlocProvider(create: (context) => CategoryBloc(CategoryRepository())),
                   BlocProvider(create: (context) => AccountBloc(AccountRepository())),
                   BlocProvider(create: (context) => BudgetBloc(BudgetRepository())),
+                  BlocProvider(create: (context) => GoalBloc(GoalRepository())),
                 ],
-                child: HomePage(),
+                child: HomePage(
+                  currentPageIndex: args.currentPageIndex,
+                ),
               ),
             );
           case updateCategoryRoute:

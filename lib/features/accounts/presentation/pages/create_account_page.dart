@@ -12,6 +12,7 @@ import '../../../../blocs/account/account_event.dart';
 import '../../../../blocs/account/account_state.dart';
 import '../../../../core/consts/animation_consts.dart';
 import '../../../../core/consts/route_consts.dart';
+import '../../../../core/page_arguments/home_page_arguments.dart';
 import '../../../../core/utils/app_flushbar.dart';
 import '../../../../data/enums/account_type.dart';
 import '../../../../data/models/account.dart';
@@ -95,7 +96,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
             if (state is AccountCreated) {
               _createAccountButtonController.success();
               Future.delayed(Duration(milliseconds: 1000), () {
-                Navigator.popAndPushNamed(context, homeRoute);
+                Navigator.popAndPushNamed(context, homeRoute, arguments: HomePageArguments(2));
               });
             } else if (state is AccountError) {
               AppFlushbar.show(context, message: t.translate(state.message));

@@ -125,13 +125,15 @@ class _UpdateCategoryPageState extends State<UpdateCategoryPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        CategoryTypeSegmentedButton(
-                          categoryType: _selectedCategoryType,
+                        TypeSegmentedButton(
+                          type: _selectedCategoryType,
                           onChanged: (CategoryType updatedCategoryType) {
                             setState(() {
                               _selectedCategoryType = updatedCategoryType;
                             });
                           },
+                          leftValue: CategoryType.expenses,
+                          rightValue: CategoryType.revenue,
                         ),
                         TitleInputField(titleController: _categoryNameController, text: 'category_name'),
                         SizedBox(height: 30.0),

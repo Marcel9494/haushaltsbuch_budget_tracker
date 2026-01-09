@@ -115,13 +115,15 @@ class _CreateCategoryPageState extends State<CreateCategoryPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        CategoryTypeSegmentedButton(
-                          categoryType: widget.selectedCategoryType,
+                        TypeSegmentedButton(
+                          type: widget.selectedCategoryType,
                           onChanged: (CategoryType newCategoryType) {
                             setState(() {
                               widget.selectedCategoryType = newCategoryType;
                             });
                           },
+                          leftValue: CategoryType.expenses,
+                          rightValue: CategoryType.revenue,
                         ),
                         TitleInputField(titleController: _categoryNameController, text: 'category_name'),
                         SizedBox(height: 30.0),
