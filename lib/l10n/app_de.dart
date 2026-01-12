@@ -116,6 +116,7 @@ const Map<String, String> de = {
   'goal_amount': 'Zielbetrag',
   'start_date': 'Startdatum',
   'end_date': 'Enddatum',
+  'deleted_goal': 'Gelöschtes Ziel',
   // Sprachen
   'de': 'Deutsch',
   'en': 'Englisch',

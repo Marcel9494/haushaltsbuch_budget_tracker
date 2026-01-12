@@ -1,3 +1,5 @@
+import 'package:haushaltsbuch_budget_tracker/data/models/goal.dart';
+
 import '../../features/bookings/data/enums/amount_type.dart';
 import '../../features/bookings/data/enums/booking_type.dart';
 import '../../features/bookings/data/enums/repetition_type.dart';
@@ -21,7 +23,8 @@ class Booking {
   final Account? debitAccount;
   final String? targetAccountId;
   final Account? targetAccount;
-  final String goal;
+  final Goal? goal;
+  final String? goalId;
   final String person;
   final bool isBooked;
 
@@ -42,7 +45,8 @@ class Booking {
     required this.debitAccountId,
     this.targetAccount,
     required this.targetAccountId,
-    required this.goal,
+    this.goal,
+    this.goalId,
     required this.person,
     required this.isBooked,
   });
@@ -65,7 +69,8 @@ class Booking {
       debitAccountId: map['debit_account_id'],
       targetAccount: map['target_account'] != null ? Account.fromMap(map['target_account']) : null,
       targetAccountId: map['target_account_id'],
-      goal: map['goal'],
+      goal: map['goals'] != null ? Goal.fromMap(map['goals']) : null,
+      goalId: map['goal_id'],
       person: map['person'],
       isBooked: map['is_booked'],
     );
@@ -84,7 +89,7 @@ class Booking {
       'category_id': categoryId,
       'debit_account_id': debitAccountId,
       'target_account_id': targetAccountId,
-      'goal': goal,
+      'goal_id': goalId,
       'person': person,
       'is_booked': isBooked,
     };

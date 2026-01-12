@@ -10,6 +10,7 @@ class GoalBloc extends Bloc<GoalEvent, GoalState> {
 
   GoalBloc(this._goalRepository) : super(GoalInitial()) {
     on<CreateGoal>(_onCreateGoal);
+    on<LoadGoals>(_onLoadGoals);
   }
 
   Future<void> _onCreateGoal(CreateGoal event, Emitter<GoalState> emit) async {
@@ -23,6 +24,16 @@ class GoalBloc extends Bloc<GoalEvent, GoalState> {
       } else {
         emit(GoalError('create_goal_error'));
       }
+    }
+  }
+
+  Future<void> _onLoadGoals(LoadGoals event, Emitter<GoalState> emit) async {
+    emit(GoalLoading());
+    try {
+      final List<Goal> goals = await _goalRepository.loadGoals();
+      emit(GoalListLoaded(goals));
+    } catch (e) {
+      emit(GoalError('load_goals_error'));
     }
   }
 }

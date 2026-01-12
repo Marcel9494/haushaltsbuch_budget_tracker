@@ -15,6 +15,8 @@ import '../../../../blocs/booking/booking_bloc.dart';
 import '../../../../blocs/budget/budget_bloc.dart';
 import '../../../../blocs/budget/budget_event.dart';
 import '../../../../blocs/category/category_bloc.dart';
+import '../../../../blocs/goal/goal_bloc.dart';
+import '../../../../blocs/goal/goal_event.dart';
 import '../../../../data/enums/period_of_time_type.dart';
 import '../../../../data/repositories/account_repository.dart';
 import '../../../../data/repositories/budget_repository.dart';
@@ -41,6 +43,7 @@ class _HomePageState extends State<HomePage> {
   late CategoryBloc _categoryBloc;
   late AccountBloc _accountBloc;
   late BudgetBloc _budgetBloc;
+  late GoalBloc _goalBloc;
   DateTime _currentSelectedDate = DateTime.now();
   PeriodOfTimeType _currentPeriodOfTime = PeriodOfTimeType.monthly;
   int _selectedPageIndex = 0;
@@ -55,11 +58,13 @@ class _HomePageState extends State<HomePage> {
     _categoryBloc = context.read<CategoryBloc>();
     _accountBloc = context.read<AccountBloc>();
     _budgetBloc = context.read<BudgetBloc>();
+    _goalBloc = context.read<GoalBloc>();
 
     onPeriodOfTimeChanged(_currentPeriodOfTime);
     _loadCategories();
     _loadAccounts();
     _loadBudgets();
+    _loadGoals();
   }
 
   void _loadMonthlyBookings(DateTime selectedDate) {
@@ -101,6 +106,10 @@ class _HomePageState extends State<HomePage> {
 
   void _loadBudgets() {
     _budgetBloc.add(LoadMonthlyBudgets(_currentSelectedDate));
+  }
+
+  void _loadGoals() {
+    _goalBloc.add(LoadGoals());
   }
 
   List<Widget> get _pages => [
@@ -281,6 +290,7 @@ class _HomePageState extends State<HomePage> {
             providers: [
               BlocProvider.value(value: _categoryBloc),
               BlocProvider.value(value: _accountBloc),
+              BlocProvider.value(value: _goalBloc),
             ],
             child: CreateBookingPage(),
           );

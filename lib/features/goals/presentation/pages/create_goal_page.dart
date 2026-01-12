@@ -75,7 +75,7 @@ class _CreateGoalPageState extends State<CreateGoalPage> {
 
       final Goal newGoal = Goal(
         userId: supabase.auth.currentUser!.id,
-        amount: amount!,
+        goalAmount: amount!,
         goalName: _goalNameController.text.trim(),
         goalType: _selectedGoalType,
         startDate: parsedStartDate,
