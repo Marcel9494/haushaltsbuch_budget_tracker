@@ -20,6 +20,7 @@ import '../../../../core/utils/app_flushbar.dart';
 import '../../../../data/models/account.dart';
 import '../../../../data/models/booking.dart';
 import '../../../../data/models/category.dart';
+import '../../../../data/models/goal.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/enums/amount_type.dart';
 import '../../data/enums/booking_type.dart';
@@ -43,6 +44,7 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
   late Category _selectedCategory;
   late Account _selectedDebitAccount;
   late Account _selectedTargetAccount;
+  late Goal _selectedGoal;
   final GlobalKey<FormState> _createBookingFormKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
@@ -94,7 +96,7 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
         categoryId: _bookingType == BookingType.transfer ? null : _selectedCategory.id,
         debitAccountId: _selectedDebitAccount.id!,
         targetAccountId: _bookingType == BookingType.transfer ? _selectedTargetAccount.id : null,
-        goal: _goalController.text.trim(),
+        goalId: _selectedGoal.id,
         person: _personController.text.trim(),
         isBooked: true, // TODO
       );
@@ -236,7 +238,14 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
                                 : SizedBox.shrink(),
                           ],
                         ),
-                        GoalInputField(goalController: _goalController),
+                        GoalInputField(
+                          goalController: _goalController,
+                          onGoalChanged: (Goal newGoal) {
+                            setState(() {
+                              _selectedGoal = newGoal;
+                            });
+                          },
+                        ),
                         // TODO implementieren, wenn Haushaltsmitglieder hinzugefügt werden: PersonInputField(personController: _personController),
                         SizedBox(height: 30.0),
                         Hero(

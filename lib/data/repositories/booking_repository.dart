@@ -17,7 +17,7 @@ class BookingRepository {
     final monthlyBookings = await Supabase.instance.client
         .from('bookings')
         .select(
-            '*, categories(*), debit_account:accounts!bookings_debit_account_id_fkey(*), target_account:accounts!bookings_target_account_id_fkey(*)')
+            '*, categories(*), debit_account:accounts!bookings_debit_account_id_fkey(*), target_account:accounts!bookings_target_account_id_fkey(*), goals(*)')
         .gte('booking_date', startOfMonth)
         .lt('booking_date', endOfMonth)
         .order('booking_date', ascending: false);
@@ -30,7 +30,7 @@ class BookingRepository {
     final yearlyBookings = await Supabase.instance.client
         .from('bookings')
         .select(
-            '*, categories(*), debit_account:accounts!bookings_debit_account_id_fkey(*), target_account:accounts!bookings_target_account_id_fkey(*)')
+            '*, categories(*), debit_account:accounts!bookings_debit_account_id_fkey(*), target_account:accounts!bookings_target_account_id_fkey(*), goals(*)')
         .gte('booking_date', startOfYear)
         .lt('booking_date', endOfYear)
         .order('booking_date', ascending: false);

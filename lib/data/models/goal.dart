@@ -3,7 +3,8 @@ import '../enums/goal_type.dart';
 class Goal {
   final String? id;
   final String? userId;
-  final double amount;
+  final double? currentAmount;
+  final double goalAmount;
   final String goalName;
   final GoalType goalType;
   final DateTime startDate;
@@ -13,7 +14,8 @@ class Goal {
   Goal({
     this.id,
     this.userId,
-    required this.amount,
+    this.currentAmount,
+    required this.goalAmount,
     required this.goalName,
     required this.goalType,
     required this.startDate,
@@ -25,7 +27,8 @@ class Goal {
     return Goal(
       id: map['id'],
       userId: map['user_id'],
-      amount: map['amount'],
+      currentAmount: map['current_amount'],
+      goalAmount: map['goal_amount'],
       goalName: map['goal_name'],
       goalType: GoalType.fromString(map['goal_type']),
       startDate: DateTime.parse(map['start_date']),
@@ -37,7 +40,7 @@ class Goal {
   Map<String, dynamic> toMap() {
     return {
       'user_id': userId,
-      'amount': amount,
+      'goal_amount': goalAmount,
       'goal_name': goalName,
       'goal_type': goalType.name,
       'start_date': startDate.toIso8601String(),

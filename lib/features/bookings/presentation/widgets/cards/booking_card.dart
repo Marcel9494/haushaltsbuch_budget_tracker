@@ -45,7 +45,7 @@ class BookingCard extends StatelessWidget {
                       ),
                       SizedBox(height: 4.0),
                       Text(
-                        booking.goal,
+                        booking.goal == null ? t.translate('deleted_goal') : booking.goal!.goalName,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(color: Colors.grey),
                       ),
