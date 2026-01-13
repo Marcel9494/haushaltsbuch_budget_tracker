@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:haushaltsbuch_budget_tracker/core/consts/route_consts.dart';
+import 'package:haushaltsbuch_budget_tracker/core/page_arguments/category_list_page_arguments.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -91,7 +92,11 @@ class _CreateCategoryPageState extends State<CreateCategoryPage> {
               _createCategoryButtonController.success();
               Future.delayed(Duration(milliseconds: 1000), () {
                 Navigator.pop(context);
-                Navigator.popAndPushNamed(context, categoryListRoute);
+                Navigator.popAndPushNamed(
+                  context,
+                  categoryListRoute,
+                  arguments: CategoryListPageArguments(state.category.categoryType),
+                );
               });
             } else if (state is CategoryError) {
               AppFlushbar.show(context, message: t.translate(state.message));
@@ -124,6 +129,8 @@ class _CreateCategoryPageState extends State<CreateCategoryPage> {
                           },
                           leftValue: CategoryType.expenses,
                           rightValue: CategoryType.revenue,
+                          leftText: CategoryType.expenses.name,
+                          rightText: CategoryType.revenue.name,
                         ),
                         TitleInputField(titleController: _categoryNameController, text: 'category_name'),
                         SizedBox(height: 30.0),

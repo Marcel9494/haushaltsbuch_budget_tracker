@@ -17,7 +17,7 @@ class SubtitleText extends StatelessWidget {
       child: Text(
         t.translate(text),
         style: TextStyle(
-          fontSize: 20.0,
+          fontSize: 24.0,
           fontWeight: FontWeight.bold,
         ),
       ),

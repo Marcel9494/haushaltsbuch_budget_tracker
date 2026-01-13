@@ -10,6 +10,7 @@ import '../../../../blocs/category/category_bloc.dart';
 import '../../../../blocs/category/category_event.dart';
 import '../../../../blocs/category/category_state.dart';
 import '../../../../core/consts/animation_consts.dart';
+import '../../../../core/page_arguments/category_list_page_arguments.dart';
 import '../../../../core/utils/app_flushbar.dart';
 import '../../../../data/models/category.dart';
 import '../../../../data/repositories/category_repository.dart';
@@ -101,7 +102,11 @@ class _UpdateCategoryPageState extends State<UpdateCategoryPage> {
               _updateCategoryButtonController.success();
               Future.delayed(Duration(milliseconds: 1000), () {
                 Navigator.pop(context);
-                Navigator.popAndPushNamed(context, categoryListRoute);
+                Navigator.popAndPushNamed(
+                  context,
+                  categoryListRoute,
+                  arguments: CategoryListPageArguments(state.category.categoryType),
+                );
               });
             } else if (state is CategoryError) {
               AppFlushbar.show(context, message: t.translate(state.message));
@@ -134,6 +139,8 @@ class _UpdateCategoryPageState extends State<UpdateCategoryPage> {
                           },
                           leftValue: CategoryType.expenses,
                           rightValue: CategoryType.revenue,
+                          leftText: CategoryType.expenses.name,
+                          rightText: CategoryType.revenue.name,
                         ),
                         TitleInputField(titleController: _categoryNameController, text: 'category_name'),
                         SizedBox(height: 30.0),

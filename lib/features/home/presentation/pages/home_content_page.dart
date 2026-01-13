@@ -46,7 +46,22 @@ class _HomeContentPageState extends State<HomeContentPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SubtitleText(text: 'overview'),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SubtitleText(text: 'overview'),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                        child: PeriodOfTimeSegmentedButton(
+                          periodOfTimeType: widget.currentPeriodOfTimeType,
+                          onChanged: (newValue) => widget.onPeriodOfTimeChanged?.call(newValue),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 GridView.count(
                   crossAxisCount: 2,
                   shrinkWrap: true,
@@ -76,22 +91,8 @@ class _HomeContentPageState extends State<HomeContentPage> {
                   ],
                 ),
                 SizedBox(height: 20.0),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 6.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SubtitleText(text: 'categories'),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                        child: PeriodOfTimeSegmentedButton(
-                          periodOfTimeType: widget.currentPeriodOfTimeType,
-                          onChanged: (newValue) => widget.onPeriodOfTimeChanged?.call(newValue),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                SubtitleText(text: 'categories'),
+                SizedBox(height: 12.0),
                 CategoryStats(
                   bookings: state.bookings,
                   currentSelectedDate: widget.currentSelectedDate,
@@ -110,7 +111,22 @@ class _HomeContentPageState extends State<HomeContentPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SubtitleText(text: 'overview'),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SubtitleText(text: 'overview'),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                        child: PeriodOfTimeSegmentedButton(
+                          periodOfTimeType: widget.currentPeriodOfTimeType,
+                          onChanged: (newValue) => widget.onPeriodOfTimeChanged?.call(newValue),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 GridView.count(
                   crossAxisCount: 2,
                   shrinkWrap: true,
@@ -134,22 +150,8 @@ class _HomeContentPageState extends State<HomeContentPage> {
                   ],
                 ),
                 SizedBox(height: 20.0),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 6.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SubtitleText(text: 'categories'),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                        child: PeriodOfTimeSegmentedButton(
-                          periodOfTimeType: widget.currentPeriodOfTimeType,
-                          onChanged: (newValue) => widget.onPeriodOfTimeChanged?.call(newValue),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                SubtitleText(text: 'categories'),
+                SizedBox(height: 12.0),
                 CategoryStats(
                   bookings: yearlyBookings,
                   currentSelectedDate: widget.currentSelectedDate,

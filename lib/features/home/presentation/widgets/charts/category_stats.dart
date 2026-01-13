@@ -83,7 +83,6 @@ class _CategoryStatsState extends State<CategoryStats> with TickerProviderStateM
                   },
                   showSelectedIcon: false,
                   style: ButtonStyle(
-                    side: WidgetStateProperty.all(BorderSide.none),
                     shape: WidgetStateProperty.all(
                       const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(12.0)),

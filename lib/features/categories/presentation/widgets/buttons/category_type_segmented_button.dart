@@ -7,6 +7,8 @@ class TypeSegmentedButton<T> extends StatefulWidget {
   final ValueChanged<T> onChanged;
   final T leftValue;
   final T rightValue;
+  final String leftText;
+  final String rightText;
 
   TypeSegmentedButton({
     super.key,
@@ -14,6 +16,8 @@ class TypeSegmentedButton<T> extends StatefulWidget {
     required this.onChanged,
     required this.leftValue,
     required this.rightValue,
+    required this.leftText,
+    required this.rightText,
   });
 
   @override
@@ -30,12 +34,12 @@ class _TypeSegmentedButtonState<T> extends State<TypeSegmentedButton<T>> {
         segments: <ButtonSegment<T>>[
           ButtonSegment<T>(
             value: widget.leftValue,
-            label: Text(t.translate('expense')),
+            label: Text(t.translate(widget.leftText)),
             icon: Icon(Icons.remove_rounded),
           ),
           ButtonSegment<T>(
             value: widget.rightValue,
-            label: Text(t.translate('income')),
+            label: Text(t.translate(widget.rightText)),
             icon: Icon(Icons.add_rounded),
           ),
         ],

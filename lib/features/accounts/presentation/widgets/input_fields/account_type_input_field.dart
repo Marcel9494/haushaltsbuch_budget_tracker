@@ -41,8 +41,8 @@ class _AccountTypeInputFieldState extends State<AccountTypeInputField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Text(t.translate('account_type'), style: TextStyle(fontSize: 16.0)),
+          padding: const EdgeInsets.only(top: 12.0, bottom: 6.0),
+          child: Text(t.translate('account_type'), style: TextStyle(fontSize: 14.0)),
         ),
         TextFormField(
           controller: widget.accountTypeController,

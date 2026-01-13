@@ -38,7 +38,7 @@ class _CreateGoalPageState extends State<CreateGoalPage> {
   final TextEditingController _startDateController = TextEditingController();
   final TextEditingController _endDateController = TextEditingController();
   final RoundedLoadingButtonController _createGoalButtonController = RoundedLoadingButtonController();
-  GoalType _selectedGoalType = GoalType.expense;
+  GoalType _selectedGoalType = GoalType.saving;
   double _currentGoalAmount = 0.0;
 
   @override
@@ -146,8 +146,10 @@ class _CreateGoalPageState extends State<CreateGoalPage> {
                               _selectedGoalType = newGoalType;
                             });
                           },
-                          leftValue: GoalType.expense,
-                          rightValue: GoalType.income,
+                          leftValue: GoalType.payOff,
+                          rightValue: GoalType.saving,
+                          leftText: 'pay_off',
+                          rightText: 'saving',
                         ),
                         TitleInputField(titleController: _goalNameController, text: 'goal_name'),
                         AmountInputField(

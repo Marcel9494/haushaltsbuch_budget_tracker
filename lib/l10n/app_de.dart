@@ -18,6 +18,7 @@ const Map<String, String> de = {
   'reset_email_sent': 'E-Mail zum Zurücksetzen des Passworts wurde gesendet.',
   'to_login': 'Zum Login',
   'home': 'Home',
+  'dashboard': 'Dashboard',
   'overview': 'Übersicht',
   'bookings': 'Buchungen',
   'accounts': 'Konten',
@@ -116,6 +117,8 @@ const Map<String, String> de = {
   'goal_amount': 'Zielbetrag',
   'start_date': 'Startdatum',
   'end_date': 'Enddatum',
+  'pay_off': 'Abbezahlen',
+  'saving': 'Sparen',
   'deleted_goal': 'Gelöschtes Ziel',
   // Sprachen
   'de': 'Deutsch',
