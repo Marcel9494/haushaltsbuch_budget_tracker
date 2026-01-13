@@ -13,6 +13,7 @@ import 'blocs/budget/budget_bloc.dart';
 import 'blocs/category/category_bloc.dart';
 import 'blocs/goal/goal_bloc.dart';
 import 'core/consts/route_consts.dart';
+import 'core/page_arguments/category_list_page_arguments.dart';
 import 'core/page_arguments/home_page_arguments.dart';
 import 'core/page_arguments/update_category_page_arguments.dart';
 import 'data/repositories/account_repository.dart';
@@ -200,7 +201,6 @@ class MyApp extends StatelessWidget {
         createBookingRoute: (context) => const CreateBookingPage(),
         createAccountRoute: (context) => const CreateAccountPage(),
         createGoalRoute: (context) => const CreateGoalPage(),
-        categoryListRoute: (context) => const CategoryListPage(),
         goalListRoute: (context) => const GoalListPage(),
         settingsRoute: (context) => const SettingsPage(),
       },
@@ -235,6 +235,14 @@ class MyApp extends StatelessWidget {
                   currentPageIndex: args.currentPageIndex,
                 ),
               ),
+            );
+          case categoryListRoute:
+            final args = settings.arguments as CategoryListPageArguments;
+            return MaterialPageRoute<String>(
+              builder: (context) => CategoryListPage(
+                categoryType: args.categoryType,
+              ),
+              settings: settings,
             );
           case updateCategoryRoute:
             final args = settings.arguments as UpdateCategoryPageArguments;

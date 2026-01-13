@@ -4,7 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:haushaltsbuch_budget_tracker/blocs/category/category_event.dart';
 import 'package:haushaltsbuch_budget_tracker/core/consts/route_consts.dart';
+import 'package:haushaltsbuch_budget_tracker/core/page_arguments/category_list_page_arguments.dart';
 import 'package:haushaltsbuch_budget_tracker/features/budgets/presentation/pages/budget_list_page.dart';
+import 'package:haushaltsbuch_budget_tracker/features/categories/data/enums/category_type.dart';
 import 'package:haushaltsbuch_budget_tracker/features/goals/presentation/pages/goal_list_page.dart';
 import 'package:haushaltsbuch_budget_tracker/features/home/presentation/widgets/navigation/month_navigation.dart';
 import 'package:haushaltsbuch_budget_tracker/features/home/presentation/widgets/navigation/year_navigation.dart';
@@ -146,7 +148,7 @@ class _HomePageState extends State<HomePage> {
         GoalListPage(),
       ];
   final List<String> _pageTitle = [
-    'home',
+    'dashboard',
     'bookings',
     'accounts',
     'budgets',
@@ -201,8 +203,8 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.home_rounded),
-              title: Text(t.translate('home')),
+              leading: Icon(Icons.dashboard_rounded),
+              title: Text(t.translate('dashboard')),
               onTap: () => {
                 _onItemTapped(0),
                 Navigator.pop(context),
@@ -244,7 +246,11 @@ class _HomePageState extends State<HomePage> {
               leading: FaIcon(FontAwesomeIcons.grip),
               title: Text(t.translate('categories')),
               onTap: () => {
-                Navigator.popAndPushNamed(context, categoryListRoute),
+                Navigator.popAndPushNamed(
+                  context,
+                  categoryListRoute,
+                  arguments: CategoryListPageArguments(CategoryType.expenses),
+                ),
               },
             ),
             ListTile(
@@ -270,7 +276,7 @@ class _HomePageState extends State<HomePage> {
         type: BottomNavigationBarType.fixed,
         iconSize: 22.0,
         items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: t.translate('home')),
+          BottomNavigationBarItem(icon: Icon(Icons.dashboard_rounded), label: t.translate('dashboard')),
           BottomNavigationBarItem(icon: Icon(Icons.menu_book_rounded), label: t.translate('bookings')),
           BottomNavigationBarItem(icon: FaIcon(FontAwesomeIcons.buildingColumns), label: t.translate('accounts')),
           BottomNavigationBarItem(icon: Icon(Icons.account_balance_wallet_rounded), label: t.translate('budgets')),

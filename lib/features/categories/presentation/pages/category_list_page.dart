@@ -17,31 +17,33 @@ import '../widgets/cards/category_card.dart';
 import 'create_category_page.dart';
 
 class CategoryListPage extends StatefulWidget {
-  const CategoryListPage({super.key});
+  final CategoryType categoryType;
+
+  const CategoryListPage({
+    super.key,
+    required this.categoryType,
+  });
 
   @override
   State<CategoryListPage> createState() => _CategoryListPageState();
 }
 
 class _CategoryListPageState extends State<CategoryListPage> with SingleTickerProviderStateMixin {
-  CategoryType _selectedCategoryType = CategoryType.expenses;
+  late CategoryType _selectedCategoryType = widget.categoryType;
   Key _expenseListKey = UniqueKey();
   Key _revenueListKey = UniqueKey();
   bool _ascendingOrder = true;
-
   late TabController _tabController;
-  int selectedTabIndex = 0;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-
+    _tabController.index = _selectedCategoryType == CategoryType.expenses ? 0 : 1;
     _tabController.addListener(() {
       if (_tabController.indexIsChanging == false) {
         setState(() {
-          selectedTabIndex = _tabController.index;
-          if (selectedTabIndex == 0) {
+          if (_tabController.index == 0) {
             _selectedCategoryType = CategoryType.expenses;
           } else {
             _selectedCategoryType = CategoryType.revenue;

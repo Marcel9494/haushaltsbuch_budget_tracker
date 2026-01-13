@@ -29,8 +29,8 @@ class _DateInputFieldState extends State<DateInputField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Text(t.translate('booking_date'), style: TextStyle(fontSize: 16.0)),
+          padding: const EdgeInsets.only(top: 12.0, bottom: 6.0),
+          child: Text(t.translate('booking_date'), style: TextStyle(fontSize: 14.0)),
         ),
         TextFormField(
           controller: widget.dateController,

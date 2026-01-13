@@ -87,7 +87,7 @@ class _MonthlyBookingListState extends State<MonthlyBookingList> {
                           ),
                           SizedBox(width: 4.0),
                           Text(
-                            t.translate('upcoming_bookings'),
+                            '${t.translate('upcoming_bookings')} (${_upcomingBookings.length})',
                             style: TextStyle(color: Colors.white70),
                           ),
                         ],

@@ -59,8 +59,8 @@ class _GoalInputFieldState extends State<GoalInputField> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Text(t.translate('goal'), style: TextStyle(fontSize: 16.0)),
+                padding: const EdgeInsets.only(top: 12.0, bottom: 6.0),
+                child: Text(t.translate('goal'), style: TextStyle(fontSize: 14.0)),
               ),
               TextFormField(
                 controller: widget.goalController,
@@ -89,7 +89,12 @@ class _GoalInputFieldState extends State<GoalInputField> {
                     padding: const EdgeInsets.only(left: 16, right: 12, top: 12),
                     child: const FaIcon(FontAwesomeIcons.bullseye, size: 22.0),
                   ),
-                  suffixIcon: Icon(Icons.keyboard_arrow_right_rounded, size: 24.0),
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      widget.goalController.text = 'Kein Ziel';
+                    },
+                    icon: const Icon(Icons.clear_rounded, size: 22.0),
+                  ),
                   counterText: '',
                 ),
                 onTap: () {
