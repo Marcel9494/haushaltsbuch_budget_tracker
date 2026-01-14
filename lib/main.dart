@@ -15,12 +15,14 @@ import 'blocs/goal/goal_bloc.dart';
 import 'core/consts/route_consts.dart';
 import 'core/page_arguments/category_list_page_arguments.dart';
 import 'core/page_arguments/home_page_arguments.dart';
+import 'core/page_arguments/update_account_page_arguments.dart';
 import 'core/page_arguments/update_category_page_arguments.dart';
 import 'data/repositories/account_repository.dart';
 import 'data/repositories/booking_repository.dart';
 import 'data/repositories/budget_repository.dart';
 import 'data/repositories/goal_repository.dart';
 import 'features/accounts/presentation/pages/create_account_page.dart';
+import 'features/accounts/presentation/pages/update_account_page.dart';
 import 'features/auth/presentation/pages/login_page.dart';
 import 'features/auth/presentation/pages/register_page.dart';
 import 'features/auth/presentation/pages/reset_password_page.dart';
@@ -249,6 +251,14 @@ class MyApp extends StatelessWidget {
             return MaterialPageRoute<String>(
               builder: (context) => UpdateCategoryPage(
                 category: args.category,
+              ),
+              settings: settings,
+            );
+          case updateAccountRoute:
+            final args = settings.arguments as UpdateAccountPageArguments;
+            return MaterialPageRoute<String>(
+              builder: (context) => UpdateAccountPage(
+                account: args.account,
               ),
               settings: settings,
             );

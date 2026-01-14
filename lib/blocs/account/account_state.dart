@@ -16,6 +16,11 @@ class AccountListLoaded extends AccountState {
   AccountListLoaded(this.accounts);
 }
 
+class AccountUpdated extends AccountState {
+  final Account account;
+  AccountUpdated(this.account);
+}
+
 class AccountError extends AccountState {
   final String message;
   AccountError(this.message);

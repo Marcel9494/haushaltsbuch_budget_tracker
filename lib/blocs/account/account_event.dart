@@ -13,3 +13,11 @@ class CreateAccount extends AccountEvent {
 class LoadAccounts extends AccountEvent {
   LoadAccounts();
 }
+
+class UpdateAccount extends AccountEvent {
+  final Account account;
+
+  UpdateAccount({
+    required this.account,
+  });
+}
