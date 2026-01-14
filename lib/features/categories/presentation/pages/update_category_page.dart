@@ -38,7 +38,6 @@ class _UpdateCategoryPageState extends State<UpdateCategoryPage> {
   final RoundedLoadingButtonController _updateCategoryButtonController = RoundedLoadingButtonController();
   late CategoryType _selectedCategoryType;
 
-  // TODO hier weitermachen und Kategorie bearbeiten fertig implementieren
   @override
   void initState() {
     super.initState();

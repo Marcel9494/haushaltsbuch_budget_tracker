@@ -120,6 +120,8 @@ const Map<String, String> de = {
   'pay_off': 'Abbezahlen',
   'saving': 'Sparen',
   'deleted_goal': 'Gelöschtes Ziel',
+  'update_account': 'Konto bearbeiten',
+  'delete_account': 'Konto löschen',
   // Sprachen
   'de': 'Deutsch',
   'en': 'Englisch',
@@ -141,6 +143,8 @@ const Map<String, String> de = {
   'create_booking_error': 'Datenbankfehler beim Erstellen der Buchung. Bitte versuchen Sie es später erneut.',
   'load_bookings_error': 'Datenbankfehler beim Laden der Buchungen. Bitte versuchen Sie es später erneut.',
   'create_account_error': 'Datenbankfehler beim Erstellen des Kontos. Bitte versuchen Sie es später erneut.',
+  'update_account_error': 'Datenbankfehler beim Bearbeiten des Kontos. Bitte versuchen Sie es später erneut.',
+  'duplicated_account_error': 'Ein Konto mit diesem Namen existiert bereits.',
   'load_accounts_error': 'Datenbankfehler beim Laden der Konten. Bitte versuchen Sie es später erneut.',
   'create_category_error': 'Datenbankfehler beim Erstellen der Kategorie. Bitte versuchen Sie es später erneut.',
   'update_category_error': 'Datenbankfehler beim Bearbeiten der Kategorie. Bitte versuchen Sie es später erneut.',

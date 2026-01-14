@@ -14,6 +14,26 @@ class AccountRepository {
     return (accounts as List).map((data) => Account.fromMap(data)).toList();
   }
 
+  Future<Account> updateAccount(Account account) async {
+    try {
+      final SupabaseClient supabase = Supabase.instance.client;
+      final updatedAccount = await supabase
+          .from('accounts')
+          .update(account.toMap())
+          .eq('id', account.id!)
+          .eq('user_id', supabase.auth.currentUser!.id)
+          .select()
+          .single();
+      return Account.fromMap(updatedAccount);
+    } on PostgrestException catch (e) {
+      // Postgresql Fehlercode für unique_violation
+      if (e.code == '23505') {
+        throw Exception('duplicated_account');
+      }
+      rethrow;
+    }
+  }
+
   double calculateAssets(List<Account> accounts) {
     double totalAssets = 0;
     for (Account account in accounts) {

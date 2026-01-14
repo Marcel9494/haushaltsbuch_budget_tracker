@@ -11,6 +11,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
   AccountBloc(this._accountRepository) : super(AccountInitial()) {
     on<CreateAccount>(_onCreateAccount);
     on<LoadAccounts>(_onLoadAccounts);
+    on<UpdateAccount>(_onUpdateAccount);
   }
 
   Future<void> _onCreateAccount(CreateAccount event, Emitter<AccountState> emit) async {
@@ -30,6 +31,19 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       emit(AccountListLoaded(accounts));
     } catch (e) {
       emit(AccountError('load_accounts_error'));
+    }
+  }
+
+  Future<void> _onUpdateAccount(UpdateAccount event, Emitter<AccountState> emit) async {
+    try {
+      Account updatedAccount = await _accountRepository.updateAccount(event.account);
+      emit(AccountUpdated(updatedAccount));
+    } catch (e) {
+      if (e.toString().contains('duplicated_account')) {
+        emit(AccountError('duplicated_account_error'));
+      } else {
+        emit(AccountError('update_account_error'));
+      }
     }
   }
 }
