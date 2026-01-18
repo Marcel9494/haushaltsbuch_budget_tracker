@@ -21,6 +21,7 @@ import 'data/repositories/account_repository.dart';
 import 'data/repositories/booking_repository.dart';
 import 'data/repositories/budget_repository.dart';
 import 'data/repositories/goal_repository.dart';
+import 'features/accounts/presentation/pages/account_list_page.dart';
 import 'features/accounts/presentation/pages/create_account_page.dart';
 import 'features/accounts/presentation/pages/update_account_page.dart';
 import 'features/auth/presentation/pages/login_page.dart';
@@ -203,6 +204,7 @@ class MyApp extends StatelessWidget {
         createBookingRoute: (context) => const CreateBookingPage(),
         createAccountRoute: (context) => const CreateAccountPage(),
         createGoalRoute: (context) => const CreateGoalPage(),
+        accountListRoute: (context) => const AccountListPage(),
         goalListRoute: (context) => const GoalListPage(),
         settingsRoute: (context) => const SettingsPage(),
       },

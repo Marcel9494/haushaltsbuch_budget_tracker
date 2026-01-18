@@ -25,123 +25,113 @@ class AccountListPage extends StatefulWidget {
 }
 
 class _AccountListPageState extends State<AccountListPage> {
-  AccountBloc _accountBloc = AccountBloc(AccountRepository());
   final AccountRepository _accountRepository = AccountRepository();
   late double assets;
   late double debts;
 
   @override
-  void initState() {
-    super.initState();
-    _accountBloc = context.read<AccountBloc>();
-    _loadAccounts();
-  }
-
-  void _loadAccounts() {
-    _accountBloc.add(
-      LoadAccounts(),
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
     return Scaffold(
-      body: BlocBuilder<AccountBloc, AccountState>(
-        builder: (context, state) {
-          if (state is AccountLoading) {
-            return CircularLoadingIndicator();
-          } else if (state is AccountListLoaded) {
-            assets = _accountRepository.calculateAssets(state.accounts);
-            debts = _accountRepository.calculateDebts(state.accounts);
-            return Column(
-              children: [
-                Row(
-                  children: [
-                    AccountListOverviewCard(
-                      title: 'assets',
-                      amount: assets,
-                      icon: FaIcon(FontAwesomeIcons.piggyBank, size: 22.0),
-                      color: Colors.green,
-                    ),
-                    AccountListOverviewCard(
-                      title: 'debts',
-                      amount: debts,
-                      icon: FaIcon(FontAwesomeIcons.cashRegister, size: 22.0),
-                      color: Colors.redAccent,
-                    ),
-                    AccountListOverviewCard(
-                      title: 'net_assets',
-                      amount: assets - debts,
-                      icon: FaIcon(FontAwesomeIcons.coins, size: 22.0),
-                      color: assets - debts >= 0 ? Colors.green : Colors.redAccent,
-                    ),
-                  ],
-                ),
-                SizedBox(height: 4.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Hero(
-                      tag: 'create_account_fab',
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                        child: OutlinedButton.icon(
-                          onPressed: () {
-                            Navigator.push(context, slowHeroRoute(CreateAccountPage()));
-                          },
-                          icon: Icon(Icons.add_rounded),
-                          label: Text(t.translate('create_account')),
-                        ),
+      body: BlocProvider(
+        create: (context) => AccountBloc(AccountRepository())..add(LoadAccounts()),
+        child: BlocBuilder<AccountBloc, AccountState>(
+          builder: (context, state) {
+            if (state is AccountLoading) {
+              return CircularLoadingIndicator();
+            } else if (state is AccountListLoaded) {
+              assets = _accountRepository.calculateAssets(state.accounts);
+              debts = _accountRepository.calculateDebts(state.accounts);
+              return Column(
+                children: [
+                  Row(
+                    children: [
+                      AccountListOverviewCard(
+                        title: 'assets',
+                        amount: assets,
+                        icon: FaIcon(FontAwesomeIcons.piggyBank, size: 22.0),
+                        color: Colors.green,
                       ),
-                    ),
-                  ],
-                ),
-                state.accounts.isEmpty
-                    ? EmptyList(
-                        text: 'no_accounts',
-                        icon: FaIcon(
-                          FontAwesomeIcons.book,
-                          size: 42.0,
-                          color: Colors.white70,
-                        ),
-                      )
-                    : Expanded(
-                        child: AnimationLimiter(
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: state.accounts.length,
-                            itemBuilder: (context, index) {
-                              final bool showHeader = index == 0 ? true : state.accounts[index - 1].accountType != state.accounts[index].accountType;
-                              final blockContent = Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  showHeader ? AccountListHeader(accounts: state.accounts, index: index) : const SizedBox.shrink(),
-                                  AccountCard(account: state.accounts[index]),
-                                  state.accounts.length - 1 == index ? SizedBox(height: 54.0) : SizedBox.shrink(),
-                                ],
-                              );
-                              return AnimationConfiguration.staggeredList(
-                                position: index,
-                                duration: const Duration(milliseconds: listAnimationDurationInMs),
-                                child: SlideAnimation(
-                                  verticalOffset: 40.0,
-                                  child: FadeInAnimation(
-                                    child: blockContent,
-                                  ),
-                                ),
-                              );
+                      AccountListOverviewCard(
+                        title: 'debts',
+                        amount: debts,
+                        icon: FaIcon(FontAwesomeIcons.cashRegister, size: 22.0),
+                        color: Colors.redAccent,
+                      ),
+                      AccountListOverviewCard(
+                        title: 'net_assets',
+                        amount: assets - debts,
+                        icon: FaIcon(FontAwesomeIcons.coins, size: 22.0),
+                        color: assets - debts >= 0 ? Colors.green : Colors.redAccent,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 4.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Hero(
+                        tag: 'create_account_fab',
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          child: OutlinedButton.icon(
+                            onPressed: () {
+                              Navigator.push(context, slowHeroRoute(CreateAccountPage()));
                             },
+                            icon: Icon(Icons.add_rounded),
+                            label: Text(t.translate('create_account')),
                           ),
                         ),
                       ),
-              ],
-            );
-          } else if (state is AccountError) {
-            return Center(child: Text(state.message));
-          }
-          return SizedBox.shrink();
-        },
+                    ],
+                  ),
+                  state.accounts.isEmpty
+                      ? EmptyList(
+                          text: 'no_accounts',
+                          icon: FaIcon(
+                            FontAwesomeIcons.book,
+                            size: 42.0,
+                            color: Colors.white70,
+                          ),
+                        )
+                      : Expanded(
+                          child: AnimationLimiter(
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: state.accounts.length,
+                              itemBuilder: (context, index) {
+                                final bool showHeader =
+                                    index == 0 ? true : state.accounts[index - 1].accountType != state.accounts[index].accountType;
+                                final blockContent = Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    showHeader ? AccountListHeader(accounts: state.accounts, index: index) : const SizedBox.shrink(),
+                                    AccountCard(account: state.accounts[index]),
+                                    state.accounts.length - 1 == index ? SizedBox(height: 54.0) : SizedBox.shrink(),
+                                  ],
+                                );
+                                return AnimationConfiguration.staggeredList(
+                                  position: index,
+                                  duration: const Duration(milliseconds: listAnimationDurationInMs),
+                                  child: SlideAnimation(
+                                    verticalOffset: 40.0,
+                                    child: FadeInAnimation(
+                                      child: blockContent,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                ],
+              );
+            } else if (state is AccountError) {
+              return Center(child: Text(state.message));
+            }
+            return SizedBox.shrink();
+          },
+        ),
       ),
     );
   }

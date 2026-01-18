@@ -69,7 +69,7 @@ class BookingCard extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              booking.debitAccount!.name,
+                              booking.debitAccount != null ? booking.debitAccount!.name : t.translate('deleted_account'),
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(color: Colors.grey),
                             ),

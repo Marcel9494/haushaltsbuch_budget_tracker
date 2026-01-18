@@ -19,7 +19,7 @@ class Booking {
   final String? repetitionId;
   final String? categoryId;
   final Category? category;
-  final String debitAccountId;
+  final String? debitAccountId;
   final Account? debitAccount;
   final String? targetAccountId;
   final Account? targetAccount;

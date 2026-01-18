@@ -34,6 +34,19 @@ class AccountRepository {
     }
   }
 
+  Future<Account> deleteAccount(String accountId, [Account? transferAccount]) async {
+    final SupabaseClient supabase = Supabase.instance.client;
+    if (transferAccount != null) {
+      final account = await supabase.from('accounts').select().eq('id', accountId).eq('user_id', supabase.auth.currentUser!.id).single();
+      final balance = account['balance'];
+      await supabase.from('accounts').update({'balance': balance + transferAccount.balance}).eq('id', transferAccount.id!);
+    }
+
+    final deletedAccount =
+        await supabase.from('accounts').delete().eq('id', accountId).eq('user_id', supabase.auth.currentUser!.id).select().single();
+    return Account.fromMap(deletedAccount);
+  }
+
   double calculateAssets(List<Account> accounts) {
     double totalAssets = 0;
     for (Account account in accounts) {

@@ -15,6 +15,8 @@ import '../../../../core/consts/animation_consts.dart';
 import '../../../../core/consts/route_consts.dart';
 import '../../../../core/page_arguments/home_page_arguments.dart';
 import '../../../../core/utils/app_flushbar.dart';
+import '../../../../core/utils/dialogs/show_delete_dialog.dart';
+import '../../../../core/utils/dialogs/show_transfer_account_dialog.dart';
 import '../../../../data/enums/account_type.dart';
 import '../../../../data/models/account.dart';
 import '../../../../data/repositories/account_repository.dart';
@@ -40,8 +42,10 @@ class _UpdateAccountPageState extends State<UpdateAccountPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _accountTypeController = TextEditingController();
+  final TextEditingController _accountController = TextEditingController();
   final RoundedLoadingButtonController _updateAccountButtonController = RoundedLoadingButtonController();
   late AccountType _selectedAccountType;
+  late Account _selectedAccount;
 
   @override
   void initState() {
@@ -126,6 +130,39 @@ class _UpdateAccountPageState extends State<UpdateAccountPage> {
             resizeToAvoidBottomInset: false,
             appBar: AppBar(
               title: Text(t.translate('update_account')),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.delete_forever_rounded),
+                  onPressed: () async {
+                    bool confirmed = false;
+                    if (widget.account.balance != 0) {
+                      confirmed = await showTransferAccountDialog(
+                        context,
+                        _accountController,
+                        (Account newAccount) {
+                          setState(() {
+                            _selectedAccount = newAccount;
+                          });
+                        },
+                      );
+                    } else {
+                      confirmed = await showDeleteDialog(
+                        context,
+                        'delete_account',
+                        '${t.translate('would_you_like_the_account')} "${widget.account.name}" ${t.translate('really_delete')}?',
+                      );
+                    }
+                    if (confirmed == true) {
+                      context.read<AccountBloc>().add(DeleteAccount(accountId: widget.account.id!, transferAccount: _selectedAccount));
+                      Future.delayed(Duration(milliseconds: 200), () {
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                        Navigator.popAndPushNamed(context, homeRoute, arguments: HomePageArguments(2));
+                      });
+                    }
+                  },
+                ),
+              ],
             ),
             body: SingleChildScrollView(
               child: SafeArea(

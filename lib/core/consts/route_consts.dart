@@ -9,5 +9,6 @@ const createGoalRoute = 'create_goal';
 const createCategoryRoute = 'create_category';
 const updateCategoryRoute = 'update_category';
 const categoryListRoute = 'category_list';
+const accountListRoute = 'account_list';
 const goalListRoute = 'goal_list';
 const settingsRoute = 'settings';

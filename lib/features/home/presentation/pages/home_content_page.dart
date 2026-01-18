@@ -7,6 +7,7 @@ import '../../../../blocs/booking/booking_bloc.dart';
 import '../../../../data/enums/period_of_time_type.dart';
 import '../../../../data/models/booking.dart';
 import '../../../../data/repositories/booking_repository.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../shared/presentation/widgets/buttons/period_of_time_segmented_button.dart';
 import '../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../widgets/cards/home_grid_item_card.dart';
@@ -33,7 +34,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO einbauen, wenn AccountBloc steht mit MultiBloc... Widgets
+    final t = AppLocalizations.of(context);
     return BlocBuilder<BookingBloc, BookingState>(
       builder: (context, state) {
         if (state is BookingLoading) {
@@ -162,7 +163,23 @@ class _HomeContentPageState extends State<HomeContentPage> {
             ),
           );
         } else if (state is BookingError) {
-          return Center(child: Text(state.message));
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                FaIcon(
+                  FontAwesomeIcons.bug,
+                  size: 50.0,
+                  color: Colors.white70,
+                ),
+                SizedBox(height: 24.0),
+                Text(
+                  t.translate(state.message),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          );
         }
         return SizedBox.shrink();
       },
