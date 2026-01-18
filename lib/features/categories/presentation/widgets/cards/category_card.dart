@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:haushaltsbuch_budget_tracker/core/consts/route_consts.dart';
 import 'package:haushaltsbuch_budget_tracker/core/page_arguments/update_category_page_arguments.dart';
+import 'package:haushaltsbuch_budget_tracker/core/utils/dialogs/show_delete_dialog.dart';
 
 import '../../../../../blocs/category/category_bloc.dart';
 import '../../../../../blocs/category/category_event.dart';
@@ -29,29 +30,10 @@ class CategoryCard extends StatelessWidget {
           trailing: IconButton(
             icon: const FaIcon(FontAwesomeIcons.squareMinus),
             onPressed: () async {
-              final bool? confirmed = await showDialog<bool>(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: Text(t.translate('delete_category')),
-                  content: Text(
-                    '${t.translate('would_you_like_the_category')} "${category.categoryName}" ${t.translate('really_delete')}?',
-                  ),
-                  actions: [
-                    TextButton(
-                      style: TextButton.styleFrom(foregroundColor: Colors.grey),
-                      onPressed: () => Navigator.of(context).pop(false),
-                      child: Text(t.translate('no')),
-                    ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.black87,
-                        backgroundColor: Colors.redAccent,
-                      ),
-                      onPressed: () => Navigator.of(context).pop(true),
-                      child: Text(t.translate('yes')),
-                    ),
-                  ],
-                ),
+              final bool confirmed = await showDeleteDialog(
+                context,
+                'delete_category',
+                '${t.translate('would_you_like_the_category')} "${category.categoryName}" ${t.translate('really_delete')}?',
               );
               if (confirmed == true) {
                 context.read<CategoryBloc>().add(DeleteCategory(categoryId: category.id!));

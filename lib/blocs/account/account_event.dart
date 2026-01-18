@@ -21,3 +21,13 @@ class UpdateAccount extends AccountEvent {
     required this.account,
   });
 }
+
+class DeleteAccount extends AccountEvent {
+  final String accountId;
+  final Account? transferAccount;
+
+  DeleteAccount({
+    required this.accountId,
+    this.transferAccount,
+  });
+}
