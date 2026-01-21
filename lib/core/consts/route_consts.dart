@@ -10,5 +10,7 @@ const createCategoryRoute = 'create_category';
 const updateCategoryRoute = 'update_category';
 const categoryListRoute = 'category_list';
 const accountListRoute = 'account_list';
+const updateBudgetRoute = 'update_budget';
+const budgetBookingsRoute = 'budget_bookings';
 const goalListRoute = 'goal_list';
 const settingsRoute = 'settings';

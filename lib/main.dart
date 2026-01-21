@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:haushaltsbuch_budget_tracker/data/repositories/category_repository.dart';
 import 'package:haushaltsbuch_budget_tracker/features/auth/presentation/pages/forgot_password_page.dart';
+import 'package:haushaltsbuch_budget_tracker/features/budgets/presentation/pages/budget_bookings_page.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -13,8 +14,10 @@ import 'blocs/budget/budget_bloc.dart';
 import 'blocs/category/category_bloc.dart';
 import 'blocs/goal/goal_bloc.dart';
 import 'core/consts/route_consts.dart';
+import 'core/page_arguments/budget_bookings_page_arguments.dart';
 import 'core/page_arguments/category_list_page_arguments.dart';
 import 'core/page_arguments/home_page_arguments.dart';
+import 'core/page_arguments/updateBudgetPageArguments.dart';
 import 'core/page_arguments/update_account_page_arguments.dart';
 import 'core/page_arguments/update_category_page_arguments.dart';
 import 'data/repositories/account_repository.dart';
@@ -28,6 +31,7 @@ import 'features/auth/presentation/pages/login_page.dart';
 import 'features/auth/presentation/pages/register_page.dart';
 import 'features/auth/presentation/pages/reset_password_page.dart';
 import 'features/bookings/presentation/pages/create_booking_page.dart';
+import 'features/budgets/presentation/pages/update_budget_page.dart';
 import 'features/categories/presentation/pages/category_list_page.dart';
 import 'features/categories/presentation/pages/update_category_page.dart';
 import 'features/goals/presentation/pages/create_goal_page.dart';
@@ -248,6 +252,15 @@ class MyApp extends StatelessWidget {
               ),
               settings: settings,
             );
+          case budgetBookingsRoute:
+            final args = settings.arguments as BudgetBookingsPageArguments;
+            return MaterialPageRoute<String>(
+              builder: (context) => BudgetBookingsPage(
+                budget: args.budget,
+                bookings: args.bookings,
+              ),
+              settings: settings,
+            );
           case updateCategoryRoute:
             final args = settings.arguments as UpdateCategoryPageArguments;
             return MaterialPageRoute<String>(
@@ -261,6 +274,15 @@ class MyApp extends StatelessWidget {
             return MaterialPageRoute<String>(
               builder: (context) => UpdateAccountPage(
                 account: args.account,
+              ),
+              settings: settings,
+            );
+          case updateBudgetRoute:
+            final args = settings.arguments as UpdateBudgetPageArguments;
+            return MaterialPageRoute<String>(
+              builder: (context) => UpdateBudgetPage(
+                budget: args.budget,
+                budgetSelectionType: args.budgetSelectionType,
               ),
               settings: settings,
             );

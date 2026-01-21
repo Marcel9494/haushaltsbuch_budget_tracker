@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> {
     onPeriodOfTimeChanged(_currentPeriodOfTime);
     _loadCategories();
     _loadAccounts();
-    _loadBudgets();
+    _loadBudgets(_currentSelectedDate);
     _loadGoals();
   }
 
@@ -106,8 +106,8 @@ class _HomePageState extends State<HomePage> {
     _accountBloc.add(LoadAccounts());
   }
 
-  void _loadBudgets() {
-    _budgetBloc.add(LoadMonthlyBudgets(_currentSelectedDate));
+  void _loadBudgets(DateTime selectedDate) {
+    _budgetBloc.add(LoadMonthlyBudgets(selectedDate));
   }
 
   void _loadGoals() {
@@ -138,6 +138,7 @@ class _HomePageState extends State<HomePage> {
         BlocProvider(
           create: (context) => BudgetBloc(BudgetRepository()),
           child: BudgetListPage(
+            key: ValueKey(_currentSelectedDate),
             currentSelectedDate: _currentSelectedDate,
             currentPeriodOfTimeType: _currentPeriodOfTime,
             onPeriodOfTimeChanged: (newPeriodOfTime) {
@@ -177,6 +178,7 @@ class _HomePageState extends State<HomePage> {
                         setState(() {
                           _currentSelectedDate = newDate;
                           _loadMonthlyBookings(_currentSelectedDate);
+                          _loadBudgets(_currentSelectedDate);
                         });
                       },
                     )
@@ -186,6 +188,7 @@ class _HomePageState extends State<HomePage> {
                         setState(() {
                           _currentSelectedDate = DateTime(newYear, 1, 1);
                           _loadYearlyBookings(_currentSelectedDate.year);
+                          _loadBudgets(_currentSelectedDate);
                         });
                       },
                     ),

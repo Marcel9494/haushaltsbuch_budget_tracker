@@ -71,7 +71,7 @@ class _DateInputFieldState extends State<DateInputField> {
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            '${t.translate('repetition')}:',
+                                            '${t.translate('select_repetition')}:',
                                             style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                                           ),
                                           IconButton(

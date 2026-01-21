@@ -8,6 +8,10 @@ class BudgetCreated extends BudgetState {
   BudgetCreated();
 }
 
+class BudgetUpdated extends BudgetState {
+  BudgetUpdated();
+}
+
 class BudgetLoading extends BudgetState {}
 
 class BudgetListLoaded extends BudgetState {

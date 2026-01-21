@@ -121,6 +121,7 @@ class _MonthlyBudgetListState extends State<MonthlyBudgetList> {
                                           final double percentageUsed = (usedBudgetAmount / state.budgets[index].budgetAmount);
                                           return BudgetCard(
                                             budget: state.budgets[index],
+                                            bookings: bookings,
                                             usedBudgetAmount: usedBudgetAmount,
                                             percentageUsed: percentageUsed,
                                             currentSelectedDate: widget.currentSelectedDate,
