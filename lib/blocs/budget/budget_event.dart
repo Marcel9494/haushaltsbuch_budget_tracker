@@ -1,3 +1,5 @@
+import 'package:haushaltsbuch_budget_tracker/data/enums/budget_selection_type.dart';
+
 import '../../data/models/budget.dart';
 
 abstract class BudgetEvent {}
@@ -7,6 +9,16 @@ class CreateBudget extends BudgetEvent {
 
   CreateBudget({
     required this.budget,
+  });
+}
+
+class UpdateBudget extends BudgetEvent {
+  final Budget budget;
+  final BudgetSelectionType budgetSelectionType;
+
+  UpdateBudget({
+    required this.budget,
+    required this.budgetSelectionType,
   });
 }
 

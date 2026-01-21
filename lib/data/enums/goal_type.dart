@@ -11,7 +11,7 @@ enum GoalType {
       };
 }
 
-extension CategoryTypeExtension on GoalType {
+extension GoalTypeExtension on GoalType {
   String get name {
     switch (this) {
       case GoalType.undefined:

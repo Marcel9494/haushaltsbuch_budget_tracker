@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:haushaltsbuch_budget_tracker/data/enums/budget_selection_type.dart';
 import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
@@ -29,6 +30,40 @@ class BudgetRepository {
       );
     }
     await Supabase.instance.client.from('budgets').insert(createdBudgets).select();
+  }
+
+  void updateBudget(Budget updatedBudget, BudgetSelectionType budgetSelectionType) async {
+    final supabase = Supabase.instance.client;
+    final currentMonth = DateTime(DateTime.now().year, DateTime.now().month, 1);
+
+    switch (budgetSelectionType) {
+      case BudgetSelectionType.single:
+        await supabase
+            .from('budgets')
+            .update({'budget_amount': updatedBudget.budgetAmount})
+            .eq('id', updatedBudget.id!)
+            .eq('user_id', supabase.auth.currentUser!.id)
+            .eq('category_id', updatedBudget.categoryId);
+        break;
+
+      case BudgetSelectionType.onlyFuture:
+        await supabase
+            .from('budgets')
+            .update({'budget_amount': updatedBudget.budgetAmount})
+            .eq('user_id', supabase.auth.currentUser!.id)
+            .eq('category_id', updatedBudget.categoryId)
+            .gt('budget_date', DateFormat('yyyy-MM-dd').format(currentMonth));
+        break;
+
+      case BudgetSelectionType.all:
+        await supabase
+            .from('budgets')
+            .update({'budget_amount': updatedBudget.budgetAmount})
+            .eq('budget_id', updatedBudget.budgetId!)
+            .eq('user_id', supabase.auth.currentUser!.id)
+            .eq('category_id', updatedBudget.categoryId);
+        break;
+    }
   }
 
   Future<List<Budget>> loadMonthlyBudgets(DateTime selectedDate) async {

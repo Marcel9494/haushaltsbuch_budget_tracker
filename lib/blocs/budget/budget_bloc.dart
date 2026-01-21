@@ -10,6 +10,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
 
   BudgetBloc(this._budgetRepository) : super(BudgetInitial()) {
     on<CreateBudget>(_onCreateBudget);
+    on<UpdateBudget>(_onUpdateBudget);
     on<LoadMonthlyBudgets>(_onLoadMonthlyBudgets);
     on<LoadYearlyBudgets>(_onLoadYearlyBudgets);
   }
@@ -21,6 +22,16 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
       emit(BudgetCreated());
     } catch (e) {
       emit(BudgetError('create_budget_error'));
+    }
+  }
+
+  Future<void> _onUpdateBudget(UpdateBudget event, Emitter<BudgetState> emit) async {
+    emit(BudgetLoading());
+    try {
+      _budgetRepository.updateBudget(event.budget, event.budgetSelectionType);
+      emit(BudgetUpdated());
+    } catch (e) {
+      emit(BudgetError('update_budget_error'));
     }
   }
 
