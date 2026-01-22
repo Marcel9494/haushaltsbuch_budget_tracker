@@ -51,7 +51,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
   Future<void> _onDeleteAccount(DeleteAccount event, Emitter<AccountState> emit) async {
     try {
       await _accountRepository.deleteAccount(event.accountId, event.transferAccount);
-      final accounts = await _accountRepository.loadAccounts();
+      final List<Account> accounts = await _accountRepository.loadAccounts();
       emit(AccountListLoaded(accounts));
     } catch (e) {
       emit(AccountError('delete_account_error'));

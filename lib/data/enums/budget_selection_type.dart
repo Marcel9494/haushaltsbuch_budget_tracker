@@ -34,4 +34,15 @@ extension SelectionTypeExtension on BudgetSelectionType {
         return 'Änderungen gelten für alle $budgetName Budgets.';
     }
   }
+
+  String deleteDescription(String budgetName) {
+    switch (this) {
+      case BudgetSelectionType.single:
+        return 'Es wird das aktuelle $budgetName Budget gelöscht.';
+      case BudgetSelectionType.onlyFuture:
+        return 'Es werden nur zukünftige $budgetName Budgets gelöscht.';
+      case BudgetSelectionType.all:
+        return 'Es werden alle $budgetName Budgets gelöscht.';
+    }
+  }
 }

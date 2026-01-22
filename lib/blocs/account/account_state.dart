@@ -21,11 +21,6 @@ class AccountUpdated extends AccountState {
   AccountUpdated(this.account);
 }
 
-class AccountDeleted extends AccountState {
-  final Account account;
-  AccountDeleted(this.account);
-}
-
 class AccountError extends AccountState {
   final String message;
   AccountError(this.message);
