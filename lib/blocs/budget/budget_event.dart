@@ -22,6 +22,16 @@ class UpdateBudget extends BudgetEvent {
   });
 }
 
+class DeleteBudget extends BudgetEvent {
+  final Budget budget;
+  final BudgetSelectionType budgetSelectionType;
+
+  DeleteBudget({
+    required this.budget,
+    required this.budgetSelectionType,
+  });
+}
+
 class LoadMonthlyBudgets extends BudgetEvent {
   final DateTime currentSelectedDate;
 

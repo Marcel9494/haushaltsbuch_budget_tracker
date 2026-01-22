@@ -34,7 +34,6 @@ class BudgetRepository {
 
   void updateBudget(Budget updatedBudget, BudgetSelectionType budgetSelectionType) async {
     final supabase = Supabase.instance.client;
-    final currentMonth = DateTime(DateTime.now().year, DateTime.now().month, 1);
 
     switch (budgetSelectionType) {
       case BudgetSelectionType.single:
@@ -52,7 +51,7 @@ class BudgetRepository {
             .update({'budget_amount': updatedBudget.budgetAmount})
             .eq('user_id', supabase.auth.currentUser!.id)
             .eq('category_id', updatedBudget.categoryId)
-            .gt('budget_date', DateFormat('yyyy-MM-dd').format(currentMonth));
+            .gt('budget_date', DateFormat('yyyy-MM-dd').format(updatedBudget.budgetDate!));
         break;
 
       case BudgetSelectionType.all:
@@ -62,6 +61,39 @@ class BudgetRepository {
             .eq('budget_id', updatedBudget.budgetId!)
             .eq('user_id', supabase.auth.currentUser!.id)
             .eq('category_id', updatedBudget.categoryId);
+        break;
+    }
+  }
+
+  Future<void> deleteBudget(Budget deleteBudget, BudgetSelectionType budgetSelectionType) async {
+    final supabase = Supabase.instance.client;
+
+    switch (budgetSelectionType) {
+      case BudgetSelectionType.single:
+        await supabase
+            .from('budgets')
+            .delete()
+            .eq('id', deleteBudget.id!)
+            .eq('user_id', supabase.auth.currentUser!.id)
+            .eq('category_id', deleteBudget.categoryId);
+        break;
+
+      case BudgetSelectionType.onlyFuture:
+        await supabase
+            .from('budgets')
+            .delete()
+            .eq('user_id', supabase.auth.currentUser!.id)
+            .eq('category_id', deleteBudget.categoryId)
+            .gt('budget_date', DateFormat('yyyy-MM-dd').format(deleteBudget.budgetDate!));
+        break;
+
+      case BudgetSelectionType.all:
+        await supabase
+            .from('budgets')
+            .delete()
+            .eq('budget_id', deleteBudget.budgetId!)
+            .eq('user_id', supabase.auth.currentUser!.id)
+            .eq('category_id', deleteBudget.categoryId);
         break;
     }
   }

@@ -109,6 +109,7 @@ const Map<String, String> de = {
   'create_budget': 'Budget erstellen',
   'no_budgets': 'Keine Budgets vorhanden.',
   'update_budget': 'Budget bearbeiten',
+  'delete_budget': 'Budget löschen',
   'currently_until': 'Aktuell bis',
   'in_budget': 'im Budget',
   'minimum': 'Minimum',
