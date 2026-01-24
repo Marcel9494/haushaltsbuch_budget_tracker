@@ -10,6 +10,14 @@ class CreateGoal extends GoalEvent {
   });
 }
 
+class UpdateGoal extends GoalEvent {
+  final Goal goal;
+
+  UpdateGoal({
+    required this.goal,
+  });
+}
+
 class LoadGoals extends GoalEvent {
   LoadGoals();
 }

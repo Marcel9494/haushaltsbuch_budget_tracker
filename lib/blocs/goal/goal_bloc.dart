@@ -10,6 +10,7 @@ class GoalBloc extends Bloc<GoalEvent, GoalState> {
 
   GoalBloc(this._goalRepository) : super(GoalInitial()) {
     on<CreateGoal>(_onCreateGoal);
+    on<UpdateGoal>(_onUpdateGoal);
     on<LoadGoals>(_onLoadGoals);
   }
 
@@ -23,6 +24,19 @@ class GoalBloc extends Bloc<GoalEvent, GoalState> {
         emit(GoalError('duplicated_goal_error'));
       } else {
         emit(GoalError('create_goal_error'));
+      }
+    }
+  }
+
+  Future<void> _onUpdateGoal(UpdateGoal event, Emitter<GoalState> emit) async {
+    try {
+      Goal updatedGoal = await _goalRepository.updateGoal(event.goal);
+      emit(GoalUpdated(updatedGoal));
+    } catch (e) {
+      if (e.toString().contains('duplicated_goal')) {
+        emit(GoalError('duplicated_goal_error'));
+      } else {
+        emit(GoalError('update_goal_error'));
       }
     }
   }

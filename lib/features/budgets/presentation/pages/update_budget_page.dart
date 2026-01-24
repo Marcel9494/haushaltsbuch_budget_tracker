@@ -119,7 +119,11 @@ class _UpdateBudgetPageState extends State<UpdateBudgetPage> {
             if (state is BudgetUpdated) {
               _updateBudgetButtonController.success();
               Future.delayed(Duration(milliseconds: 1000), () {
-                Navigator.popAndPushNamed(context, homeRoute, arguments: HomePageArguments(3));
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  homeRoute,
+                  (route) => false,
+                  arguments: HomePageArguments(3),
+                );
               });
             } else if (state is BudgetError) {
               AppFlushbar.show(context, message: t.translate(state.message));
