@@ -27,7 +27,6 @@ class GoalListPage extends StatefulWidget {
 
 class _GoalListPageState extends State<GoalListPage> {
   GoalBloc _goalBloc = GoalBloc(GoalRepository());
-  final GoalRepository _goalRepository = GoalRepository();
   GoalDiagramType _goalDiagramType = GoalDiagramType.line;
 
   @override

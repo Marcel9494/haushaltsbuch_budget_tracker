@@ -16,10 +16,12 @@ import 'blocs/goal/goal_bloc.dart';
 import 'core/consts/route_consts.dart';
 import 'core/page_arguments/budget_bookings_page_arguments.dart';
 import 'core/page_arguments/category_list_page_arguments.dart';
+import 'core/page_arguments/goal_bookings_page_arguments.dart';
 import 'core/page_arguments/home_page_arguments.dart';
 import 'core/page_arguments/updateBudgetPageArguments.dart';
 import 'core/page_arguments/update_account_page_arguments.dart';
 import 'core/page_arguments/update_category_page_arguments.dart';
+import 'core/page_arguments/update_goal_page_arguments.dart';
 import 'data/repositories/account_repository.dart';
 import 'data/repositories/booking_repository.dart';
 import 'data/repositories/budget_repository.dart';
@@ -35,7 +37,9 @@ import 'features/budgets/presentation/pages/update_budget_page.dart';
 import 'features/categories/presentation/pages/category_list_page.dart';
 import 'features/categories/presentation/pages/update_category_page.dart';
 import 'features/goals/presentation/pages/create_goal_page.dart';
+import 'features/goals/presentation/pages/goal_bookings_page.dart';
 import 'features/goals/presentation/pages/goal_list_page.dart';
+import 'features/goals/presentation/pages/update_goal_page.dart';
 import 'features/home/presentation/pages/home_page.dart';
 import 'features/settings/presentation/pages/settings_page.dart';
 import 'l10n/app_localizations.dart';
@@ -261,6 +265,14 @@ class MyApp extends StatelessWidget {
               ),
               settings: settings,
             );
+          case goalBookingsRoute:
+            final args = settings.arguments as GoalBookingsPageArguments;
+            return MaterialPageRoute<String>(
+              builder: (context) => GoalBookingsPage(
+                goal: args.goal,
+              ),
+              settings: settings,
+            );
           case updateCategoryRoute:
             final args = settings.arguments as UpdateCategoryPageArguments;
             return MaterialPageRoute<String>(
@@ -283,6 +295,14 @@ class MyApp extends StatelessWidget {
               builder: (context) => UpdateBudgetPage(
                 budget: args.budget,
                 budgetSelectionType: args.budgetSelectionType,
+              ),
+              settings: settings,
+            );
+          case updateGoalRoute:
+            final args = settings.arguments as UpdateGoalPageArguments;
+            return MaterialPageRoute<String>(
+              builder: (context) => UpdateGoalPage(
+                goal: args.goal,
               ),
               settings: settings,
             );

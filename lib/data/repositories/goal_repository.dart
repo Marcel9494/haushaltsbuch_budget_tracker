@@ -8,6 +8,21 @@ class GoalRepository {
     return Goal.fromMap(createdGoal);
   }
 
+  Future<Goal> updateGoal(Goal goal) async {
+    try {
+      final SupabaseClient supabase = Supabase.instance.client;
+      final updatedGoal =
+          await supabase.from('goals').update(goal.toMap()).eq('id', goal.id!).eq('user_id', supabase.auth.currentUser!.id).select().single();
+      return Goal.fromMap(updatedGoal);
+    } on PostgrestException catch (e) {
+      // Postgresql Fehlercode für unique_violation
+      if (e.code == '23505') {
+        throw Exception('duplicated_goal');
+      }
+      rethrow;
+    }
+  }
+
   Future<List<Goal>> loadGoals() async {
     final goals = await Supabase.instance.client.from('goals').select().order('goal_amount', ascending: true);
     for (int i = 0; i < goals.length; i++) {
