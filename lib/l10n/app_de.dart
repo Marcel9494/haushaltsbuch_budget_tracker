@@ -124,6 +124,8 @@ const Map<String, String> de = {
   'end_date': 'Enddatum',
   'pay_off': 'Abbezahlen',
   'saving': 'Sparen',
+  'delete_goal': 'Ziel löschen',
+  'delete_goal_confirmation': 'Möchten Sie das Ziel wirklich löschen?',
   'deleted_goal': 'Gelöschtes Ziel',
   'update_account': 'Konto bearbeiten',
   'delete_account': 'Konto löschen',

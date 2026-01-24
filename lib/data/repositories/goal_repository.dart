@@ -23,6 +23,12 @@ class GoalRepository {
     }
   }
 
+  Future<Goal> deleteGoal(String goalId) async {
+    final SupabaseClient supabase = Supabase.instance.client;
+    final deletedGoal = await supabase.from('goals').delete().eq('id', goalId).eq('user_id', supabase.auth.currentUser!.id).select().single();
+    return Goal.fromMap(deletedGoal);
+  }
+
   Future<List<Goal>> loadGoals() async {
     final goals = await Supabase.instance.client.from('goals').select().order('goal_amount', ascending: true);
     for (int i = 0; i < goals.length; i++) {

@@ -18,6 +18,14 @@ class UpdateGoal extends GoalEvent {
   });
 }
 
+class DeleteGoal extends GoalEvent {
+  final String goalId;
+
+  DeleteGoal({
+    required this.goalId,
+  });
+}
+
 class LoadGoals extends GoalEvent {
   LoadGoals();
 }
