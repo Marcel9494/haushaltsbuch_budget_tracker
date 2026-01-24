@@ -3,8 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 
 import '../../../../blocs/goal/goal_bloc.dart';
+import '../../../../blocs/goal/goal_event.dart';
 import '../../../../core/consts/route_consts.dart';
+import '../../../../core/page_arguments/home_page_arguments.dart';
 import '../../../../core/page_arguments/update_goal_page_arguments.dart';
+import '../../../../core/utils/dialogs/show_delete_dialog.dart';
 import '../../../../data/models/goal.dart';
 import '../../../../data/repositories/goal_repository.dart';
 
@@ -39,9 +42,24 @@ class _GoalBookingsPageState extends State<GoalBookingsPage> {
               ),
               IconButton(
                 icon: Icon(Icons.delete_forever_rounded),
-                onPressed: () {
-                  //final budgetBloc = innerContext.read<BudgetBloc>();
-                  //showDeleteBudgetBottomSheet(innerContext, widget.goal, budgetBloc);
+                onPressed: () async {
+                  final goalBloc = innerContext.read<GoalBloc>();
+                  final navigator = Navigator.of(context);
+
+                  final bool confirmed = await showDeleteDialog(
+                    context,
+                    t.translate('delete_goal'),
+                    t.translate('delete_goal_confirmation'),
+                  );
+
+                  if (confirmed == true) {
+                    goalBloc.add(DeleteGoal(goalId: widget.goal.id!));
+                    navigator.pushNamedAndRemoveUntil(
+                      homeRoute,
+                      (route) => false,
+                      arguments: HomePageArguments(4),
+                    );
+                  }
                 },
               ),
             ],

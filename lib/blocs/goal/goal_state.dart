@@ -14,6 +14,11 @@ class GoalUpdated extends GoalState {
   GoalUpdated(this.goal);
 }
 
+class GoalDeleted extends GoalState {
+  final Goal goal;
+  GoalDeleted(this.goal);
+}
+
 class GoalLoading extends GoalState {}
 
 class GoalListLoaded extends GoalState {
