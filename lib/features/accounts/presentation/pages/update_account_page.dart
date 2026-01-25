@@ -116,7 +116,11 @@ class _UpdateAccountPageState extends State<UpdateAccountPage> {
             if (state is AccountUpdated) {
               _updateAccountButtonController.success();
               Future.delayed(Duration(milliseconds: 1000), () {
-                Navigator.popAndPushNamed(context, homeRoute, arguments: HomePageArguments(2));
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  homeRoute,
+                  (route) => false,
+                  arguments: HomePageArguments(2),
+                );
               });
             } else if (state is AccountError) {
               AppFlushbar.show(context, message: t.translate(state.message));
@@ -153,8 +157,14 @@ class _UpdateAccountPageState extends State<UpdateAccountPage> {
                       );
                     }
                     if (confirmed == true) {
+                      // TODO funktioniert noch nicht richtig _selectedAccount ist nicht immer gesetzt siehe _selectedAcount oben
                       context.read<AccountBloc>().add(DeleteAccount(accountId: widget.account.id!, transferAccount: _selectedAccount));
                       Future.delayed(Duration(milliseconds: 200), () {
+                        /*Navigator.of(context).pushNamedAndRemoveUntil(
+                          homeRoute,
+                          (route) => false,
+                          arguments: HomePageArguments(2),
+                        );*/
                         Navigator.pop(context);
                         Navigator.pop(context);
                         Navigator.popAndPushNamed(context, homeRoute, arguments: HomePageArguments(2));
@@ -187,6 +197,7 @@ class _UpdateAccountPageState extends State<UpdateAccountPage> {
                           amountController: _amountController,
                           bookingType: BookingType.transfer,
                           onAmountTypeChanged: (_) {},
+                          showMinus: true,
                         ),
                         SizedBox(height: 30.0),
                         Hero(

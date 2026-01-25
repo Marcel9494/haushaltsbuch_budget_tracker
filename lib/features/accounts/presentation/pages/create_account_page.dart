@@ -134,6 +134,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                           amountController: _amountController,
                           bookingType: BookingType.transfer,
                           onAmountTypeChanged: (_) {},
+                          showMinus: true,
                         ),
                         SizedBox(height: 30.0),
                         Hero(

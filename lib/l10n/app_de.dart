@@ -133,6 +133,10 @@ const Map<String, String> de = {
   'transfer_account': 'Kontobetrag übertragen',
   'transfer_account_text': 'Wählen Sie ein Konto aus, auf das der Kontobetrag übertragen werden soll.',
   'transmitted': 'Übertragen',
+  'current_assets': 'Aktuelles Vermögen',
+  'this_month': 'diesen Monat',
+  'this_year': 'dieses Jahr',
+  'remaining_amount': 'Restlicher Betrag',
   // Sprachen
   'de': 'Deutsch',
   'en': 'Englisch',

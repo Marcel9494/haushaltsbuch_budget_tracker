@@ -14,6 +14,7 @@ class AmountInputField extends StatefulWidget {
   final ValueChanged<AmountType> onAmountTypeChanged;
   final ValueChanged<double>? onAmountChanged;
   final String text;
+  final bool showMinus;
 
   const AmountInputField({
     super.key,
@@ -22,6 +23,7 @@ class AmountInputField extends StatefulWidget {
     required this.onAmountTypeChanged,
     this.onAmountChanged,
     this.text = 'amount',
+    this.showMinus = false,
   });
 
   @override
@@ -105,6 +107,13 @@ class _AmountInputFieldState extends State<AmountInputField> {
 
     String text = widget.amountController.text.replaceAll(' €', '');
 
+    if (value == '-') {
+      if (text.isEmpty) {
+        widget.amountController.text = '-';
+      }
+      return;
+    }
+
     if (value == ',') {
       if (text.contains(',')) {
         return;
@@ -153,7 +162,7 @@ class _AmountInputFieldState extends State<AmountInputField> {
   void _finalizeAmountInputFormat() {
     String text = widget.amountController.text;
 
-    if (text.isEmpty || text == ',' || text == '0,' || text == '0') {
+    if (text.isEmpty || text == ',' || text == '0,' || text == '0' || text == '-') {
       widget.amountController.text = '0,00 €';
       return;
     }
@@ -308,12 +317,13 @@ class _AmountInputFieldState extends State<AmountInputField> {
                           GridItemButton(text: '7', onTap: () => _addAmountInput('7')),
                           GridItemButton(text: '8', onTap: () => _addAmountInput('8')),
                           GridItemButton(text: '9', onTap: () => _addAmountInput('9')),
-                          GridItemButton(text: ',', onTap: () => _addAmountInput(',')),
-                          // Vierte Zeile
-                          GridItemButton(text: '', onTap: () {}),
-                          GridItemButton(text: '0', onTap: () => _addAmountInput('0')),
-                          GridItemButton(text: '', onTap: () {}),
                           GridItemButton(icon: Icons.check_rounded, color: Colors.greenAccent, iconSize: 32, onTap: () => Navigator.pop(context)),
+                          // Vierte Zeile
+                          GridItemButton(
+                              text: widget.showMinus == true ? '-' : '', onTap: widget.showMinus == true ? () => _addAmountInput('-') : () {}),
+                          GridItemButton(text: '0', onTap: () => _addAmountInput('0')),
+                          GridItemButton(text: ',', onTap: () => _addAmountInput(',')),
+                          GridItemButton(text: '', onTap: () {}),
                         ],
                       ),
                     ],

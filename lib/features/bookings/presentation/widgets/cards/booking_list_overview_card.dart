@@ -59,46 +59,61 @@ class _BookingListOverviewCardState extends State<BookingListOverviewCard> with 
         child: SlideTransition(
           position: _slide,
           child: Card(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 12.0, right: 4.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 6.0, bottom: 2.0),
-                    child: Text(
-                      t.translate(widget.title),
-                      style: const TextStyle(color: Colors.grey),
-                    ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.bottomRight,
+                    end: Alignment.topLeft,
+                    colors: [
+                      Theme.of(context).colorScheme.primary.withValues(alpha: 0.03),
+                      Theme.of(context).colorScheme.primary.withValues(alpha: 0.0),
+                    ],
                   ),
-                  TweenAnimationBuilder<double>(
-                    duration: const Duration(milliseconds: 1200),
-                    curve: Curves.easeOut,
-                    tween: Tween<double>(begin: 0, end: widget.amount),
-                    builder: (context, value, _) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 2.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 12.0, right: 4.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 6.0, bottom: 2.0),
                         child: Text(
-                          formatCurrency(value, 'EUR'),
-                          style: TextStyle(fontSize: 16.0, color: widget.color),
+                          t.translate(widget.title),
+                          style: const TextStyle(color: Colors.grey),
                         ),
-                      );
-                    },
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 6.0),
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 400),
-                      child: Text(
-                        '\u00D8 ${formatCurrency(widget.amount / widget.averageDivider, 'EUR')} ${t.translate(widget.averageText)}',
-                        key: ValueKey(widget.amount),
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(color: Colors.grey),
                       ),
-                    ),
+                      TweenAnimationBuilder<double>(
+                        duration: const Duration(milliseconds: 1200),
+                        curve: Curves.easeOut,
+                        tween: Tween<double>(begin: 0, end: widget.amount),
+                        builder: (context, value, _) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 2.0),
+                            child: Text(
+                              formatCurrency(value, 'EUR'),
+                              style: TextStyle(fontSize: 16.0, color: widget.color),
+                            ),
+                          );
+                        },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 6.0),
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 400),
+                          child: Text(
+                            '\u00D8 ${formatCurrency(widget.amount / widget.averageDivider, 'EUR')} ${t.translate(widget.averageText)}',
+                            key: ValueKey(widget.amount),
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(color: Colors.grey),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
