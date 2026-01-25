@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> {
     onPeriodOfTimeChanged(_currentPeriodOfTime);
     _loadCategories();
     _loadAccounts();
-    _loadBudgets(_currentSelectedDate);
+    _loadMonthlyBudgets(_currentSelectedDate);
     _loadGoals();
   }
 
@@ -92,8 +92,10 @@ class _HomePageState extends State<HomePage> {
       _currentPeriodOfTime = newPeriodOfTime;
       if (_currentPeriodOfTime == PeriodOfTimeType.monthly) {
         _loadMonthlyBookings(_currentSelectedDate);
+        _loadMonthlyBudgets(_currentSelectedDate);
       } else {
         _loadYearlyBookings(_currentSelectedDate.year);
+        _loadYearlyBudgets(_currentSelectedDate.year);
       }
     });
   }
@@ -106,8 +108,12 @@ class _HomePageState extends State<HomePage> {
     _accountBloc.add(LoadAccounts());
   }
 
-  void _loadBudgets(DateTime selectedDate) {
+  void _loadMonthlyBudgets(DateTime selectedDate) {
     _budgetBloc.add(LoadMonthlyBudgets(selectedDate));
+  }
+
+  void _loadYearlyBudgets(int selectedYear) {
+    _budgetBloc.add(LoadYearlyBudgets(selectedYear));
   }
 
   void _loadGoals() {
@@ -178,7 +184,7 @@ class _HomePageState extends State<HomePage> {
                         setState(() {
                           _currentSelectedDate = newDate;
                           _loadMonthlyBookings(_currentSelectedDate);
-                          _loadBudgets(_currentSelectedDate);
+                          _loadMonthlyBudgets(_currentSelectedDate);
                         });
                       },
                     )
@@ -188,7 +194,7 @@ class _HomePageState extends State<HomePage> {
                         setState(() {
                           _currentSelectedDate = DateTime(newYear, 1, 1);
                           _loadYearlyBookings(_currentSelectedDate.year);
-                          _loadBudgets(_currentSelectedDate);
+                          _loadYearlyBudgets(_currentSelectedDate.year);
                         });
                       },
                     ),
