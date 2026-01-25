@@ -57,7 +57,7 @@ class _BudgetListPageState extends State<BudgetListPage> {
                 )
               : Expanded(
                   child: YearlyBudgetList(
-                    currentSelectedYear: widget.currentSelectedDate.year,
+                    currentSelectedDate: widget.currentSelectedDate,
                     currentPeriodOfTimeType: widget.currentPeriodOfTimeType,
                     onPeriodOfTimeChanged: widget.onPeriodOfTimeChanged,
                   ),

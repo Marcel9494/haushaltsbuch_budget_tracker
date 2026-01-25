@@ -21,17 +21,18 @@ import '../../../../shared/presentation/widgets/buttons/period_of_time_segmented
 import '../../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../../../../shared/presentation/widgets/deco/empty_list.dart';
 import '../../pages/create_budget_page.dart';
+import '../cards/budget_card.dart';
 import '../charts/budget_bar_chart.dart';
 import '../deco/budget_info_row.dart';
 
 class YearlyBudgetList extends StatefulWidget {
-  final int currentSelectedYear;
+  final DateTime currentSelectedDate;
   final PeriodOfTimeType currentPeriodOfTimeType;
   final ValueChanged<PeriodOfTimeType>? onPeriodOfTimeChanged;
 
   const YearlyBudgetList({
     super.key,
-    required this.currentSelectedYear,
+    required this.currentSelectedDate,
     required this.currentPeriodOfTimeType,
     required this.onPeriodOfTimeChanged,
   });
@@ -48,7 +49,7 @@ class _YearlyBudgetListState extends State<YearlyBudgetList> with TickerProvider
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
     return BlocProvider(
-      create: (context) => BudgetBloc(BudgetRepository())..add(LoadYearlyBudgets(selectedYear: widget.currentSelectedYear)),
+      create: (context) => BudgetBloc(BudgetRepository())..add(LoadYearlyBudgets(widget.currentSelectedDate.year)),
       child: BlocBuilder<BudgetBloc, BudgetState>(
         builder: (context, state) {
           if (state is BudgetLoading) {
@@ -79,7 +80,7 @@ class _YearlyBudgetListState extends State<YearlyBudgetList> with TickerProvider
                               for (int month = 1; month <= 12; month++) {
                                 final monthlyBudgets = state.yearlyBudgets.values
                                     .expand((list) => list)
-                                    .where((b) => b.budgetDate?.year == widget.currentSelectedYear && b.budgetDate?.month == month)
+                                    .where((b) => b.budgetDate?.year == widget.currentSelectedDate.year && b.budgetDate?.month == month)
                                     .toList();
                                 totalBudgets.add(monthlyBudgets.fold(0.0, (sum, b) => sum + b.budgetAmount));
                                 overallBudgetAmount += totalBudgets.last;
@@ -215,33 +216,18 @@ class _YearlyBudgetListState extends State<YearlyBudgetList> with TickerProvider
                                               totalBudgetAmount += budgetsForEntry[i].budgetAmount;
                                               barGroups.add(makeGroupData(i, budgetsForEntry[i].budgetAmount, usedAmount));
                                             }
-                                            return Card(
-                                              child: AspectRatio(
-                                                aspectRatio: 1.35,
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(16),
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                                                    children: <Widget>[
-                                                      BudgetInfoRow(
-                                                        budgetName: state.yearlyBudgets.values.elementAt(index).first.category!.categoryName,
-                                                        budgetAmount: totalBudgetAmount,
-                                                        usedAmount: totalUsedAmount,
-                                                      ),
-                                                      const SizedBox(height: 22.0),
-                                                      BudgetBarChart(
-                                                        totalBudgets: budgetAmounts,
-                                                        usedAmounts: usedAmounts,
-                                                        barGroups: barGroups,
-                                                      ),
-                                                      const SizedBox(height: 12.0),
-                                                      BudgetStatRow(
-                                                        usedBudgetAmounts: usedAmounts,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
+                                            Budget yearlyBudget = Budget(
+                                              budgetAmount: totalBudgetAmount,
+                                              budgetDate: state.yearlyBudgets.values.elementAt(index).first.budgetDate,
+                                              categoryId: state.yearlyBudgets.values.elementAt(index).first.categoryId,
+                                              category: state.yearlyBudgets.values.elementAt(index).first.category,
+                                            );
+                                            return BudgetCard(
+                                              budget: yearlyBudget,
+                                              bookings: bookings,
+                                              usedBudgetAmount: totalUsedAmount,
+                                              percentageUsed: totalUsedAmount / totalBudgetAmount,
+                                              currentSelectedDate: widget.currentSelectedDate,
                                             );
                                           },
                                         ),

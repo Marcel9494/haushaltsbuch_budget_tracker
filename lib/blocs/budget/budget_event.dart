@@ -43,7 +43,7 @@ class LoadMonthlyBudgets extends BudgetEvent {
 class LoadYearlyBudgets extends BudgetEvent {
   final int selectedYear;
 
-  LoadYearlyBudgets({
-    required this.selectedYear,
-  });
+  LoadYearlyBudgets(
+    this.selectedYear,
+  );
 }
