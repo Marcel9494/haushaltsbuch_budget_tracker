@@ -10,6 +10,7 @@ import '../../../../../core/consts/animation_consts.dart';
 import '../../../../../data/enums/period_of_time_type.dart';
 import '../../../../../data/repositories/booking_repository.dart';
 import '../../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
+import '../../../../shared/presentation/widgets/deco/error_text.dart';
 import '../deco/booking_list_actions.dart';
 import '../deco/booking_list_overview.dart';
 
@@ -93,12 +94,7 @@ class _YearlyBookingListState extends State<YearlyBookingList> {
               ],
             );
           } else if (state is BookingError) {
-            return Center(
-              child: Text(
-                t.translate(state.message),
-                textAlign: TextAlign.center,
-              ),
-            );
+            return ErrorText(errorMessage: state.message);
           }
           return SizedBox.shrink();
         },

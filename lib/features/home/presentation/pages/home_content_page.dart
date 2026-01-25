@@ -10,6 +10,7 @@ import '../../../../data/repositories/booking_repository.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../shared/presentation/widgets/buttons/period_of_time_segmented_button.dart';
 import '../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
+import '../../../shared/presentation/widgets/deco/error_text.dart';
 import '../widgets/cards/home_grid_item_card.dart';
 import '../widgets/charts/category_stats.dart';
 
@@ -48,7 +49,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 12.0),
+                  padding: const EdgeInsets.only(top: 6.0, bottom: 12.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -75,19 +76,19 @@ class _HomeContentPageState extends State<HomeContentPage> {
                       icon: FaIcon(FontAwesomeIcons.piggyBank, size: 20.0),
                       title: 'net_assets',
                       stat: 100000,
-                      subtitle: 'Aktuelles Vermögen',
+                      subtitle: 'current_assets',
                     ),
                     HomeGridItemCard(
                       icon: FaIcon(FontAwesomeIcons.coins, size: 20.0),
-                      title: 'Restlicher Betrag',
+                      title: 'remaining_amount',
                       stat: balance,
-                      subtitle: 'diesen Monat',
+                      subtitle: 'this_month',
                     ),
                     HomeGridItemCard(
                       icon: FaIcon(FontAwesomeIcons.book, size: 20.0),
-                      title: 'Ausgaben',
+                      title: 'expenses',
                       stat: expenses,
-                      subtitle: 'diesen Monat',
+                      subtitle: 'this_month',
                     ),
                   ],
                 ),
@@ -113,7 +114,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 12.0),
+                  padding: const EdgeInsets.only(top: 6.0, bottom: 12.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -138,15 +139,15 @@ class _HomeContentPageState extends State<HomeContentPage> {
                   children: [
                     HomeGridItemCard(
                       icon: FaIcon(FontAwesomeIcons.coins, size: 20.0),
-                      title: 'Restlicher Betrag',
+                      title: 'remaining_amount',
                       stat: balance,
-                      subtitle: 'dieses Jahr',
+                      subtitle: 'this_year',
                     ),
                     HomeGridItemCard(
                       icon: FaIcon(FontAwesomeIcons.book, size: 20.0),
-                      title: 'Ausgaben',
+                      title: 'expenses',
                       stat: expenses,
-                      subtitle: 'dieses Jahr',
+                      subtitle: 'this_year',
                     ),
                   ],
                 ),
@@ -163,23 +164,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
             ),
           );
         } else if (state is BookingError) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                FaIcon(
-                  FontAwesomeIcons.bug,
-                  size: 50.0,
-                  color: Colors.white70,
-                ),
-                SizedBox(height: 24.0),
-                Text(
-                  t.translate(state.message),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          );
+          return ErrorText(errorMessage: state.message);
         }
         return SizedBox.shrink();
       },

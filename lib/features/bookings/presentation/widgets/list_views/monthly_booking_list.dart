@@ -3,9 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:haushaltsbuch_budget_tracker/data/enums/period_of_time_type.dart';
-import 'package:haushaltsbuch_budget_tracker/features/bookings/presentation/widgets/deco/booking_list_actions.dart';
-import 'package:haushaltsbuch_budget_tracker/features/bookings/presentation/widgets/deco/booking_list_daily_header.dart';
-import 'package:haushaltsbuch_budget_tracker/features/bookings/presentation/widgets/deco/booking_list_overview.dart';
+import 'package:haushaltsbuch_budget_tracker/features/shared/presentation/widgets/deco/error_text.dart';
 
 import '../../../../../blocs/booking/booking_bloc.dart';
 import '../../../../../core/consts/animation_consts.dart';
@@ -14,6 +12,9 @@ import '../../../../../l10n/app_localizations.dart';
 import '../../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../../../../shared/presentation/widgets/deco/empty_list.dart';
 import '../cards/booking_card.dart';
+import '../deco/booking_list_actions.dart';
+import '../deco/booking_list_daily_header.dart';
+import '../deco/booking_list_overview.dart';
 
 class MonthlyBookingList extends StatefulWidget {
   final DateTime currentSelectedDate;
@@ -156,12 +157,7 @@ class _MonthlyBookingListState extends State<MonthlyBookingList> {
             ],
           );
         } else if (state is BookingError) {
-          return Center(
-            child: Text(
-              t.translate(state.message),
-              textAlign: TextAlign.center,
-            ),
-          );
+          return ErrorText(errorMessage: state.message);
         }
         return SizedBox.shrink();
       },

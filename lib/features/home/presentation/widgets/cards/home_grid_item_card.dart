@@ -55,29 +55,44 @@ class _HomeGridItemCardState extends State<HomeGridItemCard> with TickerProvider
       child: SlideTransition(
         position: _slide,
         child: Card(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 10.0),
-                      child: widget.icon,
-                    ),
-                    Text(t.translate(widget.title)),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12.0),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.bottomRight,
+                  end: Alignment.topLeft,
+                  colors: [
+                    Theme.of(context).colorScheme.primary.withValues(alpha: 0.06),
+                    Theme.of(context).colorScheme.primary.withValues(alpha: 0.02),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 6.0),
-                  child: Text(
-                    formatCurrency(widget.stat, 'EUR'),
-                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                  ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10.0),
+                          child: widget.icon,
+                        ),
+                        Text(t.translate(widget.title)),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6.0),
+                      child: Text(
+                        formatCurrency(widget.stat, 'EUR'),
+                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Text(t.translate(widget.subtitle)),
+                  ],
                 ),
-                Text(t.translate(widget.subtitle)),
-              ],
+              ),
             ),
           ),
         ),

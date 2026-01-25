@@ -52,9 +52,10 @@ class _MonthNavigationState extends State<MonthNavigation> {
               firstDate: DateTime(2000),
               lastDate: DateTime(2100),
               monthPickerDialogSettings: MonthPickerDialogSettings(
-                headerSettings: const PickerHeaderSettings(
+                headerSettings: PickerHeaderSettings(
                   headerCurrentPageTextStyle: TextStyle(fontSize: 20),
                   headerSelectedIntervalTextStyle: TextStyle(fontSize: 20),
+                  headerBackgroundColor: Colors.grey[900],
                 ),
                 dateButtonsSettings: const PickerDateButtonsSettings(
                   unselectedMonthsTextColor: Colors.white70,

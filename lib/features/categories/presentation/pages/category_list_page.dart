@@ -12,6 +12,7 @@ import '../../../../blocs/category/category_state.dart';
 import '../../../../core/consts/animation_consts.dart';
 import '../../../../data/models/category.dart';
 import '../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
+import '../../../shared/presentation/widgets/deco/error_text.dart';
 import '../../data/enums/category_type.dart';
 import '../widgets/cards/category_card.dart';
 import 'create_category_page.dart';
@@ -171,7 +172,7 @@ class _CategoryListPageState extends State<CategoryListPage> with SingleTickerPr
                   ],
                 );
               } else if (state is CategoryError) {
-                return Center(child: Text(state.message));
+                return ErrorText(errorMessage: state.message);
               }
               return SizedBox.shrink();
             },

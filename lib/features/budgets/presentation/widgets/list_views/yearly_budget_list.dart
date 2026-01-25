@@ -20,6 +20,7 @@ import '../../../../../l10n/app_localizations.dart';
 import '../../../../shared/presentation/widgets/buttons/period_of_time_segmented_button.dart';
 import '../../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../../../../shared/presentation/widgets/deco/empty_list.dart';
+import '../../../../shared/presentation/widgets/deco/error_text.dart';
 import '../../pages/create_budget_page.dart';
 import '../cards/budget_card.dart';
 import '../charts/budget_bar_chart.dart';
@@ -244,12 +245,7 @@ class _YearlyBudgetListState extends State<YearlyBudgetList> with TickerProvider
               ],
             );
           } else if (state is BudgetError) {
-            return Center(
-              child: Text(
-                t.translate(state.message),
-                textAlign: TextAlign.center,
-              ),
-            );
+            return ErrorText(errorMessage: state.message);
           }
           return SizedBox.shrink();
         },

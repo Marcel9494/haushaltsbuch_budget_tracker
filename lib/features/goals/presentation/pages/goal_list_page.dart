@@ -15,6 +15,7 @@ import '../../../../data/models/goal.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../../../shared/presentation/widgets/deco/empty_list.dart';
+import '../../../shared/presentation/widgets/deco/error_text.dart';
 import '../widgets/cards/goal_card.dart';
 import 'create_goal_page.dart';
 
@@ -139,7 +140,7 @@ class _GoalListPageState extends State<GoalListPage> {
             ],
           );
         } else if (state is GoalError) {
-          return Center(child: Text(state.message));
+          return ErrorText(errorMessage: state.message);
         }
         return SizedBox.shrink();
       },

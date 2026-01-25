@@ -14,6 +14,7 @@ import '../../../../core/consts/animation_consts.dart';
 import '../../../../core/utils/slow_hero_animation.dart';
 import '../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../../../shared/presentation/widgets/deco/empty_list.dart';
+import '../../../shared/presentation/widgets/deco/error_text.dart';
 import '../widgets/cards/account_card.dart';
 import '../widgets/deco/account_list_header.dart';
 
@@ -127,7 +128,7 @@ class _AccountListPageState extends State<AccountListPage> {
                 ],
               );
             } else if (state is AccountError) {
-              return Center(child: Text(state.message));
+              return ErrorText(errorMessage: state.message);
             }
             return SizedBox.shrink();
           },

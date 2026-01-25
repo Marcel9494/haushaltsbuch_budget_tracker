@@ -57,40 +57,55 @@ class _AccountListOverviewCardState extends State<AccountListOverviewCard> with 
         child: SlideTransition(
           position: _slide,
           child: Card(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 12.0, left: 12.0, right: 4.0, bottom: 2.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  widget.icon,
-                  SizedBox(height: 8.0),
-                  Text(
-                    t.translate(widget.title),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.bottomRight,
+                    end: Alignment.topLeft,
+                    colors: [
+                      Theme.of(context).colorScheme.primary.withValues(alpha: 0.03),
+                      Theme.of(context).colorScheme.primary.withValues(alpha: 0.0),
+                    ],
                   ),
-                  TweenAnimationBuilder<double>(
-                    duration: const Duration(milliseconds: 1200),
-                    curve: Curves.easeOut,
-                    tween: Tween<double>(begin: 0, end: widget.amount),
-                    builder: (context, value, _) {
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 4.0, bottom: 8.0),
-                        child: Text(
-                          formatCurrency(value, 'EUR'),
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            color: widget.color,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 12.0, left: 12.0, right: 4.0, bottom: 2.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      widget.icon,
+                      SizedBox(height: 8.0),
+                      Text(
+                        t.translate(widget.title),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      );
-                    },
+                      ),
+                      TweenAnimationBuilder<double>(
+                        duration: const Duration(milliseconds: 1200),
+                        curve: Curves.easeOut,
+                        tween: Tween<double>(begin: 0, end: widget.amount),
+                        builder: (context, value, _) {
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 4.0, bottom: 8.0),
+                            child: Text(
+                              formatCurrency(value, 'EUR'),
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                color: widget.color,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),

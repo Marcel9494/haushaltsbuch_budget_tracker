@@ -16,6 +16,7 @@ import '../../../../../data/repositories/budget_repository.dart';
 import '../../../../shared/presentation/widgets/buttons/period_of_time_segmented_button.dart';
 import '../../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../../../../shared/presentation/widgets/deco/empty_list.dart';
+import '../../../../shared/presentation/widgets/deco/error_text.dart';
 import '../../pages/create_budget_page.dart';
 import '../cards/budget_card.dart';
 import '../cards/budget_overview_stat_card.dart';
@@ -140,7 +141,7 @@ class _MonthlyBudgetListState extends State<MonthlyBudgetList> {
             ],
           );
         } else if (state is BudgetError) {
-          return Center(child: Text(state.message));
+          return ErrorText(errorMessage: state.message);
         }
         return SizedBox.shrink();
       },
