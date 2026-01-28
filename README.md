@@ -9,6 +9,7 @@ Haushaltsbuch - Budget Tracker
 - Supabase
   - Email Authentication
   - Google Authentication
+  - Anonymously Authentication
   - Postgres Database
 - SQL (Schema Entwurf, CRUD Operationen)
 - Git & Github
