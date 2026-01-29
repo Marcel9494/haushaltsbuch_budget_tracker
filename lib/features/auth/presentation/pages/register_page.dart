@@ -27,6 +27,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final RoundedLoadingButtonController _registerButtonController = RoundedLoadingButtonController();
+  final RoundedLoadingButtonController _continueAsGuestButtonController = RoundedLoadingButtonController();
   double _cardOpacity = 0.0;
 
   @override
@@ -59,7 +60,7 @@ class _RegisterPageState extends State<RegisterPage> {
       if (e.code == 'user_already_exists') {
         AppFlushbar.show(context, message: t.translate('email_already_exists'));
       } else {
-        AppFlushbar.show(context, message: e.message);
+        AppFlushbar.show(context, message: t.translate('authentication_error'));
       }
       _registerButtonController.error();
       Timer(const Duration(milliseconds: buttonResetAnimationInMs), () {
@@ -76,6 +77,23 @@ class _RegisterPageState extends State<RegisterPage> {
     }
 
     _registerButtonController.success();
+  }
+
+  Future<void> _continueAsGuest() async {
+    final t = AppLocalizations.of(context);
+    try {
+      final AuthResponse response = await Supabase.instance.client.auth.signInAnonymously();
+      if (response.user != null) {
+        _continueAsGuestButtonController.success();
+      }
+    } catch (e) {
+      AppFlushbar.show(context, message: t.translate('unknown_error'));
+      _continueAsGuestButtonController.error();
+      Timer(const Duration(milliseconds: buttonResetAnimationInMs), () {
+        _continueAsGuestButtonController.reset();
+      });
+      return;
+    }
   }
 
   @override
@@ -115,6 +133,12 @@ class _RegisterPageState extends State<RegisterPage> {
                         DividerWithText(text: t.translate('or')),
                         SizedBox(height: 20),
                         GoogleSignInButton(text: t.translate('register_with_google')),
+                        SizedBox(height: 16),
+                        AnimatedLoadingButton(
+                          controller: _continueAsGuestButtonController,
+                          text: t.translate('continue_as_guest'),
+                          onPressed: () => _continueAsGuest(),
+                        ),
                         SizedBox(height: 20),
                         GestureDetector(
                           onTap: () => Navigator.pushNamed(context, loginRoute),

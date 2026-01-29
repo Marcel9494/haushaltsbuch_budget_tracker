@@ -5,10 +5,12 @@ import '../../../../../l10n/app_localizations.dart';
 class TitleInputField extends StatefulWidget {
   final TextEditingController titleController;
   final String text;
+  final bool showTitle;
 
   const TitleInputField({
     super.key,
     required this.titleController,
+    this.showTitle = true,
     this.text = 'title',
   });
 
@@ -46,10 +48,12 @@ class _TitleInputFieldState extends State<TitleInputField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 12.0, bottom: 6.0),
-          child: Text(t.translate(widget.text), style: TextStyle(fontSize: 14.0)),
-        ),
+        widget.showTitle == true
+            ? Padding(
+                padding: const EdgeInsets.only(top: 12.0, bottom: 6.0),
+                child: Text(t.translate(widget.text), style: TextStyle(fontSize: 14.0)),
+              )
+            : SizedBox.shrink(),
         TextFormField(
           controller: widget.titleController,
           keyboardType: TextInputType.text,

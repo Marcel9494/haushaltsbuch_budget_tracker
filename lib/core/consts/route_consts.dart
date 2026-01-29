@@ -16,3 +16,4 @@ const budgetBookingsRoute = 'budget_bookings';
 const goalBookingsRoute = 'goal_bookings';
 const goalListRoute = 'goal_list';
 const settingsRoute = 'settings';
+const upgradeAccountRoute = 'upgrade_account';

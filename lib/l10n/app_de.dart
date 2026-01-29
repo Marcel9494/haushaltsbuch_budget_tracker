@@ -101,15 +101,15 @@ const Map<String, String> de = {
   'year': 'Jahr',
   'upcoming_bookings': 'Bevorstehende Buchungen',
   'past_bookings': 'Vergangene Buchungen',
-  'no_bookings': 'Keine Buchungen vorhanden.',
+  'no_bookings': 'Noch keine Buchungen vorhanden.',
   'empty_bookings': 'Noch keine Buchungen',
   'assets': 'Vermögen',
   'debts': 'Schulden',
   'net_assets': 'Nettovermögen',
-  'no_accounts': 'Keine Konten vorhanden.',
+  'no_accounts': 'Noch keine Konten vorhanden.',
   'budget': 'Budget',
   'create_budget': 'Budget erstellen',
-  'no_budgets': 'Keine Budgets vorhanden.',
+  'no_budgets': 'Noch keine Budgets vorhanden.',
   'update_budget': 'Budget bearbeiten',
   'delete_budget': 'Budget löschen',
   'currently_until': 'Aktuell bis',
@@ -127,6 +127,7 @@ const Map<String, String> de = {
   'delete_goal': 'Ziel löschen',
   'delete_goal_confirmation': 'Möchten Sie das Ziel wirklich löschen?',
   'deleted_goal': 'Gelöschtes Ziel',
+  'no_goals': 'Noch keine Ziele vorhanden.',
   'update_account': 'Konto bearbeiten',
   'delete_account': 'Konto löschen',
   'deleted_account': 'Gelöschtes Konto',
@@ -137,9 +138,23 @@ const Map<String, String> de = {
   'this_month': 'diesen Monat',
   'this_year': 'dieses Jahr',
   'remaining_amount': 'Restlicher Betrag',
+  'continue_as_guest': 'Weiter als Gast',
+  'guest_info_text':
+      'Aktuell hast du ein vorübergehendes Gästekonto. Deine Daten gehen verloren, wenn du die App deinstallierst oder dein Gerät wechselst. Um deine Daten dauerhaft zu sichern und plattformübergreifend zu nutzen, erstelle bitte ein kostenloses Konto.',
+  'upgrade_account': 'Konto upgraden',
+  'guest_logout_description_important':
+      'WICHTIG: Vorübergehende Gästekontos verlieren alle ihre Daten, wenn du dich abmeldest. Diese Aktion kann nicht rückgängig gemacht werden. Wenn du dich trotzdem abmelden möchtest bestätige bitte mit dem Wort: Logout',
+  'guest_logout_description_notice':
+      'HINWEIS: Wenn du ein dauerhaftes Konto erstellen möchten, kannst du dein Gästekonto in den Einstellungen zu einem kostenlosen Konto upgraden. Anschließend sind deine Daten sicher gespeichert.',
+  'guest_logout_confirmation_failed': 'Die Bestätigung ist fehlgeschlagen. Bitte bestätige mit dem Wort: Logout, wenn du dich abmelden möchten.',
+  'confirm': 'Bestätigen',
+  'upgrade': 'Upgraden',
+  'upgrade_with_google': 'Mit Google upgraden',
   // Sprachen
   'de': 'Deutsch',
   'en': 'Englisch',
+  // Spezial Strings
+  'guest_logout_confirmation_word': 'Logout',
   // Error Messages
   'empty_email_error': 'Bitte geben Sie eine E-Mail Adresse ein.',
   'invalid_email_error': 'Bitte geben Sie eine gültige E-Mail Adresse ein.',
@@ -173,6 +188,10 @@ const Map<String, String> de = {
   'load_budgets_error': 'Datenbankfehler beim Laden der Budgets. Bitte versuchen Sie es später erneut.',
   'create_goal_error': 'Datenbankfehler beim Erstellen des Ziels. Bitte versuchen Sie es später erneut.',
   'update_goal_error': 'Datenbankfehler beim Bearbeiten des Ziels. Bitte versuchen Sie es später erneut.',
+  'authentication_error': 'Authentifizierungsfehler bitte versuchen Sie es später erneut.',
+  'upgrade_account_error': 'Authentifizierungsfehler beim Upgraden des Kontos. Bitte versuchen Sie es später erneut.',
+  'google_identity_already_exists_error':
+      'Diese Google E-Mail ist bereits mit einem anderen Konto verknüpft. Bitte melde dich mit dem Gast Konto ab und logge dich mit deiner Google E-Mail ein.',
   'database_error': 'Datenbankfehler. Bitte versuchen Sie es später erneut.',
   'unknown_error': 'Ein unbekannter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.',
 };
