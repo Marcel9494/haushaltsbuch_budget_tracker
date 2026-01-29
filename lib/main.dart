@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:haushaltsbuch_budget_tracker/data/repositories/category_repository.dart';
 import 'package:haushaltsbuch_budget_tracker/features/auth/presentation/pages/forgot_password_page.dart';
 import 'package:haushaltsbuch_budget_tracker/features/budgets/presentation/pages/budget_bookings_page.dart';
+import 'package:haushaltsbuch_budget_tracker/features/settings/presentation/pages/upgrade_account_page.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -22,6 +23,7 @@ import 'core/page_arguments/updateBudgetPageArguments.dart';
 import 'core/page_arguments/update_account_page_arguments.dart';
 import 'core/page_arguments/update_category_page_arguments.dart';
 import 'core/page_arguments/update_goal_page_arguments.dart';
+import 'core/utils/app_flushbar.dart';
 import 'data/repositories/account_repository.dart';
 import 'data/repositories/booking_repository.dart';
 import 'data/repositories/budget_repository.dart';
@@ -29,6 +31,7 @@ import 'data/repositories/goal_repository.dart';
 import 'features/accounts/presentation/pages/account_list_page.dart';
 import 'features/accounts/presentation/pages/create_account_page.dart';
 import 'features/accounts/presentation/pages/update_account_page.dart';
+import 'features/auth/presentation/pages/authentication_gate_page.dart';
 import 'features/auth/presentation/pages/login_page.dart';
 import 'features/auth/presentation/pages/register_page.dart';
 import 'features/auth/presentation/pages/reset_password_page.dart';
@@ -60,33 +63,62 @@ void main() async {
   await Supabase.initialize(
     url: supabaseUrl,
     anonKey: supabaseKey,
+    authOptions: const FlutterAuthClientOptions(
+      autoRefreshToken: true,
+    ),
   );
 
-  Supabase.instance.client.auth.onAuthStateChange.listen((data) async {
-    final event = data.event;
+  Supabase.instance.client.auth.onAuthStateChange.listen(
+    (data) async {
+      final event = data.event;
 
-    if (event == AuthChangeEvent.signedIn || event == AuthChangeEvent.initialSession) {
-      navigatorKey.currentState?.pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => MultiBlocProvider(
-            providers: [
-              BlocProvider(create: (context) => BookingBloc(BookingRepository())),
-              BlocProvider(create: (context) => CategoryBloc(CategoryRepository())),
-              BlocProvider(create: (context) => AccountBloc(AccountRepository())),
-              BlocProvider(create: (context) => BudgetBloc(BudgetRepository())),
-              BlocProvider(create: (context) => GoalBloc(GoalRepository())),
-            ],
-            child: HomePage(currentPageIndex: 0),
+      if (event == AuthChangeEvent.signedIn || event == AuthChangeEvent.initialSession || event == AuthChangeEvent.userUpdated) {
+        navigatorKey.currentState?.pushReplacement(
+          MaterialPageRoute(
+            builder: (_) => MultiBlocProvider(
+              providers: [
+                BlocProvider(create: (context) => BookingBloc(BookingRepository())),
+                BlocProvider(create: (context) => CategoryBloc(CategoryRepository())),
+                BlocProvider(create: (context) => AccountBloc(AccountRepository())),
+                BlocProvider(create: (context) => BudgetBloc(BudgetRepository())),
+                BlocProvider(create: (context) => GoalBloc(GoalRepository())),
+              ],
+              child: HomePage(currentPageIndex: 0),
+            ),
           ),
-        ),
-      );
-    } else if (event == AuthChangeEvent.passwordRecovery) {
-      // Benutzer wurde über Passwort-Reset-Link reingebracht
-      navigatorKey.currentState!.push(
-        MaterialPageRoute(builder: (_) => const ResetPasswordPage()),
-      );
-    }
-  });
+        );
+      } else if (event == AuthChangeEvent.passwordRecovery) {
+        // Benutzer wurde über Passwort-Reset-Link reingebracht
+        navigatorKey.currentState!.push(
+          MaterialPageRoute(builder: (_) => const ResetPasswordPage()),
+        );
+      } else if (event == AuthChangeEvent.signedOut) {
+        navigatorKey.currentState?.pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const RegisterPage()),
+          (route) => false,
+        );
+      }
+    },
+    onError: (error) {
+      final context = navigatorKey.currentContext;
+      if (context == null) {
+        return;
+      }
+      final t = AppLocalizations.of(context);
+      if (error is AuthException && error.statusCode == 'identity_already_exists') {
+        AppFlushbar.show(
+          context,
+          message: t.translate('google_identity_already_exists_error'),
+          duration: const Duration(seconds: 7),
+        );
+      } else {
+        AppFlushbar.show(
+          context,
+          message: t.translate('upgrade_account_error'),
+        );
+      }
+    },
+  );
 
   runApp(const MyApp());
 }
@@ -206,7 +238,7 @@ class MyApp extends StatelessWidget {
       ),
       themeMode: ThemeMode.system,
       navigatorKey: navigatorKey,
-      home: const RegisterPage(),
+      home: const AuthenticationGatePage(),
       routes: {
         forgotPasswordRoute: (context) => const ForgotPasswordPage(),
         createBookingRoute: (context) => const CreateBookingPage(),
@@ -215,6 +247,7 @@ class MyApp extends StatelessWidget {
         accountListRoute: (context) => const AccountListPage(),
         goalListRoute: (context) => const GoalListPage(),
         settingsRoute: (context) => const SettingsPage(),
+        upgradeAccountRoute: (context) => const UpgradeAccountPage(),
       },
       onGenerateRoute: (settings) {
         switch (settings.name) {

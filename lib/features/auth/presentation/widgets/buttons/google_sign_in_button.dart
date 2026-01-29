@@ -7,10 +7,12 @@ import '../../../../../l10n/app_localizations.dart';
 
 class GoogleSignInButton extends StatelessWidget {
   final String text;
+  final bool upgradeAccount;
 
   const GoogleSignInButton({
     super.key,
     required this.text,
+    this.upgradeAccount = false,
   });
 
   Future<void> _signInWithGoogle(BuildContext context) async {
@@ -26,11 +28,18 @@ class GoogleSignInButton extends StatelessWidget {
     }
   }
 
+  Future<void> _upgradeAccountWithGoogle(BuildContext context) async {
+    await Supabase.instance.client.auth.linkIdentity(
+      OAuthProvider.google,
+      redirectTo: 'io.supabase.flutter://login-callback/',
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GoogleAuthButton(
       text: text,
-      onPressed: () => _signInWithGoogle(context),
+      onPressed: () => upgradeAccount == false ? _signInWithGoogle(context) : _upgradeAccountWithGoogle(context),
       style: AuthButtonStyle(
         buttonType: AuthButtonType.secondary,
         borderRadius: 12.0,

@@ -4,9 +4,13 @@ import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:haushaltsbuch_budget_tracker/features/settings/presentation/widgets/cards/settings_card.dart';
 import 'package:haushaltsbuch_budget_tracker/features/settings/presentation/widgets/deco/settings_title.dart';
+import 'package:haushaltsbuch_budget_tracker/features/settings/presentation/widgets/dialogs/show_user_logout_dialog.dart';
 import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../../core/consts/route_consts.dart';
 import '../widgets/bottom_sheets/show_selectable_bottom_sheet.dart';
+import '../widgets/dialogs/show_guest_logout_dialog.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -18,6 +22,23 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   Locale _currentLocale = PlatformDispatcher.instance.locale;
   String _currentCurrency = 'Euro';
+
+  Future<void> _logout() async {
+    final supabase = Supabase.instance.client;
+    final user = supabase.auth.currentUser;
+    bool confirmed = false;
+
+    final isAnonymous = user?.isAnonymous ?? false;
+    if (isAnonymous == true) {
+      confirmed = await showGuestLogoutDialog(context);
+    } else {
+      confirmed = await showUserLogoutDialog(context);
+    }
+
+    if (confirmed == true) {
+      await supabase.auth.signOut();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +86,13 @@ class _SettingsPageState extends State<SettingsPage> {
                 title: t.translate('change_password'),
                 onTap: () {},
               ),
+              Supabase.instance.client.auth.currentUser!.isAnonymous
+                  ? SettingsCard(
+                      leading: Icon(Icons.workspace_premium_rounded),
+                      title: t.translate('upgrade_account'),
+                      onTap: () => Navigator.pushNamed(context, upgradeAccountRoute),
+                    )
+                  : SizedBox.shrink(),
               SettingsTitle(title: 'generally'),
               SettingsCard(
                 leading: Icon(Icons.person_add_rounded),
@@ -96,7 +124,7 @@ class _SettingsPageState extends State<SettingsPage> {
               SettingsCard(
                 leading: Icon(Icons.logout_rounded),
                 title: t.translate('logout'),
-                onTap: () {},
+                onTap: () => _logout(),
               ),
               SettingsCard(
                 leading: Icon(Icons.delete_forever_rounded, color: Colors.redAccent),

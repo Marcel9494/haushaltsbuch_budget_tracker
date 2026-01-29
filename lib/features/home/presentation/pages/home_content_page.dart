@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:haushaltsbuch_budget_tracker/features/home/presentation/widgets/cards/guest_info_card.dart';
 import 'package:haushaltsbuch_budget_tracker/features/shared/presentation/widgets/deco/subtitle_text.dart';
 
 import '../../../../blocs/booking/booking_bloc.dart';
@@ -48,6 +49,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                GuestInfoCard(),
                 Padding(
                   padding: const EdgeInsets.only(top: 6.0, bottom: 12.0),
                   child: Row(
@@ -113,6 +115,7 @@ class _HomeContentPageState extends State<HomeContentPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                GuestInfoCard(),
                 Padding(
                   padding: const EdgeInsets.only(top: 6.0, bottom: 12.0),
                   child: Row(
