@@ -77,42 +77,54 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
-    return Scaffold(
-      appBar: AppBar(),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: AnimatedOpacity(
-              duration: const Duration(milliseconds: fadeInAnimationDurationInMs),
-              curve: Curves.easeOut,
-              opacity: _cardOpacity,
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
-                  child: Form(
-                    key: _forgotPasswordFormKey,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TitleText(text: t.translate('new_password')),
-                        SizedBox(height: 24),
-                        PasswordInputField(passwordController: _newPasswordController, text: 'new_password'),
-                        SizedBox(height: 24),
-                        PasswordInputField(passwordController: _confirmNewPasswordController, text: 'confirm_new_password'),
-                        SizedBox(height: 24),
-                        AnimatedLoadingButton(
-                          controller: _resetPasswordButtonController,
-                          text: t.translate('reset_password'),
-                          onPressed: () => _resetPassword(),
-                        ),
-                        SizedBox(height: 24),
-                        GestureDetector(
-                          onTap: () => Navigator.pushNamed(context, loginRoute),
-                          child: Text(t.translate('to_login')),
-                        ),
-                      ],
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (bool didPop, Object? result) {
+        if (didPop) {
+          return;
+        }
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          loginRoute,
+          (route) => false,
+        );
+      },
+      child: Scaffold(
+        appBar: AppBar(),
+        body: Center(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: AnimatedOpacity(
+                duration: const Duration(milliseconds: fadeInAnimationDurationInMs),
+                curve: Curves.easeOut,
+                opacity: _cardOpacity,
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+                    child: Form(
+                      key: _forgotPasswordFormKey,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TitleText(text: t.translate('new_password')),
+                          SizedBox(height: 24),
+                          PasswordInputField(passwordController: _newPasswordController, text: 'new_password'),
+                          SizedBox(height: 24),
+                          PasswordInputField(passwordController: _confirmNewPasswordController, text: 'confirm_new_password'),
+                          SizedBox(height: 24),
+                          AnimatedLoadingButton(
+                            controller: _resetPasswordButtonController,
+                            text: t.translate('reset_password'),
+                            onPressed: () => _resetPassword(),
+                          ),
+                          SizedBox(height: 24),
+                          GestureDetector(
+                            onTap: () => Navigator.pushNamed(context, loginRoute),
+                            child: Text(t.translate('to_login')),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

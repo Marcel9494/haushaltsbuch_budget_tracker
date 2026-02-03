@@ -7,6 +7,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/consts/animation_consts.dart';
 import '../../../../core/consts/route_consts.dart';
 import '../../../../core/utils/app_flushbar.dart';
+import '../../../../core/utils/app_icon.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../shared/presentation/widgets/buttons/animated_loading_button.dart';
 import '../../../shared/presentation/widgets/input_fields/email_input_field.dart';
@@ -73,43 +74,50 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
-    return Scaffold(
-      appBar: AppBar(),
-      body: Center(
-        child: SingleChildScrollView(
+    return SafeArea(
+      child: Scaffold(
+        body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: AnimatedOpacity(
               duration: const Duration(milliseconds: fadeInAnimationDurationInMs),
               curve: Curves.easeOut,
               opacity: _cardOpacity,
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
-                  child: Form(
-                    key: _forgotPasswordFormKey,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TitleText(text: t.translate('reset_password')),
-                        SizedBox(height: 24),
-                        EmailInputField(emailController: _emailController),
-                        SizedBox(height: 24),
-                        AnimatedLoadingButton(
-                          controller: _forgotPasswordButtonController,
-                          text: t.translate('send_link'),
-                          onPressed: () => _sendEmail(),
+              child: Column(
+                children: [
+                  AppIcon(),
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+                      child: Form(
+                        key: _forgotPasswordFormKey,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TitleText(text: t.translate('reset_password')),
+                            SizedBox(height: 24),
+                            EmailInputField(emailController: _emailController),
+                            SizedBox(height: 24),
+                            AnimatedLoadingButton(
+                              controller: _forgotPasswordButtonController,
+                              text: t.translate('send_link'),
+                              onPressed: () => _sendEmail(),
+                            ),
+                            SizedBox(height: 24),
+                            GestureDetector(
+                              onTap: () => Navigator.of(context).pushNamedAndRemoveUntil(
+                                loginRoute,
+                                (route) => false,
+                              ),
+                              child: Text(t.translate('to_login')),
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 24),
-                        GestureDetector(
-                          onTap: () => Navigator.pushNamed(context, loginRoute),
-                          child: Text(t.translate('to_login')),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
             ),
           ),
