@@ -8,6 +8,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/consts/animation_consts.dart';
 import '../../../../core/utils/app_flushbar.dart';
+import '../../../../core/utils/app_icon.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../shared/presentation/widgets/buttons/animated_loading_button.dart';
 import '../../../shared/presentation/widgets/input_fields/email_input_field.dart';
@@ -82,50 +83,69 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
-    return Scaffold(
-      appBar: AppBar(),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: AnimatedOpacity(
-              duration: const Duration(milliseconds: fadeInAnimationDurationInMs),
-              curve: Curves.easeOut,
-              opacity: _cardOpacity,
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
-                  child: Form(
-                    key: _loginFormKey,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TitleText(text: t.translate('login')),
-                        SizedBox(height: 24),
-                        EmailInputField(emailController: _emailController),
-                        SizedBox(height: 16),
-                        PasswordInputField(passwordController: _passwordController),
-                        SizedBox(height: 6),
-                        ForgotPasswordLinkButton(),
-                        SizedBox(height: 24),
-                        AnimatedLoadingButton(
-                          controller: _loginButtonController,
-                          text: t.translate('login'),
-                          onPressed: () => _loginUser(),
+    return SafeArea(
+      child: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (bool didPop, Object? result) {
+          if (didPop) {
+            return;
+          }
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            registerRoute,
+            (route) => false,
+          );
+        },
+        child: Scaffold(
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: AnimatedOpacity(
+                duration: const Duration(milliseconds: fadeInAnimationDurationInMs),
+                curve: Curves.easeOut,
+                opacity: _cardOpacity,
+                child: Column(
+                  children: [
+                    AppIcon(),
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+                        child: Form(
+                          key: _loginFormKey,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              TitleText(text: t.translate('login')),
+                              SizedBox(height: 24),
+                              EmailInputField(emailController: _emailController),
+                              SizedBox(height: 16),
+                              PasswordInputField(passwordController: _passwordController),
+                              SizedBox(height: 6),
+                              ForgotPasswordLinkButton(),
+                              SizedBox(height: 24),
+                              AnimatedLoadingButton(
+                                controller: _loginButtonController,
+                                text: t.translate('login'),
+                                onPressed: () => _loginUser(),
+                              ),
+                              SizedBox(height: 24),
+                              DividerWithText(text: t.translate('or')),
+                              SizedBox(height: 20),
+                              GoogleSignInButton(text: t.translate('login_with_google')),
+                              SizedBox(height: 20),
+                              GestureDetector(
+                                onTap: () => Navigator.of(context).pushNamedAndRemoveUntil(
+                                  registerRoute,
+                                  (route) => false,
+                                ),
+                                child: Text(t.translate('no_account_yet')),
+                              ),
+                            ],
+                          ),
                         ),
-                        SizedBox(height: 24),
-                        DividerWithText(text: t.translate('or')),
-                        SizedBox(height: 20),
-                        GoogleSignInButton(text: t.translate('login_with_google')),
-                        SizedBox(height: 20),
-                        GestureDetector(
-                          onTap: () => Navigator.pushNamed(context, registerRoute),
-                          child: Text(t.translate('no_account_yet')),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ),
             ),
