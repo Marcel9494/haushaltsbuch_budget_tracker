@@ -71,19 +71,13 @@ class _HomePageState extends State<HomePage> {
 
   void _loadMonthlyBookings(DateTime selectedDate) {
     _bookingBloc.add(
-      LoadMonthlyBookings(
-        selectedDate: selectedDate,
-        userId: 'a39f32da-0876-4119-abf4-f636c2a8ad12',
-      ),
+      LoadMonthlyBookings(selectedDate: selectedDate),
     );
   }
 
   void _loadYearlyBookings(int selectedYear) {
     _bookingBloc.add(
-      LoadYearlyBookings(
-        selectedYear: selectedYear,
-        userId: 'a39f32da-0876-4119-abf4-f636c2a8ad12',
-      ),
+      LoadYearlyBookings(selectedYear: selectedYear),
     );
   }
 
@@ -314,13 +308,36 @@ class _HomePageState extends State<HomePage> {
         closedShape: const CircleBorder(),
         closedColor: Colors.cyanAccent,
         closedBuilder: (context, openContainer) {
-          return FloatingActionButton(
-            onPressed: openContainer,
-            backgroundColor: Colors.cyanAccent,
-            child: const Icon(
-              Icons.add_rounded,
-              color: Colors.black87,
-              size: 26.0,
+          return Container(
+            width: 56.0,
+            height: 56.0,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colors.cyanAccent,
+                  Color(0xFF00ACC1),
+                ],
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 6,
+                  offset: Offset(0, 3),
+                ),
+              ],
+            ),
+            child: FloatingActionButton(
+              onPressed: openContainer,
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              child: const Icon(
+                Icons.add_rounded,
+                color: Colors.black87,
+                size: 26.0,
+              ),
             ),
           );
         },

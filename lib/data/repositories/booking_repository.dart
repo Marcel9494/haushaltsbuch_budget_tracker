@@ -11,7 +11,12 @@ class BookingRepository {
     return Booking.fromMap(createdBooking);
   }
 
-  Future<List<Booking>> loadMonthlyBookings(DateTime selectedDate, String userId) async {
+  Future<void> deleteBooking(String bookingId) async {
+    final SupabaseClient supabase = Supabase.instance.client;
+    await supabase.from('bookings').delete().eq('id', bookingId).eq('user_id', supabase.auth.currentUser!.id).select().single();
+  }
+
+  Future<List<Booking>> loadMonthlyBookings(DateTime selectedDate) async {
     final startOfMonth = DateTime(selectedDate.year, selectedDate.month, 1);
     final endOfMonth = DateTime(selectedDate.year, selectedDate.month + 1, 1);
     final monthlyBookings = await Supabase.instance.client
@@ -24,7 +29,7 @@ class BookingRepository {
     return (monthlyBookings as List).map((data) => Booking.fromMap(data)).toList();
   }
 
-  Future<Map<int, List<Booking>>> loadYearlyBookings(int selectedYear, String userId) async {
+  Future<Map<int, List<Booking>>> loadYearlyBookings(int selectedYear) async {
     final startOfYear = DateTime(selectedYear, 1, 1);
     final endOfYear = DateTime(selectedYear + 1, 1, 1);
     final yearlyBookings = await Supabase.instance.client
@@ -35,10 +40,10 @@ class BookingRepository {
         .lt('booking_date', endOfYear)
         .order('booking_date', ascending: false);
     final List<Booking> allBookings = (yearlyBookings as List).map((data) => Booking.fromMap(data)).toList();
-    final Map<int, List<Booking>> monthlyBookings = groupBy(allBookings, (booking) {
+    final Map<int, List<Booking>> groupedMonthlyBookings = groupBy(allBookings, (booking) {
       return booking.bookingDate.month;
     });
-    return monthlyBookings;
+    return groupedMonthlyBookings;
   }
 
   List<BookingCategoryStats> calculateBookingsByCategory(List<Booking> bookings, BookingType selectedBookingType) {
