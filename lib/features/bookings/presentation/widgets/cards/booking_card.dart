@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:haushaltsbuch_budget_tracker/core/consts/route_consts.dart';
+import 'package:haushaltsbuch_budget_tracker/core/page_arguments/update_booking_page_arguments.dart';
 import 'package:haushaltsbuch_budget_tracker/features/bookings/data/enums/booking_type.dart';
 import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 
@@ -17,117 +19,120 @@ class BookingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
-    return Card(
-      child: ClipPath(
-        clipper: ShapeBorderClipper(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border(right: BorderSide(color: booking.bookingType.color, width: 3.5)),
+    return GestureDetector(
+      onTap: () => Navigator.pushNamed(context, updateBookingRoute, arguments: UpdateBookingPageArguments(booking)),
+      child: Card(
+        child: ClipPath(
+          clipper: ShapeBorderClipper(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
           ),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(10.0, 6.0, 0.0, 6.0),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        booking.bookingType == BookingType.transfer
-                            ? t.translate('transfer')
-                            : booking.category == null
-                                ? t.translate('deleted_category')
-                                : booking.category!.categoryName,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      SizedBox(height: 4.0),
-                      Text(
-                        booking.goal == null ? t.translate('deleted_goal') : booking.goal!.goalName,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  height: 42,
-                  width: 1.3,
-                  color: Colors.white30,
-                  margin: const EdgeInsets.symmetric(horizontal: 12.0),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(booking.title, overflow: TextOverflow.ellipsis),
-                      SizedBox(height: 4.0),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              booking.debitAccount != null ? booking.debitAccount!.name : t.translate('deleted_account'),
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                          ),
-                          booking.targetAccount != null
-                              ? Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                                  child: FaIcon(FontAwesomeIcons.anglesRight, size: 14, color: Colors.grey),
-                                )
-                              : SizedBox.shrink(),
-                          booking.targetAccount != null
-                              ? Expanded(
-                                  child: Text(
-                                    booking.targetAccount!.name,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                )
-                              : SizedBox.shrink(),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 14.0),
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border(right: BorderSide(color: booking.bookingType.color, width: 3.5)),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10.0, 6.0, 0.0, 6.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 1,
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            // TODO Repetition icon integrieren
-                            /* Icon(
-                              booking.repetitionType != RepetitionType.none ? Icons.repeat_rounded : null,
-                              color: Colors.white,
-                              size: 16.0,
-                            ),*/
-                            Text(
-                              formatCurrency(booking.amount, 'EUR'),
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(color: booking.bookingType.color),
-                            ),
-                          ],
+                        Text(
+                          booking.bookingType == BookingType.transfer
+                              ? t.translate('transfer')
+                              : booking.category == null
+                                  ? t.translate('deleted_category')
+                                  : booking.category!.categoryName,
+                          overflow: TextOverflow.ellipsis,
                         ),
                         SizedBox(height: 4.0),
                         Text(
-                          booking.person,
+                          booking.goal == null ? t.translate('deleted_goal') : booking.goal!.goalName,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(color: Colors.grey),
                         ),
                       ],
                     ),
                   ),
-                ),
-              ],
+                  Container(
+                    height: 42,
+                    width: 1.3,
+                    color: Colors.white30,
+                    margin: const EdgeInsets.symmetric(horizontal: 12.0),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(booking.title, overflow: TextOverflow.ellipsis),
+                        SizedBox(height: 4.0),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                booking.debitAccount != null ? booking.debitAccount!.name : t.translate('deleted_account'),
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ),
+                            booking.targetAccount != null
+                                ? Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                                    child: FaIcon(FontAwesomeIcons.anglesRight, size: 14, color: Colors.grey),
+                                  )
+                                : SizedBox.shrink(),
+                            booking.targetAccount != null
+                                ? Expanded(
+                                    child: Text(
+                                      booking.targetAccount!.name,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                  )
+                                : SizedBox.shrink(),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 14.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              // TODO Repetition icon integrieren
+                              /* Icon(
+                                booking.repetitionType != RepetitionType.none ? Icons.repeat_rounded : null,
+                                color: Colors.white,
+                                size: 16.0,
+                              ),*/
+                              Text(
+                                formatCurrency(booking.amount, 'EUR'),
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(color: booking.bookingType.color),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 4.0),
+                          Text(
+                            booking.person,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

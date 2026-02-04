@@ -4,7 +4,7 @@ import '../../../data/enums/budget_selection_type.dart';
 import '../../../data/models/budget.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../consts/route_consts.dart';
-import '../../page_arguments/updateBudgetPageArguments.dart';
+import '../../page_arguments/update_budget_page_arguments.dart';
 import '../date_formatter.dart';
 
 void showUpdateBudgetBottomSheet(BuildContext context, Budget budget) {

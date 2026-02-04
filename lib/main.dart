@@ -19,8 +19,9 @@ import 'core/page_arguments/budget_bookings_page_arguments.dart';
 import 'core/page_arguments/category_list_page_arguments.dart';
 import 'core/page_arguments/goal_bookings_page_arguments.dart';
 import 'core/page_arguments/home_page_arguments.dart';
-import 'core/page_arguments/updateBudgetPageArguments.dart';
 import 'core/page_arguments/update_account_page_arguments.dart';
+import 'core/page_arguments/update_booking_page_arguments.dart';
+import 'core/page_arguments/update_budget_page_arguments.dart';
 import 'core/page_arguments/update_category_page_arguments.dart';
 import 'core/page_arguments/update_goal_page_arguments.dart';
 import 'core/utils/app_flushbar.dart';
@@ -36,6 +37,7 @@ import 'features/auth/presentation/pages/login_page.dart';
 import 'features/auth/presentation/pages/register_page.dart';
 import 'features/auth/presentation/pages/reset_password_page.dart';
 import 'features/bookings/presentation/pages/create_booking_page.dart';
+import 'features/bookings/presentation/pages/update_booking_page.dart';
 import 'features/budgets/presentation/pages/update_budget_page.dart';
 import 'features/categories/presentation/pages/category_list_page.dart';
 import 'features/categories/presentation/pages/update_category_page.dart';
@@ -303,6 +305,14 @@ class MyApp extends StatelessWidget {
             return MaterialPageRoute<String>(
               builder: (context) => GoalBookingsPage(
                 goal: args.goal,
+              ),
+              settings: settings,
+            );
+          case updateBookingRoute:
+            final args = settings.arguments as UpdateBookingPageArguments;
+            return MaterialPageRoute<String>(
+              builder: (context) => UpdateBookingPage(
+                booking: args.booking,
               ),
               settings: settings,
             );

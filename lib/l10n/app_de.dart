@@ -30,6 +30,8 @@ const Map<String, String> de = {
   'premium': 'Premium',
   'settings': 'Einstellungen',
   'create_booking': 'Buchung erstellen',
+  'delete_booking': 'Buchung löschen',
+  'delete_booking_confirmation': 'Möchten Sie die Buchung wirklich löschen?',
   'title': 'Titel',
   'amount': 'Betrag',
   'enter_amount': 'Betrag eingeben',
@@ -150,6 +152,7 @@ const Map<String, String> de = {
   'confirm': 'Bestätigen',
   'upgrade': 'Upgraden',
   'upgrade_with_google': 'Mit Google upgraden',
+  'update_booking': 'Buchung bearbeiten',
   // Sprachen
   'de': 'Deutsch',
   'en': 'Englisch',

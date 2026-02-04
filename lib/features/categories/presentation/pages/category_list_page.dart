@@ -185,13 +185,36 @@ class _CategoryListPageState extends State<CategoryListPage> with SingleTickerPr
             closedShape: const CircleBorder(),
             closedColor: Colors.cyanAccent,
             closedBuilder: (context, openContainer) {
-              return FloatingActionButton(
-                onPressed: openContainer,
-                backgroundColor: Colors.cyanAccent,
-                child: const Icon(
-                  Icons.add_rounded,
-                  color: Colors.black87,
-                  size: 26.0,
+              return Container(
+                width: 56.0,
+                height: 56.0,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Colors.cyanAccent,
+                      Color(0xFF00ACC1),
+                    ],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 6,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: FloatingActionButton(
+                  onPressed: openContainer,
+                  elevation: 0,
+                  backgroundColor: Colors.transparent,
+                  child: const Icon(
+                    Icons.add_rounded,
+                    color: Colors.black87,
+                    size: 26.0,
+                  ),
                 ),
               );
             },

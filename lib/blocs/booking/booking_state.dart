@@ -9,6 +9,11 @@ class BookingCreated extends BookingState {
   BookingCreated(this.booking);
 }
 
+class BookingUpdated extends BookingState {
+  final Booking booking;
+  BookingUpdated(this.booking);
+}
+
 class BookingLoading extends BookingState {}
 
 class BookingLoaded extends BookingState {

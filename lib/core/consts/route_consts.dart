@@ -3,6 +3,7 @@ const loginRoute = 'login';
 const forgotPasswordRoute = 'forgot_password';
 const homeRoute = 'home';
 const createBookingRoute = 'create_booking';
+const updateBookingRoute = 'update_booking';
 const createAccountRoute = 'create_account';
 const updateAccountRoute = 'update_account';
 const createGoalRoute = 'create_goal';

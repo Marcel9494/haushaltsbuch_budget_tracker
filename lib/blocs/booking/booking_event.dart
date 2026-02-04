@@ -10,13 +10,19 @@ class CreateBooking extends BookingEvent {
   });
 }
 
+class DeleteBooking extends BookingEvent {
+  final String bookingId;
+
+  DeleteBooking({
+    required this.bookingId,
+  });
+}
+
 class LoadMonthlyBookings extends BookingEvent {
   final DateTime selectedDate;
-  final String userId;
 
   LoadMonthlyBookings({
     required this.selectedDate,
-    required this.userId,
   });
 }
 
@@ -30,10 +36,8 @@ class LoadMonthlyBookingsByCategory extends BookingEvent {
 
 class LoadYearlyBookings extends BookingEvent {
   final int selectedYear;
-  final String userId;
 
   LoadYearlyBookings({
     required this.selectedYear,
-    required this.userId,
   });
 }
