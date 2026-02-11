@@ -25,6 +25,78 @@ enum RepetitionType {
         'Ende des Jahres' => RepetitionType.endOfYear,
         _ => RepetitionType.none
       };
+
+  static DateTime getNextBookingDate(
+    DateTime current,
+    RepetitionType repetitionType,
+  ) {
+    switch (repetitionType) {
+      case RepetitionType.none:
+        return current;
+
+      case RepetitionType.weekly:
+        return current.add(const Duration(days: 7));
+
+      case RepetitionType.twoWeekly:
+        return current.add(const Duration(days: 14));
+
+      case RepetitionType.beginningOfMonth:
+        return DateTime(
+          current.year,
+          current.month + 1,
+          1,
+        );
+
+      case RepetitionType.endOfMonth:
+        return DateTime(
+          current.year,
+          current.month + 2,
+          0,
+        );
+
+      case RepetitionType.monthly:
+        return DateTime(
+          current.year,
+          current.month + 1,
+          current.day,
+        );
+
+      case RepetitionType.quarterly:
+        return DateTime(
+          current.year,
+          current.month + 3,
+          current.day,
+        );
+
+      case RepetitionType.halfYearly:
+        return DateTime(
+          current.year,
+          current.month + 6,
+          current.day,
+        );
+
+      case RepetitionType.yearly:
+        return DateTime(
+          current.year + 1,
+          current.month,
+          current.day,
+        );
+
+      case RepetitionType.beginningOfYear:
+        return DateTime(
+          current.year + 1,
+          1,
+          1,
+        );
+
+      case RepetitionType.endOfYear:
+        return DateTime(
+          current.year + 1,
+          12,
+          31,
+        );
+    }
+  }
 }
 
 extension AmountTypeExtension on RepetitionType {

@@ -1,17 +1,22 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../features/bookings/data/enums/booking_type.dart';
 import '../enums/account_type.dart';
 import '../models/account.dart';
+import '../models/booking.dart';
 
 class AccountRepository {
   Future<Account> createAccount(Account newAccount) async {
-    final createdAccount = await Supabase.instance.client.from('accounts').insert(newAccount.toMap()).select().single();
-    return Account.fromMap(createdAccount);
-  }
-
-  Future<List<Account>> loadAccounts() async {
-    final accounts = await Supabase.instance.client.from('accounts').select().order('account_type', ascending: true);
-    return (accounts as List).map((data) => Account.fromMap(data)).toList();
+    try {
+      final createdAccount = await Supabase.instance.client.from('accounts').insert(newAccount.toMap()).select().single();
+      return Account.fromMap(createdAccount);
+    } on PostgrestException catch (e) {
+      // Postgresql Fehlercode für unique_violation
+      if (e.code == '23505') {
+        throw Exception('duplicated_account');
+      }
+      rethrow;
+    }
   }
 
   Future<Account> updateAccount(Account account) async {
@@ -47,6 +52,11 @@ class AccountRepository {
     return Account.fromMap(deletedAccount);
   }
 
+  Future<List<Account>> loadAccounts() async {
+    final accounts = await Supabase.instance.client.from('accounts').select().order('account_type', ascending: true);
+    return (accounts as List).map((data) => Account.fromMap(data)).toList();
+  }
+
   double calculateAssets(List<Account> accounts) {
     double totalAssets = 0;
     for (Account account in accounts) {
@@ -65,5 +75,48 @@ class AccountRepository {
       }
     }
     return totalDebts;
+  }
+
+  Future<void> updateAccountBalance(List<Booking> bookings) async {
+    double totalSum = 0.0;
+    final SupabaseClient supabase = Supabase.instance.client;
+    if (bookings.isEmpty) {
+      return;
+    }
+    for (int i = 0; i < bookings.length; i++) {
+      // Wenn die Buchung in der Zukunft liegt, dann mit nächster Buchung weitermachen
+      if (bookings[i].bookingDate.isAfter(DateTime.now()) || bookings[i].bookingDate.isAtSameMomentAs(DateTime.now())) {
+        continue;
+      }
+      totalSum += bookings[i].amount;
+    }
+    if (bookings[0].bookingType == BookingType.expense) {
+      final debitAccount = await supabase.from('accounts').select('balance').eq('id', bookings[0].debitAccountId!).single();
+      await supabase
+          .from('accounts')
+          .update({'balance': debitAccount['balance'] - totalSum})
+          .eq('id', bookings[0].debitAccountId!)
+          .eq('user_id', supabase.auth.currentUser!.id);
+    } else if (bookings[0].bookingType == BookingType.income) {
+      final debitAccount = await supabase.from('accounts').select('balance').eq('id', bookings[0].debitAccountId!).single();
+      await supabase
+          .from('accounts')
+          .update({'balance': debitAccount['balance'] + totalSum})
+          .eq('id', bookings[0].debitAccountId!)
+          .eq('user_id', supabase.auth.currentUser!.id);
+    } else if (bookings[0].bookingType == BookingType.transfer) {
+      final debitAccount = await supabase.from('accounts').select('balance').eq('id', bookings[0].debitAccountId!).single();
+      final targetAccount = await supabase.from('accounts').select('balance').eq('id', bookings[0].targetAccountId!).single();
+      await supabase
+          .from('accounts')
+          .update({'balance': debitAccount['balance'] - totalSum})
+          .eq('id', bookings[0].debitAccountId!)
+          .eq('user_id', supabase.auth.currentUser!.id);
+      await supabase
+          .from('accounts')
+          .update({'balance': targetAccount['balance'] + totalSum})
+          .eq('id', bookings[0].targetAccountId!)
+          .eq('user_id', supabase.auth.currentUser!.id);
+    }
   }
 }

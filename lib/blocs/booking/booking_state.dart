@@ -5,8 +5,7 @@ abstract class BookingState {}
 class BookingInitial extends BookingState {}
 
 class BookingCreated extends BookingState {
-  final Booking booking;
-  BookingCreated(this.booking);
+  BookingCreated();
 }
 
 class BookingUpdated extends BookingState {

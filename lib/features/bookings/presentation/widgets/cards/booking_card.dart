@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:haushaltsbuch_budget_tracker/core/consts/route_consts.dart';
-import 'package:haushaltsbuch_budget_tracker/core/page_arguments/update_booking_page_arguments.dart';
 import 'package:haushaltsbuch_budget_tracker/features/bookings/data/enums/booking_type.dart';
 import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 
+import '../../../../../blocs/account/account_bloc.dart';
+import '../../../../../blocs/booking/booking_bloc.dart';
+import '../../../../../blocs/category/category_bloc.dart';
+import '../../../../../blocs/goal/goal_bloc.dart';
 import '../../../../../core/utils/currency_formatter.dart';
 import '../../../../../data/models/booking.dart';
+import '../../pages/update_booking_page.dart';
 
 class BookingCard extends StatelessWidget {
   final Booking booking;
@@ -20,7 +24,19 @@ class BookingCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
     return GestureDetector(
-      onTap: () => Navigator.pushNamed(context, updateBookingRoute, arguments: UpdateBookingPageArguments(booking)),
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider.value(value: context.read<BookingBloc>()),
+              BlocProvider.value(value: context.read<CategoryBloc>()),
+              BlocProvider.value(value: context.read<AccountBloc>()),
+              BlocProvider.value(value: context.read<GoalBloc>()),
+            ],
+            child: UpdateBookingPage(booking: booking),
+          ),
+        ),
+      ),
       child: Card(
         child: ClipPath(
           clipper: ShapeBorderClipper(

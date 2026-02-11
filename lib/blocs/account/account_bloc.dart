@@ -21,7 +21,11 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       final Account createdAccount = await _accountRepository.createAccount(event.account);
       emit(AccountCreated(createdAccount));
     } catch (e) {
-      emit(AccountError('create_account_error'));
+      if (e.toString().contains('duplicated_account')) {
+        emit(AccountError('duplicated_account_error'));
+      } else {
+        emit(AccountError('create_account_error'));
+      }
     }
   }
 

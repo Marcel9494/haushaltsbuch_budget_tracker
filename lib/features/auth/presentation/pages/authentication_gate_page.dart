@@ -25,7 +25,7 @@ class AuthenticationGatePage extends StatelessWidget {
     if (session != null) {
       return MultiBlocProvider(
         providers: [
-          BlocProvider(create: (_) => BookingBloc(BookingRepository())),
+          BlocProvider(create: (_) => BookingBloc(BookingRepository(), AccountRepository())),
           BlocProvider(create: (_) => CategoryBloc(CategoryRepository())),
           BlocProvider(create: (_) => AccountBloc(AccountRepository())),
           BlocProvider(create: (_) => BudgetBloc(BudgetRepository())),

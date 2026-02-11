@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:haushaltsbuch_budget_tracker/core/consts/route_consts.dart';
-import 'package:haushaltsbuch_budget_tracker/core/page_arguments/budget_bookings_page_arguments.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
+import '../../../../../blocs/category/category_bloc.dart';
 import '../../../../../core/utils/currency_formatter.dart';
+import '../../../../../core/utils/slow_hero_animation.dart';
 import '../../../../../data/models/booking.dart';
 import '../../../../../data/models/budget.dart';
 import '../../../../../l10n/app_localizations.dart';
+import '../../pages/budget_bookings_page.dart';
 
 class BudgetCard extends StatelessWidget {
   final Budget budget;
@@ -39,7 +41,15 @@ class BudgetCard extends StatelessWidget {
       verticalOffset: 40.0,
       child: FadeInAnimation(
         child: GestureDetector(
-          onTap: () => Navigator.pushNamed(context, budgetBookingsRoute, arguments: BudgetBookingsPageArguments(budget, bookings)),
+          onTap: () => Navigator.push(
+            context,
+            slowHeroRoute(
+              BlocProvider.value(
+                value: context.read<CategoryBloc>(),
+                child: BudgetBookingsPage(budget: budget, bookings: bookings),
+              ),
+            ),
+          ),
           child: Card(
             child: ClipPath(
               clipper: ShapeBorderClipper(

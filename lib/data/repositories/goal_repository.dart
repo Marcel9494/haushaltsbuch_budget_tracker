@@ -4,8 +4,16 @@ import '../models/goal.dart';
 
 class GoalRepository {
   Future<Goal> createGoal(Goal newGoal) async {
-    final createdGoal = await Supabase.instance.client.from('goals').insert(newGoal.toMap()).select().single();
-    return Goal.fromMap(createdGoal);
+    try {
+      final createdGoal = await Supabase.instance.client.from('goals').insert(newGoal.toMap()).select().single();
+      return Goal.fromMap(createdGoal);
+    } on PostgrestException catch (e) {
+      // Postgresql Fehlercode für unique_violation
+      if (e.code == '23505') {
+        throw Exception('duplicated_goal');
+      }
+      rethrow;
+    }
   }
 
   Future<Goal> updateGoal(Goal goal) async {

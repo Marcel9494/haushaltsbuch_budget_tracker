@@ -16,11 +16,6 @@ class CategoryRepository {
     }
   }
 
-  Future<List<Category>> loadCategories() async {
-    final categories = await Supabase.instance.client.from('categories').select().order('created_at', ascending: false);
-    return (categories as List).map((data) => Category.fromMap(data)).toList();
-  }
-
   Future<Category> updateCategory(Category category) async {
     try {
       final SupabaseClient supabase = Supabase.instance.client;
@@ -46,5 +41,10 @@ class CategoryRepository {
     final deletedCategory =
         await supabase.from('categories').delete().eq('id', categoryId).eq('user_id', supabase.auth.currentUser!.id).select().single();
     return Category.fromMap(deletedCategory);
+  }
+
+  Future<List<Category>> loadCategories() async {
+    final categories = await Supabase.instance.client.from('categories').select().order('created_at', ascending: false);
+    return (categories as List).map((data) => Category.fromMap(data)).toList();
   }
 }
