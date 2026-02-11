@@ -79,7 +79,7 @@ void main() async {
           MaterialPageRoute(
             builder: (_) => MultiBlocProvider(
               providers: [
-                BlocProvider(create: (context) => BookingBloc(BookingRepository())),
+                BlocProvider(create: (context) => BookingBloc(BookingRepository(), AccountRepository())),
                 BlocProvider(create: (context) => CategoryBloc(CategoryRepository())),
                 BlocProvider(create: (context) => AccountBloc(AccountRepository())),
                 BlocProvider(create: (context) => BudgetBloc(BudgetRepository())),
@@ -272,7 +272,7 @@ class MyApp extends StatelessWidget {
               settings: settings,
               child: MultiBlocProvider(
                 providers: [
-                  BlocProvider(create: (context) => BookingBloc(BookingRepository())),
+                  BlocProvider(create: (context) => BookingBloc(BookingRepository(), AccountRepository())),
                   BlocProvider(create: (context) => CategoryBloc(CategoryRepository())),
                   BlocProvider(create: (context) => AccountBloc(AccountRepository())),
                   BlocProvider(create: (context) => BudgetBloc(BudgetRepository())),

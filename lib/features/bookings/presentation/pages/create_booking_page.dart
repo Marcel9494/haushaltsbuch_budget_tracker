@@ -21,6 +21,7 @@ import '../../../../data/models/account.dart';
 import '../../../../data/models/booking.dart';
 import '../../../../data/models/category.dart';
 import '../../../../data/models/goal.dart';
+import '../../../../data/repositories/account_repository.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/enums/amount_type.dart';
 import '../../data/enums/booking_type.dart';
@@ -123,11 +124,39 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
     }
   }
 
+  DateTime tryParseSelectedDate() {
+    try {
+      return DateFormat(
+        '(E) dd.MM.yyyy',
+        WidgetsBinding.instance.platformDispatcher.locale.toString(),
+      ).parseStrict(_dateController.text);
+    } catch (_) {
+      return DateTime.now();
+    }
+  }
+
+  void setDateForRepetitionType() {
+    final date = tryParseSelectedDate();
+    if (_repetitionType == RepetitionType.beginningOfMonth) {
+      _dateController.text =
+          DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(DateTime(date.year, date.month, 1));
+    } else if (_repetitionType == RepetitionType.endOfMonth) {
+      _dateController.text =
+          DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(DateTime(date.year, date.month + 1, 0));
+    } else if (_repetitionType == RepetitionType.beginningOfYear) {
+      _dateController.text =
+          DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(DateTime(date.year, 1, 1));
+    } else if (_repetitionType == RepetitionType.endOfYear) {
+      _dateController.text =
+          DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(DateTime(date.year, 12, 31));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
     return BlocProvider(
-      create: (_) => BookingBloc(BookingRepository()),
+      create: (_) => BookingBloc(BookingRepository(), AccountRepository()),
       child: Builder(builder: (context) {
         return BlocListener<BookingBloc, BookingState>(
           listener: (context, state) {
@@ -172,6 +201,7 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
                           onRepetitionTypeChanged: (RepetitionType newRepetitionType) {
                             setState(() {
                               _repetitionType = newRepetitionType;
+                              setDateForRepetitionType();
                             });
                           },
                         ),

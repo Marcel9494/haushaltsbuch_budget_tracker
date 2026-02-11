@@ -15,13 +15,7 @@ import 'package:intl/intl.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../../../blocs/account/account_bloc.dart';
-import '../../../../blocs/account/account_event.dart';
 import '../../../../blocs/booking/booking_bloc.dart';
-import '../../../../blocs/category/category_bloc.dart';
-import '../../../../blocs/category/category_event.dart';
-import '../../../../blocs/goal/goal_bloc.dart';
-import '../../../../blocs/goal/goal_event.dart';
 import '../../../../core/consts/animation_consts.dart';
 import '../../../../core/utils/app_flushbar.dart';
 import '../../../../core/utils/dialogs/show_delete_dialog.dart';
@@ -31,8 +25,6 @@ import '../../../../data/models/booking.dart';
 import '../../../../data/models/category.dart';
 import '../../../../data/models/goal.dart';
 import '../../../../data/repositories/account_repository.dart';
-import '../../../../data/repositories/category_repository.dart';
-import '../../../../data/repositories/goal_repository.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/enums/amount_type.dart';
 import '../../data/enums/booking_type.dart';
@@ -117,7 +109,8 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
       final DateTime parsedDate =
           DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).parse(_dateController.text);
 
-      final Booking newBooking = Booking(
+      final Booking updatedBooking = Booking(
+        id: widget.booking.id,
         userId: supabase.auth.currentUser!.id,
         bookingType: _bookingType, // TODO
         title: _titleController.text.trim(),
@@ -133,7 +126,7 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
         isBooked: true, // TODO
       );
 
-      contextForBloc.read<BookingBloc>().add(CreateBooking(booking: newBooking));
+      contextForBloc.read<BookingBloc>().add(UpdateBooking(booking: updatedBooking));
     } on PostgrestException catch (_) {
       AppFlushbar.show(context, message: t.translate('database_error'));
       _updateBookingButtonController.error();
@@ -159,7 +152,7 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
     return BlocProvider(
-      create: (_) => BookingBloc(BookingRepository()),
+      create: (_) => BookingBloc(BookingRepository(), AccountRepository()),
       child: Builder(builder: (innerContext) {
         return BlocListener<BookingBloc, BookingState>(
           listener: (context, state) {
@@ -194,7 +187,6 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
                     );
 
                     if (confirmed == true) {
-                      // TODO hier weitermachen mit Laden von Kategorien, Konten und Ziele verbessern mit BlocProvider.value?!
                       bookingBloc.add(DeleteBooking(bookingId: widget.booking.id!));
                       navigator.pushNamedAndRemoveUntil(
                         homeRoute,
@@ -244,35 +236,29 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
                         TitleInputField(titleController: _titleController),
                         _bookingType == BookingType.transfer
                             ? SizedBox.shrink()
-                            : BlocProvider(
-                                create: (context) => CategoryBloc(CategoryRepository())..add(LoadCategories()),
-                                child: CategorieInputField(
-                                  categorieController: _categorieController,
-                                  bookingType: _bookingType,
-                                  onCategorieChanged: (Category newCategory) {
-                                    setState(() {
-                                      _selectedCategory = newCategory;
-                                    });
-                                  },
-                                ),
+                            : CategorieInputField(
+                                categorieController: _categorieController,
+                                bookingType: _bookingType,
+                                onCategorieChanged: (Category newCategory) {
+                                  setState(() {
+                                    _selectedCategory = newCategory;
+                                  });
+                                },
                               ),
                         Row(
                           children: [
                             Expanded(
                               child: Padding(
                                 padding: EdgeInsets.only(right: _bookingType == BookingType.transfer ? 12.0 : 0.0),
-                                child: BlocProvider(
-                                  create: (context) => AccountBloc(AccountRepository())..add(LoadAccounts()),
-                                  child: AccountInputField(
-                                    accountController: _debitAccountController,
-                                    text: _bookingType == BookingType.transfer ? 'debit_account' : 'account',
-                                    showSuffixIcon: _bookingType == BookingType.transfer ? false : true,
-                                    onAccountChanged: (Account newDebitAccount) {
-                                      setState(() {
-                                        _selectedDebitAccount = newDebitAccount;
-                                      });
-                                    },
-                                  ),
+                                child: AccountInputField(
+                                  accountController: _debitAccountController,
+                                  text: _bookingType == BookingType.transfer ? 'debit_account' : 'account',
+                                  showSuffixIcon: _bookingType == BookingType.transfer ? false : true,
+                                  onAccountChanged: (Account newDebitAccount) {
+                                    setState(() {
+                                      _selectedDebitAccount = newDebitAccount;
+                                    });
+                                  },
                                 ),
                               ),
                             ),
@@ -286,34 +272,28 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
                                 ? Expanded(
                                     child: Padding(
                                       padding: const EdgeInsets.only(left: 12.0),
-                                      child: BlocProvider(
-                                        create: (context) => AccountBloc(AccountRepository())..add(LoadAccounts()),
-                                        child: AccountInputField(
-                                          accountController: _targetAccountController,
-                                          text: 'target_account',
-                                          showSuffixIcon: _bookingType == BookingType.transfer ? false : true,
-                                          onAccountChanged: (Account newTargetAccount) {
-                                            setState(() {
-                                              _selectedTargetAccount = newTargetAccount;
-                                            });
-                                          },
-                                        ),
+                                      child: AccountInputField(
+                                        accountController: _targetAccountController,
+                                        text: 'target_account',
+                                        showSuffixIcon: _bookingType == BookingType.transfer ? false : true,
+                                        onAccountChanged: (Account newTargetAccount) {
+                                          setState(() {
+                                            _selectedTargetAccount = newTargetAccount;
+                                          });
+                                        },
                                       ),
                                     ),
                                   )
                                 : SizedBox.shrink(),
                           ],
                         ),
-                        BlocProvider(
-                          create: (context) => GoalBloc(GoalRepository())..add(LoadGoals()),
-                          child: GoalInputField(
-                            goalController: _goalController,
-                            onGoalChanged: (Goal newGoal) {
-                              setState(() {
-                                _selectedGoal = newGoal;
-                              });
-                            },
-                          ),
+                        GoalInputField(
+                          goalController: _goalController,
+                          onGoalChanged: (Goal newGoal) {
+                            setState(() {
+                              _selectedGoal = newGoal;
+                            });
+                          },
                         ),
                         // TODO implementieren, wenn Haushaltsmitglieder hinzugefügt werden: PersonInputField(personController: _personController),
                         SizedBox(height: 30.0),
@@ -322,7 +302,7 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
                           child: AnimatedLoadingButton(
                             text: t.translate('update_booking'),
                             controller: _updateBookingButtonController,
-                            onPressed: () => _updateBooking(context),
+                            onPressed: () => _updateBooking(innerContext),
                             horizontalPadding: 12.0,
                             buttonColor: Colors.cyanAccent,
                             textColor: Colors.black87,

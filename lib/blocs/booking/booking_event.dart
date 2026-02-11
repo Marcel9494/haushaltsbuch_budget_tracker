@@ -10,6 +10,14 @@ class CreateBooking extends BookingEvent {
   });
 }
 
+class UpdateBooking extends BookingEvent {
+  final Booking booking;
+
+  UpdateBooking({
+    required this.booking,
+  });
+}
+
 class DeleteBooking extends BookingEvent {
   final String bookingId;
 

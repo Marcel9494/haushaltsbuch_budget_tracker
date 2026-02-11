@@ -180,7 +180,7 @@ const Map<String, String> de = {
   'create_account_error': 'Datenbankfehler beim Erstellen des Kontos. Bitte versuchen Sie es später erneut.',
   'update_account_error': 'Datenbankfehler beim Bearbeiten des Kontos. Bitte versuchen Sie es später erneut.',
   'delete_account_error': 'Datenbankfehler beim Löschen des Kontos. Bitte versuchen Sie es später erneut.',
-  'duplicated_account_error': 'Ein Konto mit diesem Namen existiert bereits.',
+  'duplicated_account_error': 'Ein Konto mit diesem Kontoname existiert bereits.',
   'duplicated_goal_error': 'Ein Ziel mit diesem Namen existiert bereits.',
   'load_accounts_error': 'Datenbankfehler beim Laden der Konten. Bitte versuchen Sie es später erneut.',
   'create_category_error': 'Datenbankfehler beim Erstellen der Kategorie. Bitte versuchen Sie es später erneut.',

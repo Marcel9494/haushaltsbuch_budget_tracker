@@ -1,14 +1,67 @@
 import 'package:collection/collection.dart';
 import 'package:haushaltsbuch_budget_tracker/data/helper_models/booking_category_stats.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
 
+import '../../core/consts/repeat_number_consts.dart';
 import '../../features/bookings/data/enums/booking_type.dart';
+import '../../features/bookings/data/enums/repetition_type.dart';
 import '../models/booking.dart';
 
 class BookingRepository {
-  Future<Booking> createBooking(Booking newBooking) async {
-    final createdBooking = await Supabase.instance.client.from('bookings').insert(newBooking.toMap()).select().single();
-    return Booking.fromMap(createdBooking);
+  Future<List<Booking>> createBooking(Booking newBooking) async {
+    final supabase = Supabase.instance.client;
+    if (newBooking.repetitionType == RepetitionType.none) {
+      final createdBookings = await Supabase.instance.client.from('bookings').insert(newBooking.toMap()).select();
+      return createdBookings.map<Booking>((e) => Booking.fromMap(e)).toList();
+    } else {
+      final createdBookingsMap = <Map<String, dynamic>>[];
+
+      final repetitionBookingId = const Uuid().v4();
+
+      final baseBookingMap = Map<String, dynamic>.from(
+        newBooking.toMap(),
+      )..['repetition_id'] = repetitionBookingId;
+
+      DateTime currentBookingDate = DateTime(
+        newBooking.bookingDate.year,
+        newBooking.bookingDate.month,
+        newBooking.bookingDate.day,
+      );
+
+      final DateTime endDate = DateTime(
+        currentBookingDate.year + bookingRepetitionNumberInYears,
+        currentBookingDate.month,
+        currentBookingDate.day,
+      );
+
+      while (currentBookingDate.isBefore(endDate)) {
+        createdBookingsMap.add({
+          ...baseBookingMap,
+          'booking_date': currentBookingDate.toIso8601String(),
+          'is_booked': !currentBookingDate.isAfter(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day)),
+        });
+        currentBookingDate = RepetitionType.getNextBookingDate(currentBookingDate, newBooking.repetitionType);
+      }
+
+      final createdBookings = await supabase.from('bookings').insert(createdBookingsMap).select();
+      return createdBookings.map<Booking>((e) => Booking.fromMap(e)).toList();
+    }
+  }
+
+  Future<Booking> updateBooking(Booking booking) async {
+    final SupabaseClient supabase = Supabase.instance.client;
+    final updatedBooking = await supabase
+        .from('bookings')
+        .update(booking.toMap())
+        .eq('id', booking.id!)
+        .eq(
+          'user_id',
+          supabase.auth.currentUser!.id,
+        )
+        .select()
+        .single();
+    return Booking.fromMap(updatedBooking);
   }
 
   Future<void> deleteBooking(String bookingId) async {

@@ -2,17 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:haushaltsbuch_budget_tracker/blocs/category/category_event.dart';
 import 'package:haushaltsbuch_budget_tracker/core/utils/currency_formatter.dart';
 import 'package:haushaltsbuch_budget_tracker/data/enums/budget_selection_type.dart';
-import 'package:haushaltsbuch_budget_tracker/data/repositories/category_repository.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../blocs/budget/budget_bloc.dart';
 import '../../../../blocs/budget/budget_event.dart';
 import '../../../../blocs/budget/budget_state.dart';
-import '../../../../blocs/category/category_bloc.dart';
 import '../../../../core/consts/animation_consts.dart';
 import '../../../../core/consts/route_consts.dart';
 import '../../../../core/page_arguments/home_page_arguments.dart';
@@ -147,17 +144,14 @@ class _UpdateBudgetPageState extends State<UpdateBudgetPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        BlocProvider(
-                          create: (context) => CategoryBloc(CategoryRepository())..add(LoadCategories()),
-                          child: CategorieInputField(
-                            categorieController: _categoryController,
-                            bookingType: BookingType.expense,
-                            onCategorieChanged: (Category newCategory) {
-                              setState(() {
-                                _selectedCategory = newCategory;
-                              });
-                            },
-                          ),
+                        CategorieInputField(
+                          categorieController: _categoryController,
+                          bookingType: BookingType.expense,
+                          onCategorieChanged: (Category newCategory) {
+                            setState(() {
+                              _selectedCategory = newCategory;
+                            });
+                          },
                         ),
                         AmountInputField(
                           amountController: _budgetAmountController,

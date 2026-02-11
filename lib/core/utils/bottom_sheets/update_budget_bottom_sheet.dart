@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:haushaltsbuch_budget_tracker/features/budgets/presentation/pages/update_budget_page.dart';
 
+import '../../../blocs/category/category_bloc.dart';
 import '../../../data/enums/budget_selection_type.dart';
 import '../../../data/models/budget.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../consts/route_consts.dart';
-import '../../page_arguments/update_budget_page_arguments.dart';
 import '../date_formatter.dart';
 
-void showUpdateBudgetBottomSheet(BuildContext context, Budget budget) {
-  final t = AppLocalizations.of(context);
+void showUpdateBudgetBottomSheet(BuildContext parentContext, Budget budget) {
+  final t = AppLocalizations.of(parentContext);
   showModalBottomSheet(
-    context: context,
+    context: parentContext,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
     ),
-    builder: (BuildContext context) {
+    builder: (BuildContext sheetContext) {
       return SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
@@ -37,7 +38,7 @@ void showUpdateBudgetBottomSheet(BuildContext context, Budget budget) {
                   ),
                   IconButton(
                     icon: const Icon(Icons.close, size: 28),
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => Navigator.pop(sheetContext),
                   ),
                 ],
               ),
@@ -55,21 +56,24 @@ void showUpdateBudgetBottomSheet(BuildContext context, Budget budget) {
                     ),
                     subtitle: Text(
                       '${selectionType.updateDescription(budget.category!.categoryName)} '
-                      '${selectionType == BudgetSelectionType.single ? '(${formatMonthYear(context, budget.budgetDate!)})' : ''}',
+                      '${selectionType == BudgetSelectionType.single ? '(${formatMonthYear(sheetContext, budget.budgetDate!)})' : ''}',
                       style: const TextStyle(fontSize: 12.0, color: Colors.grey),
                     ),
                     trailing: const Icon(Icons.keyboard_arrow_right_rounded, size: 24.0),
                     onTap: () {
-                      Navigator.pop(context);
-                      Navigator.pushNamed(
-                        context,
-                        updateBudgetRoute,
-                        arguments: UpdateBudgetPageArguments(budget, selectionType),
+                      Navigator.pop(sheetContext);
+                      Navigator.of(parentContext).push(
+                        MaterialPageRoute(
+                          builder: (_) => BlocProvider.value(
+                            value: parentContext.read<CategoryBloc>(),
+                            child: UpdateBudgetPage(budget: budget, budgetSelectionType: selectionType),
+                          ),
+                        ),
                       );
                     },
                   );
                 },
-                separatorBuilder: (context, index) => const Divider(height: 1),
+                separatorBuilder: (_, __) => const Divider(height: 1),
               ),
             ],
           ),

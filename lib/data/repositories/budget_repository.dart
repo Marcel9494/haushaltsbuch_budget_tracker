@@ -10,6 +10,7 @@ import '../models/budget.dart';
 
 class BudgetRepository {
   void createBudgets(Budget newBudget) async {
+    // TODO hier noch auf doppelte Budgets prüfen, auch dort noch repetitionId mit beachten + update Methode.
     final createdBudgets = <Map<String, dynamic>>[];
     DateTime currentBudgetDate = DateTime(DateTime.now().year, DateTime.now().month, 1);
     final budgetId = const Uuid().v4();

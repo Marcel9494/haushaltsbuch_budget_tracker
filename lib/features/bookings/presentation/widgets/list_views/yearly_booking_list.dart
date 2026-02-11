@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:haushaltsbuch_budget_tracker/data/repositories/account_repository.dart';
 import 'package:haushaltsbuch_budget_tracker/features/bookings/presentation/widgets/cards/booking_month_overview_card.dart';
 import 'package:intl/intl.dart';
 
@@ -46,7 +47,7 @@ class _YearlyBookingListState extends State<YearlyBookingList> {
   Widget build(BuildContext context) {
     final List<String> months = getAllMonthNames('de_DE');
     return BlocProvider(
-      create: (_) => BookingBloc(BookingRepository())..add(LoadYearlyBookings(selectedYear: widget.currentSelectedYear)),
+      create: (_) => BookingBloc(BookingRepository(), AccountRepository())..add(LoadYearlyBookings(selectedYear: widget.currentSelectedYear)),
       child: BlocBuilder<BookingBloc, BookingState>(
         builder: (context, state) {
           if (state is BookingLoading) {
