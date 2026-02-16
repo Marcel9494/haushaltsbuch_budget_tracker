@@ -46,6 +46,7 @@ class _HomePageState extends State<HomePage> {
   late AccountBloc _accountBloc;
   late BudgetBloc _budgetBloc;
   late GoalBloc _goalBloc;
+  bool _showUpcomingBookings = false;
   DateTime _currentSelectedDate = DateTime.now();
   PeriodOfTimeType _currentPeriodOfTime = PeriodOfTimeType.monthly;
   int _selectedPageIndex = 0;
@@ -94,6 +95,12 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void onShowUpcomingBookingsChanged(bool showUpcomingBookings) {
+    setState(() {
+      _showUpcomingBookings = showUpcomingBookings;
+    });
+  }
+
   void _loadCategories() {
     _categoryBloc.add(LoadCategories());
   }
@@ -126,6 +133,10 @@ class _HomePageState extends State<HomePage> {
         BookingListPage(
           key: ValueKey(_currentSelectedDate),
           currentSelectedDate: _currentSelectedDate,
+          showUpcomingBookings: _showUpcomingBookings,
+          onShowUpcomingBookingsChanged: (showUpcomingBookings) {
+            onShowUpcomingBookingsChanged(showUpcomingBookings);
+          },
           currentPeriodOfTimeType: _currentPeriodOfTime,
           onPeriodOfTimeChanged: (newPeriodOfTime) {
             onPeriodOfTimeChanged(newPeriodOfTime);
@@ -206,48 +217,48 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.dashboard_rounded),
-              title: Text(t.translate('dashboard')),
+              leading: Icon(Icons.dashboard_rounded, color: _selectedPageIndex == 0 ? Colors.cyanAccent : Colors.white),
+              title: Text(t.translate('dashboard'), style: TextStyle(color: _selectedPageIndex == 0 ? Colors.cyanAccent : Colors.white)),
               onTap: () => {
                 _onItemTapped(0),
                 Navigator.pop(context),
               },
             ),
             ListTile(
-              leading: Icon(Icons.menu_book_rounded),
-              title: Text(t.translate('bookings')),
+              leading: Icon(Icons.menu_book_rounded, color: _selectedPageIndex == 1 ? Colors.cyanAccent : Colors.white),
+              title: Text(t.translate('bookings'), style: TextStyle(color: _selectedPageIndex == 1 ? Colors.cyanAccent : Colors.white)),
               onTap: () => {
                 _onItemTapped(1),
                 Navigator.pop(context),
               },
             ),
             ListTile(
-              leading: FaIcon(FontAwesomeIcons.buildingColumns, size: 22.0),
-              title: Text(t.translate('accounts')),
+              leading: FaIcon(FontAwesomeIcons.buildingColumns, size: 22.0, color: _selectedPageIndex == 2 ? Colors.cyanAccent : Colors.white),
+              title: Text(t.translate('accounts'), style: TextStyle(color: _selectedPageIndex == 2 ? Colors.cyanAccent : Colors.white)),
               onTap: () => {
                 _onItemTapped(2),
                 Navigator.pop(context),
               },
             ),
             ListTile(
-              leading: Icon(Icons.account_balance_wallet_rounded),
-              title: Text(t.translate('budgets')),
+              leading: Icon(Icons.account_balance_wallet_rounded, color: _selectedPageIndex == 3 ? Colors.cyanAccent : Colors.white),
+              title: Text(t.translate('budgets'), style: TextStyle(color: _selectedPageIndex == 3 ? Colors.cyanAccent : Colors.white)),
               onTap: () => {
                 _onItemTapped(3),
                 Navigator.pop(context),
               },
             ),
             ListTile(
-              leading: FaIcon(FontAwesomeIcons.bullseye),
-              title: Text(t.translate('goals')),
+              leading: FaIcon(FontAwesomeIcons.bullseye, color: _selectedPageIndex == 4 ? Colors.cyanAccent : Colors.white),
+              title: Text(t.translate('goals'), style: TextStyle(color: _selectedPageIndex == 4 ? Colors.cyanAccent : Colors.white)),
               onTap: () => {
                 _onItemTapped(4),
                 Navigator.pop(context),
               },
             ),
             ListTile(
-              leading: FaIcon(FontAwesomeIcons.grip),
-              title: Text(t.translate('categories')),
+              leading: FaIcon(FontAwesomeIcons.grip, color: Colors.white),
+              title: Text(t.translate('categories'), style: TextStyle(color: Colors.white)),
               onTap: () => {
                 Navigator.popAndPushNamed(
                   context,
@@ -257,20 +268,20 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
-              leading: FaIcon(FontAwesomeIcons.solidAddressBook),
-              title: Text(t.translate('household_members')),
+              leading: FaIcon(FontAwesomeIcons.solidAddressBook, color: Colors.white),
+              title: Text(t.translate('household_members'), style: TextStyle(color: Colors.white)),
               onTap: () {},
             ),
             Divider(),
             ListTile(
-              leading: Icon(Icons.stars_rounded),
-              title: Text(t.translate('premium')),
+              leading: Icon(Icons.stars_rounded, color: Colors.white),
+              title: Text(t.translate('premium'), style: TextStyle(color: Colors.white)),
               onTap: () {},
             ),
             ListTile(
-              leading: FaIcon(FontAwesomeIcons.gear),
-              title: Text(t.translate('settings')),
-              onTap: () => Navigator.pushNamed(context, settingsRoute),
+              leading: FaIcon(FontAwesomeIcons.gear, color: Colors.white),
+              title: Text(t.translate('settings'), style: TextStyle(color: Colors.white)),
+              onTap: () => Navigator.popAndPushNamed(context, settingsRoute),
             ),
           ],
         ),

@@ -57,6 +57,9 @@ class _RegisterPageState extends State<RegisterPage> {
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
+      Timer(const Duration(milliseconds: buttonResetAnimationInMs), () {
+        _registerButtonController.success();
+      });
     } on AuthException catch (e) {
       if (e.code == 'user_already_exists') {
         AppFlushbar.show(context, message: t.translate('email_already_exists'));
@@ -76,8 +79,6 @@ class _RegisterPageState extends State<RegisterPage> {
       });
       return;
     }
-
-    _registerButtonController.success();
   }
 
   Future<void> _continueAsGuest() async {

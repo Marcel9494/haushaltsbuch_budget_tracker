@@ -7,25 +7,21 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/consts/animation_consts.dart';
 import '../../../../core/utils/app_flushbar.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../auth/presentation/widgets/buttons/google_sign_in_button.dart';
-import '../../../auth/presentation/widgets/deco/divider_with_text.dart';
 import '../../../auth/presentation/widgets/deco/title_text.dart';
 import '../../../shared/presentation/widgets/buttons/animated_loading_button.dart';
 import '../../../shared/presentation/widgets/input_fields/email_input_field.dart';
-import '../../../shared/presentation/widgets/input_fields/password_input_field.dart';
 
-class UpgradeAccountPage extends StatefulWidget {
-  const UpgradeAccountPage({super.key});
+class ChangeEmailPage extends StatefulWidget {
+  const ChangeEmailPage({super.key});
 
   @override
-  State<UpgradeAccountPage> createState() => _UpgradeAccountPageState();
+  State<ChangeEmailPage> createState() => _ChangeEmailPageState();
 }
 
-class _UpgradeAccountPageState extends State<UpgradeAccountPage> {
-  final GlobalKey<FormState> _upgradeFormKey = GlobalKey<FormState>();
+class _ChangeEmailPageState extends State<ChangeEmailPage> {
+  final GlobalKey<FormState> _changeEmailFormKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final RoundedLoadingButtonController _upgradeButtonController = RoundedLoadingButtonController();
+  final RoundedLoadingButtonController _changeEmailButtonController = RoundedLoadingButtonController();
   double _cardOpacity = 0.0;
 
   @override
@@ -39,34 +35,29 @@ class _UpgradeAccountPageState extends State<UpgradeAccountPage> {
     });
   }
 
-  Future<void> _upgradeGuest() async {
+  Future<void> _changeEmail() async {
     final t = AppLocalizations.of(context);
-    final supabase = Supabase.instance.client;
     try {
-      _upgradeButtonController.start();
-      await supabase.auth.updateUser(
+      await Supabase.instance.client.auth.updateUser(
         UserAttributes(
           email: _emailController.text.trim(),
-          password: _passwordController.text.trim(),
         ),
       );
-      _upgradeButtonController.success();
-      // TODO schauen das noch eine AppBar angezeigt wird für bessere UX AppFlushbar.show(context, message: t.translate('account_upgrade_successful'));
     } on AuthApiException catch (e) {
       if (e.code == 'email_exists') {
         AppFlushbar.show(context, message: t.translate('email_already_exists'));
       } else {
         AppFlushbar.show(context, message: t.translate('database_error'));
       }
-      _upgradeButtonController.error();
+      _changeEmailButtonController.error();
       Timer(const Duration(milliseconds: buttonResetAnimationInMs), () {
-        _upgradeButtonController.reset();
+        _changeEmailButtonController.reset();
       });
     } catch (e) {
       AppFlushbar.show(context, message: t.translate('unknown_error'));
-      _upgradeButtonController.error();
+      _changeEmailButtonController.error();
       Timer(const Duration(milliseconds: buttonResetAnimationInMs), () {
-        _upgradeButtonController.reset();
+        _changeEmailButtonController.reset();
       });
     }
   }
@@ -75,7 +66,7 @@ class _UpgradeAccountPageState extends State<UpgradeAccountPage> {
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text(t.translate('upgrade_account'))),
+      appBar: AppBar(title: Text(t.translate('change_email'))),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -87,28 +78,31 @@ class _UpgradeAccountPageState extends State<UpgradeAccountPage> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
                 child: Form(
-                  key: _upgradeFormKey,
+                  key: _changeEmailFormKey,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TitleText(text: t.translate('upgrade_account')),
-                      SizedBox(height: 24),
-                      EmailInputField(emailController: _emailController),
+                      TitleText(text: t.translate('change_email')),
                       SizedBox(height: 16),
-                      PasswordInputField(passwordController: _passwordController),
+                      Text('${t.translate('current_email')}:', style: TextStyle(fontWeight: FontWeight.bold)),
+                      SizedBox(height: 2),
+                      Text('${Supabase.instance.client.auth.currentUser!.email}'),
+                      SizedBox(height: 16),
+                      Text('${t.translate('important')}:', style: TextStyle(fontWeight: FontWeight.bold)),
+                      SizedBox(height: 2),
+                      Text(t.translate('change_email_description'), textAlign: TextAlign.justify),
                       SizedBox(height: 24),
-                      AnimatedLoadingButton(
-                        controller: _upgradeButtonController,
-                        text: t.translate('upgrade'),
-                        onPressed: () => _upgradeGuest(),
+                      EmailInputField(
+                        emailController: _emailController,
+                        text: 'new_email',
                       ),
                       SizedBox(height: 24),
-                      DividerWithText(text: t.translate('or')),
-                      SizedBox(height: 20),
-                      GoogleSignInButton(
-                        text: t.translate('upgrade_with_google'),
-                        upgradeAccount: true,
+                      AnimatedLoadingButton(
+                        controller: _changeEmailButtonController,
+                        text: t.translate('send_confirmation_emails'),
+                        onPressed: () => _changeEmail(),
                       ),
                     ],
                   ),

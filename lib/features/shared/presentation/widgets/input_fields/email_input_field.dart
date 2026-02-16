@@ -5,10 +5,12 @@ import '../../../../../l10n/app_localizations.dart';
 
 class EmailInputField extends StatefulWidget {
   final TextEditingController emailController;
+  final String text;
 
   const EmailInputField({
     super.key,
     required this.emailController,
+    this.text = 'email',
   });
 
   @override
@@ -52,8 +54,8 @@ class _EmailInputFieldState extends State<EmailInputField> {
       validator: (emailInput) => _checkEmailInput(),
       decoration: InputDecoration(
         border: OutlineInputBorder(),
-        labelText: t.translate('email'),
-        hintText: '${t.translate('email')}...',
+        labelText: t.translate(widget.text),
+        hintText: '${t.translate(widget.text)}...',
         prefixIcon: const Icon(Icons.email_rounded),
         suffixIcon: IconButton(
           onPressed: () {

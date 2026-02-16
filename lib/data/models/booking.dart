@@ -46,7 +46,7 @@ class Booking {
     this.targetAccount,
     required this.targetAccountId,
     this.goal,
-    this.goalId,
+    required this.goalId,
     required this.person,
     required this.isBooked,
   });

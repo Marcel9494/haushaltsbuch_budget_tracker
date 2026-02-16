@@ -6,12 +6,16 @@ import '../widgets/list_views/monthly_booking_list.dart';
 
 class BookingListPage extends StatefulWidget {
   final DateTime currentSelectedDate;
+  final bool showUpcomingBookings;
+  final ValueChanged<bool>? onShowUpcomingBookingsChanged;
   final PeriodOfTimeType currentPeriodOfTimeType;
   final ValueChanged<PeriodOfTimeType>? onPeriodOfTimeChanged;
 
   const BookingListPage({
     super.key,
     required this.currentSelectedDate,
+    required this.showUpcomingBookings,
+    required this.onShowUpcomingBookingsChanged,
     required this.currentPeriodOfTimeType,
     required this.onPeriodOfTimeChanged,
   });
@@ -31,6 +35,8 @@ class _BookingListPageState extends State<BookingListPage> {
               ? Expanded(
                   child: MonthlyBookingList(
                     currentSelectedDate: widget.currentSelectedDate,
+                    showUpcomingBookings: widget.showUpcomingBookings,
+                    onShowUpcomingBookingsChanged: widget.onShowUpcomingBookingsChanged,
                     currentPeriodOfTimeType: widget.currentPeriodOfTimeType,
                     onPeriodOfTimeChanged: widget.onPeriodOfTimeChanged,
                   ),

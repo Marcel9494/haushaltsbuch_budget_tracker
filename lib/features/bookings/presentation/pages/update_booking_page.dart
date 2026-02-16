@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:haushaltsbuch_budget_tracker/core/consts/route_consts.dart';
 import 'package:haushaltsbuch_budget_tracker/core/page_arguments/home_page_arguments.dart';
 import 'package:haushaltsbuch_budget_tracker/core/utils/currency_formatter.dart';
+import 'package:haushaltsbuch_budget_tracker/data/enums/goal_type.dart';
 import 'package:haushaltsbuch_budget_tracker/data/repositories/booking_repository.dart';
 import 'package:haushaltsbuch_budget_tracker/features/bookings/presentation/widgets/input_fields/categorie_input_field.dart';
 import 'package:haushaltsbuch_budget_tracker/features/bookings/presentation/widgets/input_fields/goal_input_field.dart';
@@ -72,11 +73,20 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
     _amountType = widget.booking.amountType;
     _repetitionType = widget.booking.repetitionType;
     _selectedCategory = widget.booking.category!;
-    _selectedDebitAccount = widget.booking.debitAccount!;
+    if (widget.booking.debitAccount != null) {
+      _selectedDebitAccount = widget.booking.debitAccount!;
+    } else {
+      // TODO hier weitermachen und Gelöschtes Konto und Gelöschtes Ziel behandeln
+      _selectedDebitAccount = Account(name: '', accountType: AccountType.none, balance: 0.0);
+    }
     if (_bookingType == BookingType.transfer) {
       _selectedTargetAccount = widget.booking.targetAccount!;
     }
-    _selectedGoal = widget.booking.goal!;
+    if (widget.booking.goal != null) {
+      _selectedGoal = widget.booking.goal!;
+    } else {
+      _selectedGoal = Goal(goalAmount: 0.0, goalName: '', goalType: GoalType.undefined, startDate: DateTime.now(), endDate: DateTime.now());
+    }
     _titleController.text = widget.booking.title;
     _amountController.text = formatCurrency(widget.booking.amount, 'EUR');
     _dateController.text =
