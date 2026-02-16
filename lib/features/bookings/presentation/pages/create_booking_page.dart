@@ -17,12 +17,14 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../blocs/booking/booking_bloc.dart';
 import '../../../../core/consts/animation_consts.dart';
 import '../../../../core/utils/app_flushbar.dart';
+import '../../../../data/enums/goal_type.dart';
 import '../../../../data/models/account.dart';
 import '../../../../data/models/booking.dart';
 import '../../../../data/models/category.dart';
 import '../../../../data/models/goal.dart';
 import '../../../../data/repositories/account_repository.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../categories/data/enums/category_type.dart';
 import '../../data/enums/amount_type.dart';
 import '../../data/enums/booking_type.dart';
 import '../../data/enums/repetition_type.dart';
@@ -45,7 +47,8 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
   late Category _selectedCategory;
   late Account _selectedDebitAccount;
   late Account _selectedTargetAccount;
-  late Goal _selectedGoal;
+  late Goal _selectedGoal =
+      Goal(goalAmount: 0.0, goalName: 'Kein Ziel', goalType: GoalType.undefined, startDate: DateTime.now(), endDate: DateTime.now());
   final GlobalKey<FormState> _createBookingFormKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
@@ -152,6 +155,17 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
     }
   }
 
+  void resetCategory() {
+    _categorieController.text = '';
+    if (_bookingType == BookingType.expense) {
+      _selectedCategory = Category(id: '', categoryName: '', categoryType: CategoryType.expenses);
+    } else if (_bookingType == BookingType.income) {
+      _selectedCategory = Category(id: '', categoryName: '', categoryType: CategoryType.revenue);
+    } else if (_bookingType == BookingType.transfer) {
+      _selectedCategory = Category(id: '', categoryName: '', categoryType: CategoryType.undefined);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
@@ -192,6 +206,7 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
                           onChanged: (BookingType newBookingType) {
                             setState(() {
                               _bookingType = newBookingType;
+                              resetCategory();
                             });
                           },
                         ),

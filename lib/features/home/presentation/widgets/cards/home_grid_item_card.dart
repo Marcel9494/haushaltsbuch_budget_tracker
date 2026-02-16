@@ -79,17 +79,23 @@ class _HomeGridItemCardState extends State<HomeGridItemCard> with TickerProvider
                           padding: const EdgeInsets.only(right: 10.0),
                           child: widget.icon,
                         ),
-                        Text(t.translate(widget.title)),
+                        Text(
+                          t.translate(widget.title),
+                          style: TextStyle(color: Colors.white, fontSize: 14.0, fontWeight: FontWeight.bold),
+                        ),
                       ],
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6.0),
+                      padding: const EdgeInsets.only(top: 10.0, bottom: 6.0),
                       child: Text(
                         formatCurrency(widget.stat, 'EUR'),
-                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 21.0, fontWeight: FontWeight.bold),
                       ),
                     ),
-                    Text(t.translate(widget.subtitle)),
+                    Text(
+                      t.translate(widget.subtitle),
+                      style: TextStyle(color: Colors.white54),
+                    ),
                   ],
                 ),
               ),

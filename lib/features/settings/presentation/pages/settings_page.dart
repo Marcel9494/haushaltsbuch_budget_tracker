@@ -43,6 +43,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
+    final currentUser = Supabase.instance.client.auth.currentUser!;
     return Scaffold(
       appBar: AppBar(title: Text(t.translate('settings'))),
       body: SingleChildScrollView(
@@ -76,17 +77,21 @@ class _SettingsPageState extends State<SettingsPage> {
                 title: '${t.translate('change_currency')}: $_currentCurrency',
                 onTap: () {},
               ),
-              SettingsCard(
-                leading: Icon(Icons.email_rounded),
-                title: t.translate('change_email'),
-                onTap: () {},
-              ),
-              SettingsCard(
-                leading: Icon(Icons.lock_reset_rounded),
-                title: t.translate('change_password'),
-                onTap: () {},
-              ),
-              Supabase.instance.client.auth.currentUser!.isAnonymous
+              currentUser.isAnonymous
+                  ? SizedBox.shrink()
+                  : SettingsCard(
+                      leading: Icon(Icons.email_rounded),
+                      title: t.translate('change_email'),
+                      onTap: () => Navigator.pushNamed(context, changeEmailRoute),
+                    ),
+              currentUser.isAnonymous || currentUser.identities?[0].provider != 'email'
+                  ? SizedBox.shrink()
+                  : SettingsCard(
+                      leading: Icon(Icons.lock_reset_rounded),
+                      title: t.translate('change_password'),
+                      onTap: () => Navigator.pushNamed(context, changePasswordRoute),
+                    ),
+              currentUser.isAnonymous
                   ? SettingsCard(
                       leading: Icon(Icons.workspace_premium_rounded),
                       title: t.translate('upgrade_account'),

@@ -144,6 +144,7 @@ const Map<String, String> de = {
   'guest_info_text':
       'Aktuell hast du ein vorübergehendes Gästekonto. Deine Daten gehen verloren, wenn du die App deinstallierst oder dein Gerät wechselst. Um deine Daten dauerhaft zu sichern und plattformübergreifend zu nutzen, erstelle bitte ein kostenloses Konto.',
   'upgrade_account': 'Konto upgraden',
+  'user_logout_description': 'Möchtest du dich wirklich abmelden?',
   'guest_logout_description_important':
       'WICHTIG: Vorübergehende Gästekontos verlieren alle ihre Daten, wenn du dich abmeldest. Diese Aktion kann nicht rückgängig gemacht werden. Wenn du dich trotzdem abmelden möchtest bestätige bitte mit dem Wort: Logout',
   'guest_logout_description_notice':
@@ -153,6 +154,15 @@ const Map<String, String> de = {
   'upgrade': 'Upgraden',
   'upgrade_with_google': 'Mit Google upgraden',
   'update_booking': 'Buchung bearbeiten',
+  'account_upgrade_successful': 'Dein Konto wurde erfolgreich geupgradet.',
+  'current_email': 'Aktuelle E-Mail Adresse',
+  'important': 'WICHTIG',
+  'change_email_description':
+      'Bitte gib zuerst deine neue E-Mail-Adresse ein. Zur Sicherheit senden wir dir anschließend jeweils einen Bestätigungslink an deine aktuelle sowie an deine neue E-Mail-Adresse. Die E-Mail-Änderung wird erst abgeschlossen, nachdem beide Links bestätigt wurden.',
+  'new_email': 'Neue E-Mail',
+  'send_confirmation_emails': 'Bestätigungs-E-Mails senden',
+  'email_change_successful': 'Deine E-Mail Adresse wurde erfolgreich geändert.',
+  'current_password': 'Aktuelles Passwort',
   // Sprachen
   'de': 'Deutsch',
   'en': 'Englisch',
@@ -195,6 +205,7 @@ const Map<String, String> de = {
   'upgrade_account_error': 'Authentifizierungsfehler beim Upgraden des Kontos. Bitte versuchen Sie es später erneut.',
   'google_identity_already_exists_error':
       'Diese Google E-Mail ist bereits mit einem anderen Konto verknüpft. Bitte melde dich mit dem Gast Konto ab und logge dich mit deiner Google E-Mail ein.',
+  'wrong_current_password_error': 'Das aktuelle Passwort ist nicht korrekt. Bitte geben Sie Ihr aktuelles Passwort korrekt ein.',
   'database_error': 'Datenbankfehler. Bitte versuchen Sie es später erneut.',
   'unknown_error': 'Ein unbekannter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.',
 };

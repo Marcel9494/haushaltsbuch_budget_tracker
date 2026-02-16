@@ -13,7 +13,7 @@ Future<bool> showUserLogoutDialog(BuildContext context) async {
         TextButton(
           style: TextButton.styleFrom(foregroundColor: Colors.grey),
           onPressed: () => Navigator.of(context).pop(false),
-          child: Text(t.translate('cancel')),
+          child: Text(t.translate('no')),
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
@@ -21,7 +21,7 @@ Future<bool> showUserLogoutDialog(BuildContext context) async {
             backgroundColor: Colors.redAccent,
           ),
           onPressed: () => Navigator.of(context).pop(true),
-          child: Text(t.translate('confirm')),
+          child: Text(t.translate('yes')),
         ),
       ],
     ),

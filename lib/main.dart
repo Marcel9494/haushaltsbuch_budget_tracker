@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:haushaltsbuch_budget_tracker/data/repositories/category_repository.dart';
 import 'package:haushaltsbuch_budget_tracker/features/auth/presentation/pages/forgot_password_page.dart';
 import 'package:haushaltsbuch_budget_tracker/features/budgets/presentation/pages/budget_bookings_page.dart';
+import 'package:haushaltsbuch_budget_tracker/features/settings/presentation/pages/change_email_page.dart';
 import 'package:haushaltsbuch_budget_tracker/features/settings/presentation/pages/upgrade_account_page.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -46,6 +47,7 @@ import 'features/goals/presentation/pages/goal_bookings_page.dart';
 import 'features/goals/presentation/pages/goal_list_page.dart';
 import 'features/goals/presentation/pages/update_goal_page.dart';
 import 'features/home/presentation/pages/home_page.dart';
+import 'features/settings/presentation/pages/change_password_page.dart';
 import 'features/settings/presentation/pages/settings_page.dart';
 import 'l10n/app_localizations.dart';
 
@@ -75,7 +77,7 @@ void main() async {
       final event = data.event;
 
       if (event == AuthChangeEvent.signedIn || event == AuthChangeEvent.initialSession || event == AuthChangeEvent.userUpdated) {
-        navigatorKey.currentState?.pushReplacement(
+        navigatorKey.currentState?.pushAndRemoveUntil(
           MaterialPageRoute(
             builder: (_) => MultiBlocProvider(
               providers: [
@@ -88,6 +90,7 @@ void main() async {
               child: HomePage(currentPageIndex: 0),
             ),
           ),
+          (route) => false,
         );
       } else if (event == AuthChangeEvent.passwordRecovery) {
         // Benutzer wurde über Passwort-Reset-Link reingebracht
@@ -101,7 +104,7 @@ void main() async {
         );
       }
     },
-    onError: (error) {
+    onError: (error) async {
       final context = navigatorKey.currentContext;
       if (context == null) {
         return;
@@ -112,6 +115,17 @@ void main() async {
           context,
           message: t.translate('google_identity_already_exists_error'),
           duration: const Duration(seconds: 7),
+        );
+      } else if (error is AuthException && error.statusCode == 'otp_expired') {
+        // Benutzer hat beide Bestätigungslink für die E-Mail Änderung geklickt. Beim zweiten
+        // Link ist der Token abgelaufen, daher wird hier otp_expired geworfen.
+        // Die E-Mail Änderung ist aber trotzdem erfolgreich.
+        await Supabase.instance.client.auth.refreshSession();
+        AppFlushbar.show(
+          context,
+          icon: Icons.check_circle_rounded,
+          iconColor: Colors.greenAccent,
+          message: t.translate('email_change_successful'),
         );
       } else {
         AppFlushbar.show(
@@ -249,6 +263,8 @@ class MyApp extends StatelessWidget {
         accountListRoute: (context) => const AccountListPage(),
         goalListRoute: (context) => const GoalListPage(),
         settingsRoute: (context) => const SettingsPage(),
+        changeEmailRoute: (context) => const ChangeEmailPage(),
+        changePasswordRoute: (context) => const ChangePasswordPage(),
         upgradeAccountRoute: (context) => const UpgradeAccountPage(),
       },
       onGenerateRoute: (settings) {

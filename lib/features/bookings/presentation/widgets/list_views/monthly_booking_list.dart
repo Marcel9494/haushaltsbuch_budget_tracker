@@ -18,12 +18,16 @@ import '../deco/booking_list_overview.dart';
 
 class MonthlyBookingList extends StatefulWidget {
   final DateTime currentSelectedDate;
+  bool showUpcomingBookings;
+  final ValueChanged<bool>? onShowUpcomingBookingsChanged;
   PeriodOfTimeType currentPeriodOfTimeType;
   final ValueChanged<PeriodOfTimeType>? onPeriodOfTimeChanged;
 
   MonthlyBookingList({
     super.key,
     required this.currentSelectedDate,
+    required this.showUpcomingBookings,
+    required this.onShowUpcomingBookingsChanged,
     required this.currentPeriodOfTimeType,
     required this.onPeriodOfTimeChanged,
   });
@@ -33,24 +37,30 @@ class MonthlyBookingList extends StatefulWidget {
 }
 
 class _MonthlyBookingListState extends State<MonthlyBookingList> {
-  bool _showUpcomingBookings = false;
   List<Booking> _pastBookings = [];
   List<Booking> _upcomingBookings = [];
   List<Booking> _combinedBookings = [];
   int _pastStartIndex = 0;
+  final ScrollController _scrollController = ScrollController();
 
   void _prepareBookingList(List<Booking> bookings) {
     _pastBookings = bookings.where((b) => b.bookingDate.isBefore(DateTime.now())).toList()..sort((a, b) => b.bookingDate.compareTo(a.bookingDate));
     _upcomingBookings = bookings.where((b) => b.bookingDate.isAfter(DateTime.now())).toList()..sort((a, b) => b.bookingDate.compareTo(a.bookingDate));
-    _pastStartIndex = _showUpcomingBookings ? _upcomingBookings.length : 0;
+    _pastStartIndex = widget.showUpcomingBookings ? _upcomingBookings.length : 0;
     _combinedBookings = [
-      if (_showUpcomingBookings) ..._upcomingBookings,
+      if (widget.showUpcomingBookings) ..._upcomingBookings,
       ..._pastBookings,
     ];
   }
 
   bool _isSameDay(DateTime a, DateTime b) {
     return a.year == b.year && a.month == b.month && a.day == b.day;
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -77,13 +87,21 @@ class _MonthlyBookingListState extends State<MonthlyBookingList> {
                   ? TextButton(
                       onPressed: () {
                         setState(() {
-                          _showUpcomingBookings = !_showUpcomingBookings;
+                          widget.onShowUpcomingBookingsChanged?.call(!widget.showUpcomingBookings);
+
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            _scrollController.animateTo(
+                              0,
+                              duration: const Duration(milliseconds: 500),
+                              curve: Curves.easeInOut,
+                            );
+                          });
                         });
                       },
                       child: Row(
                         children: [
                           Icon(
-                            _showUpcomingBookings ? Icons.keyboard_arrow_down_rounded : Icons.keyboard_arrow_up_rounded,
+                            widget.showUpcomingBookings ? Icons.keyboard_arrow_down_rounded : Icons.keyboard_arrow_up_rounded,
                             color: Colors.white70,
                           ),
                           SizedBox(width: 4.0),
@@ -107,6 +125,7 @@ class _MonthlyBookingListState extends State<MonthlyBookingList> {
                   : Expanded(
                       child: AnimationLimiter(
                         child: ListView.builder(
+                          controller: _scrollController,
                           shrinkWrap: true,
                           itemCount: _combinedBookings.length,
                           itemBuilder: (context, index) {

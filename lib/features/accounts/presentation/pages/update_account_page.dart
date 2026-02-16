@@ -50,6 +50,7 @@ class _UpdateAccountPageState extends State<UpdateAccountPage> {
   @override
   void initState() {
     super.initState();
+    _selectedAccount = widget.account;
     _nameController.text = widget.account.name;
     _amountController.text = formatCurrency(widget.account.balance, 'EUR');
     _accountTypeController.text = widget.account.accountType.name;
@@ -157,17 +158,17 @@ class _UpdateAccountPageState extends State<UpdateAccountPage> {
                       );
                     }
                     if (confirmed == true) {
-                      // TODO funktioniert noch nicht richtig _selectedAccount ist nicht immer gesetzt siehe _selectedAcount oben
-                      context.read<AccountBloc>().add(DeleteAccount(accountId: widget.account.id!, transferAccount: _selectedAccount));
+                      if (_selectedAccount.id == widget.account.id) {
+                        context.read<AccountBloc>().add(DeleteAccount(accountId: widget.account.id!));
+                      } else {
+                        context.read<AccountBloc>().add(DeleteAccount(accountId: widget.account.id!, transferAccount: _selectedAccount));
+                      }
                       Future.delayed(Duration(milliseconds: 200), () {
-                        /*Navigator.of(context).pushNamedAndRemoveUntil(
+                        Navigator.of(context).pushNamedAndRemoveUntil(
                           homeRoute,
                           (route) => false,
                           arguments: HomePageArguments(2),
-                        );*/
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                        Navigator.popAndPushNamed(context, homeRoute, arguments: HomePageArguments(2));
+                        );
                       });
                     }
                   },
