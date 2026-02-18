@@ -11,5 +11,7 @@ Haushaltsbuch - Budget Tracker
   - Google Authentication
   - Anonymously Authentication
   - Postgres Database
+  - Email ändern
+  - Passwort ändern
 - SQL (Schema Entwurf, CRUD Operationen)
 - Git & Github
