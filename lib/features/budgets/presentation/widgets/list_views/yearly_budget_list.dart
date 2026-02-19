@@ -12,8 +12,10 @@ import '../../../../../blocs/budget/budget_event.dart';
 import '../../../../../blocs/budget/budget_state.dart';
 import '../../../../../blocs/category/category_bloc.dart';
 import '../../../../../core/consts/animation_consts.dart';
+import '../../../../../core/utils/helper_functions.dart';
 import '../../../../../core/utils/slow_hero_animation.dart';
 import '../../../../../data/enums/period_of_time_type.dart';
+import '../../../../../data/helper_models/budget_stats.dart';
 import '../../../../../data/models/booking.dart';
 import '../../../../../data/models/budget.dart';
 import '../../../../../l10n/app_localizations.dart';
@@ -73,22 +75,7 @@ class _YearlyBudgetListState extends State<YearlyBudgetList> with TickerProvider
                               return const [];
                             },
                             builder: (context, bookings) {
-                              final List<BarChartGroupData> barGroups = [];
-                              final List<double> usedAmounts = [];
-                              final List<double> totalBudgets = [];
-                              double overallUsedAmount = 0.0;
-                              double overallBudgetAmount = 0.0;
-                              for (int month = 1; month <= 12; month++) {
-                                final monthlyBudgets = state.yearlyBudgets.values
-                                    .expand((list) => list)
-                                    .where((b) => b.budgetDate?.year == widget.currentSelectedDate.year && b.budgetDate?.month == month)
-                                    .toList();
-                                totalBudgets.add(monthlyBudgets.fold(0.0, (sum, b) => sum + b.budgetAmount));
-                                overallBudgetAmount += totalBudgets.last;
-                                usedAmounts.add(_budgetRepository.calculateMonthlyUsedAmount(monthlyBudgets, bookings));
-                                overallUsedAmount += usedAmounts.last;
-                                barGroups.add(makeGroupData(month - 1, totalBudgets[month - 1], usedAmounts[month - 1]));
-                              }
+                              final BudgetStats budgetStats = calculateBudgetStats(state.yearlyBudgets, bookings, widget.currentSelectedDate.year);
                               return Card(
                                 child: AspectRatio(
                                   aspectRatio: 1.35,
@@ -101,18 +88,18 @@ class _YearlyBudgetListState extends State<YearlyBudgetList> with TickerProvider
                                         // TODO Bei Budget Stats nur bis aktuellem Monat berücksichtigen?
                                         BudgetInfoRow(
                                           budgetName: t.translate('total_budget'),
-                                          budgetAmount: overallBudgetAmount,
-                                          usedAmount: overallUsedAmount,
+                                          budgetAmount: budgetStats.overallBudgetAmount,
+                                          usedAmount: budgetStats.overallUsedAmount,
                                         ),
                                         const SizedBox(height: 22.0),
                                         BudgetBarChart(
-                                          totalBudgets: totalBudgets,
-                                          usedAmounts: usedAmounts,
-                                          barGroups: barGroups,
+                                          totalBudgets: budgetStats.totalBudgets,
+                                          usedAmounts: budgetStats.usedAmounts,
+                                          barGroups: budgetStats.barGroups,
                                         ),
                                         const SizedBox(height: 12.0),
                                         BudgetStatRow(
-                                          usedBudgetAmounts: usedAmounts,
+                                          usedBudgetAmounts: budgetStats.usedAmounts,
                                         ),
                                       ],
                                     ),
@@ -250,51 +237,6 @@ class _YearlyBudgetListState extends State<YearlyBudgetList> with TickerProvider
           return SizedBox.shrink();
         },
       ),
-    );
-  }
-
-  BarChartGroupData makeGroupData(int x, double budgetAmount, double usedAmount) {
-    return BarChartGroupData(
-      barsSpace: 3.0,
-      x: x,
-      barRods: [
-        BarChartRodData(
-          toY: budgetAmount,
-          width: 7.0,
-          gradient: const LinearGradient(
-            begin: Alignment.bottomCenter,
-            end: Alignment.topCenter,
-            colors: [
-              Colors.cyan,
-              Colors.cyanAccent,
-            ],
-          ),
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(8.0),
-            topRight: Radius.circular(8.0),
-            bottomLeft: Radius.circular(2.0),
-            bottomRight: Radius.circular(2.0),
-          ),
-        ),
-        BarChartRodData(
-          toY: usedAmount,
-          width: 7.0,
-          gradient: LinearGradient(
-            begin: Alignment.bottomCenter,
-            end: Alignment.topCenter,
-            colors: [
-              usedAmount > budgetAmount ? Colors.red : Colors.green,
-              usedAmount > budgetAmount ? Colors.redAccent.shade200 : Colors.greenAccent,
-            ],
-          ),
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(8.0),
-            topRight: Radius.circular(8.0),
-            bottomLeft: Radius.circular(2.0),
-            bottomRight: Radius.circular(2.0),
-          ),
-        ),
-      ],
     );
   }
 }

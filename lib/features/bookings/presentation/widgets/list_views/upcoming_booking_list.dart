@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../core/utils/currency_formatter.dart';
+import '../../../../../core/utils/date_helper.dart';
 import '../../../../../data/models/booking.dart';
 import '../../../../../data/repositories/booking_repository.dart';
 import '../cards/booking_card.dart';
@@ -14,10 +15,6 @@ class UpcomingBookingList extends StatelessWidget {
     super.key,
     required this.bookings,
   });
-
-  bool _isSameDay(DateTime a, DateTime b) {
-    return a.year == b.year && a.month == b.month && a.day == b.day;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +30,7 @@ class UpcomingBookingList extends StatelessWidget {
             showHeader = true;
           } else {
             final previousBooking = bookings[index - 1];
-            showHeader = !_isSameDay(
+            showHeader = !isSameDay(
               bookingDate,
               previousBooking.bookingDate,
             );

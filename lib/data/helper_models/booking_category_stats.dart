@@ -3,7 +3,7 @@ class BookingCategoryStats {
   final double totalAmount;
   final double percentage;
 
-  BookingCategoryStats({
+  const BookingCategoryStats({
     required this.category,
     required this.totalAmount,
     required this.percentage,
