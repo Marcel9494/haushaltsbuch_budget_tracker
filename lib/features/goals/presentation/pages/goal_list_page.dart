@@ -61,7 +61,7 @@ class _GoalListPageState extends State<GoalListPage> {
                     tag: 'create_goal_fab',
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      child: OutlinedButton(
+                      child: OutlinedButton.icon(
                         onPressed: () {
                           Navigator.push(
                             context,
@@ -73,7 +73,8 @@ class _GoalListPageState extends State<GoalListPage> {
                             ),
                           );
                         },
-                        child: Text(t.translate('create_goal')),
+                        icon: Icon(Icons.add_rounded),
+                        label: Text(t.translate('create_goal')),
                       ),
                     ),
                   ),

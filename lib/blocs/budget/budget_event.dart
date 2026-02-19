@@ -47,3 +47,13 @@ class LoadYearlyBudgets extends BudgetEvent {
     this.selectedYear,
   );
 }
+
+class LoadYearlyBudgetsFromCategory extends BudgetEvent {
+  final int selectedYear;
+  final String categoryId;
+
+  LoadYearlyBudgetsFromCategory(
+    this.selectedYear,
+    this.categoryId,
+  );
+}

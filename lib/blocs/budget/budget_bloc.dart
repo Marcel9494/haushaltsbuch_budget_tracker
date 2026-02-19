@@ -14,6 +14,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
     on<DeleteBudget>(_onDeleteBudget);
     on<LoadMonthlyBudgets>(_onLoadMonthlyBudgets);
     on<LoadYearlyBudgets>(_onLoadYearlyBudgets);
+    on<LoadYearlyBudgetsFromCategory>(_onLoadYearlyBudgetsFromCategory);
   }
 
   Future<void> _onCreateBudget(CreateBudget event, Emitter<BudgetState> emit) async {
@@ -61,6 +62,17 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
     try {
       final Map<String, List<Budget>> yearlyBudgets = await _budgetRepository.loadYearlyBudgets(event.selectedYear);
       emit(YearlyBudgetListLoaded(yearlyBudgets));
+    } catch (e) {
+      emit(BudgetError('load_budgets_error'));
+    }
+  }
+
+  Future<void> _onLoadYearlyBudgetsFromCategory(LoadYearlyBudgetsFromCategory event, Emitter<BudgetState> emit) async {
+    emit(BudgetLoading());
+    try {
+      final Map<String, List<Budget>> yearlyBudgetsFromCategory =
+          await _budgetRepository.loadYearlyBudgetsFromCategory(event.selectedYear, event.categoryId);
+      emit(YearlyBudgetFromCategoryListLoaded(yearlyBudgetsFromCategory));
     } catch (e) {
       emit(BudgetError('load_budgets_error'));
     }

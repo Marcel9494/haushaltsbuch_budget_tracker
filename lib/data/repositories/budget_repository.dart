@@ -127,6 +127,23 @@ class BudgetRepository {
     return budgetCategories;
   }
 
+  Future<Map<String, List<Budget>>> loadYearlyBudgetsFromCategory(int selectedYear, String categoryId) async {
+    final startOfYear = DateTime(selectedYear, 1, 1);
+    final endOfYear = DateTime(selectedYear + 1, 1, 1);
+    final yearlyBudgets = await Supabase.instance.client
+        .from('budgets')
+        .select('*, categories(*)')
+        .gte('budget_date', startOfYear)
+        .lt('budget_date', endOfYear)
+        .eq('category_id', categoryId)
+        .order('budget_date', ascending: false);
+    final List<Budget> allBudgets = (yearlyBudgets as List).map((data) => Budget.fromMap(data)).toList();
+    final Map<String, List<Budget>> budgetCategories = groupBy(allBudgets, (budget) {
+      return budget.categoryId;
+    });
+    return budgetCategories;
+  }
+
   double calculateUsedAmountForBudget(Budget budget, List<Booking> bookings) {
     double usedBudgetAmount = 0.0;
     for (Booking booking in bookings) {

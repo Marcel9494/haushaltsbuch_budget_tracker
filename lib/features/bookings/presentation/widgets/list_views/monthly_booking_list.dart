@@ -7,6 +7,7 @@ import 'package:haushaltsbuch_budget_tracker/features/shared/presentation/widget
 
 import '../../../../../blocs/booking/booking_bloc.dart';
 import '../../../../../core/consts/animation_consts.dart';
+import '../../../../../core/utils/date_helper.dart';
 import '../../../../../data/models/booking.dart';
 import '../../../../../l10n/app_localizations.dart';
 import '../../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
@@ -132,7 +133,7 @@ class _MonthlyBookingListState extends State<MonthlyBookingList> {
                             final bookingDate = _combinedBookings[index].bookingDate;
                             final bool showHeader = index == 0
                                 ? true
-                                : !_isSameDay(
+                                : !isSameDay(
                                     bookingDate,
                                     _combinedBookings[index - 1].bookingDate,
                                   );

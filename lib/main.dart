@@ -313,6 +313,7 @@ class MyApp extends StatelessWidget {
               builder: (context) => BudgetBookingsPage(
                 budget: args.budget,
                 bookings: args.bookings,
+                currentSelectedDate: args.currentSelectedDate,
               ),
               settings: settings,
             );

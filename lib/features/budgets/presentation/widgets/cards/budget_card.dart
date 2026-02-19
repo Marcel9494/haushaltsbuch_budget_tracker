@@ -46,7 +46,11 @@ class BudgetCard extends StatelessWidget {
             slowHeroRoute(
               BlocProvider.value(
                 value: context.read<CategoryBloc>(),
-                child: BudgetBookingsPage(budget: budget, bookings: bookings),
+                child: BudgetBookingsPage(
+                  budget: budget,
+                  bookings: bookings,
+                  currentSelectedDate: currentSelectedDate,
+                ),
               ),
             ),
           ),

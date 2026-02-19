@@ -24,6 +24,11 @@ class YearlyBudgetListLoaded extends BudgetState {
   YearlyBudgetListLoaded(this.yearlyBudgets);
 }
 
+class YearlyBudgetFromCategoryListLoaded extends BudgetState {
+  final Map<String, List<Budget>> yearlyBudgetsFromCategory;
+  YearlyBudgetFromCategoryListLoaded(this.yearlyBudgetsFromCategory);
+}
+
 class BudgetError extends BudgetState {
   final String message;
   BudgetError(this.message);
