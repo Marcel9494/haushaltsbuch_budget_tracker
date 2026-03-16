@@ -10,6 +10,14 @@ class CreateAccount extends AccountEvent {
   });
 }
 
+class CreateAccounts extends AccountEvent {
+  final List<Account> accounts;
+
+  CreateAccounts({
+    required this.accounts,
+  });
+}
+
 class LoadAccounts extends AccountEvent {
   LoadAccounts();
 }

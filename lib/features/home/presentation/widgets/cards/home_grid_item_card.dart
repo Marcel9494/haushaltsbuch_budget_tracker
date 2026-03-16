@@ -7,13 +7,17 @@ class HomeGridItemCard extends StatefulWidget {
   final String title;
   final double stat;
   final String subtitle;
+  bool isSelected;
+  final VoidCallback? onTap;
 
-  const HomeGridItemCard({
+  HomeGridItemCard({
     super.key,
     required this.icon,
     required this.title,
     required this.stat,
     required this.subtitle,
+    this.isSelected = false,
+    this.onTap,
   });
 
   @override
@@ -54,49 +58,69 @@ class _HomeGridItemCardState extends State<HomeGridItemCard> with TickerProvider
       opacity: _opacity,
       child: SlideTransition(
         position: _slide,
-        child: Card(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12.0),
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.bottomRight,
-                  end: Alignment.topLeft,
-                  colors: [
-                    Theme.of(context).colorScheme.primary.withValues(alpha: 0.06),
-                    Theme.of(context).colorScheme.primary.withValues(alpha: 0.02),
-                  ],
-                ),
+        child: GestureDetector(
+          onTap: () {
+            setState(() {
+              widget.onTap?.call();
+              widget.isSelected = !widget.isSelected;
+            });
+          },
+          child: AnimatedContainer(
+            duration: Duration(milliseconds: 200),
+            curve: Curves.easeInOut,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: widget.isSelected ? Colors.cyanAccent : Colors.transparent,
+                width: 1.2,
               ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+            ),
+            child: Card(
+              margin: EdgeInsets.zero,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.bottomRight,
+                      end: Alignment.topLeft,
+                      colors: [
+                        Theme.of(context).colorScheme.primary.withValues(alpha: 0.06),
+                        Theme.of(context).colorScheme.primary.withValues(alpha: 0.02),
+                      ],
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10.0),
+                              child: widget.icon,
+                            ),
+                            Text(
+                              t.translate(widget.title),
+                              style: TextStyle(color: Colors.white, fontSize: 14.0, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
                         Padding(
-                          padding: const EdgeInsets.only(right: 10.0),
-                          child: widget.icon,
+                          padding: const EdgeInsets.only(top: 10.0, bottom: 6.0),
+                          child: Text(
+                            formatCurrency(widget.stat, 'EUR'),
+                            style: TextStyle(fontSize: 21.0, fontWeight: FontWeight.bold),
+                          ),
                         ),
                         Text(
-                          t.translate(widget.title),
-                          style: TextStyle(color: Colors.white, fontSize: 14.0, fontWeight: FontWeight.bold),
+                          t.translate(widget.subtitle),
+                          style: TextStyle(color: Colors.white54),
                         ),
                       ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0, bottom: 6.0),
-                      child: Text(
-                        formatCurrency(widget.stat, 'EUR'),
-                        style: TextStyle(fontSize: 21.0, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    Text(
-                      t.translate(widget.subtitle),
-                      style: TextStyle(color: Colors.white54),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),

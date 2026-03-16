@@ -1,20 +1,28 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:haushaltsbuch_budget_tracker/blocs/on_boarding/on_boarding_bloc.dart';
 import 'package:haushaltsbuch_budget_tracker/data/repositories/category_repository.dart';
 import 'package:haushaltsbuch_budget_tracker/features/auth/presentation/pages/forgot_password_page.dart';
 import 'package:haushaltsbuch_budget_tracker/features/budgets/presentation/pages/budget_bookings_page.dart';
+import 'package:haushaltsbuch_budget_tracker/features/onboarding/presentation/pages/category_onboarding_page.dart';
 import 'package:haushaltsbuch_budget_tracker/features/settings/presentation/pages/change_email_page.dart';
 import 'package:haushaltsbuch_budget_tracker/features/settings/presentation/pages/upgrade_account_page.dart';
+import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' hide User;
 
 import 'blocs/account/account_bloc.dart';
 import 'blocs/booking/booking_bloc.dart';
 import 'blocs/budget/budget_bloc.dart';
 import 'blocs/category/category_bloc.dart';
+import 'blocs/dashboard_element/dashboard_element_bloc.dart';
 import 'blocs/goal/goal_bloc.dart';
+import 'blocs/user/user_bloc.dart';
+import 'blocs/user/user_event.dart';
 import 'core/consts/route_consts.dart';
 import 'core/page_arguments/budget_bookings_page_arguments.dart';
 import 'core/page_arguments/category_list_page_arguments.dart';
@@ -26,10 +34,13 @@ import 'core/page_arguments/update_budget_page_arguments.dart';
 import 'core/page_arguments/update_category_page_arguments.dart';
 import 'core/page_arguments/update_goal_page_arguments.dart';
 import 'core/utils/app_flushbar.dart';
+import 'data/models/user.dart';
 import 'data/repositories/account_repository.dart';
 import 'data/repositories/booking_repository.dart';
 import 'data/repositories/budget_repository.dart';
+import 'data/repositories/dashboard_element_repository.dart';
 import 'data/repositories/goal_repository.dart';
+import 'data/repositories/user_repository.dart';
 import 'features/accounts/presentation/pages/account_list_page.dart';
 import 'features/accounts/presentation/pages/create_account_page.dart';
 import 'features/accounts/presentation/pages/update_account_page.dart';
@@ -47,11 +58,15 @@ import 'features/goals/presentation/pages/goal_bookings_page.dart';
 import 'features/goals/presentation/pages/goal_list_page.dart';
 import 'features/goals/presentation/pages/update_goal_page.dart';
 import 'features/home/presentation/pages/home_page.dart';
+import 'features/onboarding/presentation/pages/account_onboarding_page.dart';
+import 'features/onboarding/presentation/pages/completed_onboarding_page.dart';
+import 'features/onboarding/presentation/pages/dashboard_onboarding_page.dart';
 import 'features/settings/presentation/pages/change_password_page.dart';
 import 'features/settings/presentation/pages/settings_page.dart';
 import 'l10n/app_localizations.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+final userBloc = UserBloc(UserRepository());
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -76,7 +91,30 @@ void main() async {
     (data) async {
       final event = data.event;
 
-      if (event == AuthChangeEvent.signedIn || event == AuthChangeEvent.initialSession || event == AuthChangeEvent.userUpdated) {
+      if (event == AuthChangeEvent.initialSession) {
+        // TODO
+      } else if (event == AuthChangeEvent.signedIn) {
+        final locale = PlatformDispatcher.instance.locale;
+        final localeString = locale.countryCode != null ? locale.toString() : '${locale.languageCode}_US';
+
+        final newUser = User(
+          id: Supabase.instance.client.auth.currentUser!.id,
+          language: locale.languageCode,
+          country: locale.countryCode ?? '',
+          currencySymbol: NumberFormat.simpleCurrency(locale: localeString).currencySymbol,
+          currencyName: NumberFormat.simpleCurrency(locale: localeString).currencyName ?? '',
+          hasOnboardingCompleted: false,
+          dashboardConfig: {},
+        );
+
+        userBloc.add(CreateUser(user: newUser));
+        navigatorKey.currentState?.pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (_) => const CategoryOnboardingPage(),
+          ),
+          (route) => false,
+        );
+      } else if (event == AuthChangeEvent.userUpdated) {
         navigatorKey.currentState?.pushAndRemoveUntil(
           MaterialPageRoute(
             builder: (_) => MultiBlocProvider(
@@ -266,6 +304,24 @@ class MyApp extends StatelessWidget {
         changeEmailRoute: (context) => const ChangeEmailPage(),
         changePasswordRoute: (context) => const ChangePasswordPage(),
         upgradeAccountRoute: (context) => const UpgradeAccountPage(),
+        categoryOnboardingRoute: (context) => const CategoryOnboardingPage(),
+        dashboardOnboardingRoute: (context) => const DashboardOnboardingPage(),
+        accountOnboardingRoute: (context) => const AccountOnboardingPage(),
+        completedOnboardingRoute: (context) => MultiBlocProvider(
+              providers: [
+                BlocProvider(
+                  create: (context) => OnboardingBloc(
+                    categoryRepository: CategoryRepository(),
+                    accountRepository: AccountRepository(),
+                    dashboardRepository: DashboardElementRepository(),
+                  ),
+                ),
+                BlocProvider(create: (context) => CategoryBloc(CategoryRepository())),
+                BlocProvider(create: (context) => AccountBloc(AccountRepository())),
+                BlocProvider(create: (context) => DashboardElementBloc(DashboardElementRepository())),
+              ],
+              child: const CompletedOnboardingPage(),
+            ),
       },
       onGenerateRoute: (settings) {
         switch (settings.name) {
@@ -273,7 +329,12 @@ class MyApp extends StatelessWidget {
             return PageTransition(
               type: PageTransitionType.fade,
               settings: settings,
-              child: RegisterPage(),
+              child: MultiBlocProvider(
+                providers: [
+                  BlocProvider<UserBloc>.value(value: userBloc),
+                ],
+                child: RegisterPage(),
+              ),
             );
           case loginRoute:
             return PageTransition(

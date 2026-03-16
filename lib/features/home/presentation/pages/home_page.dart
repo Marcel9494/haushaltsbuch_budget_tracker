@@ -33,7 +33,7 @@ class HomePage extends StatefulWidget {
 
   const HomePage({
     super.key,
-    required this.currentPageIndex,
+    this.currentPageIndex = 0,
   });
 
   @override

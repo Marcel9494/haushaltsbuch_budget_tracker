@@ -9,6 +9,10 @@ class CategoryCreated extends CategoryState {
   CategoryCreated(this.category);
 }
 
+class CategoriesCreated extends CategoryState {
+  CategoriesCreated();
+}
+
 class CategoryLoading extends CategoryState {}
 
 class CategoryListLoaded extends CategoryState {

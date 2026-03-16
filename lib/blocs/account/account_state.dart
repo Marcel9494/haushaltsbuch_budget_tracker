@@ -9,6 +9,10 @@ class AccountCreated extends AccountState {
   AccountCreated(this.booking);
 }
 
+class AccountsCreated extends AccountState {
+  AccountsCreated();
+}
+
 class AccountLoading extends AccountState {}
 
 class AccountListLoaded extends AccountState {

@@ -60,7 +60,7 @@ class _AccountListPageState extends State<AccountListPage> {
                         color: Colors.redAccent,
                       ),
                       AccountListOverviewCard(
-                        title: 'net_assets',
+                        title: 'total_assets',
                         amount: assets - debts,
                         icon: FaIcon(FontAwesomeIcons.coins, size: 22.0),
                         color: assets - debts >= 0 ? Colors.green : Colors.redAccent,

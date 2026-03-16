@@ -10,6 +10,7 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
 
   CategoryBloc(this._categoryRepository) : super(CategoryInitial()) {
     on<CreateCategory>(_onCreateCategory);
+    on<CreateCategories>(_onCreateCategories);
     on<LoadCategories>(_onLoadCategories);
     on<UpdateCategory>(_onUpdateCategory);
     on<DeleteCategory>(_onDeleteCategory);
@@ -25,6 +26,20 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
         emit(CategoryError('duplicated_category_error'));
       } else {
         emit(CategoryError('create_category_error'));
+      }
+    }
+  }
+
+  Future<void> _onCreateCategories(CreateCategories event, Emitter<CategoryState> emit) async {
+    emit(CategoryLoading());
+    try {
+      await _categoryRepository.createCategories(event.categories);
+      emit(CategoriesCreated());
+    } catch (e) {
+      if (e.toString().contains('duplicated_category')) {
+        emit(CategoryError('duplicated_category_error'));
+      } else {
+        emit(CategoryError('create_categories_error'));
       }
     }
   }

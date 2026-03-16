@@ -16,6 +16,26 @@ class CategoryRepository {
     }
   }
 
+  Future<void> createCategories(List<Category> newCategories) async {
+    try {
+      final categoryMap = <Map<String, dynamic>>[];
+
+      for (int i = 0; i < newCategories.length; i++) {
+        categoryMap.add({
+          'category_name': newCategories[i].categoryName,
+          'category_type': newCategories[i].categoryType.name,
+        });
+      }
+      await Supabase.instance.client.from('categories').insert(categoryMap);
+    } on PostgrestException catch (e) {
+      // Postgresql Fehlercode für unique_violation
+      if (e.code == '23505') {
+        throw Exception('duplicated_category');
+      }
+      rethrow;
+    }
+  }
+
   Future<Category> updateCategory(Category category) async {
     try {
       final SupabaseClient supabase = Supabase.instance.client;

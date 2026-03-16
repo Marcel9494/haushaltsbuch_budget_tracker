@@ -9,14 +9,14 @@ import '../models/booking.dart';
 import '../models/budget.dart';
 
 class BudgetRepository {
-  void createBudgets(Budget newBudget) async {
+  Future<void> createBudgets(Budget newBudget) async {
     // TODO hier noch auf doppelte Budgets prüfen, auch dort noch repetitionId mit beachten + update Methode.
-    final createdBudgets = <Map<String, dynamic>>[];
+    final budgetMap = <Map<String, dynamic>>[];
     DateTime currentBudgetDate = DateTime(DateTime.now().year, DateTime.now().month, 1);
     final budgetId = const Uuid().v4();
 
     for (int i = 0; i < budgetRepetitionNumberInMonths; i++) {
-      createdBudgets.add({
+      budgetMap.add({
         'budget_id': budgetId,
         'user_id': newBudget.userId,
         'category_id': newBudget.categoryId,
@@ -30,7 +30,7 @@ class BudgetRepository {
         1,
       );
     }
-    await Supabase.instance.client.from('budgets').insert(createdBudgets).select();
+    await Supabase.instance.client.from('budgets').insert(budgetMap).select();
   }
 
   void updateBudget(Budget updatedBudget, BudgetSelectionType budgetSelectionType) async {
