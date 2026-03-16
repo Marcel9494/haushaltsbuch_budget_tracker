@@ -10,6 +10,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
   AccountBloc(this._accountRepository) : super(AccountInitial()) {
     on<CreateAccount>(_onCreateAccount);
+    on<CreateAccounts>(_onCreateAccounts);
     on<LoadAccounts>(_onLoadAccounts);
     on<UpdateAccount>(_onUpdateAccount);
     on<DeleteAccount>(_onDeleteAccount);
@@ -25,6 +26,20 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
         emit(AccountError('duplicated_account_error'));
       } else {
         emit(AccountError('create_account_error'));
+      }
+    }
+  }
+
+  Future<void> _onCreateAccounts(CreateAccounts event, Emitter<AccountState> emit) async {
+    emit(AccountLoading());
+    try {
+      await _accountRepository.createAccounts(event.accounts);
+      emit(AccountsCreated());
+    } catch (e) {
+      if (e.toString().contains('duplicated_account')) {
+        emit(AccountError('duplicated_account_error'));
+      } else {
+        emit(AccountError('create_accounts_error'));
       }
     }
   }

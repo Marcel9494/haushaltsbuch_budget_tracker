@@ -19,6 +19,27 @@ class AccountRepository {
     }
   }
 
+  Future<void> createAccounts(List<Account> newAccounts) async {
+    try {
+      final accountMap = <Map<String, dynamic>>[];
+
+      for (int i = 0; i < newAccounts.length; i++) {
+        accountMap.add({
+          'name': newAccounts[i].name,
+          'account_type': newAccounts[i].accountType.name,
+          'balance': newAccounts[i].balance,
+        });
+      }
+      await Supabase.instance.client.from('accounts').insert(accountMap);
+    } on PostgrestException catch (e) {
+      // Postgresql Fehlercode für unique_violation
+      if (e.code == '23505') {
+        throw Exception('duplicated_account');
+      }
+      rethrow;
+    }
+  }
+
   Future<Account> updateAccount(Account account) async {
     try {
       final SupabaseClient supabase = Supabase.instance.client;

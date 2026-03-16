@@ -10,6 +10,14 @@ class CreateCategory extends CategoryEvent {
   });
 }
 
+class CreateCategories extends CategoryEvent {
+  final List<Category> categories;
+
+  CreateCategories({
+    required this.categories,
+  });
+}
+
 class LoadCategories extends CategoryEvent {
   LoadCategories();
 }

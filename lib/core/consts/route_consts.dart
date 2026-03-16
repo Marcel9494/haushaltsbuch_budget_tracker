@@ -20,3 +20,7 @@ const settingsRoute = 'settings';
 const changeEmailRoute = 'change_email';
 const changePasswordRoute = 'change_password';
 const upgradeAccountRoute = 'upgrade_account';
+const categoryOnboardingRoute = 'category_onboarding';
+const dashboardOnboardingRoute = 'dashboard_onboarding';
+const accountOnboardingRoute = 'account_onboarding';
+const completedOnboardingRoute = 'completed_onboarding';
