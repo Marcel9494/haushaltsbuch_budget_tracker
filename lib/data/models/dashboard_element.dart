@@ -1,4 +1,8 @@
 import '../enums/dashboard_element_type.dart';
+import '../repositories/account_repository.dart';
+import '../repositories/booking_repository.dart';
+import 'account.dart';
+import 'booking.dart';
 
 class DashboardElement {
   final String? id;
@@ -31,6 +35,20 @@ class DashboardElement {
     );
   }
 
+  factory DashboardElement.fromUserElementsMap(Map<String, dynamic> map) {
+    final element = map['dashboard_elements'];
+
+    return DashboardElement(
+      id: element['id'],
+      title: element['title'],
+      showValue: element['show_value'],
+      shortDescription: element['short_description'],
+      icon: element['icon'],
+      dashboardElementType: DashboardElementType.fromString(element['dashboard_element_type']),
+      isSelected: element['default_is_selected'],
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'title': title,
@@ -40,5 +58,27 @@ class DashboardElement {
       'dashboard_element_type': dashboardElementType.name,
       'default_is_selected': isSelected,
     };
+  }
+
+  static double calculateDisplayValue(DashboardElement dashboardElement, List<Booking> bookings, List<Account> accounts) {
+    final BookingRepository _bookingRepository = BookingRepository();
+    final AccountRepository _accountRepository = AccountRepository();
+    if (dashboardElement.title == 'expenses' &&
+        (dashboardElement.shortDescription == 'this_year' || dashboardElement.shortDescription == 'this_month')) {
+      return _bookingRepository.calculateExpenses(bookings);
+    } else if (dashboardElement.title == 'revenue' &&
+        (dashboardElement.shortDescription == 'this_year' || dashboardElement.shortDescription == 'this_month')) {
+      return _bookingRepository.calculateRevenue(bookings);
+    } else if (dashboardElement.title == 'total_assets') {
+      return _accountRepository.calculateAssets(accounts);
+    } else if (dashboardElement.title == 'total_debts') {
+      return _accountRepository.calculateDebts(accounts);
+    } else if (dashboardElement.title == 'net_assets') {
+      double assets = _accountRepository.calculateAssets(accounts);
+      double debts = _accountRepository.calculateDebts(accounts);
+      return assets - debts;
+    } else {
+      return 0.0;
+    }
   }
 }

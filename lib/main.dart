@@ -120,6 +120,7 @@ void main() async {
             builder: (_) => MultiBlocProvider(
               providers: [
                 BlocProvider(create: (context) => BookingBloc(BookingRepository(), AccountRepository())),
+                BlocProvider(create: (context) => DashboardElementBloc(DashboardElementRepository())),
                 BlocProvider(create: (context) => CategoryBloc(CategoryRepository())),
                 BlocProvider(create: (context) => AccountBloc(AccountRepository())),
                 BlocProvider(create: (context) => BudgetBloc(BudgetRepository())),
@@ -350,6 +351,7 @@ class MyApp extends StatelessWidget {
               child: MultiBlocProvider(
                 providers: [
                   BlocProvider(create: (context) => BookingBloc(BookingRepository(), AccountRepository())),
+                  BlocProvider(create: (context) => DashboardElementBloc(DashboardElementRepository())),
                   BlocProvider(create: (context) => CategoryBloc(CategoryRepository())),
                   BlocProvider(create: (context) => AccountBloc(AccountRepository())),
                   BlocProvider(create: (context) => BudgetBloc(BudgetRepository())),

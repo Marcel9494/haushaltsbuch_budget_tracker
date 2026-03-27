@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:haushaltsbuch_budget_tracker/data/repositories/account_repository.dart';
 import 'package:haushaltsbuch_budget_tracker/features/home/presentation/widgets/cards/guest_info_card.dart';
 import 'package:haushaltsbuch_budget_tracker/features/shared/presentation/widgets/deco/subtitle_text.dart';
 
 import '../../../../blocs/account/account_bloc.dart';
 import '../../../../blocs/account/account_state.dart';
 import '../../../../blocs/booking/booking_bloc.dart';
+import '../../../../blocs/dashboard_element/dashboard_element_bloc.dart';
+import '../../../../blocs/dashboard_element/dashboard_element_state.dart';
+import '../../../../core/utils/icon_helper.dart';
+import '../../../../data/enums/dashboard_element_type.dart';
 import '../../../../data/enums/period_of_time_type.dart';
 import '../../../../data/models/booking.dart';
-import '../../../../data/repositories/booking_repository.dart';
-import '../../../shared/presentation/widgets/buttons/period_of_time_segmented_button.dart';
+import '../../../../data/models/dashboard_element.dart';
 import '../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../../../shared/presentation/widgets/deco/error_text.dart';
 import '../widgets/cards/home_grid_item_card.dart';
@@ -34,149 +36,288 @@ class HomeContentPage extends StatefulWidget {
 }
 
 class _HomeContentPageState extends State<HomeContentPage> {
-  late final BookingRepository _bookingRepository = BookingRepository();
-  late final AccountRepository _accountRepository = AccountRepository();
+  final ScrollController _controller = ScrollController();
+  double _currentPage = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller.addListener(() {
+      setState(() {
+        // 152 = item width + padding (z.B. 140 + 12)
+        _currentPage = _controller.offset / 152;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AccountBloc, AccountState>(
       builder: (context, accountState) {
-        return BlocBuilder<BookingBloc, BookingState>(
-          builder: (context, bookingState) {
-            if (bookingState is BookingLoading || accountState is AccountLoading) {
-              return CircularLoadingIndicator();
-            } else if (bookingState is BookingListLoaded && accountState is AccountListLoaded) {
-              double revenue = _bookingRepository.calculateRevenue(bookingState.bookings);
-              double expenses = _bookingRepository.calculateExpenses(bookingState.bookings);
-              double balance = revenue - expenses;
-              double assets = _accountRepository.calculateAssets(accountState.accounts);
-              double debts = _accountRepository.calculateDebts(accountState.accounts);
-              double netAssets = assets - debts;
-              return SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    GuestInfoCard(),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 6.0, bottom: 16.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SubtitleText(text: 'overview'),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                            child: PeriodOfTimeSegmentedButton(
-                              periodOfTimeType: widget.currentPeriodOfTimeType,
-                              onChanged: (newValue) => widget.onPeriodOfTimeChanged?.call(newValue),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    GridView.count(
-                      crossAxisCount: 2,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      mainAxisSpacing: 16,
-                      crossAxisSpacing: 6,
-                      childAspectRatio: 1.6,
+        return BlocBuilder<DashboardElementBloc, DashboardElementState>(
+          builder: (context, dashboardElementState) {
+            return BlocBuilder<BookingBloc, BookingState>(
+              builder: (context, bookingState) {
+                if (bookingState is BookingLoading || accountState is AccountLoading || dashboardElementState is DashboardElementLoading) {
+                  return CircularLoadingIndicator();
+                } else if (bookingState is BookingListLoaded &&
+                    accountState is AccountListLoaded &&
+                    dashboardElementState is DashboardUserElementsLoaded) {
+                  List<DashboardElement?> generalDashboardElement = dashboardElementState.userDashboardElements
+                      .where((element) => element.dashboardElementType == DashboardElementType.general)
+                      .toList();
+                  List<DashboardElement?> monthlyDashboardElements = dashboardElementState.userDashboardElements
+                      .where((element) => element.dashboardElementType == DashboardElementType.month)
+                      .toList();
+                  return SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        HomeGridItemCard(
-                          icon: FaIcon(FontAwesomeIcons.piggyBank, size: 20.0),
-                          title: 'total_assets',
-                          stat: netAssets,
-                          subtitle: 'current_assets',
+                        GuestInfoCard(),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 6.0, bottom: 10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SubtitleText(text: 'overview'),
+                              IconButton(
+                                onPressed: () => {},
+                                icon: Icon(
+                                  FontAwesomeIcons.gear,
+                                  size: 16.0,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        HomeGridItemCard(
-                          icon: FaIcon(FontAwesomeIcons.coins, size: 20.0),
-                          title: 'remaining_amount',
-                          stat: balance,
-                          subtitle: 'this_month',
+                        SizedBox(
+                          height: 120.0,
+                          child: ListView.builder(
+                            controller: _controller,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: generalDashboardElement.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                                child: HomeGridItemCard(
+                                  icon: FaIcon(getDashboardElementIcon(generalDashboardElement[index]!.icon), size: 20.0),
+                                  title: generalDashboardElement[index]!.title,
+                                  stat: generalDashboardElement[index]!.showValue,
+                                  subtitle: generalDashboardElement[index]!.shortDescription,
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                        HomeGridItemCard(
-                          icon: FaIcon(FontAwesomeIcons.book, size: 20.0),
-                          title: 'expenses',
-                          stat: expenses,
-                          subtitle: 'this_month',
+                        generalDashboardElement.length >= 3
+                            ? Padding(
+                                padding: const EdgeInsets.only(top: 12.0),
+                                child: SizedBox(
+                                  height: 16.0,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: List.generate(generalDashboardElement.length, (index) {
+                                      int activeIndex = _currentPage.round().clamp(0, generalDashboardElement.length - 1);
+                                      bool isActive = index == activeIndex;
+                                      double difference = (_currentPage - index).abs();
+                                      double value = (1 - difference).clamp(0.0, 1.0);
+                                      return AnimatedContainer(
+                                        duration: Duration(milliseconds: 0),
+                                        margin: EdgeInsets.symmetric(horizontal: 4),
+                                        width: 6 + (value * 4),
+                                        height: 6 + (value * 4),
+                                        decoration: BoxDecoration(
+                                          color: isActive ? Colors.cyanAccent : Colors.grey,
+                                          shape: BoxShape.circle,
+                                        ),
+                                      );
+                                    }),
+                                  ),
+                                ),
+                              )
+                            : SizedBox.shrink(),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10.0, bottom: 12.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SubtitleText(text: 'monthly_values'),
+                              IconButton(
+                                onPressed: () => {},
+                                icon: Icon(
+                                  FontAwesomeIcons.gear,
+                                  size: 16.0,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        GridView.count(
+                          crossAxisCount: 2,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          mainAxisSpacing: 16,
+                          crossAxisSpacing: 6,
+                          childAspectRatio: 1.6,
+                          children: [
+                            for (final element in monthlyDashboardElements)
+                              HomeGridItemCard(
+                                icon: FaIcon(getDashboardElementIcon(element!.icon), size: 20.0),
+                                title: element.title,
+                                stat: DashboardElement.calculateDisplayValue(element, bookingState.bookings, accountState.accounts),
+                                subtitle: element.shortDescription,
+                              ),
+                          ],
+                        ),
+                        SizedBox(height: 20.0),
+                        SubtitleText(text: 'categories'),
+                        SizedBox(height: 12.0),
+                        CategoryStats(
+                          bookings: bookingState.bookings,
+                          currentSelectedDate: widget.currentSelectedDate,
+                          currentPeriodOfTimeType: widget.currentPeriodOfTimeType,
+                          onPeriodOfTimeChanged: widget.onPeriodOfTimeChanged,
                         ),
                       ],
                     ),
-                    SizedBox(height: 20.0),
-                    SubtitleText(text: 'categories'),
-                    SizedBox(height: 12.0),
-                    CategoryStats(
-                      bookings: bookingState.bookings,
-                      currentSelectedDate: widget.currentSelectedDate,
-                      currentPeriodOfTimeType: widget.currentPeriodOfTimeType,
-                      onPeriodOfTimeChanged: widget.onPeriodOfTimeChanged,
-                    ),
-                  ],
-                ),
-              );
-            } else if (bookingState is YearlyBookingListLoaded) {
-              List<Booking> yearlyBookings = bookingState.yearlyBookings.values.expand((bookingList) => bookingList).toList();
-              double revenue = _bookingRepository.calculateRevenue(yearlyBookings);
-              double expenses = _bookingRepository.calculateExpenses(yearlyBookings);
-              double balance = revenue - expenses;
-              return SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    GuestInfoCard(),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 6.0, bottom: 12.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SubtitleText(text: 'overview'),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                            child: PeriodOfTimeSegmentedButton(
-                              periodOfTimeType: widget.currentPeriodOfTimeType,
-                              onChanged: (newValue) => widget.onPeriodOfTimeChanged?.call(newValue),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    GridView.count(
-                      crossAxisCount: 2,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      mainAxisSpacing: 16,
-                      crossAxisSpacing: 6,
-                      childAspectRatio: 1.6,
+                  );
+                } else if (bookingState is YearlyBookingListLoaded &&
+                    accountState is AccountListLoaded &&
+                    dashboardElementState is DashboardUserElementsLoaded) {
+                  List<Booking> yearlyBookings = bookingState.yearlyBookings.values.expand((bookingList) => bookingList).toList();
+                  List<DashboardElement?> generalDashboardElement = dashboardElementState.userDashboardElements
+                      .where((element) => element.dashboardElementType == DashboardElementType.general)
+                      .toList();
+                  List<DashboardElement?> yearlyDashboardElements = dashboardElementState.userDashboardElements
+                      .where((element) => element.dashboardElementType == DashboardElementType.year)
+                      .toList();
+                  return SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        HomeGridItemCard(
-                          icon: FaIcon(FontAwesomeIcons.coins, size: 20.0),
-                          title: 'remaining_amount',
-                          stat: balance,
-                          subtitle: 'this_year',
+                        GuestInfoCard(),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 6.0, bottom: 10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SubtitleText(text: 'overview'),
+                              IconButton(
+                                onPressed: () => {},
+                                icon: Icon(
+                                  FontAwesomeIcons.gear,
+                                  size: 16.0,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        HomeGridItemCard(
-                          icon: FaIcon(FontAwesomeIcons.book, size: 20.0),
-                          title: 'expenses',
-                          stat: expenses,
-                          subtitle: 'this_year',
+                        SizedBox(
+                          height: 120.0,
+                          child: ListView.builder(
+                            controller: _controller,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: generalDashboardElement.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                                child: HomeGridItemCard(
+                                  icon: FaIcon(getDashboardElementIcon(generalDashboardElement[index]!.icon), size: 20.0),
+                                  title: generalDashboardElement[index]!.title,
+                                  stat: generalDashboardElement[index]!.showValue,
+                                  subtitle: generalDashboardElement[index]!.shortDescription,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        generalDashboardElement.length >= 3
+                            ? Padding(
+                                padding: const EdgeInsets.only(top: 12.0),
+                                child: SizedBox(
+                                  height: 16.0,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: List.generate(generalDashboardElement.length, (index) {
+                                      int activeIndex = _currentPage.round().clamp(0, generalDashboardElement.length - 1);
+                                      bool isActive = index == activeIndex;
+                                      double difference = (_currentPage - index).abs();
+                                      double value = (1 - difference).clamp(0.0, 1.0);
+                                      return AnimatedContainer(
+                                        duration: Duration(milliseconds: 0),
+                                        margin: EdgeInsets.symmetric(horizontal: 4),
+                                        width: 6 + (value * 4),
+                                        height: 6 + (value * 4),
+                                        decoration: BoxDecoration(
+                                          color: isActive ? Colors.cyanAccent : Colors.grey,
+                                          shape: BoxShape.circle,
+                                        ),
+                                      );
+                                    }),
+                                  ),
+                                ),
+                              )
+                            : SizedBox.shrink(),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10.0, bottom: 12.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SubtitleText(text: 'yearly_values'),
+                              IconButton(
+                                onPressed: () => {},
+                                icon: Icon(
+                                  FontAwesomeIcons.gear,
+                                  size: 16.0,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        GridView.count(
+                          crossAxisCount: 2,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          mainAxisSpacing: 16,
+                          crossAxisSpacing: 6,
+                          childAspectRatio: 1.6,
+                          children: [
+                            for (final element in yearlyDashboardElements)
+                              HomeGridItemCard(
+                                icon: FaIcon(getDashboardElementIcon(element!.icon), size: 20.0),
+                                title: element.title,
+                                stat: DashboardElement.calculateDisplayValue(element, yearlyBookings, accountState.accounts),
+                                subtitle: element.shortDescription,
+                              ),
+                          ],
+                        ),
+                        SizedBox(height: 20.0),
+                        SubtitleText(text: 'categories'),
+                        SizedBox(height: 12.0),
+                        CategoryStats(
+                          bookings: yearlyBookings,
+                          currentSelectedDate: widget.currentSelectedDate,
+                          currentPeriodOfTimeType: widget.currentPeriodOfTimeType,
+                          onPeriodOfTimeChanged: widget.onPeriodOfTimeChanged,
                         ),
                       ],
                     ),
-                    SizedBox(height: 20.0),
-                    SubtitleText(text: 'categories'),
-                    SizedBox(height: 12.0),
-                    CategoryStats(
-                      bookings: yearlyBookings,
-                      currentSelectedDate: widget.currentSelectedDate,
-                      currentPeriodOfTimeType: widget.currentPeriodOfTimeType,
-                      onPeriodOfTimeChanged: widget.onPeriodOfTimeChanged,
-                    ),
-                  ],
-                ),
-              );
-            } else if (bookingState is BookingError) {
-              return ErrorText(errorMessage: bookingState.message);
-            }
-            return SizedBox.shrink();
+                  );
+                } else if (bookingState is BookingError) {
+                  return ErrorText(errorMessage: bookingState.message);
+                } else if (accountState is AccountError) {
+                  return ErrorText(errorMessage: accountState.message);
+                } else if (dashboardElementState is DashboardElementError) {
+                  return ErrorText(errorMessage: dashboardElementState.message);
+                }
+                return SizedBox.shrink();
+              },
+            );
           },
         );
       },

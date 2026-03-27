@@ -75,50 +75,53 @@ class _HomeGridItemCardState extends State<HomeGridItemCard> with TickerProvider
                 width: 1.2,
               ),
             ),
-            child: Card(
-              margin: EdgeInsets.zero,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.bottomRight,
-                      end: Alignment.topLeft,
-                      colors: [
-                        Theme.of(context).colorScheme.primary.withValues(alpha: 0.06),
-                        Theme.of(context).colorScheme.primary.withValues(alpha: 0.02),
-                      ],
+            child: SizedBox(
+              width: 178.0,
+              child: Card(
+                margin: EdgeInsets.zero,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.bottomRight,
+                        end: Alignment.topLeft,
+                        colors: [
+                          Theme.of(context).colorScheme.primary.withValues(alpha: 0.05),
+                          Theme.of(context).colorScheme.primary.withValues(alpha: 0.0),
+                        ],
+                      ),
                     ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 10.0),
-                              child: widget.icon,
-                            ),
-                            Text(
-                              t.translate(widget.title),
-                              style: TextStyle(color: Colors.white, fontSize: 14.0, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10.0, bottom: 6.0),
-                          child: Text(
-                            formatCurrency(widget.stat, 'EUR'),
-                            style: TextStyle(fontSize: 21.0, fontWeight: FontWeight.bold),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10.0),
+                                child: widget.icon,
+                              ),
+                              Text(
+                                t.translate(widget.title),
+                                style: TextStyle(color: Colors.white, fontSize: 14.0, fontWeight: FontWeight.bold),
+                              ),
+                            ],
                           ),
-                        ),
-                        Text(
-                          t.translate(widget.subtitle),
-                          style: TextStyle(color: Colors.white54),
-                        ),
-                      ],
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10.0, bottom: 6.0),
+                            child: Text(
+                              formatCurrency(widget.stat, 'EUR'),
+                              style: TextStyle(fontSize: 21.0, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Text(
+                            t.translate(widget.subtitle),
+                            style: TextStyle(color: Colors.white54),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:haushaltsbuch_budget_tracker/blocs/category/category_event.dart';
+import 'package:haushaltsbuch_budget_tracker/blocs/dashboard_element/dashboard_element_bloc.dart';
+import 'package:haushaltsbuch_budget_tracker/blocs/dashboard_element/dashboard_element_event.dart';
 import 'package:haushaltsbuch_budget_tracker/core/consts/route_consts.dart';
 import 'package:haushaltsbuch_budget_tracker/core/page_arguments/category_list_page_arguments.dart';
 import 'package:haushaltsbuch_budget_tracker/features/budgets/presentation/pages/budget_list_page.dart';
 import 'package:haushaltsbuch_budget_tracker/features/categories/data/enums/category_type.dart';
 import 'package:haushaltsbuch_budget_tracker/features/goals/presentation/pages/goal_list_page.dart';
-import 'package:haushaltsbuch_budget_tracker/features/home/presentation/widgets/navigation/month_navigation.dart';
-import 'package:haushaltsbuch_budget_tracker/features/home/presentation/widgets/navigation/year_navigation.dart';
 
 import '../../../../blocs/account/account_bloc.dart';
 import '../../../../blocs/account/account_event.dart';
@@ -26,6 +26,7 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../accounts/presentation/pages/account_list_page.dart';
 import '../../../bookings/presentation/pages/booking_list_page.dart';
 import '../../../bookings/presentation/pages/create_booking_page.dart';
+import '../widgets/navigation/month_picker_bar.dart';
 import 'home_content_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -42,6 +43,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late BookingBloc _bookingBloc;
+  late DashboardElementBloc _dashboardElementBloc;
   late CategoryBloc _categoryBloc;
   late AccountBloc _accountBloc;
   late BudgetBloc _budgetBloc;
@@ -58,16 +60,22 @@ class _HomePageState extends State<HomePage> {
     _selectedPageIndex = widget.currentPageIndex;
 
     _bookingBloc = context.read<BookingBloc>();
+    _dashboardElementBloc = context.read<DashboardElementBloc>();
     _categoryBloc = context.read<CategoryBloc>();
     _accountBloc = context.read<AccountBloc>();
     _budgetBloc = context.read<BudgetBloc>();
     _goalBloc = context.read<GoalBloc>();
 
     onPeriodOfTimeChanged(_currentPeriodOfTime);
+    _loadDashboardElements();
     _loadCategories();
     _loadAccounts();
     _loadMonthlyBudgets(_currentSelectedDate);
     _loadGoals();
+  }
+
+  void _loadDashboardElements() {
+    _dashboardElementBloc.add(LoadUserDashboardElements());
   }
 
   void _loadMonthlyBookings(DateTime selectedDate) {
@@ -179,31 +187,6 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(t.translate(_pageTitle[_selectedPageIndex]), style: TextStyle(fontSize: 20.0)),
-        actions: [
-          _selectedPageIndex == 2 || _selectedPageIndex == 4
-              ? SizedBox.shrink()
-              : _currentPeriodOfTime == PeriodOfTimeType.monthly
-                  ? MonthNavigation(
-                      initialDate: _currentSelectedDate,
-                      onDateChanged: (newDate) {
-                        setState(() {
-                          _currentSelectedDate = newDate;
-                          _loadMonthlyBookings(_currentSelectedDate);
-                          _loadMonthlyBudgets(_currentSelectedDate);
-                        });
-                      },
-                    )
-                  : YearNavigation(
-                      initialYear: _currentSelectedDate.year,
-                      onYearChanged: (newYear) {
-                        setState(() {
-                          _currentSelectedDate = DateTime(newYear, 1, 1);
-                          _loadYearlyBookings(_currentSelectedDate.year);
-                          _loadYearlyBudgets(_currentSelectedDate.year);
-                        });
-                      },
-                    ),
-        ],
       ),
       drawer: Drawer(
         child: ListView(
@@ -286,20 +269,50 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        iconSize: 22.0,
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.dashboard_rounded), label: t.translate('dashboard')),
-          BottomNavigationBarItem(icon: Icon(Icons.menu_book_rounded), label: t.translate('bookings')),
-          BottomNavigationBarItem(icon: FaIcon(FontAwesomeIcons.buildingColumns), label: t.translate('accounts')),
-          BottomNavigationBarItem(icon: Icon(Icons.account_balance_wallet_rounded), label: t.translate('budgets')),
-          BottomNavigationBarItem(icon: FaIcon(FontAwesomeIcons.bullseye), label: t.translate('goals')),
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _selectedPageIndex == 2 || _selectedPageIndex == 4
+              ? SizedBox.shrink()
+              : Column(
+                  children: [
+                    Divider(height: 0.5),
+                    MonthPickerBar(
+                      initialDate: _currentSelectedDate,
+                      onDateChanged: (newDate) {
+                        setState(() {
+                          _currentSelectedDate = newDate;
+                          _loadMonthlyBookings(_currentSelectedDate);
+                          _loadMonthlyBudgets(_currentSelectedDate);
+                        });
+                      },
+                      onPeriodOfTimeChanged: (isYear) {
+                        if (isYear) {
+                          _currentSelectedDate = DateTime(_currentSelectedDate.year, 1, 1);
+                          onPeriodOfTimeChanged(PeriodOfTimeType.yearly);
+                        } else {
+                          onPeriodOfTimeChanged(PeriodOfTimeType.monthly);
+                        }
+                      },
+                    ),
+                  ],
+                ),
+          BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            iconSize: 22.0,
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(icon: Icon(Icons.dashboard_rounded), label: t.translate('dashboard')),
+              BottomNavigationBarItem(icon: Icon(Icons.menu_book_rounded), label: t.translate('bookings')),
+              BottomNavigationBarItem(icon: FaIcon(FontAwesomeIcons.buildingColumns), label: t.translate('accounts')),
+              BottomNavigationBarItem(icon: Icon(Icons.account_balance_wallet_rounded), label: t.translate('budgets')),
+              BottomNavigationBarItem(icon: FaIcon(FontAwesomeIcons.bullseye), label: t.translate('goals')),
+            ],
+            currentIndex: _selectedPageIndex,
+            selectedItemColor: Colors.cyanAccent,
+            unselectedItemColor: Colors.white,
+            onTap: _onItemTapped,
+          ),
         ],
-        currentIndex: _selectedPageIndex,
-        selectedItemColor: Colors.cyanAccent,
-        unselectedItemColor: Colors.white,
-        onTap: _onItemTapped,
       ),
       body: _pages[_selectedPageIndex],
       floatingActionButton: OpenContainer(

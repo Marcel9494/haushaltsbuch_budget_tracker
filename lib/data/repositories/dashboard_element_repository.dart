@@ -19,4 +19,21 @@ class DashboardElementRepository {
     final dashboardElements = await Supabase.instance.client.from('dashboard_elements').select().order('created_at', ascending: false);
     return (dashboardElements as List).map((data) => DashboardElement.fromMap(data)).toList();
   }
+
+  Future<List<DashboardElement>> loadUserDashboardElements() async {
+    final supabase = Supabase.instance.client;
+    final response = await supabase.from('users_dashboard_elements').select('''
+      position,
+      dashboard_elements (
+        id,
+        title,
+        short_description,
+        icon,
+        dashboard_element_type,
+        show_value,
+        default_is_selected
+      )
+    ''').eq('user_id', supabase.auth.currentUser!.id).order('position');
+    return (response as List).map((e) => DashboardElement.fromUserElementsMap(e)).toList();
+  }
 }

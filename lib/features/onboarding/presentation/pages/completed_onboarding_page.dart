@@ -94,7 +94,11 @@ class _CompletedOnboardingPageState extends State<CompletedOnboardingPage> {
           if (!context.mounted) {
             return;
           }
-          Navigator.pushReplacementNamed(context, homeRoute, arguments: HomePageArguments(0));
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            homeRoute,
+            (route) => false,
+            arguments: HomePageArguments(0),
+          );
         }
       },
       builder: (context, state) {

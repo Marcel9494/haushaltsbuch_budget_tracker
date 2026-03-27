@@ -10,6 +10,7 @@ class DashboardElementBloc extends Bloc<DashboardElementEvent, DashboardElementS
   DashboardElementBloc(this._dashboardElementRepository) : super(DashboardElementInitial()) {
     on<CreateDashboardElements>(_onCreateDashboardElements);
     on<LoadDashboardElements>(_onLoadDashboardElements);
+    on<LoadUserDashboardElements>(_onLoadUserDashboardElements);
   }
 
   Future<void> _onCreateDashboardElements(CreateDashboardElements event, Emitter<DashboardElementState> emit) async {
@@ -28,6 +29,16 @@ class DashboardElementBloc extends Bloc<DashboardElementEvent, DashboardElementS
       emit(DashboardElementsLoaded(dashboardElements));
     } catch (e) {
       emit(DashboardElementError('load_dashboard_elements_error'));
+    }
+  }
+
+  Future<void> _onLoadUserDashboardElements(LoadUserDashboardElements event, Emitter<DashboardElementState> emit) async {
+    emit(DashboardElementLoading());
+    try {
+      final dashboardElements = await _dashboardElementRepository.loadUserDashboardElements();
+      emit(DashboardUserElementsLoaded(dashboardElements));
+    } catch (e) {
+      emit(DashboardElementError('load_user_dashboard_elements_error'));
     }
   }
 }
