@@ -19,7 +19,6 @@ import '../../../../../data/helper_models/budget_stats.dart';
 import '../../../../../data/models/booking.dart';
 import '../../../../../data/models/budget.dart';
 import '../../../../../l10n/app_localizations.dart';
-import '../../../../shared/presentation/widgets/buttons/period_of_time_segmented_button.dart';
 import '../../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../../../../shared/presentation/widgets/deco/empty_list.dart';
 import '../../../../shared/presentation/widgets/deco/error_text.dart';
@@ -116,13 +115,13 @@ class _YearlyBudgetListState extends State<YearlyBudgetList> with TickerProvider
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 6.0),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Hero(
                         tag: 'create_budget_fab',
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: OutlinedButton(
+                          child: OutlinedButton.icon(
                             onPressed: () {
                               Navigator.push(
                                 context,
@@ -134,15 +133,9 @@ class _YearlyBudgetListState extends State<YearlyBudgetList> with TickerProvider
                                 ),
                               );
                             },
-                            child: Text(t.translate('create_budget')),
+                            label: Text(t.translate('create_budget')),
+                            icon: Icon(Icons.add_rounded),
                           ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                        child: PeriodOfTimeSegmentedButton(
-                          periodOfTimeType: widget.currentPeriodOfTimeType,
-                          onChanged: (newValue) => widget.onPeriodOfTimeChanged?.call(newValue),
                         ),
                       ),
                     ],

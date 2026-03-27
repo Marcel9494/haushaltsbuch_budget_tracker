@@ -20,6 +20,11 @@ class DashboardElementsLoaded extends DashboardElementState {
   DashboardElementsLoaded(this.dashboardElements);
 }
 
+class DashboardUserElementsLoaded extends DashboardElementState {
+  final List<DashboardElement> userDashboardElements;
+  DashboardUserElementsLoaded(this.userDashboardElements);
+}
+
 class DashboardElementError extends DashboardElementState {
   final String message;
   DashboardElementError(this.message);

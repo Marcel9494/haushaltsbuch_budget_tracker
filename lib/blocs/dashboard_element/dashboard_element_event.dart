@@ -13,3 +13,7 @@ class CreateDashboardElements extends DashboardElementEvent {
 class LoadDashboardElements extends DashboardElementEvent {
   LoadDashboardElements();
 }
+
+class LoadUserDashboardElements extends DashboardElementEvent {
+  LoadUserDashboardElements();
+}

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:haushaltsbuch_budget_tracker/blocs/dashboard_element/dashboard_element_bloc.dart';
+import 'package:haushaltsbuch_budget_tracker/data/repositories/dashboard_element_repository.dart';
 import 'package:haushaltsbuch_budget_tracker/features/auth/presentation/pages/register_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -26,6 +28,7 @@ class AuthenticationGatePage extends StatelessWidget {
       return MultiBlocProvider(
         providers: [
           BlocProvider(create: (_) => BookingBloc(BookingRepository(), AccountRepository())),
+          BlocProvider(create: (_) => DashboardElementBloc(DashboardElementRepository())),
           BlocProvider(create: (_) => CategoryBloc(CategoryRepository())),
           BlocProvider(create: (_) => AccountBloc(AccountRepository())),
           BlocProvider(create: (_) => BudgetBloc(BudgetRepository())),

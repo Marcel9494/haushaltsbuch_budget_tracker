@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../../data/enums/period_of_time_type.dart';
-import '../../../../shared/presentation/widgets/buttons/period_of_time_segmented_button.dart';
 
 class BookingListActions extends StatefulWidget {
   final PeriodOfTimeType periodOfTimeType;
@@ -92,13 +91,6 @@ class _BookingListActionsState extends State<BookingListActions> with SingleTick
                   ),
                 ),
               ],
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: PeriodOfTimeSegmentedButton(
-                periodOfTimeType: widget.periodOfTimeType,
-                onChanged: (newValue) => widget.onPeriodOfTimeChanged?.call(newValue),
-              ),
             ),
           ],
         ),
