@@ -26,7 +26,7 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../accounts/presentation/pages/account_list_page.dart';
 import '../../../bookings/presentation/pages/booking_list_page.dart';
 import '../../../bookings/presentation/pages/create_booking_page.dart';
-import '../widgets/navigation/month_picker_bar.dart';
+import '../widgets/navigation/date_picker_bar.dart';
 import 'home_content_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -246,7 +246,7 @@ class _HomePageState extends State<HomePage> {
                 Navigator.popAndPushNamed(
                   context,
                   categoryListRoute,
-                  arguments: CategoryListPageArguments(CategoryType.expenses),
+                  arguments: CategoryListPageArguments(CategoryType.expense),
                 ),
               },
             ),
@@ -277,22 +277,18 @@ class _HomePageState extends State<HomePage> {
               : Column(
                   children: [
                     Divider(height: 0.5),
-                    MonthPickerBar(
+                    DatePickerBar(
                       initialDate: _currentSelectedDate,
-                      onDateChanged: (newDate) {
+                      onDateChanged: (newDate, isYearView) {
                         setState(() {
                           _currentSelectedDate = newDate;
-                          _loadMonthlyBookings(_currentSelectedDate);
-                          _loadMonthlyBudgets(_currentSelectedDate);
+                          if (isYearView) {
+                            _currentSelectedDate = DateTime(_currentSelectedDate.year, _currentSelectedDate.month, 1);
+                            onPeriodOfTimeChanged(PeriodOfTimeType.yearly);
+                          } else {
+                            onPeriodOfTimeChanged(PeriodOfTimeType.monthly);
+                          }
                         });
-                      },
-                      onPeriodOfTimeChanged: (isYear) {
-                        if (isYear) {
-                          _currentSelectedDate = DateTime(_currentSelectedDate.year, 1, 1);
-                          onPeriodOfTimeChanged(PeriodOfTimeType.yearly);
-                        } else {
-                          onPeriodOfTimeChanged(PeriodOfTimeType.monthly);
-                        }
                       },
                     ),
                   ],

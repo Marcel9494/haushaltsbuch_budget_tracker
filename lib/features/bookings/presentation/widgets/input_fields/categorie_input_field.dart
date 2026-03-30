@@ -64,10 +64,14 @@ class _CategorieInputFieldState extends State<CategorieInputField> {
         } else if (state is CategoryListLoaded) {
           List<Category> filteredCategories = [];
           if (widget.bookingType == BookingType.expense) {
-            filteredCategories = state.categories.where((category) => category.categoryType.name.contains(CategoryType.expenses.name)).toList()
+            filteredCategories = state.categories
+                .where((category) => category.categoryType.pluralName.contains(CategoryType.expense.pluralName))
+                .toList()
               ..sort((a, b) => a.categoryName.toLowerCase().compareTo(b.categoryName.toLowerCase()));
           } else if (widget.bookingType == BookingType.income) {
-            filteredCategories = state.categories.where((category) => category.categoryType.name.contains(CategoryType.revenue.name)).toList()
+            filteredCategories = state.categories
+                .where((category) => category.categoryType.pluralName.contains(CategoryType.income.pluralName))
+                .toList()
               ..sort((a, b) => a.categoryName.toLowerCase().compareTo(b.categoryName.toLowerCase()));
           }
           return Column(

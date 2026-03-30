@@ -22,7 +22,7 @@ class StartCategory {
   Map<String, dynamic> toMap() {
     return {
       'category_name': categoryName,
-      'category_type': categoryType.name,
+      'category_type': categoryType.pluralName,
       'is_selected': isSelected,
     };
   }

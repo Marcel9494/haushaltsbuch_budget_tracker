@@ -6,11 +6,13 @@ class TitleInputField extends StatefulWidget {
   final TextEditingController titleController;
   final String text;
   final bool showTitle;
+  final bool autoFocus;
 
   const TitleInputField({
     super.key,
     required this.titleController,
     this.showTitle = true,
+    this.autoFocus = false,
     this.text = 'title',
   });
 
@@ -59,6 +61,7 @@ class _TitleInputFieldState extends State<TitleInputField> {
           keyboardType: TextInputType.text,
           maxLength: 60,
           focusNode: _focusNode,
+          autofocus: widget.autoFocus,
           textCapitalization: TextCapitalization.sentences,
           validator: (titleInput) => _checkTitleInput(),
           decoration: InputDecoration(

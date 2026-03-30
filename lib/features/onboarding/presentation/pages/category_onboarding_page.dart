@@ -23,7 +23,7 @@ class CategoryOnboardingPage extends StatefulWidget {
 }
 
 class _CategoryOnboardingPageState extends State<CategoryOnboardingPage> with SingleTickerProviderStateMixin {
-  late CategoryType _selectedCategoryType = CategoryType.expenses;
+  late CategoryType _selectedCategoryType = CategoryType.expense;
   late TabController _tabController;
   final TextEditingController _categorieNameController = TextEditingController();
   final ScrollController _expensesScrollController = ScrollController();
@@ -38,9 +38,9 @@ class _CategoryOnboardingPageState extends State<CategoryOnboardingPage> with Si
       if (_tabController.indexIsChanging == false) {
         setState(() {
           if (_tabController.index == 0) {
-            _selectedCategoryType = CategoryType.expenses;
+            _selectedCategoryType = CategoryType.expense;
           } else {
-            _selectedCategoryType = CategoryType.revenue;
+            _selectedCategoryType = CategoryType.income;
           }
         });
       }
@@ -49,18 +49,18 @@ class _CategoryOnboardingPageState extends State<CategoryOnboardingPage> with Si
 
   void createNewStartCategory(String categoryName) {
     setState(() {
-      if (_selectedCategoryType == CategoryType.expenses) {
+      if (_selectedCategoryType == CategoryType.expense) {
         if (expensesStartCategories.any((category) => category.categoryName == categoryName)) {
           expensesStartCategories.firstWhere((category) => category.categoryName == categoryName).isSelected = true;
         } else {
-          expensesStartCategories.add(StartCategory(categoryName: categoryName, categoryType: CategoryType.expenses, isSelected: true));
+          expensesStartCategories.add(StartCategory(categoryName: categoryName, categoryType: CategoryType.expense, isSelected: true));
           _scrollToListEnd();
         }
       } else {
         if (revenueStartCategories.any((category) => category.categoryName == categoryName)) {
           revenueStartCategories.firstWhere((category) => category.categoryName == categoryName).isSelected = true;
         } else {
-          revenueStartCategories.add(StartCategory(categoryName: categoryName, categoryType: CategoryType.revenue, isSelected: true));
+          revenueStartCategories.add(StartCategory(categoryName: categoryName, categoryType: CategoryType.income, isSelected: true));
           _scrollToListEnd();
         }
       }
@@ -68,7 +68,7 @@ class _CategoryOnboardingPageState extends State<CategoryOnboardingPage> with Si
   }
 
   void _scrollToListEnd() {
-    final controller = _selectedCategoryType == CategoryType.expenses ? _expensesScrollController : _revenueScrollController;
+    final controller = _selectedCategoryType == CategoryType.expense ? _expensesScrollController : _revenueScrollController;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       controller.animateTo(
         controller.position.maxScrollExtent,
@@ -109,7 +109,7 @@ class _CategoryOnboardingPageState extends State<CategoryOnboardingPage> with Si
                 controller: _tabController,
                 onTap: (index) {
                   setState(() {
-                    _selectedCategoryType = index == 0 ? CategoryType.expenses : CategoryType.revenue;
+                    _selectedCategoryType = index == 0 ? CategoryType.expense : CategoryType.income;
                   });
                 },
                 tabs: <Widget>[

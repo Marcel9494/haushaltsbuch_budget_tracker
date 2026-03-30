@@ -127,12 +127,16 @@ class _CreateCategoryPageState extends State<CreateCategoryPage> {
                               widget.selectedCategoryType = newCategoryType;
                             });
                           },
-                          leftValue: CategoryType.expenses,
-                          rightValue: CategoryType.revenue,
-                          leftText: CategoryType.expenses.name,
-                          rightText: CategoryType.revenue.name,
+                          leftValue: CategoryType.expense,
+                          rightValue: CategoryType.income,
+                          leftText: CategoryType.expense.pluralName,
+                          rightText: CategoryType.income.pluralName,
                         ),
-                        TitleInputField(titleController: _categoryNameController, text: 'category_name'),
+                        TitleInputField(
+                          titleController: _categoryNameController,
+                          text: 'category_name',
+                          autoFocus: true,
+                        ),
                         SizedBox(height: 30.0),
                         Hero(
                           tag: 'create_category_fab',
