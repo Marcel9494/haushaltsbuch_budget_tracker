@@ -1,25 +1,30 @@
 enum CategoryType {
-  undefined,
-  expenses,
-  revenue;
+  expense,
+  income;
 
   static CategoryType fromString(String s) => switch (s) {
-        '' => CategoryType.undefined,
-        'Ausgaben' => CategoryType.expenses,
-        'Einnahmen' => CategoryType.revenue,
-        _ => CategoryType.undefined
+        'expense' => CategoryType.expense,
+        'income' => CategoryType.income,
+        _ => CategoryType.expense,
       };
 }
 
 extension CategoryTypeExtension on CategoryType {
   String get name {
     switch (this) {
-      case CategoryType.undefined:
-        return '';
-      case CategoryType.expenses:
-        return 'Ausgaben';
-      case CategoryType.revenue:
-        return 'Einnahmen';
+      case CategoryType.expense:
+        return 'expense';
+      case CategoryType.income:
+        return 'income';
+    }
+  }
+
+  String get pluralName {
+    switch (this) {
+      case CategoryType.expense:
+        return 'expenses';
+      case CategoryType.income:
+        return 'revenue';
     }
   }
 }

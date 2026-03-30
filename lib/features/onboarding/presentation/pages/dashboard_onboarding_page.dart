@@ -12,7 +12,6 @@ import '../../../../core/consts/route_consts.dart';
 import '../../../../core/utils/icon_helper.dart';
 import '../../../../data/enums/dashboard_element_type.dart';
 import '../../../../data/enums/onboarding_progressbar_type.dart';
-import '../../../../data/models/dashboard_element.dart';
 import '../../../home/presentation/widgets/cards/home_grid_item_card.dart';
 import '../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../../../shared/presentation/widgets/deco/error_text.dart';
@@ -31,7 +30,6 @@ class DashboardOnboardingPage extends StatefulWidget {
 class _DashboardOnboardingPageState extends State<DashboardOnboardingPage> with SingleTickerProviderStateMixin {
   late DashboardElementType _selectedDashboardElementType = DashboardElementType.general;
   late TabController _tabController;
-  late List<DashboardElement> _dashboardElementList = [];
 
   @override
   void initState() {
@@ -54,7 +52,6 @@ class _DashboardOnboardingPageState extends State<DashboardOnboardingPage> with 
       } else {
         _selectedDashboardElementType = DashboardElementType.year;
       }
-      print(_selectedDashboardElementType);
     });
   }
 
@@ -138,7 +135,6 @@ class _DashboardOnboardingPageState extends State<DashboardOnboardingPage> with 
                     if (state is DashboardElementLoading) {
                       return CircularLoadingIndicator();
                     } else if (state is DashboardElementsLoaded) {
-                      _dashboardElementList = state.dashboardElements;
                       selectedStartDashboardElements = state.dashboardElements.where((element) => element.isSelected == true).toList();
                       final filteredDashboardElementList =
                           state.dashboardElements.where((element) => element.dashboardElementType == _selectedDashboardElementType).toList();
@@ -161,6 +157,7 @@ class _DashboardOnboardingPageState extends State<DashboardOnboardingPage> with 
                               stat: dashboardElement.showValue,
                               subtitle: dashboardElement.shortDescription,
                               isSelected: dashboardElement.isSelected,
+                              isSelectable: true,
                               onTap: () {
                                 setState(() {
                                   dashboardElement.isSelected = !dashboardElement.isSelected;

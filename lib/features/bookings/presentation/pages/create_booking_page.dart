@@ -157,12 +157,10 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
 
   void resetCategory() {
     _categorieController.text = '';
-    if (_bookingType == BookingType.expense) {
-      _selectedCategory = Category(id: '', categoryName: '', categoryType: CategoryType.expenses);
+    if (_bookingType == BookingType.expense || _bookingType == BookingType.transfer) {
+      _selectedCategory = Category(id: '', categoryName: '', categoryType: CategoryType.expense);
     } else if (_bookingType == BookingType.income) {
-      _selectedCategory = Category(id: '', categoryName: '', categoryType: CategoryType.revenue);
-    } else if (_bookingType == BookingType.transfer) {
-      _selectedCategory = Category(id: '', categoryName: '', categoryType: CategoryType.undefined);
+      _selectedCategory = Category(id: '', categoryName: '', categoryType: CategoryType.income);
     }
   }
 

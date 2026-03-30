@@ -40,14 +40,14 @@ class _CategoryListPageState extends State<CategoryListPage> with SingleTickerPr
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    _tabController.index = _selectedCategoryType == CategoryType.expenses ? 0 : 1;
+    _tabController.index = _selectedCategoryType == CategoryType.expense ? 0 : 1;
     _tabController.addListener(() {
       if (_tabController.indexIsChanging == false) {
         setState(() {
           if (_tabController.index == 0) {
-            _selectedCategoryType = CategoryType.expenses;
+            _selectedCategoryType = CategoryType.expense;
           } else {
-            _selectedCategoryType = CategoryType.revenue;
+            _selectedCategoryType = CategoryType.income;
           }
         });
       }
@@ -117,11 +117,11 @@ class _CategoryListPageState extends State<CategoryListPage> with SingleTickerPr
                 return CircularLoadingIndicator();
               } else if (state is CategoryListLoaded) {
                 List<Category> expenseCategories = state.categories
-                    .where((category) => category.categoryType.name.contains(CategoryType.expenses.name))
+                    .where((category) => category.categoryType.name.contains(CategoryType.expense.name))
                     .toList()
                   ..sort((a, b) => a.categoryName.toLowerCase().compareTo(b.categoryName.toLowerCase()));
                 List<Category> revenueCategories = state.categories
-                    .where((category) => category.categoryType.name.contains(CategoryType.revenue.name))
+                    .where((category) => category.categoryType.name.contains(CategoryType.income.name))
                     .toList()
                   ..sort((a, b) => a.categoryName.toLowerCase().compareTo(b.categoryName.toLowerCase()));
                 if (_ascendingOrder == false) {

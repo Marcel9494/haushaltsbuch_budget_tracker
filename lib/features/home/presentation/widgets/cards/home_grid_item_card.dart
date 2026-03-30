@@ -8,6 +8,7 @@ class HomeGridItemCard extends StatefulWidget {
   final double stat;
   final String subtitle;
   bool isSelected;
+  bool isSelectable;
   final VoidCallback? onTap;
 
   HomeGridItemCard({
@@ -17,6 +18,7 @@ class HomeGridItemCard extends StatefulWidget {
     required this.stat,
     required this.subtitle,
     this.isSelected = false,
+    this.isSelectable = false,
     this.onTap,
   });
 
@@ -59,12 +61,14 @@ class _HomeGridItemCardState extends State<HomeGridItemCard> with TickerProvider
       child: SlideTransition(
         position: _slide,
         child: GestureDetector(
-          onTap: () {
-            setState(() {
-              widget.onTap?.call();
-              widget.isSelected = !widget.isSelected;
-            });
-          },
+          onTap: widget.isSelectable
+              ? () {
+                  setState(() {
+                    widget.onTap?.call();
+                    widget.isSelected = !widget.isSelected;
+                  });
+                }
+              : null,
           child: AnimatedContainer(
             duration: Duration(milliseconds: 200),
             curve: Curves.easeInOut,
