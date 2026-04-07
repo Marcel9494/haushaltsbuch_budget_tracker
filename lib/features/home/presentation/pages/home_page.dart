@@ -19,13 +19,18 @@ import '../../../../blocs/budget/budget_event.dart';
 import '../../../../blocs/category/category_bloc.dart';
 import '../../../../blocs/goal/goal_bloc.dart';
 import '../../../../blocs/goal/goal_event.dart';
+import '../../../../core/utils/slow_hero_animation.dart';
 import '../../../../data/enums/period_of_time_type.dart';
 import '../../../../data/repositories/account_repository.dart';
 import '../../../../data/repositories/budget_repository.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../accounts/presentation/pages/account_list_page.dart';
+import '../../../accounts/presentation/pages/create_account_page.dart';
 import '../../../bookings/presentation/pages/booking_list_page.dart';
 import '../../../bookings/presentation/pages/create_booking_page.dart';
+import '../../../bookings/presentation/widgets/deco/booking_list_actions.dart';
+import '../../../budgets/presentation/pages/create_budget_page.dart';
+import '../../../goals/presentation/pages/create_goal_page.dart';
 import '../widgets/navigation/date_picker_bar.dart';
 import 'home_content_page.dart';
 
@@ -48,6 +53,7 @@ class _HomePageState extends State<HomePage> {
   late AccountBloc _accountBloc;
   late BudgetBloc _budgetBloc;
   late GoalBloc _goalBloc;
+  bool _showBookingChart = false;
   bool _showUpcomingBookings = false;
   DateTime _currentSelectedDate = DateTime.now();
   PeriodOfTimeType _currentPeriodOfTime = PeriodOfTimeType.monthly;
@@ -103,6 +109,12 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void onShowBookingChartChanged(bool showBookingChart) {
+    setState(() {
+      _showBookingChart = showBookingChart;
+    });
+  }
+
   void onShowUpcomingBookingsChanged(bool showUpcomingBookings) {
     setState(() {
       _showUpcomingBookings = showUpcomingBookings;
@@ -141,6 +153,10 @@ class _HomePageState extends State<HomePage> {
         BookingListPage(
           key: ValueKey(_currentSelectedDate),
           currentSelectedDate: _currentSelectedDate,
+          showBookingChart: _showBookingChart,
+          onShowBookingChartChanged: (showBookingChart) {
+            onShowBookingChartChanged(showBookingChart);
+          },
           showUpcomingBookings: _showUpcomingBookings,
           onShowUpcomingBookingsChanged: (showUpcomingBookings) {
             onShowUpcomingBookingsChanged(showUpcomingBookings);
@@ -181,12 +197,85 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  // TODO hier weitermachen und Branch mergen und anschließend Buchung bearbeiten weiter implementieren
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(t.translate(_pageTitle[_selectedPageIndex]), style: TextStyle(fontSize: 20.0)),
+        actions: [
+          if (_selectedPageIndex == 0)
+            IconButton(
+              icon: FaIcon(FontAwesomeIcons.gear, size: 20.0),
+              onPressed: () {
+                // TODO Dashboard bearbeiten Seite aufrufen
+              },
+            )
+          else if (_selectedPageIndex == 1)
+            BookingListActions(
+              periodOfTimeType: _currentPeriodOfTime,
+              showBookingChart: _showBookingChart,
+              onPeriodOfTimeChanged: onPeriodOfTimeChanged,
+              onShowBookingChartChanged: onShowBookingChartChanged,
+              icon: FontAwesomeIcons.chartColumn,
+            )
+          else if (_selectedPageIndex == 2)
+            Hero(
+              tag: 'create_account_fab',
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: TextButton.icon(
+                  onPressed: () {
+                    Navigator.push(context, slowHeroRoute(CreateAccountPage()));
+                  },
+                  label: Text(t.translate('create_account')),
+                ),
+              ),
+            )
+          else if (_selectedPageIndex == 3)
+            Hero(
+              tag: 'create_budget_fab',
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: TextButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      slowHeroRoute(
+                        BlocProvider.value(
+                          value: context.read<CategoryBloc>(),
+                          child: CreateBudgetPage(),
+                        ),
+                      ),
+                    );
+                  },
+                  label: Text(t.translate('create_budget')),
+                ),
+              ),
+            )
+          else if (_selectedPageIndex == 4)
+            Hero(
+              tag: 'create_goal_fab',
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: TextButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      slowHeroRoute(
+                        BlocProvider.value(
+                          value: context.read<GoalBloc>(),
+                          child: CreateGoalPage(),
+                        ),
+                      ),
+                    );
+                  },
+                  label: Text(t.translate('create_goal')),
+                ),
+              ),
+            ),
+        ],
       ),
       drawer: Drawer(
         child: ListView(

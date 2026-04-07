@@ -1,4 +1,6 @@
 // Beispielausgabe: "1 Jahr, 2 Monate, 3 Wochen, 4 Tage\n(438 Tage)"
+import 'package:intl/intl.dart';
+
 String formatDateDuration(DateTime startDate, DateTime endDate) {
   if (endDate.isBefore(startDate)) {
     return '';
@@ -46,4 +48,28 @@ String formatDateDuration(DateTime startDate, DateTime endDate) {
 
 bool isSameDay(DateTime a, DateTime b) {
   return a.year == b.year && a.month == b.month && a.day == b.day;
+}
+
+List<String> getAllMonthNames(String locale) {
+  List<String> months = [];
+  DateTime date = DateTime(DateTime.now().year, 1, 1);
+
+  for (int i = 0; i < 12; i++) {
+    String monthName = DateFormat.MMMM(locale).format(date);
+    months.add(monthName);
+    date = DateTime(date.year, date.month + 1, 1);
+  }
+  return months;
+}
+
+List<String> getAllShortMonthNames(String locale) {
+  List<String> months = [];
+  DateTime date = DateTime(DateTime.now().year, 1, 1);
+
+  for (int i = 0; i < 12; i++) {
+    String monthName = DateFormat.MMM(locale).format(date);
+    months.add(monthName);
+    date = DateTime(date.year, date.month + 1, 1);
+  }
+  return months;
 }

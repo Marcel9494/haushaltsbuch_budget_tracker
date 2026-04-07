@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:haushaltsbuch_budget_tracker/data/repositories/account_repository.dart';
-import 'package:haushaltsbuch_budget_tracker/features/accounts/presentation/pages/create_account_page.dart';
 import 'package:haushaltsbuch_budget_tracker/features/accounts/presentation/widgets/cards/account_list_overview_card.dart';
 import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 
@@ -11,7 +10,6 @@ import '../../../../blocs/account/account_bloc.dart';
 import '../../../../blocs/account/account_event.dart';
 import '../../../../blocs/account/account_state.dart';
 import '../../../../core/consts/animation_consts.dart';
-import '../../../../core/utils/slow_hero_animation.dart';
 import '../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../../../shared/presentation/widgets/deco/empty_list.dart';
 import '../../../shared/presentation/widgets/deco/error_text.dart';
@@ -68,24 +66,6 @@ class _AccountListPageState extends State<AccountListPage> {
                     ],
                   ),
                   SizedBox(height: 4.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Hero(
-                        tag: 'create_account_fab',
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: OutlinedButton.icon(
-                            onPressed: () {
-                              Navigator.push(context, slowHeroRoute(CreateAccountPage()));
-                            },
-                            icon: Icon(Icons.add_rounded),
-                            label: Text(t.translate('create_account')),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
                   state.accounts.isEmpty
                       ? EmptyList(
                           text: 'no_accounts',

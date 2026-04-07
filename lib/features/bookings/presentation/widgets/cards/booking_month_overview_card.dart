@@ -6,13 +6,13 @@ import '../../../../../data/models/booking.dart';
 import '../../../../../data/repositories/booking_repository.dart';
 
 class BookingMonthOverviewCard extends StatefulWidget {
-  final List<Booking> bookings;
+  final List<Booking> monthlyBookings;
   final String currentMonth;
   final int index;
 
   const BookingMonthOverviewCard({
     super.key,
-    required this.bookings,
+    required this.monthlyBookings,
     required this.currentMonth,
     required this.index,
   });
@@ -30,8 +30,8 @@ class _BookingMonthOverviewCardState extends State<BookingMonthOverviewCard> {
   @override
   void initState() {
     super.initState();
-    _monthlyRevenue = _bookingRepository.calculateRevenue(widget.bookings);
-    _monthlyExpenses = _bookingRepository.calculateExpenses(widget.bookings);
+    _monthlyRevenue = _bookingRepository.calculateRevenue(widget.monthlyBookings);
+    _monthlyExpenses = _bookingRepository.calculateExpenses(widget.monthlyBookings);
     _monthlyBalance = _monthlyRevenue - _monthlyExpenses;
   }
 

@@ -25,11 +25,11 @@ class _GoalDiagramTypeSegmentedButtonState extends State<GoalDiagramTypeSegmente
         segments: <ButtonSegment<GoalDiagramType>>[
           ButtonSegment<GoalDiagramType>(
             value: GoalDiagramType.dots,
-            icon: FaIcon(FontAwesomeIcons.tableCells, size: 20.0),
+            icon: FaIcon(FontAwesomeIcons.tableCells, size: 18.0),
           ),
           ButtonSegment<GoalDiagramType>(
             value: GoalDiagramType.line,
-            icon: FaIcon(FontAwesomeIcons.chartLine, size: 20.0),
+            icon: FaIcon(FontAwesomeIcons.chartLine, size: 18.0),
           ),
         ],
         selected: <GoalDiagramType>{widget.goalDiagramType},
