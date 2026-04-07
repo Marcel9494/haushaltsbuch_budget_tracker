@@ -51,7 +51,7 @@ class BookingCard extends StatelessWidget {
               child: Row(
                 children: [
                   Expanded(
-                    flex: 1,
+                    flex: 2,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -79,7 +79,7 @@ class BookingCard extends StatelessWidget {
                     margin: const EdgeInsets.symmetric(horizontal: 12.0),
                   ),
                   Expanded(
-                    flex: 2,
+                    flex: 3,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -115,27 +115,16 @@ class BookingCard extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    flex: 1,
+                    flex: 2,
                     child: Padding(
                       padding: const EdgeInsets.only(right: 14.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              // TODO Repetition icon integrieren
-                              /* Icon(
-                                booking.repetitionType != RepetitionType.none ? Icons.repeat_rounded : null,
-                                color: Colors.white,
-                                size: 16.0,
-                              ),*/
-                              Text(
-                                formatCurrency(booking.amount, 'EUR'),
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(color: booking.bookingType.color),
-                              ),
-                            ],
+                          Text(
+                            formatCurrency(booking.amount, 'EUR'),
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(color: booking.bookingType.color),
                           ),
                           SizedBox(height: 4.0),
                           Text(

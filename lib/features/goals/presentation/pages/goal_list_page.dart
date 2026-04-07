@@ -9,7 +9,6 @@ import '../../../../blocs/goal/goal_bloc.dart';
 import '../../../../blocs/goal/goal_event.dart';
 import '../../../../blocs/goal/goal_state.dart';
 import '../../../../core/consts/animation_consts.dart';
-import '../../../../core/utils/slow_hero_animation.dart';
 import '../../../../data/enums/goal_diagram_type.dart';
 import '../../../../data/models/goal.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -17,7 +16,6 @@ import '../../../shared/presentation/widgets/deco/circular_loading_indicator.dar
 import '../../../shared/presentation/widgets/deco/empty_list.dart';
 import '../../../shared/presentation/widgets/deco/error_text.dart';
 import '../widgets/cards/goal_card.dart';
-import 'create_goal_page.dart';
 
 class GoalListPage extends StatefulWidget {
   const GoalListPage({super.key});
@@ -55,29 +53,8 @@ class _GoalListPageState extends State<GoalListPage> {
             children: [
               SizedBox(height: 4.0),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Hero(
-                    tag: 'create_goal_fab',
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      child: OutlinedButton.icon(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            slowHeroRoute(
-                              BlocProvider.value(
-                                value: context.read<GoalBloc>(),
-                                child: CreateGoalPage(),
-                              ),
-                            ),
-                          );
-                        },
-                        icon: Icon(Icons.add_rounded),
-                        label: Text(t.translate('create_goal')),
-                      ),
-                    ),
-                  ),
                   GoalDiagramTypeSegmentedButton(
                     goalDiagramType: _goalDiagramType,
                     onChanged: (newGoalDiagramType) {

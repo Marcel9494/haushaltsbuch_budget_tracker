@@ -3,25 +3,29 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:haushaltsbuch_budget_tracker/data/repositories/account_repository.dart';
 import 'package:haushaltsbuch_budget_tracker/features/bookings/presentation/widgets/cards/booking_month_overview_card.dart';
-import 'package:intl/intl.dart';
+import 'package:haushaltsbuch_budget_tracker/features/bookings/presentation/widgets/charts/yearly_bar_chart.dart';
 
 import '../../../../../blocs/booking/booking_bloc.dart';
 import '../../../../../core/consts/animation_consts.dart';
+import '../../../../../core/utils/date_helper.dart';
 import '../../../../../data/enums/period_of_time_type.dart';
 import '../../../../../data/repositories/booking_repository.dart';
 import '../../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../../../../shared/presentation/widgets/deco/error_text.dart';
-import '../deco/booking_list_actions.dart';
 import '../deco/booking_list_overview.dart';
 
 class YearlyBookingList extends StatefulWidget {
   final int currentSelectedYear;
   PeriodOfTimeType currentPeriodOfTimeType;
+  bool showBookingChart;
+  final ValueChanged<bool>? onShowBookingChartChanged;
   final ValueChanged<PeriodOfTimeType>? onPeriodOfTimeChanged;
 
   YearlyBookingList({
     super.key,
     required this.currentSelectedYear,
+    required this.showBookingChart,
+    required this.onShowBookingChartChanged,
     required this.currentPeriodOfTimeType,
     required this.onPeriodOfTimeChanged,
   });
@@ -31,18 +35,6 @@ class YearlyBookingList extends StatefulWidget {
 }
 
 class _YearlyBookingListState extends State<YearlyBookingList> {
-  List<String> getAllMonthNames(String locale) {
-    List<String> months = [];
-    DateTime date = DateTime(DateTime.now().year, 1, 1);
-
-    for (int i = 0; i < 12; i++) {
-      String monthName = DateFormat.MMMM(locale).format(date);
-      months.add(monthName);
-      date = DateTime(date.year, date.month + 1, 1);
-    }
-    return months;
-  }
-
   @override
   Widget build(BuildContext context) {
     final List<String> months = getAllMonthNames('de_DE');
@@ -60,10 +52,12 @@ class _YearlyBookingListState extends State<YearlyBookingList> {
                   averageDivider: 12,
                   averageText: 'per_month',
                 ),
-                BookingListActions(
-                  periodOfTimeType: widget.currentPeriodOfTimeType,
-                  onPeriodOfTimeChanged: widget.onPeriodOfTimeChanged,
-                ),
+                widget.showBookingChart
+                    ? YearlyBarChart(
+                        bookings: state.yearlyBookings,
+                        currentSelectedYear: widget.currentSelectedYear,
+                      )
+                    : SizedBox.shrink(),
                 Expanded(
                   child: AnimationLimiter(
                     child: ListView.builder(
@@ -78,7 +72,7 @@ class _YearlyBookingListState extends State<YearlyBookingList> {
                             verticalOffset: 40.0,
                             child: FadeInAnimation(
                               child: BookingMonthOverviewCard(
-                                bookings: monthlyBookings,
+                                monthlyBookings: monthlyBookings,
                                 currentMonth: months[index],
                                 index: index,
                               ),

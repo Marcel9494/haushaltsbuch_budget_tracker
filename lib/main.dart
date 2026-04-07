@@ -50,6 +50,7 @@ import 'features/auth/presentation/pages/register_page.dart';
 import 'features/auth/presentation/pages/reset_password_page.dart';
 import 'features/bookings/presentation/pages/create_booking_page.dart';
 import 'features/bookings/presentation/pages/update_booking_page.dart';
+import 'features/budgets/presentation/pages/create_budget_page.dart';
 import 'features/budgets/presentation/pages/update_budget_page.dart';
 import 'features/categories/presentation/pages/category_list_page.dart';
 import 'features/categories/presentation/pages/update_category_page.dart';
@@ -298,6 +299,7 @@ class MyApp extends StatelessWidget {
         forgotPasswordRoute: (context) => const ForgotPasswordPage(),
         createBookingRoute: (context) => const CreateBookingPage(),
         createAccountRoute: (context) => const CreateAccountPage(),
+        createBudgetRoute: (context) => const CreateBudgetPage(),
         createGoalRoute: (context) => const CreateGoalPage(),
         accountListRoute: (context) => const AccountListPage(),
         goalListRoute: (context) => const GoalListPage(),

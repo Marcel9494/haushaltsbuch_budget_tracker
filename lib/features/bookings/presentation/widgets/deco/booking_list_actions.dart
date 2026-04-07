@@ -5,12 +5,18 @@ import '../../../../../data/enums/period_of_time_type.dart';
 
 class BookingListActions extends StatefulWidget {
   final PeriodOfTimeType periodOfTimeType;
+  final bool showBookingChart;
   final ValueChanged<PeriodOfTimeType>? onPeriodOfTimeChanged;
+  final ValueChanged<bool>? onShowBookingChartChanged;
+  final IconData icon;
 
   const BookingListActions({
     super.key,
     required this.periodOfTimeType,
+    required this.showBookingChart,
     required this.onPeriodOfTimeChanged,
+    required this.onShowBookingChartChanged,
+    required this.icon,
   });
 
   @override
@@ -54,7 +60,24 @@ class _BookingListActionsState extends State<BookingListActions> with SingleTick
       opacity: _fade,
       child: SlideTransition(
         position: _slide,
-        child: Row(
+        child: InkWell(
+          onTap: () {
+            setState(() {
+              widget.onShowBookingChartChanged?.call(!widget.showBookingChart);
+            });
+          },
+          customBorder: const CircleBorder(),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: FaIcon(
+              widget.icon,
+              size: 20,
+              color: widget.showBookingChart ? Colors.cyanAccent : Colors.white70,
+            ),
+          ),
+        ),
+        // TODO hinzufügen, wenn Buchungsliste Filter implementiert wird siehe:
+        /*child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
@@ -79,12 +102,16 @@ class _BookingListActionsState extends State<BookingListActions> with SingleTick
                   margin: const EdgeInsets.symmetric(horizontal: 10.0),
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    setState(() {
+                      widget.onShowBookingChartChanged?.call(!widget.showBookingChart);
+                    });
+                  },
                   customBorder: const CircleBorder(),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: FaIcon(
-                      FontAwesomeIcons.chartColumn,
+                      widget.icon,
                       size: 20,
                       color: Colors.white70,
                     ),
@@ -93,7 +120,7 @@ class _BookingListActionsState extends State<BookingListActions> with SingleTick
               ],
             ),
           ],
-        ),
+        ),*/
       ),
     );
   }

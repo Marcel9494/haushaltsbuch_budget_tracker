@@ -76,21 +76,8 @@ class _HomeContentPageState extends State<HomeContentPage> {
                       children: [
                         GuestInfoCard(),
                         Padding(
-                          padding: const EdgeInsets.only(top: 6.0, bottom: 10.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SubtitleText(text: 'overview'),
-                              IconButton(
-                                onPressed: () => {},
-                                icon: Icon(
-                                  FontAwesomeIcons.gear,
-                                  size: 16.0,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
+                          padding: const EdgeInsets.only(top: 12.0, bottom: 16.0),
+                          child: SubtitleText(text: 'overview'),
                         ),
                         SizedBox(
                           height: 120.0,
@@ -139,21 +126,8 @@ class _HomeContentPageState extends State<HomeContentPage> {
                               )
                             : SizedBox.shrink(),
                         Padding(
-                          padding: const EdgeInsets.only(top: 10.0, bottom: 12.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SubtitleText(text: 'monthly_values'),
-                              IconButton(
-                                onPressed: () => {},
-                                icon: Icon(
-                                  FontAwesomeIcons.gear,
-                                  size: 16.0,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
+                          padding: const EdgeInsets.only(top: 12.0, bottom: 16.0),
+                          child: SubtitleText(text: 'monthly_values'),
                         ),
                         GridView.count(
                           crossAxisCount: 2,
@@ -200,21 +174,8 @@ class _HomeContentPageState extends State<HomeContentPage> {
                       children: [
                         GuestInfoCard(),
                         Padding(
-                          padding: const EdgeInsets.only(top: 6.0, bottom: 10.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SubtitleText(text: 'overview'),
-                              IconButton(
-                                onPressed: () => {},
-                                icon: Icon(
-                                  FontAwesomeIcons.gear,
-                                  size: 16.0,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
+                          padding: const EdgeInsets.only(top: 12.0, bottom: 16.0),
+                          child: SubtitleText(text: 'overview'),
                         ),
                         SizedBox(
                           height: 120.0,
@@ -263,21 +224,8 @@ class _HomeContentPageState extends State<HomeContentPage> {
                               )
                             : SizedBox.shrink(),
                         Padding(
-                          padding: const EdgeInsets.only(top: 10.0, bottom: 12.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SubtitleText(text: 'yearly_values'),
-                              IconButton(
-                                onPressed: () => {},
-                                icon: Icon(
-                                  FontAwesomeIcons.gear,
-                                  size: 16.0,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
+                          padding: const EdgeInsets.only(top: 12.0, bottom: 16.0),
+                          child: SubtitleText(text: 'yearly_values'),
                         ),
                         GridView.count(
                           crossAxisCount: 2,

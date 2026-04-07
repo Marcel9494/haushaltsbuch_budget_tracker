@@ -7,16 +7,13 @@ import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 import '../../../../../blocs/booking/booking_bloc.dart';
 import '../../../../../blocs/budget/budget_bloc.dart';
 import '../../../../../blocs/budget/budget_state.dart';
-import '../../../../../blocs/category/category_bloc.dart';
 import '../../../../../core/consts/animation_consts.dart';
-import '../../../../../core/utils/slow_hero_animation.dart';
 import '../../../../../data/enums/period_of_time_type.dart';
 import '../../../../../data/models/booking.dart';
 import '../../../../../data/repositories/budget_repository.dart';
 import '../../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../../../../shared/presentation/widgets/deco/empty_list.dart';
 import '../../../../shared/presentation/widgets/deco/error_text.dart';
-import '../../pages/create_budget_page.dart';
 import '../cards/budget_card.dart';
 import '../cards/budget_overview_stat_card.dart';
 
@@ -52,32 +49,6 @@ class _MonthlyBudgetListState extends State<MonthlyBudgetList> {
               SizedBox(height: 4.0),
               BudgetOverviewStatCard(budgets: state.budgets),
               SizedBox(height: 4.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Hero(
-                    tag: 'create_budget_fab',
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      child: OutlinedButton.icon(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            slowHeroRoute(
-                              BlocProvider.value(
-                                value: context.read<CategoryBloc>(),
-                                child: CreateBudgetPage(),
-                              ),
-                            ),
-                          );
-                        },
-                        label: Text(t.translate('create_budget')),
-                        icon: Icon(Icons.add_rounded),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
               state.budgets.isEmpty
                   ? EmptyList(
                       text: 'no_budgets',
