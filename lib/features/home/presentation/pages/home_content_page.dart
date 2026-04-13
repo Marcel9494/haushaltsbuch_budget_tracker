@@ -129,22 +129,25 @@ class _HomeContentPageState extends State<HomeContentPage> {
                           padding: const EdgeInsets.only(top: 12.0, bottom: 16.0),
                           child: SubtitleText(text: 'monthly_values'),
                         ),
-                        GridView.count(
-                          crossAxisCount: 2,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          mainAxisSpacing: 16,
-                          crossAxisSpacing: 6,
-                          childAspectRatio: 1.6,
-                          children: [
-                            for (final element in monthlyDashboardElements)
-                              HomeGridItemCard(
-                                icon: FaIcon(getDashboardElementIcon(element!.icon), size: 20.0),
-                                title: element.title,
-                                stat: DashboardElement.calculateDisplayValue(element, bookingState.bookings, accountState.accounts),
-                                subtitle: element.shortDescription,
-                              ),
-                          ],
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                          child: GridView.count(
+                            crossAxisCount: 2,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            mainAxisSpacing: 16,
+                            crossAxisSpacing: 6,
+                            childAspectRatio: 1.6,
+                            children: [
+                              for (final element in monthlyDashboardElements)
+                                HomeGridItemCard(
+                                  icon: FaIcon(getDashboardElementIcon(element!.icon), size: 20.0),
+                                  title: element.title,
+                                  stat: DashboardElement.calculateDisplayValue(element, bookingState.bookings, accountState.accounts),
+                                  subtitle: element.shortDescription,
+                                ),
+                            ],
+                          ),
                         ),
                         SizedBox(height: 20.0),
                         SubtitleText(text: 'categories'),
@@ -227,22 +230,25 @@ class _HomeContentPageState extends State<HomeContentPage> {
                           padding: const EdgeInsets.only(top: 12.0, bottom: 16.0),
                           child: SubtitleText(text: 'yearly_values'),
                         ),
-                        GridView.count(
-                          crossAxisCount: 2,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          mainAxisSpacing: 16,
-                          crossAxisSpacing: 6,
-                          childAspectRatio: 1.6,
-                          children: [
-                            for (final element in yearlyDashboardElements)
-                              HomeGridItemCard(
-                                icon: FaIcon(getDashboardElementIcon(element!.icon), size: 20.0),
-                                title: element.title,
-                                stat: DashboardElement.calculateDisplayValue(element, yearlyBookings, accountState.accounts),
-                                subtitle: element.shortDescription,
-                              ),
-                          ],
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                          child: GridView.count(
+                            crossAxisCount: 2,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            mainAxisSpacing: 16,
+                            crossAxisSpacing: 6,
+                            childAspectRatio: 1.6,
+                            children: [
+                              for (final element in yearlyDashboardElements)
+                                HomeGridItemCard(
+                                  icon: FaIcon(getDashboardElementIcon(element!.icon), size: 20.0),
+                                  title: element.title,
+                                  stat: DashboardElement.calculateDisplayValue(element, yearlyBookings, accountState.accounts),
+                                  subtitle: element.shortDescription,
+                                ),
+                            ],
+                          ),
                         ),
                         SizedBox(height: 20.0),
                         SubtitleText(text: 'categories'),

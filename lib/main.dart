@@ -263,6 +263,9 @@ class MyApp extends StatelessWidget {
             }
             return null;
           }),
+          cancelButtonStyle: ButtonStyle(
+            foregroundColor: WidgetStatePropertyAll(Colors.grey),
+          ),
         ),
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: OutlinedButton.styleFrom(
@@ -395,6 +398,7 @@ class MyApp extends StatelessWidget {
             return MaterialPageRoute<String>(
               builder: (context) => UpdateBookingPage(
                 booking: args.booking,
+                bookingSelectionType: args.bookingSelectionType,
               ),
               settings: settings,
             );

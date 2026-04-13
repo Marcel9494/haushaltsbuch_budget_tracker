@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:haushaltsbuch_budget_tracker/data/helper_models/booking_category_stats.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../../core/utils/currency_formatter.dart';
 
@@ -16,6 +17,7 @@ class CategoryStatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = Localizations.localeOf(context).toString();
     return SlideAnimation(
       verticalOffset: 40.0,
       child: FadeInAnimation(
@@ -31,12 +33,14 @@ class CategoryStatCard extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4.0),
                 child: ListTile(
+                  dense: true,
                   title: Text(
-                    '${bookingCategoryStats.percentage.toStringAsFixed(1)}% ${bookingCategoryStats.category}',
+                    '${NumberFormat('#,##0.0', locale).format(bookingCategoryStats.percentage)}% ${bookingCategoryStats.category}',
+                    style: TextStyle(fontSize: 15.0),
                   ),
                   trailing: Text(
                     formatCurrency(bookingCategoryStats.totalAmount, 'EUR'),
-                    style: TextStyle(fontSize: 16.0),
+                    style: TextStyle(fontSize: 15.0),
                   ),
                 ),
               ),

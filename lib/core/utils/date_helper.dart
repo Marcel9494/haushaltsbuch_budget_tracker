@@ -1,6 +1,9 @@
-// Beispielausgabe: "1 Jahr, 2 Monate, 3 Wochen, 4 Tage\n(438 Tage)"
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../features/bookings/data/enums/repetition_type.dart';
+
+// Beispielausgabe: "1 Jahr, 2 Monate, 3 Wochen, 4 Tage\n(438 Tage)"
 String formatDateDuration(DateTime startDate, DateTime endDate) {
   if (endDate.isBefore(startDate)) {
     return '';
@@ -50,26 +53,58 @@ bool isSameDay(DateTime a, DateTime b) {
   return a.year == b.year && a.month == b.month && a.day == b.day;
 }
 
+// Beispielausgabe: ["Januar", "Februar", ...]
 List<String> getAllMonthNames(String locale) {
-  List<String> months = [];
+  List<String> monthNames = [];
   DateTime date = DateTime(DateTime.now().year, 1, 1);
 
   for (int i = 0; i < 12; i++) {
     String monthName = DateFormat.MMMM(locale).format(date);
-    months.add(monthName);
+    monthNames.add(monthName);
     date = DateTime(date.year, date.month + 1, 1);
   }
-  return months;
+  return monthNames;
 }
 
+// Beispielausgabe: ["Jan", "Feb", ...]
 List<String> getAllShortMonthNames(String locale) {
-  List<String> months = [];
+  List<String> shortMonthNames = [];
   DateTime date = DateTime(DateTime.now().year, 1, 1);
 
   for (int i = 0; i < 12; i++) {
     String monthName = DateFormat.MMM(locale).format(date);
-    months.add(monthName);
+    shortMonthNames.add(monthName);
     date = DateTime(date.year, date.month + 1, 1);
   }
-  return months;
+  return shortMonthNames;
+}
+
+DateTime tryParseSelectedDate(String date) {
+  try {
+    return DateFormat(
+      '(E) dd.MM.yyyy',
+      WidgetsBinding.instance.platformDispatcher.locale.toString(),
+    ).parseStrict(date);
+  } catch (_) {
+    return DateTime.now();
+  }
+}
+
+String setDateForRepetitionType(String currentDate, RepetitionType repetitionType) {
+  String dateString = '';
+  final date = tryParseSelectedDate(currentDate);
+  if (repetitionType == RepetitionType.beginningOfMonth) {
+    dateString =
+        DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(DateTime(date.year, date.month, 1));
+  } else if (repetitionType == RepetitionType.endOfMonth) {
+    dateString =
+        DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(DateTime(date.year, date.month + 1, 0));
+  } else if (repetitionType == RepetitionType.beginningOfYear) {
+    dateString = DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(DateTime(date.year, 1, 1));
+  } else if (repetitionType == RepetitionType.endOfYear) {
+    dateString = DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(DateTime(date.year, 12, 31));
+  } else {
+    dateString = DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(date);
+  }
+  return dateString;
 }

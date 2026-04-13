@@ -17,6 +17,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../blocs/booking/booking_bloc.dart';
 import '../../../../core/consts/animation_consts.dart';
 import '../../../../core/utils/app_flushbar.dart';
+import '../../../../core/utils/date_helper.dart';
 import '../../../../data/enums/goal_type.dart';
 import '../../../../data/models/account.dart';
 import '../../../../data/models/booking.dart';
@@ -127,34 +128,6 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
     }
   }
 
-  DateTime tryParseSelectedDate() {
-    try {
-      return DateFormat(
-        '(E) dd.MM.yyyy',
-        WidgetsBinding.instance.platformDispatcher.locale.toString(),
-      ).parseStrict(_dateController.text);
-    } catch (_) {
-      return DateTime.now();
-    }
-  }
-
-  void setDateForRepetitionType() {
-    final date = tryParseSelectedDate();
-    if (_repetitionType == RepetitionType.beginningOfMonth) {
-      _dateController.text =
-          DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(DateTime(date.year, date.month, 1));
-    } else if (_repetitionType == RepetitionType.endOfMonth) {
-      _dateController.text =
-          DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(DateTime(date.year, date.month + 1, 0));
-    } else if (_repetitionType == RepetitionType.beginningOfYear) {
-      _dateController.text =
-          DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(DateTime(date.year, 1, 1));
-    } else if (_repetitionType == RepetitionType.endOfYear) {
-      _dateController.text =
-          DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(DateTime(date.year, 12, 31));
-    }
-  }
-
   void resetCategory() {
     _categorieController.text = '';
     if (_bookingType == BookingType.expense || _bookingType == BookingType.transfer) {
@@ -214,7 +187,7 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
                           onRepetitionTypeChanged: (RepetitionType newRepetitionType) {
                             setState(() {
                               _repetitionType = newRepetitionType;
-                              setDateForRepetitionType();
+                              _dateController.text = setDateForRepetitionType(_dateController.text, _repetitionType);
                             });
                           },
                         ),

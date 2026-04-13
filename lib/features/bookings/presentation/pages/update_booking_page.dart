@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:haushaltsbuch_budget_tracker/core/consts/route_consts.dart';
 import 'package:haushaltsbuch_budget_tracker/core/page_arguments/home_page_arguments.dart';
 import 'package:haushaltsbuch_budget_tracker/core/utils/currency_formatter.dart';
+import 'package:haushaltsbuch_budget_tracker/data/enums/booking_selection_type.dart';
 import 'package:haushaltsbuch_budget_tracker/data/enums/goal_type.dart';
 import 'package:haushaltsbuch_budget_tracker/data/repositories/booking_repository.dart';
 import 'package:haushaltsbuch_budget_tracker/features/bookings/presentation/widgets/input_fields/categorie_input_field.dart';
@@ -19,6 +20,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../blocs/booking/booking_bloc.dart';
 import '../../../../core/consts/animation_consts.dart';
 import '../../../../core/utils/app_flushbar.dart';
+import '../../../../core/utils/date_helper.dart';
 import '../../../../core/utils/dialogs/show_delete_dialog.dart';
 import '../../../../data/enums/account_type.dart';
 import '../../../../data/models/account.dart';
@@ -27,6 +29,7 @@ import '../../../../data/models/category.dart';
 import '../../../../data/models/goal.dart';
 import '../../../../data/repositories/account_repository.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../categories/data/enums/category_type.dart';
 import '../../data/enums/amount_type.dart';
 import '../../data/enums/booking_type.dart';
 import '../../data/enums/repetition_type.dart';
@@ -37,10 +40,12 @@ import '../widgets/input_fields/title_input_field.dart';
 
 class UpdateBookingPage extends StatefulWidget {
   final Booking booking;
+  final BookingSelectionType bookingSelectionType;
 
   const UpdateBookingPage({
     super.key,
     required this.booking,
+    required this.bookingSelectionType,
   });
 
   @override
@@ -55,6 +60,7 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
   late Account _selectedDebitAccount;
   late Account _selectedTargetAccount = Account(name: '', accountType: AccountType.other, balance: 0.0);
   late Goal _selectedGoal;
+  late Booking oldBooking;
   final GlobalKey<FormState> _updateBookingFormKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
@@ -72,7 +78,12 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
     _bookingType = widget.booking.bookingType;
     _amountType = widget.booking.amountType;
     _repetitionType = widget.booking.repetitionType;
-    _selectedCategory = widget.booking.category!;
+    if (widget.booking.category != null) {
+      _selectedCategory = widget.booking.category!;
+    } else {
+      // TODO hier weitermachen und Gelöschte Kategorie behandeln
+      _selectedCategory = Category(categoryName: '', categoryType: CategoryType.expense);
+    }
     if (widget.booking.debitAccount != null) {
       _selectedDebitAccount = widget.booking.debitAccount!;
     } else {
@@ -95,6 +106,11 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
     _debitAccountController.text = _selectedDebitAccount.name;
     _targetAccountController.text = _selectedTargetAccount.name;
     _goalController.text = _selectedGoal.goalName;
+    _backupOldBooking();
+  }
+
+  void _backupOldBooking() {
+    oldBooking = widget.booking;
   }
 
   Future<void> _updateBooking(BuildContext contextForBloc) async {
@@ -127,6 +143,7 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
         amount: amount!,
         amountType: _amountType, // TODO
         bookingDate: parsedDate, // TODO
+        repetitionId: widget.booking.repetitionId,
         repetitionType: _repetitionType, // TODO
         categoryId: _bookingType == BookingType.transfer ? null : _selectedCategory.id,
         debitAccountId: _selectedDebitAccount.id!,
@@ -136,7 +153,11 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
         isBooked: true, // TODO
       );
 
-      contextForBloc.read<BookingBloc>().add(UpdateBooking(booking: updatedBooking));
+      contextForBloc.read<BookingBloc>().add(UpdateBooking(
+            oldBooking: oldBooking,
+            newBooking: updatedBooking,
+            bookingSelectionType: widget.bookingSelectionType,
+          ));
     } on PostgrestException catch (_) {
       AppFlushbar.show(context, message: t.translate('database_error'));
       _updateBookingButtonController.error();
@@ -158,6 +179,15 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
     }
   }
 
+  void resetCategory() {
+    _categorieController.text = '';
+    if (_bookingType == BookingType.expense || _bookingType == BookingType.transfer) {
+      _selectedCategory = Category(id: '', categoryName: '', categoryType: CategoryType.expense);
+    } else if (_bookingType == BookingType.income) {
+      _selectedCategory = Category(id: '', categoryName: '', categoryType: CategoryType.income);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
@@ -171,6 +201,12 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
               Future.delayed(Duration(milliseconds: 1000), () {
                 Navigator.popAndPushNamed(context, homeRoute, arguments: HomePageArguments(1));
               });
+            } else if (state is BookingListLoaded) {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                homeRoute,
+                (route) => false,
+                arguments: HomePageArguments(1),
+              );
             } else if (state is BookingError) {
               AppFlushbar.show(context, message: t.translate(state.message));
               _updateBookingButtonController.error();
@@ -188,8 +224,6 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
                   icon: Icon(Icons.delete_forever_rounded),
                   onPressed: () async {
                     final bookingBloc = innerContext.read<BookingBloc>();
-                    final navigator = Navigator.of(context);
-
                     final bool confirmed = await showDeleteDialog(
                       context,
                       t.translate('delete_booking'),
@@ -197,12 +231,7 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
                     );
 
                     if (confirmed == true) {
-                      bookingBloc.add(DeleteBooking(bookingId: widget.booking.id!));
-                      navigator.pushNamedAndRemoveUntil(
-                        homeRoute,
-                        (route) => false,
-                        arguments: HomePageArguments(1),
-                      );
+                      bookingBloc.add(DeleteBooking(booking: oldBooking, bookingSelectionType: widget.bookingSelectionType));
                     }
                   },
                 ),
@@ -222,6 +251,7 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
                           onChanged: (BookingType newBookingType) {
                             setState(() {
                               _bookingType = newBookingType;
+                              resetCategory();
                             });
                           },
                         ),
@@ -231,6 +261,7 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
                           onRepetitionTypeChanged: (RepetitionType newRepetitionType) {
                             setState(() {
                               _repetitionType = newRepetitionType;
+                              _dateController.text = setDateForRepetitionType(_dateController.text, _repetitionType);
                             });
                           },
                         ),

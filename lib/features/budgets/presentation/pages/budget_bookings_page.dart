@@ -40,15 +40,14 @@ class BudgetBookingsPage extends StatefulWidget {
 }
 
 class _BudgetBookingsPageState extends State<BudgetBookingsPage> {
-  int _pastStartIndex = 0;
+  final int _pastStartIndex = 0;
   List<Booking> filteredBookings = [];
   final ScrollController _scrollController = ScrollController();
-  final BudgetRepository _budgetRepository = BudgetRepository();
 
   @override
   void initState() {
     super.initState();
-    filteredBookings = widget.bookings.where((booking) => booking.category!.categoryName == widget.budget.category!.categoryName).toList();
+    filteredBookings = widget.bookings.where((booking) => booking.category?.categoryName == widget.budget.category?.categoryName).toList();
   }
 
   @override

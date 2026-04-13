@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:haushaltsbuch_budget_tracker/core/utils/bottom_sheets/update_booking_bottom_sheet.dart';
 import 'package:haushaltsbuch_budget_tracker/features/bookings/data/enums/booking_type.dart';
 import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 
@@ -9,6 +10,7 @@ import '../../../../../blocs/booking/booking_bloc.dart';
 import '../../../../../blocs/category/category_bloc.dart';
 import '../../../../../blocs/goal/goal_bloc.dart';
 import '../../../../../core/utils/currency_formatter.dart';
+import '../../../../../data/enums/booking_selection_type.dart';
 import '../../../../../data/models/booking.dart';
 import '../../pages/update_booking_page.dart';
 
@@ -24,19 +26,28 @@ class BookingCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
     return GestureDetector(
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) => MultiBlocProvider(
-            providers: [
-              BlocProvider.value(value: context.read<BookingBloc>()),
-              BlocProvider.value(value: context.read<CategoryBloc>()),
-              BlocProvider.value(value: context.read<AccountBloc>()),
-              BlocProvider.value(value: context.read<GoalBloc>()),
-            ],
-            child: UpdateBookingPage(booking: booking),
-          ),
-        ),
-      ),
+      onTap: () {
+        if (booking.repetitionId == null) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => MultiBlocProvider(
+                providers: [
+                  BlocProvider.value(value: context.read<BookingBloc>()),
+                  BlocProvider.value(value: context.read<CategoryBloc>()),
+                  BlocProvider.value(value: context.read<AccountBloc>()),
+                  BlocProvider.value(value: context.read<GoalBloc>()),
+                ],
+                child: UpdateBookingPage(
+                  booking: booking,
+                  bookingSelectionType: BookingSelectionType.single,
+                ),
+              ),
+            ),
+          );
+        } else {
+          showUpdateBookingBottomSheet(context, booking);
+        }
+      },
       child: Card(
         child: ClipPath(
           clipper: ShapeBorderClipper(

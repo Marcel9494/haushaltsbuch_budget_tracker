@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:haushaltsbuch_budget_tracker/data/repositories/booking_repository.dart';
 import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../../core/consts/animation_consts.dart';
 import '../../../../../data/enums/period_of_time_type.dart';
@@ -101,51 +102,66 @@ class _CategoryStatsState extends State<CategoryStats> with TickerProviderStateM
           ),
         ),
         Card(
-          child: AspectRatio(
-            aspectRatio: 1.8,
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: TweenAnimationBuilder<double>(
-                      tween: Tween(begin: 0, end: 1),
-                      duration: const Duration(milliseconds: 1200),
-                      curve: Curves.easeOutCubic,
-                      builder: (context, value, child) {
-                        return Opacity(
-                          opacity: value,
-                          child: Transform.scale(
-                            scale: value,
-                            child: child,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12.0),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [
+                    Theme.of(context).colorScheme.primary.withValues(alpha: 0.06),
+                    Theme.of(context).colorScheme.primary.withValues(alpha: 0.0),
+                  ],
+                ),
+              ),
+              child: AspectRatio(
+                aspectRatio: 1.8,
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: AspectRatio(
+                        aspectRatio: 1,
+                        child: TweenAnimationBuilder<double>(
+                          tween: Tween(begin: 0, end: 1),
+                          duration: const Duration(milliseconds: 1200),
+                          curve: Curves.easeOutCubic,
+                          builder: (context, value, child) {
+                            return Opacity(
+                              opacity: value,
+                              child: Transform.scale(
+                                scale: value,
+                                child: child,
+                              ),
+                            );
+                          },
+                          child: PieChart(
+                            PieChartData(
+                              pieTouchData: PieTouchData(
+                                touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                                  setState(() {
+                                    if (!event.isInterestedForInteractions || pieTouchResponse == null || pieTouchResponse.touchedSection == null) {
+                                      _touchedIndex = -1;
+                                      return;
+                                    }
+                                    _touchedIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
+                                  });
+                                },
+                              ),
+                              borderData: FlBorderData(show: false),
+                              sectionsSpace: 6.0,
+                              centerSpaceRadius: 40.0,
+                              sections: _bookingCategoryStats.isNotEmpty ? showingSections(_bookingCategoryStats) : showingEmptySections(),
+                            ),
+                            duration: const Duration(milliseconds: 1000),
+                            curve: Curves.easeOutBack,
                           ),
-                        );
-                      },
-                      child: PieChart(
-                        PieChartData(
-                          pieTouchData: PieTouchData(
-                            touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                              setState(() {
-                                if (!event.isInterestedForInteractions || pieTouchResponse == null || pieTouchResponse.touchedSection == null) {
-                                  _touchedIndex = -1;
-                                  return;
-                                }
-                                _touchedIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
-                              });
-                            },
-                          ),
-                          borderData: FlBorderData(show: false),
-                          sectionsSpace: 6.0,
-                          centerSpaceRadius: 40.0,
-                          sections: _bookingCategoryStats.isNotEmpty ? showingSections(_bookingCategoryStats) : showingEmptySections(),
                         ),
-                        duration: const Duration(milliseconds: 1000),
-                        curve: Curves.easeOutBack,
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
@@ -181,15 +197,16 @@ class _CategoryStatsState extends State<CategoryStats> with TickerProviderStateM
   }
 
   List<PieChartSectionData> showingSections(List<BookingCategoryStats> bookingCategoryStats) {
+    final locale = Localizations.localeOf(context).toString();
     return List.generate(bookingCategoryStats.length, (i) {
       final isTouched = i == _touchedIndex;
-      final fontSize = isTouched ? 22.0 : 16.0;
+      final fontSize = isTouched ? 20.0 : 15.0;
       final radius = isTouched ? 60.0 : 50.0;
       const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
       return PieChartSectionData(
         color: _pieCategoryColors[i % _pieCategoryColors.length],
         value: bookingCategoryStats[i].percentage,
-        title: '${bookingCategoryStats[i].percentage.toStringAsFixed(1)}% ${bookingCategoryStats[i].category}',
+        title: '${NumberFormat('#,##0.0', locale).format(bookingCategoryStats[i].percentage)}% ${bookingCategoryStats[i].category}',
         radius: radius,
         titleStyle: TextStyle(
           fontSize: fontSize,

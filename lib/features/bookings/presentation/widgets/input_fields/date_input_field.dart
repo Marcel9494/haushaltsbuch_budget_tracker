@@ -229,18 +229,6 @@ class _DateInputFieldState extends State<DateInputField> {
               lastDate: DateTime(2100),
               confirmText: t.translate('ok'),
               cancelText: t.translate('cancel'),
-              builder: (context, child) {
-                return Theme(
-                  data: Theme.of(context).copyWith(
-                    datePickerTheme: const DatePickerThemeData(
-                      cancelButtonStyle: ButtonStyle(
-                        foregroundColor: WidgetStatePropertyAll(Colors.grey),
-                      ),
-                    ),
-                  ),
-                  child: child!,
-                );
-              },
             );
 
             if (pickedDate != null) {
