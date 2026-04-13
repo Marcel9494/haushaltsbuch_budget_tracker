@@ -8,9 +8,7 @@ Future<bool> showDeleteDialog(BuildContext context, String title, String content
     context: context,
     builder: (context) => AlertDialog(
       title: Text(t.translate(title)),
-      content: Text(
-        content,
-      ),
+      content: Text(content),
       actions: [
         TextButton(
           style: TextButton.styleFrom(foregroundColor: Colors.grey),

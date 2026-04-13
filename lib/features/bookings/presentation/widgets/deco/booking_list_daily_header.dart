@@ -79,7 +79,7 @@ class _BookingListDailyHeaderState extends State<BookingListDailyHeader> {
                   formatCurrency(_revenue, 'EUR'),
                   style: const TextStyle(
                     fontSize: 14,
-                    color: Colors.greenAccent,
+                    color: Colors.green,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

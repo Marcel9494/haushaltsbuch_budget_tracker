@@ -34,6 +34,7 @@ const Map<String, String> de = {
   'create_booking': 'Buchung erstellen',
   'delete_booking': 'Buchung löschen',
   'delete_booking_confirmation': 'Möchten Sie die Buchung wirklich löschen?',
+  'update_or_delete_booking': 'Buchung bearbeiten oder löschen',
   'title': 'Titel',
   'amount': 'Betrag',
   'enter_amount': 'Betrag eingeben',

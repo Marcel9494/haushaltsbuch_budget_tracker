@@ -140,4 +140,98 @@ class AccountRepository {
           .eq('user_id', supabase.auth.currentUser!.id);
     }
   }
+
+  Future<void> reverseAccountBalance(Booking oldBooking) async {
+    final SupabaseClient supabase = Supabase.instance.client;
+    if (oldBooking.bookingDate.isAfter(DateTime.now()) || oldBooking.bookingDate.isAtSameMomentAs(DateTime.now())) {
+      return;
+    }
+
+    if (oldBooking.bookingType == BookingType.expense) {
+      final debitAccount = await supabase.from('accounts').select('balance').eq('id', oldBooking.debitAccountId!).single();
+      await supabase
+          .from('accounts')
+          .update({'balance': debitAccount['balance'] + oldBooking.amount})
+          .eq('id', oldBooking.debitAccountId!)
+          .eq('user_id', supabase.auth.currentUser!.id);
+    } else if (oldBooking.bookingType == BookingType.income) {
+      final debitAccount = await supabase.from('accounts').select('balance').eq('id', oldBooking.debitAccountId!).single();
+      await supabase
+          .from('accounts')
+          .update({'balance': debitAccount['balance'] - oldBooking.amount})
+          .eq('id', oldBooking.debitAccountId!)
+          .eq('user_id', supabase.auth.currentUser!.id);
+    } else if (oldBooking.bookingType == BookingType.transfer) {
+      final debitAccount = await supabase.from('accounts').select('balance').eq('id', oldBooking.debitAccountId!).single();
+      final targetAccount = await supabase.from('accounts').select('balance').eq('id', oldBooking.targetAccountId!).single();
+      await supabase
+          .from('accounts')
+          .update({'balance': debitAccount['balance'] + oldBooking.amount})
+          .eq('id', oldBooking.debitAccountId!)
+          .eq('user_id', supabase.auth.currentUser!.id);
+      await supabase
+          .from('accounts')
+          .update({'balance': targetAccount['balance'] - oldBooking.amount})
+          .eq('id', oldBooking.targetAccountId!)
+          .eq('user_id', supabase.auth.currentUser!.id);
+    }
+  }
+
+  Future<void> reverseAccountBalances(List<Booking> bookings) async {
+    final SupabaseClient supabase = Supabase.instance.client;
+    final userId = supabase.auth.currentUser!.id;
+
+    final Map<String, double> balanceChanges = {};
+
+    for (final booking in bookings) {
+      if (booking.bookingDate.isAfter(DateTime.now()) || booking.bookingDate.isAtSameMomentAs(DateTime.now())) {
+        continue;
+      }
+
+      switch (booking.bookingType) {
+        case BookingType.expense:
+          balanceChanges.update(
+            booking.debitAccountId!,
+            (value) => value + booking.amount,
+            ifAbsent: () => booking.amount,
+          );
+          break;
+
+        case BookingType.income:
+          balanceChanges.update(
+            booking.debitAccountId!,
+            (value) => value - booking.amount,
+            ifAbsent: () => -booking.amount,
+          );
+          break;
+
+        case BookingType.transfer:
+          balanceChanges.update(
+            booking.debitAccountId!,
+            (value) => value + booking.amount,
+            ifAbsent: () => booking.amount,
+          );
+
+          balanceChanges.update(
+            booking.targetAccountId!,
+            (value) => value - booking.amount,
+            ifAbsent: () => -booking.amount,
+          );
+          break;
+      }
+    }
+
+    final accountIds = balanceChanges.keys.toList();
+
+    final accounts = await supabase.from('accounts').select('id, balance').inFilter('id', accountIds).eq('user_id', userId);
+
+    // Updates auf betroffenen Accounts durchführen
+    for (final account in accounts) {
+      final id = account['id'];
+      final currentBalance = account['balance'];
+      final change = balanceChanges[id]!;
+
+      await supabase.from('accounts').update({'balance': currentBalance + change}).eq('id', id).eq('user_id', userId);
+    }
+  }
 }

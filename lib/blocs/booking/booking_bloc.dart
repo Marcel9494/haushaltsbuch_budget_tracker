@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:haushaltsbuch_budget_tracker/data/enums/booking_selection_type.dart';
 import 'package:haushaltsbuch_budget_tracker/data/repositories/account_repository.dart';
 
 import '../../data/helper_models/booking_category_stats.dart';
@@ -33,8 +34,32 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
 
   Future<void> _onUpdateBooking(UpdateBooking event, Emitter<BookingState> emit) async {
     try {
-      final Booking updatedBooking = await _bookingRepository.updateBooking(event.booking);
-      emit(BookingUpdated(updatedBooking));
+      if (event.bookingSelectionType == BookingSelectionType.single) {
+        await _accountRepository.reverseAccountBalance(event.oldBooking);
+        List<Booking> booking = [event.newBooking];
+        _accountRepository.updateAccountBalance(booking);
+        await _bookingRepository.updateBooking(event.newBooking);
+      } else if (event.bookingSelectionType == BookingSelectionType.onlyFuture) {
+        // 1. Nur zukünftige Buchungen laden und Kontostand rückgängig machen
+        final List<Booking> loadedFutureRepetitionBookings =
+            await _bookingRepository.loadFutureRepetitionBookings(event.oldBooking.repetitionId!, event.oldBooking.bookingDate);
+        for (Booking booking in loadedFutureRepetitionBookings) {
+          await _accountRepository.reverseAccountBalance(booking);
+        }
+        // 2. Zukünftige Buchungen mit neuen Daten aktualisieren und neuen Kontostand berechnen
+        final List<Booking> newLoadedFutureRepetitionBookings = await _bookingRepository.updateFutureRepetitionBookings(event.newBooking);
+        _accountRepository.updateAccountBalance(newLoadedFutureRepetitionBookings);
+      } else if (event.bookingSelectionType == BookingSelectionType.all) {
+        // 1. Buchungen laden und Kontostand rückgängig machen
+        final List<Booking> loadedRepetitionBookings = await _bookingRepository.loadRepetitionBookings(event.oldBooking.repetitionId!);
+        for (Booking booking in loadedRepetitionBookings) {
+          await _accountRepository.reverseAccountBalance(booking);
+        }
+        // 2. Buchungen mit neuen Daten aktualisieren und neuen Kontostand berechnen
+        final List<Booking> newLoadedRepetitionBookings = await _bookingRepository.updateRepetitionBookings(event.newBooking);
+        _accountRepository.updateAccountBalance(newLoadedRepetitionBookings);
+      }
+      emit(BookingUpdated());
     } catch (e) {
       emit(BookingError('update_booking_error'));
     }
@@ -42,7 +67,19 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
 
   Future<void> _onDeleteBooking(DeleteBooking event, Emitter<BookingState> emit) async {
     try {
-      await _bookingRepository.deleteBooking(event.bookingId);
+      if (event.bookingSelectionType == BookingSelectionType.single) {
+        await _accountRepository.reverseAccountBalance(event.booking);
+        await _bookingRepository.deleteBooking(event.booking.id!);
+      } else if (event.bookingSelectionType == BookingSelectionType.onlyFuture) {
+        final List<Booking> loadedFutureRepetitionBookings =
+            await _bookingRepository.loadFutureRepetitionBookings(event.booking.repetitionId!, event.booking.bookingDate);
+        await _accountRepository.reverseAccountBalances(loadedFutureRepetitionBookings);
+        await _bookingRepository.deleteFutureRepetitionBookings(event.booking.repetitionId!, event.booking.bookingDate);
+      } else if (event.bookingSelectionType == BookingSelectionType.all) {
+        final List<Booking> loadedRepetitionBookings = await _bookingRepository.loadRepetitionBookings(event.booking.repetitionId!);
+        await _accountRepository.reverseAccountBalances(loadedRepetitionBookings);
+        await _bookingRepository.deleteRepetitionBookings(event.booking.repetitionId!);
+      }
       final monthlyBookings = await _bookingRepository.loadMonthlyBookings(DateTime.now());
       emit(BookingListLoaded(monthlyBookings));
     } catch (e) {
