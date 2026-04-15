@@ -10,7 +10,8 @@ Haushaltsbuch - Budget Tracker
   - Email Authentication
   - Google Authentication
   - Anonymously Authentication
-  - Postgres Database
+  - Postgres Database + DB Functions
+  - Cron Job Integration
   - Email ändern
   - Passwort ändern
 - SQL (Schema Entwurf, CRUD Operationen)
