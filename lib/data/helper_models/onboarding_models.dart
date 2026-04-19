@@ -1,8 +1,8 @@
 import 'package:haushaltsbuch_budget_tracker/data/helper_models/start_account.dart';
 import 'package:haushaltsbuch_budget_tracker/data/helper_models/start_category.dart';
 
-import '../../features/categories/data/enums/category_type.dart';
 import '../enums/account_type.dart';
+import '../enums/category_type.dart';
 import '../models/dashboard_element.dart';
 
 // Start Ausgabekategorien

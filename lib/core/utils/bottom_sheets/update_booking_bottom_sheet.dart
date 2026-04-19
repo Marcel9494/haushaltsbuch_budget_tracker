@@ -52,11 +52,11 @@ void showUpdateBookingBottomSheet(BuildContext parentContext, Booking booking) {
                   final bookingSelectionType = BookingSelectionType.values[index];
                   return ListTile(
                     title: Text(
-                      bookingSelectionType.name,
+                      t.translate(bookingSelectionType.name),
                       style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      bookingSelectionType.updateDescription(),
+                      t.translate(bookingSelectionType.updateDescription()),
                       style: const TextStyle(fontSize: 12.0, color: Colors.grey),
                     ),
                     trailing: const Icon(Icons.keyboard_arrow_right_rounded, size: 24.0),

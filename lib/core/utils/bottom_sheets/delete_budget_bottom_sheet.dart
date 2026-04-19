@@ -53,11 +53,11 @@ void showDeleteBudgetBottomSheet(BuildContext context, Budget budget, BudgetBloc
                   final selectionType = BudgetSelectionType.values[index];
                   return ListTile(
                     title: Text(
-                      selectionType.name,
+                      t.translate(selectionType.name),
                       style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      '${selectionType.deleteDescription(budget.category!.categoryName)} '
+                      '${t.translate(selectionType.deleteDescription(budget.category!.categoryName))} '
                       '${selectionType == BudgetSelectionType.single ? '(${formatMonthYear(context, budget.budgetDate!)})' : ''}',
                       style: const TextStyle(fontSize: 12.0, color: Colors.grey),
                     ),

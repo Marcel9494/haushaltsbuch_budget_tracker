@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:haushaltsbuch_budget_tracker/data/enums/booking_type.dart';
 import 'package:haushaltsbuch_budget_tracker/features/accounts/presentation/widgets/input_fields/account_type_input_field.dart';
-import 'package:haushaltsbuch_budget_tracker/features/bookings/data/enums/booking_type.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -30,7 +30,7 @@ class CreateAccountPage extends StatefulWidget {
 }
 
 class _CreateAccountPageState extends State<CreateAccountPage> {
-  AccountType _accountType = AccountType.none;
+  AccountType _accountType = AccountType.noAccountType;
   final GlobalKey<FormState> _createAccountFormKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();

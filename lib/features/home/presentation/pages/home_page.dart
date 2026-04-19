@@ -7,8 +7,8 @@ import 'package:haushaltsbuch_budget_tracker/blocs/dashboard_element/dashboard_e
 import 'package:haushaltsbuch_budget_tracker/blocs/dashboard_element/dashboard_element_event.dart';
 import 'package:haushaltsbuch_budget_tracker/core/consts/route_consts.dart';
 import 'package:haushaltsbuch_budget_tracker/core/page_arguments/category_list_page_arguments.dart';
+import 'package:haushaltsbuch_budget_tracker/data/enums/category_type.dart';
 import 'package:haushaltsbuch_budget_tracker/features/budgets/presentation/pages/budget_list_page.dart';
-import 'package:haushaltsbuch_budget_tracker/features/categories/data/enums/category_type.dart';
 import 'package:haushaltsbuch_budget_tracker/features/goals/presentation/pages/goal_list_page.dart';
 
 import '../../../../blocs/account/account_bloc.dart';

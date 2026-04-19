@@ -5,8 +5,8 @@ enum PeriodOfTimeType {
 
   static PeriodOfTimeType fromString(String s) => switch (s) {
         '' => PeriodOfTimeType.undefined,
-        'Monatlich' => PeriodOfTimeType.monthly,
-        'Jährlich' => PeriodOfTimeType.yearly,
+        'monthly' => PeriodOfTimeType.monthly,
+        'yearly' => PeriodOfTimeType.yearly,
         _ => PeriodOfTimeType.undefined
       };
 }

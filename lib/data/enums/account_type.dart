@@ -1,5 +1,5 @@
 enum AccountType {
-  none,
+  noAccountType,
   account,
   capitalInvestment,
   cash,
@@ -9,58 +9,58 @@ enum AccountType {
   other;
 
   static AccountType fromString(String s) => switch (s) {
-        'Kein Kontotyp ausgewählt' => AccountType.none,
-        'Konto' => AccountType.account,
-        'Kapitalanlage' => AccountType.capitalInvestment,
-        'Bargeld' => AccountType.cash,
-        'Karte' => AccountType.card,
-        'Versicherung' => AccountType.insurance,
-        'Kredit' => AccountType.credit,
-        'Sonstiges' => AccountType.other,
-        _ => AccountType.none
+        'no_account_type' => AccountType.noAccountType,
+        'account' => AccountType.account,
+        'capital_investment' => AccountType.capitalInvestment,
+        'cash' => AccountType.cash,
+        'card' => AccountType.card,
+        'insurance' => AccountType.insurance,
+        'credit' => AccountType.credit,
+        'other' => AccountType.other,
+        _ => AccountType.noAccountType
       };
 }
 
 extension AmountTypeExtension on AccountType {
   String get name {
     switch (this) {
-      case AccountType.none:
-        return 'Kein Kontotyp ausgewählt';
+      case AccountType.noAccountType:
+        return 'no_account_type';
       case AccountType.account:
-        return 'Konto';
+        return 'account';
       case AccountType.capitalInvestment:
-        return 'Kapitalanlage';
+        return 'capital_investment';
       case AccountType.cash:
-        return 'Bargeld';
+        return 'cash';
       case AccountType.card:
-        return 'Karte';
+        return 'card';
       case AccountType.insurance:
-        return 'Versicherung';
+        return 'insurance';
       case AccountType.credit:
-        return 'Kredit';
+        return 'credit';
       case AccountType.other:
-        return 'Sonstiges';
+        return 'other';
     }
   }
 
   String get pluralName {
     switch (this) {
-      case AccountType.none:
-        return 'Kein Kontotyp ausgewählt';
+      case AccountType.noAccountType:
+        return 'no_account_type';
       case AccountType.account:
-        return 'Konten';
+        return 'accounts';
       case AccountType.capitalInvestment:
-        return 'Kapitalanlagen';
+        return 'capital_investments';
       case AccountType.cash:
-        return 'Bargeld';
+        return 'cash';
       case AccountType.card:
-        return 'Karten';
+        return 'card';
       case AccountType.insurance:
-        return 'Versicherungen';
+        return 'insurances';
       case AccountType.credit:
-        return 'Kredite';
+        return 'credit';
       case AccountType.other:
-        return 'Sonstiges';
+        return 'other';
     }
   }
 }

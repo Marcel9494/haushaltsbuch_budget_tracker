@@ -23,16 +23,16 @@ import '../../../../core/utils/app_flushbar.dart';
 import '../../../../core/utils/date_helper.dart';
 import '../../../../core/utils/dialogs/show_delete_dialog.dart';
 import '../../../../data/enums/account_type.dart';
+import '../../../../data/enums/amount_type.dart';
+import '../../../../data/enums/booking_type.dart';
+import '../../../../data/enums/category_type.dart';
+import '../../../../data/enums/repetition_type.dart';
 import '../../../../data/models/account.dart';
 import '../../../../data/models/booking.dart';
 import '../../../../data/models/category.dart';
 import '../../../../data/models/goal.dart';
 import '../../../../data/repositories/account_repository.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../categories/data/enums/category_type.dart';
-import '../../data/enums/amount_type.dart';
-import '../../data/enums/booking_type.dart';
-import '../../data/enums/repetition_type.dart';
 import '../widgets/buttons/booking_type_segmented_button.dart';
 import '../widgets/input_fields/account_input_field.dart';
 import '../widgets/input_fields/date_input_field.dart';
@@ -53,9 +53,10 @@ class UpdateBookingPage extends StatefulWidget {
 }
 
 class _UpdateBookingPageState extends State<UpdateBookingPage> {
-  BookingType _bookingType = BookingType.expense;
-  AmountType _amountType = AmountType.variable;
-  RepetitionType _repetitionType = RepetitionType.none;
+  final BookingRepository _bookingRepository = BookingRepository();
+  late BookingType _bookingType;
+  late AmountType _amountType;
+  RepetitionType _repetitionType = RepetitionType.noRepetition;
   late Category _selectedCategory;
   late Account _selectedDebitAccount;
   late Account _selectedTargetAccount = Account(name: '', accountType: AccountType.other, balance: 0.0);
@@ -88,7 +89,7 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
       _selectedDebitAccount = widget.booking.debitAccount!;
     } else {
       // TODO hier weitermachen und Gelöschtes Konto und Gelöschtes Ziel behandeln
-      _selectedDebitAccount = Account(name: '', accountType: AccountType.none, balance: 0.0);
+      _selectedDebitAccount = Account(name: '', accountType: AccountType.noAccountType, balance: 0.0);
     }
     if (_bookingType == BookingType.transfer) {
       _selectedTargetAccount = widget.booking.targetAccount!;
@@ -138,10 +139,10 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
       final Booking updatedBooking = Booking(
         id: widget.booking.id,
         userId: supabase.auth.currentUser!.id,
-        bookingType: _bookingType, // TODO
+        bookingType: _bookingType,
         title: _titleController.text.trim(),
         amount: amount!,
-        amountType: _amountType, // TODO
+        amountType: _amountType,
         bookingDate: parsedDate, // TODO
         repetitionId: widget.booking.repetitionId,
         repetitionType: _repetitionType, // TODO
@@ -150,9 +151,10 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
         targetAccountId: _bookingType == BookingType.transfer ? _selectedTargetAccount.id : null,
         goalId: _selectedGoal.id,
         person: _personController.text.trim(),
-        isBooked: true, // TODO
+        isBooked: _bookingRepository.getIsBookingDateBefore(parsedDate),
       );
 
+      // TODO Bugfixen, wenn von keine Wiederholung auf Wiederholung geändert wird, dann auch Serienbuchungen erstellen + repetition_Id vergeben
       contextForBloc.read<BookingBloc>().add(UpdateBooking(
             oldBooking: oldBooking,
             newBooking: updatedBooking,
@@ -268,6 +270,7 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
                         AmountInputField(
                           amountController: _amountController,
                           bookingType: _bookingType,
+                          amountType: _amountType,
                           onAmountTypeChanged: (AmountType newAmountType) {
                             setState(() {
                               _amountType = newAmountType;

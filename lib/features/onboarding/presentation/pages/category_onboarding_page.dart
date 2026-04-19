@@ -6,11 +6,11 @@ import 'package:haushaltsbuch_budget_tracker/data/enums/onboarding_progressbar_t
 import 'package:haushaltsbuch_budget_tracker/features/onboarding/presentation/widgets/cards/onboarding_description_card.dart';
 
 import '../../../../core/consts/animation_consts.dart';
+import '../../../../data/enums/category_type.dart';
 import '../../../../data/helper_models/onboarding_models.dart';
 import '../../../../data/helper_models/start_category.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../bookings/presentation/widgets/buttons/add_button.dart';
-import '../../../categories/data/enums/category_type.dart';
 import '../widgets/cards/selectable_category_card.dart';
 import '../widgets/deco/onboarding_progress_bar.dart';
 import '../widgets/navigation/onboarding_navigation.dart';

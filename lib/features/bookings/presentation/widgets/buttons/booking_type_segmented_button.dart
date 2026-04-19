@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../data/enums/booking_type.dart';
 import '../../../../../l10n/app_localizations.dart';
-import '../../../data/enums/booking_type.dart';
 
 class BookingTypeSegmentedButton extends StatefulWidget {
   BookingType bookingType;

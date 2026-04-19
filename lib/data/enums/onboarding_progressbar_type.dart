@@ -7,9 +7,9 @@ enum OnboardingProgressbarType {
 
   static OnboardingProgressbarType fromString(String s) => switch (s) {
         '' => OnboardingProgressbarType.notCompleted,
-        'Aktiv' => OnboardingProgressbarType.active,
-        'Abgeschlossen' => OnboardingProgressbarType.completed,
-        'Nicht Abgeschlossen' => OnboardingProgressbarType.notCompleted,
+        'onboarding_step_active' => OnboardingProgressbarType.active,
+        'onboarding_step_completed' => OnboardingProgressbarType.completed,
+        'onboarding_step_not_completed' => OnboardingProgressbarType.notCompleted,
         _ => OnboardingProgressbarType.notCompleted,
       };
 }

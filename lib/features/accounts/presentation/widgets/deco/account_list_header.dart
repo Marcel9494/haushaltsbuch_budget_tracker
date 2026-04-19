@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:haushaltsbuch_budget_tracker/data/enums/account_type.dart';
 
 import '../../../../../data/models/account.dart';
+import '../../../../../l10n/app_localizations.dart';
 
 class AccountListHeader extends StatefulWidget {
   final List<Account> accounts;
@@ -20,13 +21,14 @@ class AccountListHeader extends StatefulWidget {
 class _AccountListHeaderState extends State<AccountListHeader> {
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 6.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            widget.accounts[widget.index].accountType.pluralName,
+            t.translate(widget.accounts[widget.index].accountType.pluralName),
             style: const TextStyle(
               fontSize: 18.0,
               fontWeight: FontWeight.bold,

@@ -4,8 +4,8 @@ enum GoalDiagramType {
 
   static GoalDiagramType fromString(String s) => switch (s) {
         '' => GoalDiagramType.line,
-        'Dots' => GoalDiagramType.dots,
-        'Line' => GoalDiagramType.line,
+        'dots' => GoalDiagramType.dots,
+        'line' => GoalDiagramType.line,
         _ => GoalDiagramType.line,
       };
 }

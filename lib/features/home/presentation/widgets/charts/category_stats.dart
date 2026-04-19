@@ -6,10 +6,10 @@ import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../core/consts/animation_consts.dart';
+import '../../../../../data/enums/booking_type.dart';
 import '../../../../../data/enums/period_of_time_type.dart';
 import '../../../../../data/helper_models/booking_category_stats.dart';
 import '../../../../../data/models/booking.dart';
-import '../../../../bookings/data/enums/booking_type.dart';
 import '../cards/category_stat_card.dart';
 
 class CategoryStats extends StatefulWidget {

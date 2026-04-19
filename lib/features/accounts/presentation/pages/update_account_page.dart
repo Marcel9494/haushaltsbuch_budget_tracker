@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:haushaltsbuch_budget_tracker/core/utils/currency_formatter.dart';
+import 'package:haushaltsbuch_budget_tracker/data/enums/booking_type.dart';
 import 'package:haushaltsbuch_budget_tracker/features/accounts/presentation/widgets/input_fields/account_type_input_field.dart';
-import 'package:haushaltsbuch_budget_tracker/features/bookings/data/enums/booking_type.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -53,8 +53,13 @@ class _UpdateAccountPageState extends State<UpdateAccountPage> {
     _selectedAccount = widget.account;
     _nameController.text = widget.account.name;
     _amountController.text = formatCurrency(widget.account.balance, 'EUR');
-    _accountTypeController.text = widget.account.accountType.name;
     _selectedAccountType = widget.account.accountType;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _accountTypeController.text = AppLocalizations.of(context).translate(widget.account.accountType.name);
   }
 
   Future<void> _updateAccount(BuildContext contextForAccount) async {
