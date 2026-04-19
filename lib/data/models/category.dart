@@ -1,4 +1,4 @@
-import '../../features/categories/data/enums/category_type.dart';
+import '../enums/category_type.dart';
 
 class Category {
   final String? id;

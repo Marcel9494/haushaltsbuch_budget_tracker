@@ -10,10 +10,10 @@ import '../../../../blocs/category/category_bloc.dart';
 import '../../../../blocs/category/category_event.dart';
 import '../../../../blocs/category/category_state.dart';
 import '../../../../core/consts/animation_consts.dart';
+import '../../../../data/enums/category_type.dart';
 import '../../../../data/models/category.dart';
 import '../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../../../shared/presentation/widgets/deco/error_text.dart';
-import '../../data/enums/category_type.dart';
 import '../widgets/cards/category_card.dart';
 import 'create_category_page.dart';
 

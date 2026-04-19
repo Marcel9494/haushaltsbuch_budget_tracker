@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 
+import '../../../../../data/enums/amount_type.dart';
+import '../../../../../data/enums/booking_type.dart';
 import '../../../../shared/presentation/widgets/list_tiles/selectable_list_tile.dart';
-import '../../../data/enums/amount_type.dart';
-import '../../../data/enums/booking_type.dart';
 
 class AmountTypeBottomSheet extends StatelessWidget {
   final AmountType selectedAmountType;

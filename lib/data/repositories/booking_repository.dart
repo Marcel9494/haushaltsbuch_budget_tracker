@@ -4,14 +4,14 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../core/consts/repeat_number_consts.dart';
-import '../../features/bookings/data/enums/booking_type.dart';
-import '../../features/bookings/data/enums/repetition_type.dart';
+import '../enums/booking_type.dart';
+import '../enums/repetition_type.dart';
 import '../models/booking.dart';
 
 class BookingRepository {
   Future<List<Booking>> createBooking(Booking newBooking) async {
     final supabase = Supabase.instance.client;
-    if (newBooking.repetitionType == RepetitionType.none) {
+    if (newBooking.repetitionType == RepetitionType.noRepetition) {
       final createdBookings = await Supabase.instance.client.from('bookings').insert(newBooking.toMap()).select();
       return createdBookings.map<Booking>((e) => Booking.fromMap(e)).toList();
     } else {
@@ -39,7 +39,7 @@ class BookingRepository {
         createdBookingsMap.add({
           ...baseBookingMap,
           'booking_date': currentBookingDate.toIso8601String(),
-          'is_booked': !currentBookingDate.isAfter(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day)),
+          'is_booked': getIsBookingDateBefore(currentBookingDate),
         });
         currentBookingDate = RepetitionType.getNextBookingDate(currentBookingDate, newBooking.repetitionType);
       }
@@ -96,9 +96,7 @@ class BookingRepository {
       createdBookingsMap.add({
         ...baseBookingMap,
         'booking_date': currentBookingDate.toIso8601String(),
-        'is_booked': !currentBookingDate.isAfter(
-          DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
-        ),
+        'is_booked': getIsBookingDateBefore(currentBookingDate),
       });
 
       currentBookingDate = RepetitionType.getNextBookingDate(
@@ -142,9 +140,7 @@ class BookingRepository {
       createdBookingsMap.add({
         ...baseBookingMap,
         'booking_date': currentBookingDate.toIso8601String(),
-        'is_booked': !currentBookingDate.isAfter(
-          DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
-        ),
+        'is_booked': getIsBookingDateBefore(currentBookingDate),
       });
 
       currentBookingDate = RepetitionType.getNextBookingDate(
@@ -298,5 +294,10 @@ class BookingRepository {
       }
     }
     return totalExpenses;
+  }
+
+  bool getIsBookingDateBefore(DateTime bookingDate) {
+    final DateTime today = DateTime.now();
+    return bookingDate.isBefore(DateTime(today.year, today.month, today.day));
   }
 }

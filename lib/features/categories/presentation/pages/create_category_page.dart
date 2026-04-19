@@ -12,12 +12,12 @@ import '../../../../blocs/category/category_event.dart';
 import '../../../../blocs/category/category_state.dart';
 import '../../../../core/consts/animation_consts.dart';
 import '../../../../core/utils/app_flushbar.dart';
+import '../../../../data/enums/category_type.dart';
 import '../../../../data/models/category.dart';
 import '../../../../data/repositories/category_repository.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../bookings/presentation/widgets/input_fields/title_input_field.dart';
 import '../../../shared/presentation/widgets/buttons/animated_loading_button.dart';
-import '../../data/enums/category_type.dart';
 import '../widgets/buttons/category_type_segmented_button.dart';
 
 class CreateCategoryPage extends StatefulWidget {

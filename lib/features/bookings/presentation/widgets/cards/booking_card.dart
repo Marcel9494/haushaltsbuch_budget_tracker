@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:haushaltsbuch_budget_tracker/core/utils/bottom_sheets/update_booking_bottom_sheet.dart';
-import 'package:haushaltsbuch_budget_tracker/features/bookings/data/enums/booking_type.dart';
+import 'package:haushaltsbuch_budget_tracker/data/enums/booking_type.dart';
 import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 
 import '../../../../../blocs/account/account_bloc.dart';

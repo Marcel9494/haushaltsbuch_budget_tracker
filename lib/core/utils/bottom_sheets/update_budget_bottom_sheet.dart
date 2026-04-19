@@ -51,11 +51,11 @@ void showUpdateBudgetBottomSheet(BuildContext parentContext, Budget budget) {
                   final selectionType = BudgetSelectionType.values[index];
                   return ListTile(
                     title: Text(
-                      selectionType.name,
+                      t.translate(selectionType.name),
                       style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      '${selectionType.updateDescription(budget.category!.categoryName)} '
+                      '${t.translate(selectionType.updateDescription(budget.category!.categoryName))} '
                       '${selectionType == BudgetSelectionType.single ? '(${formatMonthYear(sheetContext, budget.budgetDate!)})' : ''}',
                       style: const TextStyle(fontSize: 12.0, color: Colors.grey),
                     ),

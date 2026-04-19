@@ -110,7 +110,7 @@ class _AccountTypeInputFieldState extends State<AccountTypeInputField> {
                                   child: OutlinedButton(
                                     onPressed: () {
                                       setState(() {
-                                        widget.accountTypeController.text = AccountType.values[index].name;
+                                        widget.accountTypeController.text = t.translate(AccountType.values[index].name);
                                       });
                                       widget.onAccountTypeChanged(AccountType.values[index]);
                                       Navigator.pop(context);

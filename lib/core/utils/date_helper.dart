@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../features/bookings/data/enums/repetition_type.dart';
+import '../../data/enums/repetition_type.dart';
 
 // Beispielausgabe: "1 Jahr, 2 Monate, 3 Wochen, 4 Tage\n(438 Tage)"
 String formatDateDuration(DateTime startDate, DateTime endDate) {

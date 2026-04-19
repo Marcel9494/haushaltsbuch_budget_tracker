@@ -1,5 +1,5 @@
 enum RepetitionType {
-  none,
+  noRepetition,
   weekly,
   twoWeekly,
   monthly,
@@ -12,18 +12,18 @@ enum RepetitionType {
   endOfYear;
 
   static RepetitionType fromString(String s) => switch (s) {
-        'Keine Wiederholung' => RepetitionType.none,
-        'Jede Woche' => RepetitionType.weekly,
-        'Jede 2 Wochen' => RepetitionType.twoWeekly,
-        'Jeden Monat' => RepetitionType.monthly,
-        'Anfang des Monats' => RepetitionType.beginningOfMonth,
-        'Ende des Monats' => RepetitionType.endOfMonth,
-        'Quartalsweise' => RepetitionType.quarterly,
-        'Halbjährlich' => RepetitionType.halfYearly,
-        'Jährlich' => RepetitionType.yearly,
-        'Anfang des Jahres' => RepetitionType.beginningOfYear,
-        'Ende des Jahres' => RepetitionType.endOfYear,
-        _ => RepetitionType.none
+        'no_repetition' => RepetitionType.noRepetition,
+        'weekly' => RepetitionType.weekly,
+        'two_weekly' => RepetitionType.twoWeekly,
+        'monthly' => RepetitionType.monthly,
+        'beginning_of_month' => RepetitionType.beginningOfMonth,
+        'end_of_month' => RepetitionType.endOfMonth,
+        'quarterly' => RepetitionType.quarterly,
+        'half_yearly' => RepetitionType.halfYearly,
+        'yearly' => RepetitionType.yearly,
+        'beginning_of_year' => RepetitionType.beginningOfYear,
+        'end_of_year' => RepetitionType.endOfYear,
+        _ => RepetitionType.noRepetition
       };
 
   static DateTime getNextBookingDate(
@@ -31,7 +31,7 @@ enum RepetitionType {
     RepetitionType repetitionType,
   ) {
     switch (repetitionType) {
-      case RepetitionType.none:
+      case RepetitionType.noRepetition:
         return current;
 
       case RepetitionType.weekly:
@@ -102,28 +102,28 @@ enum RepetitionType {
 extension AmountTypeExtension on RepetitionType {
   String get name {
     switch (this) {
-      case RepetitionType.none:
-        return 'Keine Wiederholung';
+      case RepetitionType.noRepetition:
+        return 'no_repetition';
       case RepetitionType.weekly:
-        return 'Jede Woche';
+        return 'weekly';
       case RepetitionType.twoWeekly:
-        return 'Jede 2 Wochen';
+        return 'two_weekly';
       case RepetitionType.monthly:
-        return 'Jeden Monat';
+        return 'monthly';
       case RepetitionType.beginningOfMonth:
-        return 'Anfang des Monats';
+        return 'beginning_of_month';
       case RepetitionType.endOfMonth:
-        return 'Ende des Monats';
+        return 'end_of_month';
       case RepetitionType.quarterly:
-        return 'Quartalsweise';
+        return 'quarterly';
       case RepetitionType.halfYearly:
-        return 'Halbjährlich';
+        return 'half_yearly';
       case RepetitionType.yearly:
-        return 'Jährlich';
+        return 'yearly';
       case RepetitionType.beginningOfYear:
-        return 'Anfang des Jahres';
+        return 'beginning_of_year';
       case RepetitionType.endOfYear:
-        return 'Ende des Jahres';
+        return 'end_of_year';
     }
   }
 }

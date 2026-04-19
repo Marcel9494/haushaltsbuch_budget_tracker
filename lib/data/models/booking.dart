@@ -1,8 +1,8 @@
 import 'package:haushaltsbuch_budget_tracker/data/models/goal.dart';
 
-import '../../features/bookings/data/enums/amount_type.dart';
-import '../../features/bookings/data/enums/booking_type.dart';
-import '../../features/bookings/data/enums/repetition_type.dart';
+import '../enums/amount_type.dart';
+import '../enums/booking_type.dart';
+import '../enums/repetition_type.dart';
 import 'account.dart';
 import 'category.dart';
 

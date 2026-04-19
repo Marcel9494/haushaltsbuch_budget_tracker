@@ -1,7 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../features/bookings/data/enums/booking_type.dart';
 import '../enums/account_type.dart';
+import '../enums/booking_type.dart';
 import '../models/account.dart';
 import '../models/booking.dart';
 

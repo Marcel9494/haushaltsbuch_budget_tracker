@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../data/enums/amount_type.dart';
-import '../../../data/enums/booking_type.dart';
+import '../../../../../data/enums/amount_type.dart';
+import '../../../../../data/enums/booking_type.dart';
 import 'amount_type_bottom_sheet.dart';
 
 class ShowAmountTypeBottomSheet {

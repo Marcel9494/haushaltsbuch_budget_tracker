@@ -1,12 +1,12 @@
 enum GoalType {
   undefined,
-  payOff,
-  saving;
+  saving,
+  payOff;
 
   static GoalType fromString(String s) => switch (s) {
         '' => GoalType.undefined,
-        'Abbezahlen' => GoalType.payOff,
-        'Sparen' => GoalType.saving,
+        'saving' => GoalType.saving,
+        'pay_off' => GoalType.payOff,
         _ => GoalType.undefined,
       };
 }
@@ -16,10 +16,10 @@ extension GoalTypeExtension on GoalType {
     switch (this) {
       case GoalType.undefined:
         return '';
-      case GoalType.payOff:
-        return 'Abbezahlen';
       case GoalType.saving:
-        return 'Sparen';
+        return 'saving';
+      case GoalType.payOff:
+        return 'pay_off';
     }
   }
 }

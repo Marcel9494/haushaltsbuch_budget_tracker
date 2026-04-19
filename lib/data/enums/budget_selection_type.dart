@@ -5,9 +5,9 @@ enum BudgetSelectionType {
 
   static BudgetSelectionType fromString(String s) => switch (s) {
         '' => BudgetSelectionType.single,
-        'Einzelnes Budget' => BudgetSelectionType.single,
-        'Nur Zukünftige Budgets' => BudgetSelectionType.onlyFuture,
-        'Alle Budgets' => BudgetSelectionType.all,
+        'single_budget' => BudgetSelectionType.single,
+        'future_budgets' => BudgetSelectionType.onlyFuture,
+        'all_budgets' => BudgetSelectionType.all,
         _ => BudgetSelectionType.single,
       };
 }
@@ -16,33 +16,33 @@ extension SelectionTypeExtension on BudgetSelectionType {
   String get name {
     switch (this) {
       case BudgetSelectionType.single:
-        return 'Einzelnes Budget';
+        return 'single_budget';
       case BudgetSelectionType.onlyFuture:
-        return 'Nur Zukünftige Budgets';
+        return 'future_budgets';
       case BudgetSelectionType.all:
-        return 'Alle Budgets';
+        return 'all_budgets';
     }
   }
 
   String updateDescription(String budgetName) {
     switch (this) {
       case BudgetSelectionType.single:
-        return 'Änderungen gelten nur für das aktuelle $budgetName Budget.';
+        return 'update_single_budget_description';
       case BudgetSelectionType.onlyFuture:
-        return 'Änderungen gelten nur für zukünftige $budgetName Budgets.';
+        return 'update_future_budgets_description';
       case BudgetSelectionType.all:
-        return 'Änderungen gelten für alle $budgetName Budgets.';
+        return 'update_all_budgets_description';
     }
   }
 
   String deleteDescription(String budgetName) {
     switch (this) {
       case BudgetSelectionType.single:
-        return 'Es wird das aktuelle $budgetName Budget gelöscht.';
+        return 'delete_single_budget_description';
       case BudgetSelectionType.onlyFuture:
-        return 'Es werden nur zukünftige $budgetName Budgets gelöscht.';
+        return 'delete_future_budgets_description';
       case BudgetSelectionType.all:
-        return 'Es werden alle $budgetName Budgets gelöscht.';
+        return 'delete_all_budgets_description';
     }
   }
 }

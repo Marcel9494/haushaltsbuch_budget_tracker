@@ -34,7 +34,7 @@ class _AccountOnboardingPageState extends State<AccountOnboardingPage> {
         allStartAccounts.add(StartAccount(
           isSelected: true,
           accountName: _accountNameController.text,
-          accountType: AccountType.none,
+          accountType: AccountType.noAccountType,
           balance: 0.0,
         ));
         _scrollToListEnd();

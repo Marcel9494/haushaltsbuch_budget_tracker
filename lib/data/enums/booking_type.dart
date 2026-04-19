@@ -6,9 +6,9 @@ enum BookingType {
   transfer;
 
   static BookingType fromString(String s) => switch (s) {
-        'Ausgabe' => BookingType.expense,
-        'Einnahme' => BookingType.income,
-        'Übertrag' => BookingType.transfer,
+        'expense' => BookingType.expense,
+        'income' => BookingType.income,
+        'transfer' => BookingType.transfer,
         _ => BookingType.expense,
       };
 }
@@ -17,11 +17,11 @@ extension BookingTypeExtension on BookingType {
   String get name {
     switch (this) {
       case BookingType.expense:
-        return 'Ausgabe';
+        return 'expense';
       case BookingType.income:
-        return 'Einnahme';
+        return 'income';
       case BookingType.transfer:
-        return 'Übertrag';
+        return 'transfer';
     }
   }
 

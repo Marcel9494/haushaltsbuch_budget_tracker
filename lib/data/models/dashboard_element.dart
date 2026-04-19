@@ -61,21 +61,21 @@ class DashboardElement {
   }
 
   static double calculateDisplayValue(DashboardElement dashboardElement, List<Booking> bookings, List<Account> accounts) {
-    final BookingRepository _bookingRepository = BookingRepository();
-    final AccountRepository _accountRepository = AccountRepository();
+    final BookingRepository bookingRepository = BookingRepository();
+    final AccountRepository accountRepository = AccountRepository();
     if (dashboardElement.title == 'expenses' &&
         (dashboardElement.shortDescription == 'this_year' || dashboardElement.shortDescription == 'this_month')) {
-      return _bookingRepository.calculateExpenses(bookings);
+      return bookingRepository.calculateExpenses(bookings);
     } else if (dashboardElement.title == 'revenue' &&
         (dashboardElement.shortDescription == 'this_year' || dashboardElement.shortDescription == 'this_month')) {
-      return _bookingRepository.calculateRevenue(bookings);
+      return bookingRepository.calculateRevenue(bookings);
     } else if (dashboardElement.title == 'total_assets') {
-      return _accountRepository.calculateAssets(accounts);
+      return accountRepository.calculateAssets(accounts);
     } else if (dashboardElement.title == 'total_debts') {
-      return _accountRepository.calculateDebts(accounts);
+      return accountRepository.calculateDebts(accounts);
     } else if (dashboardElement.title == 'net_assets') {
-      double assets = _accountRepository.calculateAssets(accounts);
-      double debts = _accountRepository.calculateDebts(accounts);
+      double assets = accountRepository.calculateAssets(accounts);
+      double debts = accountRepository.calculateDebts(accounts);
       return assets - debts;
     } else {
       return 0.0;

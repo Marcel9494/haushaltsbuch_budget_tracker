@@ -5,9 +5,9 @@ enum BookingSelectionType {
 
   static BookingSelectionType fromString(String s) => switch (s) {
         '' => BookingSelectionType.single,
-        'Einzelne Buchung' => BookingSelectionType.single,
-        'Zukünftige Buchungen' => BookingSelectionType.onlyFuture,
-        'Alle Buchungen' => BookingSelectionType.all,
+        'single_booking' => BookingSelectionType.single,
+        'future_bookings' => BookingSelectionType.onlyFuture,
+        'all_bookings' => BookingSelectionType.all,
         _ => BookingSelectionType.single,
       };
 }
@@ -16,33 +16,33 @@ extension SelectionTypeExtension on BookingSelectionType {
   String get name {
     switch (this) {
       case BookingSelectionType.single:
-        return 'Einzelne Buchung';
+        return 'single_booking';
       case BookingSelectionType.onlyFuture:
-        return 'Zukünftige Buchungen';
+        return 'future_bookings';
       case BookingSelectionType.all:
-        return 'Alle Buchungen';
+        return 'all_bookings';
     }
   }
 
   String updateDescription() {
     switch (this) {
       case BookingSelectionType.single:
-        return 'Die Änderungen gelten nur für diese Buchung.';
+        return 'update_single_booking_description';
       case BookingSelectionType.onlyFuture:
-        return 'Die Änderungen gelten für diese und alle zukünftigen Buchungen der Serie.';
+        return 'update_future_bookings_description';
       case BookingSelectionType.all:
-        return 'Die Änderungen gelten für alle Buchungen dieser Serie.';
+        return 'update_all_bookings_description';
     }
   }
 
   String deleteDescription() {
     switch (this) {
       case BookingSelectionType.single:
-        return 'Diese Buchung wird gelöscht.';
+        return 'delete_single_booking_description';
       case BookingSelectionType.onlyFuture:
-        return 'Diese und alle zukünftigen Buchungen der Serie werden gelöscht.';
+        return 'delete_future_bookings_description';
       case BookingSelectionType.all:
-        return 'Alle Buchungen dieser Serie werden gelöscht.';
+        return 'delete_all_bookings_description';
     }
   }
 }

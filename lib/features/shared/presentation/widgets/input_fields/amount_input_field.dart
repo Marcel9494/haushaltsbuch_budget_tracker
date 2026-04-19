@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:haushaltsbuch_budget_tracker/core/utils/currency_formatter.dart';
 
+import '../../../../../data/enums/amount_type.dart';
+import '../../../../../data/enums/booking_type.dart';
 import '../../../../../l10n/app_localizations.dart';
-import '../../../../bookings/data/enums/amount_type.dart';
-import '../../../../bookings/data/enums/booking_type.dart';
 import '../../../../bookings/presentation/widgets/bottom_sheets/show_amount_type_bottom_sheet.dart';
 import '../../../../bookings/presentation/widgets/buttons/grid_item_button.dart';
 
 class AmountInputField extends StatefulWidget {
   final TextEditingController amountController;
   final BookingType bookingType;
+  final AmountType amountType;
   final ValueChanged<AmountType> onAmountTypeChanged;
   final ValueChanged<double>? onAmountChanged;
   final String text;
@@ -21,6 +22,7 @@ class AmountInputField extends StatefulWidget {
     required this.amountController,
     required this.bookingType,
     required this.onAmountTypeChanged,
+    this.amountType = AmountType.none,
     this.onAmountChanged,
     this.text = 'amount',
     this.showMinus = false,
@@ -40,7 +42,7 @@ class _AmountInputFieldState extends State<AmountInputField> {
     super.initState();
     _focusNode = FocusNode();
     _isFirstInput = true;
-    _selectedAmountType = widget.bookingType == BookingType.expense ? AmountType.variable : AmountType.active;
+    _selectedAmountType = widget.amountType;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       widget.onAmountTypeChanged(_selectedAmountType);
     });
@@ -50,7 +52,13 @@ class _AmountInputFieldState extends State<AmountInputField> {
   void didUpdateWidget(AmountInputField oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.bookingType != oldWidget.bookingType) {
-      _selectedAmountType = widget.bookingType == BookingType.expense ? AmountType.variable : AmountType.active;
+      if (widget.bookingType == BookingType.expense) {
+        _selectedAmountType = AmountType.variable;
+      } else if (widget.bookingType == BookingType.income) {
+        _selectedAmountType = AmountType.active;
+      } else {
+        _selectedAmountType = AmountType.none;
+      }
       WidgetsBinding.instance.addPostFrameCallback((_) {
         widget.onAmountTypeChanged(_selectedAmountType);
       });
@@ -237,10 +245,13 @@ class _AmountInputFieldState extends State<AmountInputField> {
                               selected: _selectedAmountType,
                               bookingType: widget.bookingType,
                               onChanged: (newAmountType) {
-                                setState(() => _selectedAmountType = newAmountType);
+                                setState(() {
+                                  _selectedAmountType = newAmountType;
+                                  widget.onAmountTypeChanged(newAmountType);
+                                });
                               },
                             ),
-                            child: Text(_selectedAmountType.name),
+                            child: Text(t.translate(_selectedAmountType.name)),
                           ),
                         ),
                         IconButton(
@@ -249,7 +260,10 @@ class _AmountInputFieldState extends State<AmountInputField> {
                             selected: _selectedAmountType,
                             bookingType: widget.bookingType,
                             onChanged: (newAmountType) {
-                              setState(() => _selectedAmountType = newAmountType);
+                              setState(() {
+                                _selectedAmountType = newAmountType;
+                                widget.onAmountTypeChanged(newAmountType);
+                              });
                             },
                           ),
                           icon: const FaIcon(FontAwesomeIcons.scaleBalanced, size: 20.0),
