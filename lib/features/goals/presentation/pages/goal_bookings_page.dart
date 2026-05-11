@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:haushaltsbuch_budget_tracker/features/goals/presentation/widgets/deco/goal_stat_row.dart';
 import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 
 import '../../../../blocs/goal/goal_bloc.dart';
@@ -7,16 +9,25 @@ import '../../../../blocs/goal/goal_event.dart';
 import '../../../../core/consts/route_consts.dart';
 import '../../../../core/page_arguments/home_page_arguments.dart';
 import '../../../../core/page_arguments/update_goal_page_arguments.dart';
+import '../../../../core/utils/date_helper.dart';
 import '../../../../core/utils/dialogs/show_delete_dialog.dart';
+import '../../../../data/models/booking.dart';
 import '../../../../data/models/goal.dart';
 import '../../../../data/repositories/goal_repository.dart';
+import '../../../bookings/presentation/widgets/cards/booking_card.dart';
+import '../../../bookings/presentation/widgets/deco/booking_list_daily_header.dart';
+import '../../../shared/presentation/widgets/deco/empty_list.dart';
+import '../widgets/charts/goal_line_chart.dart';
+import '../widgets/deco/goal_info_row.dart';
 
 class GoalBookingsPage extends StatefulWidget {
   final Goal goal;
+  final List<Booking> goalBookings;
 
   const GoalBookingsPage({
     super.key,
     required this.goal,
+    required this.goalBookings,
   });
 
   @override
@@ -64,14 +75,58 @@ class _GoalBookingsPageState extends State<GoalBookingsPage> {
               ),
             ],
           ),
-          body: ListView.builder(
-            itemCount: 5, // widget.bookings.length,
-            itemBuilder: (context, index) {
-              return Text('TODO');
-              /*return BookingCard(
-                booking: widget.bookings[index],
-              );*/
-            },
+          body: Column(
+            children: [
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      GoalInfoRow(goal: widget.goal),
+                      GoalLineChart(
+                        goal: widget.goal,
+                        goalBookings: widget.goalBookings.where((b) => b.goalId == widget.goal.id).toList(),
+                      ),
+                      GoalStatRow(goal: widget.goal),
+                    ],
+                  ),
+                ),
+              ),
+              widget.goalBookings.isEmpty
+                  ? EmptyList(
+                      text: 'no_goal_bookings',
+                      icon: FaIcon(
+                        FontAwesomeIcons.book,
+                        size: 42.0,
+                        color: Colors.white70,
+                      ),
+                    )
+                  : Expanded(
+                      child: ListView.builder(
+                        itemCount: widget.goalBookings.length,
+                        itemBuilder: (context, index) {
+                          final bool showHeader = index == 0
+                              ? true
+                              : !isSameDay(
+                                  widget.goalBookings[index].bookingDate,
+                                  widget.goalBookings[index - 1].bookingDate,
+                                );
+                          return Column(
+                            children: [
+                              showHeader
+                                  ? BookingListDailyHeader(
+                                      bookings: widget.goalBookings, bookingDate: widget.goalBookings[index].bookingDate, index: index)
+                                  : SizedBox.shrink(),
+                              BookingCard(
+                                booking: widget.goalBookings[index],
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+            ],
           ),
         );
       }),
