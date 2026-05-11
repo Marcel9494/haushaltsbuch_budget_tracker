@@ -120,9 +120,9 @@ class _YearlyBarChartState extends State<YearlyBarChart> with SingleTickerProvid
     final t = AppLocalizations.of(context);
     return Card(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(4.0, 24.0, 16.0, 8.0),
+        padding: const EdgeInsets.fromLTRB(4.0, 24.0, 16.0, 14.0),
         child: SizedBox(
-          height: 150,
+          height: 150.0,
           child: AnimatedBuilder(
             animation: _animation,
             builder: (context, child) {
@@ -137,10 +137,10 @@ class _YearlyBarChartState extends State<YearlyBarChart> with SingleTickerProvid
                         getTitlesWidget: (value, meta) {
                           final List<String> months = getAllShortMonthNames('de_DE');
                           return Padding(
-                            padding: const EdgeInsets.only(top: 4.0),
+                            padding: const EdgeInsets.only(top: 8.0),
                             child: Text(
                               months[value.toInt()],
-                              style: const TextStyle(fontSize: 10.0),
+                              style: const TextStyle(fontSize: 11.0, fontWeight: FontWeight.bold),
                             ),
                           );
                         },
@@ -153,7 +153,7 @@ class _YearlyBarChartState extends State<YearlyBarChart> with SingleTickerProvid
                         interval: getInterval(),
                         getTitlesWidget: (value, meta) {
                           return Transform.rotate(
-                            angle: 0.28,
+                            angle: 0.22,
                             child: Text(
                               formatCurrency(value, 'EUR', decimalDigits: 0),
                               textAlign: TextAlign.center,

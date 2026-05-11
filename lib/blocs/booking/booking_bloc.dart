@@ -19,6 +19,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     on<DeleteBooking>(_onDeleteBooking);
     on<LoadMonthlyBookings>(_onLoadMonthlyBookings);
     on<LoadYearlyBookings>(_onLoadYearlyBookings);
+    on<LoadGoalBookings>(_onLoadGoalBookings);
   }
 
   Future<void> _onCreateBooking(CreateBooking event, Emitter<BookingState> emit) async {
@@ -104,6 +105,16 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
       emit(YearlyBookingListLoaded(yearlyBookings));
     } catch (e) {
       emit(BookingError('load_bookings_error'));
+    }
+  }
+
+  _onLoadGoalBookings(LoadGoalBookings event, Emitter<BookingState> emit) async {
+    emit(BookingLoading());
+    try {
+      final List<Booking> goalBookings = await _bookingRepository.loadGoalBookings();
+      emit(GoalBookingListLoaded(goalBookings));
+    } catch (e) {
+      emit(BookingError('load_goal_bookings_error'));
     }
   }
 }

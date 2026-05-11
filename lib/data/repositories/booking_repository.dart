@@ -225,6 +225,17 @@ class BookingRepository {
     return groupedMonthlyBookings;
   }
 
+  Future<List<Booking>> loadGoalBookings() async {
+    final goalBookings = await Supabase.instance.client
+        .from('bookings')
+        .select(
+            '*, categories(*), debit_account:accounts!bookings_debit_account_id_fkey(*), target_account:accounts!bookings_target_account_id_fkey(*), goals(*)')
+        .not('goal_id', 'is', null)
+        .order('booking_date', ascending: false);
+    final List<Booking> allGoalBookings = (goalBookings as List).map((data) => Booking.fromMap(data)).toList();
+    return allGoalBookings;
+  }
+
   List<BookingCategoryStats> calculateBookingsByCategory(List<Booking> bookings, BookingType selectedBookingType) {
     final Map<String, double> categoryAmount = {};
     for (final booking in bookings) {

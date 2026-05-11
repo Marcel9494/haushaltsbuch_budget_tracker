@@ -39,7 +39,6 @@ class _CreateGoalPageState extends State<CreateGoalPage> {
   final TextEditingController _endDateController = TextEditingController();
   final RoundedLoadingButtonController _createGoalButtonController = RoundedLoadingButtonController();
   GoalType _selectedGoalType = GoalType.saving;
-  double _currentGoalAmount = 0.0;
 
   @override
   void initState() {
@@ -76,6 +75,7 @@ class _CreateGoalPageState extends State<CreateGoalPage> {
       final Goal newGoal = Goal(
         userId: supabase.auth.currentUser!.id,
         goalAmount: amount!,
+        currentAmount: 0.0,
         goalName: _goalNameController.text.trim(),
         goalType: _selectedGoalType,
         startDate: parsedStartDate,
@@ -156,11 +156,6 @@ class _CreateGoalPageState extends State<CreateGoalPage> {
                           amountController: _goalAmountController,
                           bookingType: BookingType.transfer,
                           onAmountTypeChanged: (_) {},
-                          onAmountChanged: (double newGoalAmount) {
-                            setState(() {
-                              _currentGoalAmount = newGoalAmount;
-                            });
-                          },
                           text: 'goal_amount',
                         ),
                         DateSelectionButtons(

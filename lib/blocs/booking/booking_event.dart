@@ -55,3 +55,7 @@ class LoadYearlyBookings extends BookingEvent {
     required this.selectedYear,
   });
 }
+
+class LoadGoalBookings extends BookingEvent {
+  LoadGoalBookings();
+}

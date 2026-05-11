@@ -390,6 +390,7 @@ class MyApp extends StatelessWidget {
             return MaterialPageRoute<String>(
               builder: (context) => GoalBookingsPage(
                 goal: args.goal,
+                goalBookings: args.goalBookings,
               ),
               settings: settings,
             );

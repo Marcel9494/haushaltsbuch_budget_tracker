@@ -41,6 +41,7 @@ class Goal {
     return {
       'user_id': userId,
       'goal_amount': goalAmount,
+      'current_amount': currentAmount,
       'goal_name': goalName,
       'goal_type': goalType.name,
       'start_date': startDate.toIso8601String(),

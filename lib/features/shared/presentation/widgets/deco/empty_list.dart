@@ -26,7 +26,7 @@ class EmptyList extends StatelessWidget {
             child: FadeInAnimation(
               child: Center(
                 child: Padding(
-                  padding: const EdgeInsets.all(18.0),
+                  padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 60.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -34,6 +34,7 @@ class EmptyList extends StatelessWidget {
                       SizedBox(height: 12.0),
                       Text(
                         t.translate(text),
+                        textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 16.0, color: Colors.white70),
                       ),
                     ],

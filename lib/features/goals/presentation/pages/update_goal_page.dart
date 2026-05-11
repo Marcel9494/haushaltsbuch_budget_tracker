@@ -45,7 +45,6 @@ class _UpdateGoalPageState extends State<UpdateGoalPage> {
   final TextEditingController _endDateController = TextEditingController();
   final RoundedLoadingButtonController _updateGoalButtonController = RoundedLoadingButtonController();
   late GoalType _selectedGoalType;
-  double _currentGoalAmount = 0.0;
 
   @override
   void initState() {
@@ -86,6 +85,7 @@ class _UpdateGoalPageState extends State<UpdateGoalPage> {
         id: widget.goal.id,
         userId: supabase.auth.currentUser!.id,
         goalAmount: amount!,
+        currentAmount: widget.goal.currentAmount,
         goalName: _goalNameController.text.trim(),
         goalType: _selectedGoalType,
         startDate: parsedStartDate,
@@ -170,11 +170,6 @@ class _UpdateGoalPageState extends State<UpdateGoalPage> {
                           amountController: _goalAmountController,
                           bookingType: BookingType.transfer,
                           onAmountTypeChanged: (_) {},
-                          onAmountChanged: (double newGoalAmount) {
-                            setState(() {
-                              _currentGoalAmount = newGoalAmount;
-                            });
-                          },
                           text: 'goal_amount',
                         ),
                         DateSelectionButtons(
