@@ -93,7 +93,7 @@ class _BudgetBookingsPageState extends State<BudgetBookingsPage> {
                   children: [
                     Card(
                       child: AspectRatio(
-                        aspectRatio: 1.35,
+                        aspectRatio: 1.33,
                         child: Padding(
                           padding: const EdgeInsets.all(16),
                           child: Column(
@@ -111,8 +111,9 @@ class _BudgetBookingsPageState extends State<BudgetBookingsPage> {
                                 totalBudgets: budgetStats.totalBudgets,
                                 usedAmounts: budgetStats.usedAmounts,
                                 barGroups: budgetStats.barGroups,
+                                currentSelectedYear: widget.currentSelectedDate.year,
                               ),
-                              const SizedBox(height: 12.0),
+
                               BudgetStatRow(
                                 usedBudgetAmounts: budgetStats.usedAmounts,
                               ),

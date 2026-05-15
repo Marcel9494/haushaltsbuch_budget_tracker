@@ -186,6 +186,7 @@ class _YearlyBarChartState extends State<YearlyBarChart> with SingleTickerProvid
                           '${t.translate('revenue')}: ${formatCurrency(_monthlyRevenue[monthIndex], 'EUR', decimalDigits: 2)}\n'
                           '${t.translate('expenses')}: ${formatCurrency(_monthlyExpenses[monthIndex], 'EUR', decimalDigits: 2)}\n'
                           '${t.translate('balance')}: ${formatCurrency(_monthlyRevenue[monthIndex] - _monthlyExpenses[monthIndex], 'EUR', decimalDigits: 2)}',
+                          textAlign: TextAlign.start,
                           const TextStyle(
                             color: Colors.white,
                             fontSize: 11.0,

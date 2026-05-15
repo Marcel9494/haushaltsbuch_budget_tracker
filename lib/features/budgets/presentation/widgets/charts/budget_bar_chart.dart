@@ -1,31 +1,47 @@
+import 'dart:math';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../core/utils/currency_formatter.dart';
+import '../../../../../core/utils/date_helper.dart';
 import '../../../../../l10n/app_localizations.dart';
 
 class BudgetBarChart extends StatefulWidget {
   final List<double> totalBudgets;
   final List<double> usedAmounts;
   final List<BarChartGroupData> barGroups;
+  final int currentSelectedYear;
 
   const BudgetBarChart({
     super.key,
     required this.totalBudgets,
     required this.usedAmounts,
     required this.barGroups,
+    required this.currentSelectedYear,
   });
 
   @override
   State<BudgetBarChart> createState() => _BudgetBarChartState();
 }
 
-class _BudgetBarChartState extends State<BudgetBarChart> {
+class _BudgetBarChartState extends State<BudgetBarChart> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
   double maxY = 0.0;
 
   @override
   void initState() {
     maxY = calculateMaxY(widget.barGroups);
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1600),
+    );
+    _animation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOutCubic,
+    );
+    _controller.forward();
     super.initState();
   }
 
@@ -41,105 +57,153 @@ class _BudgetBarChartState extends State<BudgetBarChart> {
     return maxY * 1.1;
   }
 
+  List<BarChartGroupData> getBarGroups() {
+    final currentMonth = DateTime.now().month - 1;
+    final currentYear = DateTime.now().year;
+    return List.generate(12, (index) {
+      final isCurrentYear = widget.currentSelectedYear == currentYear;
+      final isFutureYear = widget.currentSelectedYear > currentYear;
+      final isFutureMonth = isFutureYear || (isCurrentYear && index > currentMonth);
+
+      const delayPerItem = 0.08;
+      final start = index * delayPerItem;
+      final end = start + (1 - delayPerItem * 12);
+      double progress = 0.0;
+      if (_animation.value < start) {
+        progress = 0.0;
+      } else if (_animation.value > end) {
+        progress = 1.0;
+      } else {
+        progress = (_animation.value - start) / (end - start);
+      }
+
+      return BarChartGroupData(
+        x: index,
+        barsSpace: 4.0,
+        barRods: [
+          BarChartRodData(
+            fromY: 0.0,
+            toY: widget.totalBudgets[index] * progress,
+            width: 6.0,
+            color: isFutureMonth ? Colors.green.withValues(alpha: 0.6) : Colors.green,
+            borderRadius: BorderRadius.circular(6),
+          ),
+          BarChartRodData(
+            fromY: 0.0,
+            toY: widget.usedAmounts[index] * progress,
+            width: 6.0,
+            color: isFutureMonth ? Colors.red.withValues(alpha: 0.6) : Colors.red,
+            borderRadius: BorderRadius.circular(6),
+          ),
+        ],
+      );
+    });
+  }
+
+  double getInterval() {
+    double maxRevenue = 0.0;
+    double maxExpenses = 0.0;
+    if (widget.totalBudgets.isNotEmpty) {
+      maxRevenue = widget.totalBudgets.reduce(max);
+    }
+    if (widget.usedAmounts.isNotEmpty) {
+      maxExpenses = widget.usedAmounts.reduce(max);
+    }
+    final double maxValue = max(maxRevenue, maxExpenses);
+    if (maxValue == 0.0) {
+      return 1.0;
+    }
+    return maxValue / 3;
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
-    return Expanded(
-      child: BarChart(
-        BarChartData(
-          maxY: maxY,
-          barTouchData: BarTouchData(
-            enabled: true,
-            touchTooltipData: BarTouchTooltipData(
-              tooltipBorderRadius: BorderRadius.circular(8.0),
-              tooltipPadding: const EdgeInsets.all(8),
-              tooltipMargin: 8,
-              getTooltipColor: (_) => Colors.black87,
-              getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                return BarTooltipItem(
-                  '${t.translate('budget')}: ${formatCurrency(widget.totalBudgets[groupIndex], 'EUR')}\n'
-                  '${t.translate('consumed')}: ${formatCurrency(widget.usedAmounts[groupIndex], 'EUR')}',
-                  const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    height: 1.4,
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(4.0, 6.0, 6.0, 14.0),
+      child: SizedBox(
+        height: 100.0,
+        child: AnimatedBuilder(
+          animation: _animation,
+          builder: (context, child) {
+            return BarChart(
+              BarChartData(
+                barGroups: getBarGroups(),
+                alignment: BarChartAlignment.spaceAround,
+                titlesData: FlTitlesData(
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      getTitlesWidget: (value, meta) {
+                        final List<String> months = getAllShortMonthNames('de_DE');
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            months[value.toInt()],
+                            style: const TextStyle(fontSize: 11.0, fontWeight: FontWeight.bold),
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                );
-              },
-            ),
-          ),
-          titlesData: FlTitlesData(
-            show: true,
-            rightTitles: const AxisTitles(
-              sideTitles: SideTitles(showTitles: false),
-            ),
-            topTitles: const AxisTitles(
-              sideTitles: SideTitles(showTitles: false),
-            ),
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                getTitlesWidget: bottomTitles,
-                reservedSize: 36.0,
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 50.0,
+                      interval: getInterval(),
+                      getTitlesWidget: (value, meta) {
+                        return Transform.rotate(
+                          angle: 0.22,
+                          child: Text(
+                            formatCurrency(value, 'EUR', decimalDigits: 0),
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  rightTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  topTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                ),
+                gridData: FlGridData(
+                  show: true,
+                  drawHorizontalLine: true,
+                  horizontalInterval: getInterval(),
+                ),
+                borderData: FlBorderData(show: false),
+                barTouchData: BarTouchData(
+                  enabled: true,
+                  handleBuiltInTouches: true,
+                  touchTooltipData: BarTouchTooltipData(
+                    getTooltipColor: (_) => Colors.grey.shade800,
+                    getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                      final monthIndex = group.x.toInt();
+                      final List<String> months = getAllMonthNames('de_DE');
+
+                      return BarTooltipItem(
+                        '${months[monthIndex]}:\n'
+                        '${t.translate('budget')}: ${formatCurrency(widget.totalBudgets[monthIndex], 'EUR', decimalDigits: 2)}\n'
+                        '${t.translate('consumed')}: ${formatCurrency(widget.usedAmounts[monthIndex], 'EUR', decimalDigits: 2)}\n'
+                        '${t.translate('balance')}: ${formatCurrency(widget.totalBudgets[monthIndex] - widget.usedAmounts[monthIndex], 'EUR', decimalDigits: 2)}',
+                        textAlign: TextAlign.start,
+                        const TextStyle(
+                          color: Colors.white,
+                          fontSize: 11.0,
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ),
-            ),
-            leftTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                reservedSize: 36.0,
-                interval: 1,
-                getTitlesWidget: (value, meta) => leftTitles(value, meta, maxY),
-              ),
-            ),
-          ),
-          borderData: FlBorderData(
-            show: false,
-          ),
-          barGroups: widget.barGroups,
-          gridData: const FlGridData(show: false),
+            );
+          },
         ),
       ),
-    );
-  }
-
-  Widget leftTitles(double value, TitleMeta meta, double maxY) {
-    const style = TextStyle(
-      color: Color(0xff7589a2),
-      fontWeight: FontWeight.bold,
-      fontSize: 12.0,
-    );
-    String text;
-    if (value == 0) {
-      text = '0 €';
-    } else if (value == maxY / 2) {
-      text = '${(maxY / 2).toInt()} €';
-    } else if (value == maxY) {
-      text = '${maxY.toInt()} €';
-    } else {
-      return Container();
-    }
-    return SideTitleWidget(
-      meta: meta,
-      space: 0,
-      child: Text(text, style: style),
-    );
-  }
-
-  Widget bottomTitles(double value, TitleMeta meta) {
-    final months = <String>['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
-    final Widget monthText = Text(
-      months[value.toInt()],
-      style: const TextStyle(
-        color: Color(0xff7589a2),
-        fontWeight: FontWeight.bold,
-        fontSize: 12.0,
-      ),
-    );
-
-    return SideTitleWidget(
-      meta: meta,
-      space: 12.0, // margin top
-      child: monthText,
     );
   }
 }

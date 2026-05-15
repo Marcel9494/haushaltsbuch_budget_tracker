@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import '../../../../../core/utils/currency_formatter.dart';
@@ -17,7 +18,9 @@ class BudgetInfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = Localizations.localeOf(context).toString();
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CircularPercentIndicator(
           radius: 32.0,
@@ -25,7 +28,7 @@ class BudgetInfoRow extends StatelessWidget {
           animation: true,
           percent: (usedAmount / budgetAmount).clamp(0.0, 1.0),
           center: Text(
-            '${((usedAmount / budgetAmount) * 100).toStringAsFixed(1)}%',
+            '${NumberFormat('#,##0.0', locale).format((usedAmount / budgetAmount) * 100)}%',
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 13.0,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 
 import '../../../../../blocs/booking/booking_bloc.dart';
 import '../../../../../blocs/budget/budget_bloc.dart';
@@ -38,7 +37,6 @@ class _MonthlyBudgetListState extends State<MonthlyBudgetList> {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context);
     return BlocBuilder<BudgetBloc, BudgetState>(
       builder: (context, state) {
         if (state is BudgetLoading) {
