@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import '../../../../../blocs/category/category_bloc.dart';
@@ -27,16 +28,11 @@ class BudgetCard extends StatelessWidget {
     required this.currentSelectedDate,
   });
 
-  double _shouldAmount() {
-    final daysInMonth = DateUtils.getDaysInMonth(currentSelectedDate.year, currentSelectedDate.month);
-    return (budget.budgetAmount / daysInMonth) * currentSelectedDate.day;
-  }
-
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
-    final shouldAmount = _shouldAmount();
-    final Color usedColor = usedBudgetAmount < shouldAmount == false ? Colors.red.shade400 : Colors.green.shade400;
+    final locale = Localizations.localeOf(context).toString();
+    final Color color = budget.budgetAmount - usedBudgetAmount >= 0 ? Colors.green : Colors.redAccent;
     return SlideAnimation(
       verticalOffset: 40.0,
       child: FadeInAnimation(
@@ -65,78 +61,99 @@ class BudgetCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   border: Border(
                     left: BorderSide(
-                      color: usedColor,
+                      color: color,
                       width: 3.5,
                     ),
                   ),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
+                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
                   child: Row(
                     children: [
-                      const SizedBox(width: 2.0),
+                      const SizedBox(width: 6.0),
                       CircularPercentIndicator(
-                        radius: 32.0,
+                        radius: 40.0,
                         lineWidth: 6.0,
                         animation: true,
                         percent: (percentageUsed).clamp(0.0, 1.0),
                         center: Text(
-                          '${(percentageUsed * 100).toStringAsFixed(1)}%',
+                          '${NumberFormat('#,##0.0', locale).format(percentageUsed * 100)}%',
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 13.0,
+                            fontSize: 16.0,
                           ),
                         ),
                         circularStrokeCap: CircularStrokeCap.round,
-                        progressColor: usedColor,
+                        progressColor: color,
                       ),
-                      const SizedBox(width: 16.0),
+                      const SizedBox(width: 12.0),
+                      Container(
+                        height: 96.0,
+                        width: 1.3,
+                        color: Colors.white30,
+                        margin: const EdgeInsets.symmetric(horizontal: 6.0),
+                      ),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 5.0),
+                              child: Text(
+                                '${budget.category!.categoryName}:',
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Expanded(
-                                  child: Text(
-                                    '${budget.category!.categoryName}:',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16.0,
+                                  flex: 1,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text('${t.translate('budget')}:'),
+                                        Text('${t.translate('consumed')}:'),
+                                        SizedBox(height: 8.0),
+                                        Text('${t.translate('remaining')}:'),
+                                      ],
                                     ),
-                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
-                                Text(
-                                  formatCurrency(budget.budgetAmount - usedBudgetAmount, 'EUR'),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: usedColor,
-                                    fontSize: 16.0,
+                                Expanded(
+                                  flex: 1,
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(6.0, 0.0, 12.0, 6.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          formatCurrency(budget.budgetAmount, 'EUR'),
+                                          style: const TextStyle(color: Colors.green),
+                                        ),
+                                        Text(
+                                          formatCurrency(usedBudgetAmount, 'EUR'),
+                                          style: const TextStyle(color: Colors.redAccent),
+                                        ),
+                                        const Divider(height: 8.0, endIndent: 12.0),
+                                        Text(
+                                          formatCurrency(
+                                            budget.budgetAmount - usedBudgetAmount,
+                                            'EUR',
+                                          ),
+                                          style: TextStyle(color: color),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ],
-                            ),
-                            const SizedBox(height: 4.0),
-                            Text(
-                              '${t.translate('consumed')}: '
-                              '${formatCurrency(usedBudgetAmount, 'EUR')} / '
-                              '${formatCurrency(budget.budgetAmount, 'EUR')}',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(height: 4.0),
-                            Text(
-                              '${t.translate('currently_until')}: '
-                              '${formatCurrency(shouldAmount, 'EUR')} '
-                              '${t.translate('in_budget')}.',
-                              style: const TextStyle(
-                                fontSize: 14.0,
-                                color: Colors.grey,
-                              ),
                             ),
                           ],
                         ),

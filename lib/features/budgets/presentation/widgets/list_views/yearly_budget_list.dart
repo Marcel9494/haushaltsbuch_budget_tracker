@@ -74,7 +74,7 @@ class _YearlyBudgetListState extends State<YearlyBudgetList> with TickerProvider
                               final BudgetStats budgetStats = calculateBudgetStats(state.yearlyBudgets, bookings, widget.currentSelectedDate.year);
                               return Card(
                                 child: AspectRatio(
-                                  aspectRatio: 1.35,
+                                  aspectRatio: 1.33,
                                   child: Padding(
                                     padding: const EdgeInsets.all(16),
                                     child: Column(
@@ -83,7 +83,7 @@ class _YearlyBudgetListState extends State<YearlyBudgetList> with TickerProvider
                                         // TODO anschließend leere Listen Fehler abfangen
                                         // TODO Bei Budget Stats nur bis aktuellem Monat berücksichtigen?
                                         BudgetInfoRow(
-                                          budgetName: t.translate('total_budget'),
+                                          budgetName: t.translate('yearly_budget'),
                                           budgetAmount: budgetStats.overallBudgetAmount,
                                           usedAmount: budgetStats.overallUsedAmount,
                                         ),
@@ -92,8 +92,8 @@ class _YearlyBudgetListState extends State<YearlyBudgetList> with TickerProvider
                                           totalBudgets: budgetStats.totalBudgets,
                                           usedAmounts: budgetStats.usedAmounts,
                                           barGroups: budgetStats.barGroups,
+                                          currentSelectedYear: widget.currentSelectedDate.year,
                                         ),
-                                        const SizedBox(height: 12.0),
                                         BudgetStatRow(
                                           usedBudgetAmounts: budgetStats.usedAmounts,
                                         ),
