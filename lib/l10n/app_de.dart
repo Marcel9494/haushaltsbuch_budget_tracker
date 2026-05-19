@@ -212,6 +212,10 @@ const Map<String, String> de = {
   'days': 'Tage',
   'progress': 'Fortschritt',
   'exceeded': 'Überschritten',
+  'unknown': 'Unbekannt',
+  'no_category': 'Keine Kategorie',
+  'not_assigned': 'Nicht zugeordnet',
+  'optional_fields': 'Optionale Felder',
   // Wiederholungstypen
   'no_repetition': 'Keine Wiederholung',
   'weekly': 'Jede Woche',
@@ -274,6 +278,7 @@ const Map<String, String> de = {
   'empty_account_error': 'Bitte wählen Sie ein Konto aus.',
   'empty_monthly_budget_error': 'Bitte geben Sie ein monatliches Budget ein.',
   'create_booking_error': 'Datenbankfehler beim Erstellen der Buchung. Bitte versuchen Sie es später erneut.',
+  'delete_booking_error': 'Datenbankfehler beim Löschen der Buchung. Bitte versuchen Sie es später erneut.',
   'load_bookings_error': 'Datenbankfehler beim Laden der Buchungen. Bitte versuchen Sie es später erneut.',
   'create_account_error': 'Datenbankfehler beim Erstellen des Kontos. Bitte versuchen Sie es später erneut.',
   'update_account_error': 'Datenbankfehler beim Bearbeiten des Kontos. Bitte versuchen Sie es später erneut.',

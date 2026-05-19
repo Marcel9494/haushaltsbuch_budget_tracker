@@ -14,6 +14,7 @@ class AccountInputField extends StatefulWidget {
   final TextEditingController accountController;
   final String text;
   final bool showSuffixIcon;
+  final bool isOptional;
   final ValueChanged<Account> onAccountChanged;
 
   const AccountInputField({
@@ -22,6 +23,7 @@ class AccountInputField extends StatefulWidget {
     required this.text,
     required this.onAccountChanged,
     this.showSuffixIcon = true,
+    this.isOptional = false,
   });
 
   @override
@@ -38,6 +40,9 @@ class _AccountInputFieldState extends State<AccountInputField> {
   }
 
   String? _checkAccountInput() {
+    if (widget.isOptional) {
+      return null;
+    }
     final t = AppLocalizations.of(context);
     String accountInput = widget.accountController.text.trim();
     if (accountInput.isEmpty) {

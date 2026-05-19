@@ -16,12 +16,14 @@ class CategorieInputField extends StatefulWidget {
   final TextEditingController categorieController;
   final BookingType bookingType;
   final ValueChanged<Category> onCategorieChanged;
+  final bool isOptional;
 
   const CategorieInputField({
     super.key,
     required this.categorieController,
     required this.bookingType,
     required this.onCategorieChanged,
+    this.isOptional = false,
   });
 
   @override
@@ -40,6 +42,9 @@ class _CategorieInputFieldState extends State<CategorieInputField> {
   }
 
   String? _checkCategorieInput() {
+    if (widget.isOptional) {
+      return null;
+    }
     final t = AppLocalizations.of(context);
     String categorieInput = widget.categorieController.text.trim();
     if (categorieInput.isEmpty) {

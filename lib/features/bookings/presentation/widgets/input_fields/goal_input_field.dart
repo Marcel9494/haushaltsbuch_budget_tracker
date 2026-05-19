@@ -32,15 +32,6 @@ class _GoalInputFieldState extends State<GoalInputField> {
     _focusNode = FocusNode();
   }
 
-  String? _checkGoalInput() {
-    final t = AppLocalizations.of(context);
-    String goalInput = widget.goalController.text.trim();
-    if (goalInput.isEmpty) {
-      return t.translate('empty_goal_error');
-    }
-    return null;
-  }
-
   @override
   void dispose() {
     _focusNode.dispose();
@@ -66,7 +57,6 @@ class _GoalInputFieldState extends State<GoalInputField> {
                 controller: widget.goalController,
                 readOnly: true,
                 focusNode: _focusNode,
-                validator: (goalInput) => _checkGoalInput(),
                 textAlignVertical: TextAlignVertical.center,
                 decoration: InputDecoration(
                   isDense: true,

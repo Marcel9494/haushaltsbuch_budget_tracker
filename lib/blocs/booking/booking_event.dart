@@ -4,9 +4,11 @@ abstract class BookingEvent {}
 
 class CreateBooking extends BookingEvent {
   final Booking booking;
+  final BuildContext context;
 
   CreateBooking({
     required this.booking,
+    required this.context,
   });
 }
 
@@ -14,21 +16,25 @@ class UpdateBooking extends BookingEvent {
   final Booking oldBooking;
   final Booking newBooking;
   final BookingSelectionType bookingSelectionType;
+  final BuildContext context;
 
   UpdateBooking({
     required this.oldBooking,
     required this.newBooking,
     required this.bookingSelectionType,
+    required this.context,
   });
 }
 
 class DeleteBooking extends BookingEvent {
   final Booking booking;
   final BookingSelectionType bookingSelectionType;
+  final BuildContext context;
 
   DeleteBooking({
     required this.booking,
     required this.bookingSelectionType,
+    required this.context,
   });
 }
 
