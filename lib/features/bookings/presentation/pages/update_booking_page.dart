@@ -57,9 +57,9 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
   late BookingType _bookingType;
   late AmountType _amountType;
   RepetitionType _repetitionType = RepetitionType.noRepetition;
-  late Category _selectedCategory;
-  late Account _selectedDebitAccount;
-  late Account _selectedTargetAccount = Account(name: '', accountType: AccountType.other, balance: 0.0);
+  Category? _selectedCategory;
+  Account? _selectedDebitAccount;
+  Account? _selectedTargetAccount = Account(name: '', accountType: AccountType.other, balance: 0.0);
   late Goal _selectedGoal;
   late Booking oldBooking;
   final GlobalKey<FormState> _updateBookingFormKey = GlobalKey<FormState>();
@@ -103,9 +103,9 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
     _amountController.text = formatCurrency(widget.booking.amount, 'EUR');
     _dateController.text =
         DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(widget.booking.bookingDate);
-    _categorieController.text = _selectedCategory.categoryName;
-    _debitAccountController.text = _selectedDebitAccount.name;
-    _targetAccountController.text = _selectedTargetAccount.name;
+    _categorieController.text = _selectedCategory!.categoryName;
+    _debitAccountController.text = _selectedDebitAccount!.name;
+    _targetAccountController.text = _selectedTargetAccount!.name;
     _goalController.text = _selectedGoal.goalName;
     _backupOldBooking();
   }
@@ -146,9 +146,9 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
         bookingDate: parsedDate, // TODO
         repetitionId: widget.booking.repetitionId,
         repetitionType: _repetitionType, // TODO
-        categoryId: _bookingType == BookingType.transfer ? null : _selectedCategory.id,
-        debitAccountId: _selectedDebitAccount.id!,
-        targetAccountId: _bookingType == BookingType.transfer ? _selectedTargetAccount.id : null,
+        categoryId: _bookingType == BookingType.transfer ? null : _selectedCategory?.id,
+        debitAccountId: _selectedDebitAccount?.id,
+        targetAccountId: _bookingType == BookingType.transfer ? _selectedTargetAccount?.id : null,
         goalId: _selectedGoal.id,
         person: _personController.text.trim(),
         isBooked: _bookingRepository.getIsBookingDateBefore(parsedDate),
@@ -159,6 +159,7 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
             oldBooking: oldBooking,
             newBooking: updatedBooking,
             bookingSelectionType: widget.bookingSelectionType,
+            context: context,
           ));
     } on PostgrestException catch (_) {
       AppFlushbar.show(context, message: t.translate('database_error'));
@@ -183,11 +184,7 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
 
   void resetCategory() {
     _categorieController.text = '';
-    if (_bookingType == BookingType.expense || _bookingType == BookingType.transfer) {
-      _selectedCategory = Category(id: '', categoryName: '', categoryType: CategoryType.expense);
-    } else if (_bookingType == BookingType.income) {
-      _selectedCategory = Category(id: '', categoryName: '', categoryType: CategoryType.income);
-    }
+    _selectedCategory = null;
   }
 
   @override
@@ -233,7 +230,7 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
                     );
 
                     if (confirmed == true) {
-                      bookingBloc.add(DeleteBooking(booking: oldBooking, bookingSelectionType: widget.bookingSelectionType));
+                      bookingBloc.add(DeleteBooking(booking: oldBooking, bookingSelectionType: widget.bookingSelectionType, context: context));
                     }
                   },
                 ),
@@ -277,49 +274,37 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
                             });
                           },
                         ),
-                        TitleInputField(titleController: _titleController),
                         _bookingType == BookingType.transfer
-                            ? SizedBox.shrink()
-                            : CategorieInputField(
-                                categorieController: _categorieController,
-                                bookingType: _bookingType,
-                                onCategorieChanged: (Category newCategory) {
-                                  setState(() {
-                                    _selectedCategory = newCategory;
-                                  });
-                                },
-                              ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.only(right: _bookingType == BookingType.transfer ? 12.0 : 0.0),
-                                child: AccountInputField(
-                                  accountController: _debitAccountController,
-                                  text: _bookingType == BookingType.transfer ? 'debit_account' : 'account',
-                                  showSuffixIcon: _bookingType == BookingType.transfer ? false : true,
-                                  onAccountChanged: (Account newDebitAccount) {
-                                    setState(() {
-                                      _selectedDebitAccount = newDebitAccount;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                            _bookingType == BookingType.transfer
-                                ? Padding(
+                            ? Row(
+                                children: [
+                                  Expanded(
+                                    child: Padding(
+                                      padding: EdgeInsets.only(right: _bookingType == BookingType.transfer ? 12.0 : 0.0),
+                                      child: AccountInputField(
+                                        accountController: _debitAccountController,
+                                        text: 'debit_account',
+                                        showSuffixIcon: false,
+                                        isOptional: false,
+                                        onAccountChanged: (Account newDebitAccount) {
+                                          setState(() {
+                                            _selectedDebitAccount = newDebitAccount;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
                                     padding: const EdgeInsets.only(top: 36.0),
                                     child: FaIcon(FontAwesomeIcons.anglesRight, size: 20, color: Colors.white70),
-                                  )
-                                : SizedBox.shrink(),
-                            _bookingType == BookingType.transfer
-                                ? Expanded(
+                                  ),
+                                  Expanded(
                                     child: Padding(
                                       padding: const EdgeInsets.only(left: 12.0),
                                       child: AccountInputField(
                                         accountController: _targetAccountController,
                                         text: 'target_account',
-                                        showSuffixIcon: _bookingType == BookingType.transfer ? false : true,
+                                        showSuffixIcon: false,
+                                        isOptional: false,
                                         onAccountChanged: (Account newTargetAccount) {
                                           setState(() {
                                             _selectedTargetAccount = newTargetAccount;
@@ -327,10 +312,49 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
                                         },
                                       ),
                                     ),
-                                  )
-                                : SizedBox.shrink(),
-                          ],
+                                  ),
+                                ],
+                              )
+                            : SizedBox.shrink(),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20.0),
+                          child: Row(
+                            children: [
+                              const Expanded(child: Divider(indent: 10.0, endIndent: 18.0)),
+                              Text(
+                                t.translate('optional_fields'),
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              const Expanded(child: Divider(indent: 18.0, endIndent: 10.0)),
+                            ],
+                          ),
                         ),
+                        TitleInputField(titleController: _titleController, isOptional: true),
+                        _bookingType == BookingType.transfer
+                            ? SizedBox.shrink()
+                            : CategorieInputField(
+                                categorieController: _categorieController,
+                                bookingType: _bookingType,
+                                isOptional: true,
+                                onCategorieChanged: (Category newCategory) {
+                                  setState(() {
+                                    _selectedCategory = newCategory;
+                                  });
+                                },
+                              ),
+                        _bookingType == BookingType.transfer
+                            ? SizedBox.shrink()
+                            : AccountInputField(
+                                accountController: _debitAccountController,
+                                text: 'account',
+                                showSuffixIcon: true,
+                                isOptional: true,
+                                onAccountChanged: (Account newDebitAccount) {
+                                  setState(() {
+                                    _selectedDebitAccount = newDebitAccount;
+                                  });
+                                },
+                              ),
                         GoalInputField(
                           goalController: _goalController,
                           onGoalChanged: (Goal newGoal) {

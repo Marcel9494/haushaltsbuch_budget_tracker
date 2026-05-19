@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../enums/account_type.dart';
@@ -98,7 +100,7 @@ class AccountRepository {
     return totalDebts;
   }
 
-  Future<void> updateAccountBalance(List<Booking> bookings) async {
+  Future<void> updateAccountBalance(List<Booking> bookings, BuildContext context) async {
     double totalSum = 0.0;
     final SupabaseClient supabase = Supabase.instance.client;
     if (bookings.isEmpty) {
@@ -111,27 +113,51 @@ class AccountRepository {
       }
       totalSum += bookings[i].amount;
     }
+
+    final t = AppLocalizations.of(context);
+    AccountRepository accountRepository = AccountRepository();
+
+    String? debitAccountId = bookings[0].debitAccountId;
+
+    // Falls kein Konto vorhanden -> not_assigned laden oder erstellen
+    if (debitAccountId == null) {
+      Account? existingAccount = await accountRepository.getAccountByName(
+        supabase.auth.currentUser!.id,
+        t.translate('not_assigned'),
+      );
+
+      existingAccount ??= await accountRepository.createAccount(
+        Account(
+          userId: supabase.auth.currentUser!.id,
+          name: t.translate('not_assigned'),
+          accountType: AccountType.other,
+          balance: 0.0,
+        ),
+      );
+      debitAccountId = existingAccount.id;
+    }
+
+    // TODO bei gelöschtem Konto keine Änderung vornehmen (debitAccountId == null)!?
+    final debitAccount = await supabase.from('accounts').select('balance').eq('id', debitAccountId!).single();
+
     if (bookings[0].bookingType == BookingType.expense) {
-      final debitAccount = await supabase.from('accounts').select('balance').eq('id', bookings[0].debitAccountId!).single();
       await supabase
           .from('accounts')
           .update({'balance': debitAccount['balance'] - totalSum})
-          .eq('id', bookings[0].debitAccountId!)
+          .eq('id', debitAccountId)
           .eq('user_id', supabase.auth.currentUser!.id);
     } else if (bookings[0].bookingType == BookingType.income) {
-      final debitAccount = await supabase.from('accounts').select('balance').eq('id', bookings[0].debitAccountId!).single();
       await supabase
           .from('accounts')
           .update({'balance': debitAccount['balance'] + totalSum})
-          .eq('id', bookings[0].debitAccountId!)
+          .eq('id', debitAccountId)
           .eq('user_id', supabase.auth.currentUser!.id);
     } else if (bookings[0].bookingType == BookingType.transfer) {
-      final debitAccount = await supabase.from('accounts').select('balance').eq('id', bookings[0].debitAccountId!).single();
       final targetAccount = await supabase.from('accounts').select('balance').eq('id', bookings[0].targetAccountId!).single();
       await supabase
           .from('accounts')
           .update({'balance': debitAccount['balance'] - totalSum})
-          .eq('id', bookings[0].debitAccountId!)
+          .eq('id', debitAccountId)
           .eq('user_id', supabase.auth.currentUser!.id);
       await supabase
           .from('accounts')
@@ -141,33 +167,56 @@ class AccountRepository {
     }
   }
 
-  Future<void> reverseAccountBalance(Booking oldBooking) async {
+  Future<void> reverseAccountBalance(Booking oldBooking, BuildContext context) async {
     final SupabaseClient supabase = Supabase.instance.client;
     if (oldBooking.bookingDate.isAfter(DateTime.now()) || oldBooking.bookingDate.isAtSameMomentAs(DateTime.now())) {
       return;
     }
 
+    final t = AppLocalizations.of(context);
+    AccountRepository accountRepository = AccountRepository();
+
+    String? debitAccountId = oldBooking.debitAccountId;
+
+    // Falls kein Konto vorhanden -> not_assigned laden oder erstellen
+    if (debitAccountId == null) {
+      Account? existingAccount = await accountRepository.getAccountByName(
+        supabase.auth.currentUser!.id,
+        t.translate('not_assigned'),
+      );
+
+      existingAccount ??= await accountRepository.createAccount(
+        Account(
+          userId: supabase.auth.currentUser!.id,
+          name: t.translate('not_assigned'),
+          accountType: AccountType.other,
+          balance: 0.0,
+        ),
+      );
+      debitAccountId = existingAccount.id;
+    }
+
+    // TODO bei gelöschtem Konto keine Änderung vornehmen (debitAccountId == null)!?
+    final debitAccount = await supabase.from('accounts').select('balance').eq('id', debitAccountId!).single();
+
     if (oldBooking.bookingType == BookingType.expense) {
-      final debitAccount = await supabase.from('accounts').select('balance').eq('id', oldBooking.debitAccountId!).single();
       await supabase
           .from('accounts')
           .update({'balance': debitAccount['balance'] + oldBooking.amount})
-          .eq('id', oldBooking.debitAccountId!)
+          .eq('id', debitAccountId)
           .eq('user_id', supabase.auth.currentUser!.id);
     } else if (oldBooking.bookingType == BookingType.income) {
-      final debitAccount = await supabase.from('accounts').select('balance').eq('id', oldBooking.debitAccountId!).single();
       await supabase
           .from('accounts')
           .update({'balance': debitAccount['balance'] - oldBooking.amount})
-          .eq('id', oldBooking.debitAccountId!)
+          .eq('id', debitAccountId)
           .eq('user_id', supabase.auth.currentUser!.id);
     } else if (oldBooking.bookingType == BookingType.transfer) {
-      final debitAccount = await supabase.from('accounts').select('balance').eq('id', oldBooking.debitAccountId!).single();
       final targetAccount = await supabase.from('accounts').select('balance').eq('id', oldBooking.targetAccountId!).single();
       await supabase
           .from('accounts')
           .update({'balance': debitAccount['balance'] + oldBooking.amount})
-          .eq('id', oldBooking.debitAccountId!)
+          .eq('id', debitAccountId)
           .eq('user_id', supabase.auth.currentUser!.id);
       await supabase
           .from('accounts')
@@ -233,5 +282,15 @@ class AccountRepository {
 
       await supabase.from('accounts').update({'balance': currentBalance + change}).eq('id', id).eq('user_id', userId);
     }
+  }
+
+  Future<Account?> getAccountByName(String userId, String name) async {
+    final SupabaseClient supabase = Supabase.instance.client;
+    final response = await supabase.from('accounts').select().eq('user_id', userId).eq('name', name).maybeSingle();
+
+    if (response == null) {
+      return null;
+    }
+    return Account.fromMap(response);
   }
 }

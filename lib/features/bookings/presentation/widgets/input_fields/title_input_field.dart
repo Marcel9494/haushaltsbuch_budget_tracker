@@ -7,12 +7,14 @@ class TitleInputField extends StatefulWidget {
   final String text;
   final bool showTitle;
   final bool autoFocus;
+  final bool isOptional;
 
   const TitleInputField({
     super.key,
     required this.titleController,
     this.showTitle = true,
     this.autoFocus = false,
+    this.isOptional = false,
     this.text = 'title',
   });
 
@@ -30,6 +32,9 @@ class _TitleInputFieldState extends State<TitleInputField> {
   }
 
   String? _checkTitleInput() {
+    if (widget.isOptional) {
+      return null;
+    }
     final t = AppLocalizations.of(context);
     String titleInput = widget.titleController.text.trim();
     if (titleInput.isEmpty) {

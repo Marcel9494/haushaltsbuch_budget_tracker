@@ -70,7 +70,7 @@ class BookingCard extends StatelessWidget {
                           booking.bookingType == BookingType.transfer
                               ? t.translate('transfer')
                               : booking.category == null
-                                  ? t.translate('deleted_category')
+                                  ? t.translate('no_category')
                                   : booking.category!.categoryName,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -94,13 +94,13 @@ class BookingCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(booking.title, overflow: TextOverflow.ellipsis),
+                        Text(booking.title == '' ? t.translate('unknown') : booking.title, overflow: TextOverflow.ellipsis),
                         SizedBox(height: 4.0),
                         Row(
                           children: [
                             Expanded(
                               child: Text(
-                                booking.debitAccount != null ? booking.debitAccount!.name : t.translate('deleted_account'),
+                                booking.debitAccount != null ? booking.debitAccount!.name : t.translate('not_assigned'),
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(color: Colors.grey),
                               ),

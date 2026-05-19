@@ -16,6 +16,7 @@ class AmountInputField extends StatefulWidget {
   final ValueChanged<double>? onAmountChanged;
   final String text;
   final bool showMinus;
+  final bool autofocus;
 
   const AmountInputField({
     super.key,
@@ -26,6 +27,7 @@ class AmountInputField extends StatefulWidget {
     this.onAmountChanged,
     this.text = 'amount',
     this.showMinus = false,
+    this.autofocus = false,
   });
 
   @override
@@ -45,6 +47,16 @@ class _AmountInputFieldState extends State<AmountInputField> {
     _selectedAmountType = widget.amountType;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       widget.onAmountTypeChanged(_selectedAmountType);
+
+      if (widget.autofocus) {
+        _focusNode.requestFocus();
+
+        Future.delayed(const Duration(milliseconds: 200), () {
+          if (mounted) {
+            _openAmountBottomSheet();
+          }
+        });
+      }
     });
   }
 
@@ -200,6 +212,7 @@ class _AmountInputFieldState extends State<AmountInputField> {
         TextFormField(
           controller: widget.amountController,
           readOnly: true,
+          showCursor: true,
           focusNode: _focusNode,
           validator: (amountInput) => _checkAmountInput(),
           textAlignVertical: TextAlignVertical.center,
@@ -279,77 +292,82 @@ class _AmountInputFieldState extends State<AmountInputField> {
                   ),
             counterText: '',
           ),
-          onTap: () {
-            _isFirstInput = true;
-            showModalBottomSheet(
-              context: context,
-              barrierColor: Colors.transparent,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-              ),
-              builder: (context) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            '${t.translate('enter_${widget.text}')}:',
-                            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.close, size: 28),
-                            onPressed: () => Navigator.pop(context),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      GridView.count(
-                        crossAxisCount: 4,
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        crossAxisSpacing: 8,
-                        mainAxisSpacing: 8,
-                        childAspectRatio: 1.2,
-                        children: [
-                          // Erste Zeile
-                          GridItemButton(text: '1', onTap: () => _addAmountInput('1')),
-                          GridItemButton(text: '2', onTap: () => _addAmountInput('2')),
-                          GridItemButton(text: '3', onTap: () => _addAmountInput('3')),
-                          GridItemButton(
-                              icon: Icons.clear_rounded, color: Colors.cyanAccent, iconSize: 32, onTap: () => widget.amountController.clear()),
-                          // Zweite Zeile
-                          GridItemButton(text: '4', onTap: () => _addAmountInput('4')),
-                          GridItemButton(text: '5', onTap: () => _addAmountInput('5')),
-                          GridItemButton(text: '6', onTap: () => _addAmountInput('6')),
-                          GridItemButton(icon: Icons.backspace_rounded, color: Colors.cyanAccent, onTap: () => _clearAmountInput()),
-                          // Dritte Zeile
-                          GridItemButton(text: '7', onTap: () => _addAmountInput('7')),
-                          GridItemButton(text: '8', onTap: () => _addAmountInput('8')),
-                          GridItemButton(text: '9', onTap: () => _addAmountInput('9')),
-                          GridItemButton(icon: Icons.check_rounded, color: Colors.greenAccent, iconSize: 32, onTap: () => Navigator.pop(context)),
-                          // Vierte Zeile
-                          GridItemButton(
-                              text: widget.showMinus == true ? '-' : '', onTap: widget.showMinus == true ? () => _addAmountInput('-') : () {}),
-                          GridItemButton(text: '0', onTap: () => _addAmountInput('0')),
-                          GridItemButton(text: ',', onTap: () => _addAmountInput(',')),
-                          GridItemButton(text: '', onTap: () {}),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ).whenComplete(() {
-              _finalizeAmountInputFormat();
-            });
-          },
+          onTap: _openAmountBottomSheet,
         ),
       ],
     );
+  }
+
+  void _openAmountBottomSheet() {
+    _isFirstInput = true;
+    final t = AppLocalizations.of(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _focusNode.requestFocus();
+    });
+    showModalBottomSheet(
+      context: context,
+      barrierColor: Colors.transparent,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '${t.translate('enter_${widget.text}')}:',
+                    style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close, size: 28),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              GridView.count(
+                crossAxisCount: 4,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+                childAspectRatio: 1.2,
+                children: [
+                  // Erste Zeile
+                  GridItemButton(text: '1', onTap: () => _addAmountInput('1')),
+                  GridItemButton(text: '2', onTap: () => _addAmountInput('2')),
+                  GridItemButton(text: '3', onTap: () => _addAmountInput('3')),
+                  GridItemButton(icon: Icons.clear_rounded, color: Colors.cyanAccent, iconSize: 32, onTap: () => widget.amountController.clear()),
+                  // Zweite Zeile
+                  GridItemButton(text: '4', onTap: () => _addAmountInput('4')),
+                  GridItemButton(text: '5', onTap: () => _addAmountInput('5')),
+                  GridItemButton(text: '6', onTap: () => _addAmountInput('6')),
+                  GridItemButton(icon: Icons.backspace_rounded, color: Colors.cyanAccent, onTap: () => _clearAmountInput()),
+                  // Dritte Zeile
+                  GridItemButton(text: '7', onTap: () => _addAmountInput('7')),
+                  GridItemButton(text: '8', onTap: () => _addAmountInput('8')),
+                  GridItemButton(text: '9', onTap: () => _addAmountInput('9')),
+                  GridItemButton(icon: Icons.check_rounded, color: Colors.greenAccent, iconSize: 32, onTap: () => Navigator.pop(context)),
+                  // Vierte Zeile
+                  GridItemButton(text: widget.showMinus == true ? '-' : '', onTap: widget.showMinus == true ? () => _addAmountInput('-') : () {}),
+                  GridItemButton(text: '0', onTap: () => _addAmountInput('0')),
+                  GridItemButton(text: ',', onTap: () => _addAmountInput(',')),
+                  GridItemButton(text: '', onTap: () {}),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    ).whenComplete(() {
+      _finalizeAmountInputFormat();
+      _focusNode.unfocus();
+    });
   }
 }
