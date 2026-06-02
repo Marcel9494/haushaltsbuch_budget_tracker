@@ -15,6 +15,7 @@ import '../../../../core/consts/animation_consts.dart';
 import '../../../../core/consts/route_consts.dart';
 import '../../../../core/utils/app_flushbar.dart';
 import '../../../../data/enums/booking_type.dart';
+import '../../../../data/enums/goal_state_type.dart' as goalStateEnum;
 import '../../../../data/enums/goal_type.dart';
 import '../../../../data/models/goal.dart';
 import '../../../../data/repositories/goal_repository.dart';
@@ -78,6 +79,7 @@ class _CreateGoalPageState extends State<CreateGoalPage> {
         currentAmount: 0.0,
         goalName: _goalNameController.text.trim(),
         goalType: _selectedGoalType,
+        goalState: goalStateEnum.GoalStateType.active,
         startDate: parsedStartDate,
         endDate: parsedEndDate,
       );

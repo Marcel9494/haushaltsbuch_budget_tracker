@@ -16,6 +16,7 @@ import '../../../../../l10n/app_localizations.dart';
 import '../../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../../../../shared/presentation/widgets/deco/empty_list.dart';
 import '../cards/booking_card.dart';
+import '../charts/monthly_line_chart.dart';
 import '../deco/booking_list_daily_header.dart';
 import '../deco/booking_list_overview.dart';
 
@@ -282,48 +283,8 @@ class _MonthlyBookingListState extends State<MonthlyBookingList> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.fromLTRB(32.0, 0.0, 32.0, 14.0),
-                              child: SizedBox(
-                                height: 120,
-                                child: RotatedBox(
-                                  quarterTurns: 1,
-                                  child: BarChart(
-                                    BarChartData(
-                                      maxY: incomeTotal > expenseTotal ? incomeTotal * 1 : expenseTotal * 1,
-                                      barGroups: getBarChartData(state.bookings),
-                                      barTouchData: BarTouchData(enabled: false),
-                                      titlesData: FlTitlesData(
-                                        leftTitles: AxisTitles(
-                                          sideTitles: SideTitles(
-                                            showTitles: true,
-                                            reservedSize: 60.0,
-                                            interval: incomeTotal > expenseTotal ? incomeTotal / 4 : expenseTotal / 4,
-                                            getTitlesWidget: (value, meta) {
-                                              return Transform.rotate(
-                                                angle: -1.57,
-                                                child: Text(
-                                                  '${formatCurrency(value, 'EUR', decimalDigits: 0)}\n|',
-                                                  textAlign: TextAlign.center,
-                                                  overflow: TextOverflow.ellipsis,
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                        bottomTitles: AxisTitles(
-                                          sideTitles: SideTitles(showTitles: false),
-                                        ),
-                                        rightTitles: const AxisTitles(
-                                          sideTitles: SideTitles(showTitles: false),
-                                        ),
-                                        topTitles: const AxisTitles(
-                                          sideTitles: SideTitles(showTitles: false),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
+                              padding: const EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 8.0),
+                              child: MonthlyLineChart(bookings: state.bookings),
                             ),
                           ],
                         ),

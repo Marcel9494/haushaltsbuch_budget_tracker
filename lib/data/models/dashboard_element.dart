@@ -49,6 +49,20 @@ class DashboardElement {
     );
   }
 
+  factory DashboardElement.fromUsersDashboardElementsMap(Map<String, dynamic> map) {
+    return DashboardElement(
+      id: map['id'],
+      title: map['title'],
+      showValue: map['show_value'],
+      shortDescription: map['short_description'],
+      icon: map['icon'],
+      dashboardElementType: DashboardElementType.fromString(
+        map['dashboard_element_type'],
+      ),
+      isSelected: map['is_selected'] ?? false,
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'title': title,

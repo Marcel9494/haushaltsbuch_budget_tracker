@@ -26,6 +26,7 @@ import '../../../../data/enums/account_type.dart';
 import '../../../../data/enums/amount_type.dart';
 import '../../../../data/enums/booking_type.dart';
 import '../../../../data/enums/category_type.dart';
+import '../../../../data/enums/goal_state_type.dart';
 import '../../../../data/enums/repetition_type.dart';
 import '../../../../data/models/account.dart';
 import '../../../../data/models/booking.dart';
@@ -97,7 +98,14 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
     if (widget.booking.goal != null) {
       _selectedGoal = widget.booking.goal!;
     } else {
-      _selectedGoal = Goal(goalAmount: 0.0, goalName: '', goalType: GoalType.undefined, startDate: DateTime.now(), endDate: DateTime.now());
+      _selectedGoal = Goal(
+        goalAmount: 0.0,
+        goalName: '',
+        goalType: GoalType.undefined,
+        goalState: GoalStateType.active,
+        startDate: DateTime.now(),
+        endDate: DateTime.now(),
+      );
     }
     _titleController.text = widget.booking.title;
     _amountController.text = formatCurrency(widget.booking.amount, 'EUR');

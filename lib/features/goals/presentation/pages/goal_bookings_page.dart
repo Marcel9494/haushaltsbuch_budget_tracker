@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:haushaltsbuch_budget_tracker/features/goals/presentation/widgets/deco/goal_stat_row.dart';
 import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 
 import '../../../../blocs/goal/goal_bloc.dart';
@@ -11,6 +10,7 @@ import '../../../../core/page_arguments/home_page_arguments.dart';
 import '../../../../core/page_arguments/update_goal_page_arguments.dart';
 import '../../../../core/utils/date_helper.dart';
 import '../../../../core/utils/dialogs/show_delete_dialog.dart';
+import '../../../../data/enums/goal_state_type.dart';
 import '../../../../data/models/booking.dart';
 import '../../../../data/models/goal.dart';
 import '../../../../data/repositories/goal_repository.dart';
@@ -18,7 +18,9 @@ import '../../../bookings/presentation/widgets/cards/booking_card.dart';
 import '../../../bookings/presentation/widgets/deco/booking_list_daily_header.dart';
 import '../../../shared/presentation/widgets/deco/empty_list.dart';
 import '../widgets/charts/goal_line_chart.dart';
+import '../widgets/deco/completed_goal_stat_row.dart';
 import '../widgets/deco/goal_info_row.dart';
+import '../widgets/deco/goal_stat_row.dart';
 
 class GoalBookingsPage extends StatefulWidget {
   final Goal goal;
@@ -45,12 +47,14 @@ class _GoalBookingsPageState extends State<GoalBookingsPage> {
           appBar: AppBar(
             title: Text('${widget.goal.goalName} ${t.translate('bookings')}'),
             actions: [
-              IconButton(
-                icon: Icon(Icons.edit_rounded),
-                onPressed: () {
-                  Navigator.pushNamed(context, updateGoalRoute, arguments: UpdateGoalPageArguments(widget.goal));
-                },
-              ),
+              widget.goal.goalState == GoalStateType.active
+                  ? IconButton(
+                      icon: Icon(Icons.edit_rounded),
+                      onPressed: () {
+                        Navigator.pushNamed(context, updateGoalRoute, arguments: UpdateGoalPageArguments(widget.goal));
+                      },
+                    )
+                  : SizedBox.shrink(),
               IconButton(
                 icon: Icon(Icons.delete_forever_rounded),
                 onPressed: () async {
@@ -88,7 +92,7 @@ class _GoalBookingsPageState extends State<GoalBookingsPage> {
                         goal: widget.goal,
                         goalBookings: widget.goalBookings.where((b) => b.goalId == widget.goal.id).toList(),
                       ),
-                      GoalStatRow(goal: widget.goal),
+                      widget.goal.goalState == GoalStateType.active ? GoalStatRow(goal: widget.goal) : CompletedGoalStatRow(goal: widget.goal),
                     ],
                   ),
                 ),

@@ -10,10 +10,22 @@ class CreateDashboardElements extends DashboardElementEvent {
   });
 }
 
+class UpdateUsersDashboardElements extends DashboardElementEvent {
+  final List<DashboardElement> dashboardElements;
+
+  UpdateUsersDashboardElements({
+    required this.dashboardElements,
+  });
+}
+
 class LoadDashboardElements extends DashboardElementEvent {
   LoadDashboardElements();
 }
 
 class LoadUserDashboardElements extends DashboardElementEvent {
   LoadUserDashboardElements();
+}
+
+class LoadDashboardElementsWithUserSelection extends DashboardElementEvent {
+  LoadDashboardElementsWithUserSelection();
 }

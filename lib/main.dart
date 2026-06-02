@@ -54,6 +54,8 @@ import 'features/budgets/presentation/pages/create_budget_page.dart';
 import 'features/budgets/presentation/pages/update_budget_page.dart';
 import 'features/categories/presentation/pages/category_list_page.dart';
 import 'features/categories/presentation/pages/update_category_page.dart';
+import 'features/dashboard/presentation/pages/update_dashboard_page.dart';
+import 'features/goals/presentation/pages/completed_goal_list_page.dart';
 import 'features/goals/presentation/pages/create_goal_page.dart';
 import 'features/goals/presentation/pages/goal_bookings_page.dart';
 import 'features/goals/presentation/pages/goal_list_page.dart';
@@ -314,10 +316,12 @@ class MyApp extends StatelessWidget {
         createGoalRoute: (context) => const CreateGoalPage(),
         accountListRoute: (context) => const AccountListPage(),
         goalListRoute: (context) => const GoalListPage(),
+        completedGoalListRoute: (context) => const CompletedGoalListPage(),
         settingsRoute: (context) => const SettingsPage(),
         changeEmailRoute: (context) => const ChangeEmailPage(),
         changePasswordRoute: (context) => const ChangePasswordPage(),
         upgradeAccountRoute: (context) => const UpgradeAccountPage(),
+        updateDashboardRoute: (context) => const UpdateDashboardPage(),
         categoryOnboardingRoute: (context) => const CategoryOnboardingPage(),
         dashboardOnboardingRoute: (context) => const DashboardOnboardingPage(),
         accountOnboardingRoute: (context) => const AccountOnboardingPage(),

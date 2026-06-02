@@ -12,7 +12,9 @@ class GoalBloc extends Bloc<GoalEvent, GoalState> {
     on<CreateGoal>(_onCreateGoal);
     on<UpdateGoal>(_onUpdateGoal);
     on<DeleteGoal>(_onDeleteGoal);
-    on<LoadGoals>(_onLoadGoals);
+    on<LoadActiveGoals>(_onLoadActiveGoals);
+    on<LoadCompletedGoals>(_onLoadCompletedGoals);
+    on<CompleteGoal>(_onCompleteGoal);
   }
 
   Future<void> _onCreateGoal(CreateGoal event, Emitter<GoalState> emit) async {
@@ -45,20 +47,39 @@ class GoalBloc extends Bloc<GoalEvent, GoalState> {
   Future<void> _onDeleteGoal(DeleteGoal event, Emitter<GoalState> emit) async {
     try {
       await _goalRepository.deleteGoal(event.goalId);
-      final goals = await _goalRepository.loadGoals();
+      final goals = await _goalRepository.loadActiveGoals();
       emit(GoalListLoaded(goals));
     } catch (e) {
       emit(GoalError('delete_goal_error'));
     }
   }
 
-  Future<void> _onLoadGoals(LoadGoals event, Emitter<GoalState> emit) async {
+  Future<void> _onLoadActiveGoals(LoadActiveGoals event, Emitter<GoalState> emit) async {
     emit(GoalLoading());
     try {
-      final List<Goal> goals = await _goalRepository.loadGoals();
-      emit(GoalListLoaded(goals));
+      final List<Goal> activeGoals = await _goalRepository.loadActiveGoals();
+      emit(GoalListLoaded(activeGoals));
     } catch (e) {
       emit(GoalError('load_goals_error'));
+    }
+  }
+
+  Future<void> _onLoadCompletedGoals(LoadCompletedGoals event, Emitter<GoalState> emit) async {
+    emit(GoalLoading());
+    try {
+      final List<Goal> completedGoals = await _goalRepository.loadCompletedGoals();
+      emit(GoalListLoaded(completedGoals));
+    } catch (e) {
+      emit(GoalError('load_goals_error'));
+    }
+  }
+
+  Future<void> _onCompleteGoal(CompleteGoal event, Emitter<GoalState> emit) async {
+    try {
+      Goal completedGoal = await _goalRepository.completeGoal(event.goalId);
+      emit(GoalCompleted(completedGoal));
+    } catch (e) {
+      emit(GoalError('complete_goal_error'));
     }
   }
 }

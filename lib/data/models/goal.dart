@@ -1,3 +1,4 @@
+import '../enums/goal_state_type.dart';
 import '../enums/goal_type.dart';
 
 class Goal {
@@ -7,8 +8,10 @@ class Goal {
   final double goalAmount;
   final String goalName;
   final GoalType goalType;
+  final GoalStateType goalState;
   final DateTime startDate;
   final DateTime endDate;
+  final DateTime? completedAt;
   final DateTime? reachedDate;
 
   Goal({
@@ -18,8 +21,10 @@ class Goal {
     required this.goalAmount,
     required this.goalName,
     required this.goalType,
+    required this.goalState,
     required this.startDate,
     required this.endDate,
+    this.completedAt,
     this.reachedDate,
   });
 
@@ -31,8 +36,10 @@ class Goal {
       goalAmount: map['goal_amount'],
       goalName: map['goal_name'],
       goalType: GoalType.fromString(map['goal_type']),
+      goalState: GoalStateType.fromString(map['goal_state']),
       startDate: DateTime.parse(map['start_date']),
       endDate: DateTime.parse(map['end_date']),
+      completedAt: map['completed_at'] != null ? DateTime.parse(map['completed_at']) : null,
       reachedDate: map['reached_date'] != null ? DateTime.parse(map['reached_date']) : null,
     );
   }
@@ -44,8 +51,10 @@ class Goal {
       'current_amount': currentAmount,
       'goal_name': goalName,
       'goal_type': goalType.name,
+      'goal_state': goalState.name,
       'start_date': startDate.toIso8601String(),
       'end_date': endDate.toIso8601String(),
+      'completed_at': completedAt?.toIso8601String(),
       'reached_date': reachedDate?.toIso8601String(),
     };
   }

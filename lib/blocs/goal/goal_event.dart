@@ -26,6 +26,18 @@ class DeleteGoal extends GoalEvent {
   });
 }
 
-class LoadGoals extends GoalEvent {
-  LoadGoals();
+class LoadActiveGoals extends GoalEvent {
+  LoadActiveGoals();
+}
+
+class LoadCompletedGoals extends GoalEvent {
+  LoadCompletedGoals();
+}
+
+class CompleteGoal extends GoalEvent {
+  final String goalId;
+
+  CompleteGoal({
+    required this.goalId,
+  });
 }

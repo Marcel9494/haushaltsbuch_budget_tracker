@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:haushaltsbuch_budget_tracker/features/goals/presentation/widgets/buttons/complete_goal_button.dart';
 import 'package:haushaltsbuch_budget_tracker/features/goals/presentation/widgets/charts/goal_line_chart.dart';
 import 'package:haushaltsbuch_budget_tracker/features/goals/presentation/widgets/deco/goal_info_row.dart';
 import 'package:haushaltsbuch_budget_tracker/features/goals/presentation/widgets/deco/goal_stat_row.dart';
@@ -7,9 +8,11 @@ import 'package:haushaltsbuch_budget_tracker/features/goals/presentation/widgets
 import '../../../../../blocs/booking/booking_bloc.dart';
 import '../../../../../core/consts/route_consts.dart';
 import '../../../../../core/page_arguments/goal_bookings_page_arguments.dart';
+import '../../../../../data/enums/goal_state_type.dart';
 import '../../../../../data/models/goal.dart';
 import '../../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../../../../shared/presentation/widgets/deco/error_text.dart';
+import '../deco/completed_goal_stat_row.dart';
 
 class GoalCard extends StatefulWidget {
   final Goal goal;
@@ -31,6 +34,7 @@ class _GoalCardState extends State<GoalCard> {
         if (state is BookingLoading) {
           return CircularLoadingIndicator();
         } else if (state is GoalBookingListLoaded) {
+          // TODO hier weitermachen und richtige Seite laden auch mit completed
           return GestureDetector(
             onTap: () => Navigator.pushNamed(
               context,
@@ -51,7 +55,10 @@ class _GoalCardState extends State<GoalCard> {
                       goal: widget.goal,
                       goalBookings: state.goalBookings.where((b) => b.goalId == widget.goal.id).toList(),
                     ),
-                    GoalStatRow(goal: widget.goal),
+                    widget.goal.goalState == GoalStateType.active ? GoalStatRow(goal: widget.goal) : CompletedGoalStatRow(goal: widget.goal),
+                    widget.goal.currentAmount! >= widget.goal.goalAmount && widget.goal.goalState == GoalStateType.active
+                        ? CompleteGoalButton(goalId: widget.goal.id!)
+                        : SizedBox.shrink(),
                   ],
                 ),
               ),

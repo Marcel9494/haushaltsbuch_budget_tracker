@@ -26,6 +26,11 @@ class GoalListLoaded extends GoalState {
   GoalListLoaded(this.goals);
 }
 
+class GoalCompleted extends GoalState {
+  final Goal completedGoal;
+  GoalCompleted(this.completedGoal);
+}
+
 class GoalError extends GoalState {
   final String message;
   GoalError(this.message);

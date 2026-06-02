@@ -12,7 +12,7 @@ import '../../../../core/consts/route_consts.dart';
 import '../../../../core/utils/icon_helper.dart';
 import '../../../../data/enums/dashboard_element_type.dart';
 import '../../../../data/enums/onboarding_progressbar_type.dart';
-import '../../../home/presentation/widgets/cards/home_grid_item_card.dart';
+import '../../../dashboard/presentation/widgets/cards/home_grid_item_card.dart';
 import '../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../../../shared/presentation/widgets/deco/error_text.dart';
 import '../../../shared/presentation/widgets/deco/subtitle_text.dart';
