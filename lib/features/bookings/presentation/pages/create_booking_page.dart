@@ -20,6 +20,7 @@ import '../../../../core/utils/app_flushbar.dart';
 import '../../../../core/utils/date_helper.dart';
 import '../../../../data/enums/amount_type.dart';
 import '../../../../data/enums/booking_type.dart';
+import '../../../../data/enums/goal_state_type.dart';
 import '../../../../data/enums/goal_type.dart';
 import '../../../../data/enums/repetition_type.dart';
 import '../../../../data/models/account.dart';
@@ -48,8 +49,14 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
   Category? _selectedCategory;
   Account? _selectedDebitAccount;
   Account? _selectedTargetAccount;
-  late Goal _selectedGoal =
-      Goal(goalAmount: 0.0, goalName: 'Kein Ziel', goalType: GoalType.undefined, startDate: DateTime.now(), endDate: DateTime.now());
+  // TODO Kein Ziel auf Mehrsprachigkeit erweitern
+  late Goal _selectedGoal = Goal(
+      goalAmount: 0.0,
+      goalName: 'Kein Ziel',
+      goalType: GoalType.undefined,
+      startDate: DateTime.now(),
+      endDate: DateTime.now(),
+      goalState: GoalStateType.active);
   final GlobalKey<FormState> _createBookingFormKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
@@ -142,7 +149,7 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
           listener: (context, state) {
             if (state is BookingCreated) {
               _createBookingButtonController.success();
-              Future.delayed(Duration(milliseconds: 1000), () {
+              Future.delayed(Duration(milliseconds: 800), () {
                 Navigator.popAndPushNamed(context, homeRoute, arguments: HomePageArguments(1));
               });
             } else if (state is BookingError) {

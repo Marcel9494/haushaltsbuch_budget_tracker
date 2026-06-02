@@ -55,7 +55,7 @@ class GoalStatRow extends StatelessWidget {
                 ),
         ),
         Container(
-          height: 42,
+          height: 42.0,
           width: 1.3,
           color: Colors.white30,
           margin: const EdgeInsets.symmetric(horizontal: 12.0),

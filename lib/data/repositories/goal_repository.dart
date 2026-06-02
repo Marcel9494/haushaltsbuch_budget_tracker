@@ -1,5 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../enums/goal_state_type.dart';
 import '../models/goal.dart';
 
 class GoalRepository {
@@ -37,8 +38,9 @@ class GoalRepository {
     return Goal.fromMap(deletedGoal);
   }
 
-  Future<List<Goal>> loadGoals() async {
-    final goals = await Supabase.instance.client.from('goals').select().order('goal_amount', ascending: true);
+  Future<List<Goal>> loadActiveGoals() async {
+    final goals =
+        await Supabase.instance.client.from('goals').select().eq('goal_state', GoalStateType.active.name).order('goal_amount', ascending: true);
     for (int i = 0; i < goals.length; i++) {
       double totalGoalAmount = 0.0;
       final bookings = await Supabase.instance.client
@@ -52,5 +54,35 @@ class GoalRepository {
       goals[i]['current_amount'] = totalGoalAmount;
     }
     return (goals as List).map((data) => Goal.fromMap(data)).toList();
+  }
+
+  Future<List<Goal>> loadCompletedGoals() async {
+    final goals =
+        await Supabase.instance.client.from('goals').select().eq('goal_state', GoalStateType.completed.name).order('completed_at', ascending: true);
+    for (int i = 0; i < goals.length; i++) {
+      double totalGoalAmount = 0.0;
+      final bookings = await Supabase.instance.client
+          .from('bookings')
+          .select('*, goals(*)')
+          .eq('goals.user_id', Supabase.instance.client.auth.currentUser!.id)
+          .eq('goal_id', goals[i]['id']);
+      for (int j = 0; j < bookings.length; j++) {
+        totalGoalAmount += bookings[j]['amount'];
+      }
+      goals[i]['current_amount'] = totalGoalAmount;
+    }
+    return (goals as List).map((data) => Goal.fromMap(data)).toList();
+  }
+
+  Future<Goal> completeGoal(String goalId) async {
+    final SupabaseClient supabase = Supabase.instance.client;
+    final completedGoal = await supabase
+        .from('goals')
+        .update({'goal_state': GoalStateType.completed.name, 'completed_at': DateTime.now().toIso8601String()})
+        .eq('id', goalId)
+        .eq('user_id', supabase.auth.currentUser!.id)
+        .select()
+        .single();
+    return Goal.fromMap(completedGoal);
   }
 }

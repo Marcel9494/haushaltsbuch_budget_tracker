@@ -33,12 +33,12 @@ class _GoalListPageState extends State<GoalListPage> {
     super.initState();
     _goalBloc = context.read<GoalBloc>();
     _bookingBloc = context.read<BookingBloc>();
-    _loadGoals();
+    _loadActiveGoals();
     _loadGoalBookings();
   }
 
-  void _loadGoals() {
-    _goalBloc.add(LoadGoals());
+  void _loadActiveGoals() {
+    _goalBloc.add(LoadActiveGoals());
   }
 
   void _loadGoalBookings() {

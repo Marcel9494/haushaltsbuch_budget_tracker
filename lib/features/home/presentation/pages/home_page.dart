@@ -30,9 +30,9 @@ import '../../../bookings/presentation/pages/booking_list_page.dart';
 import '../../../bookings/presentation/pages/create_booking_page.dart';
 import '../../../bookings/presentation/widgets/deco/booking_list_actions.dart';
 import '../../../budgets/presentation/pages/create_budget_page.dart';
+import '../../../dashboard/presentation/pages/dashboard_page.dart';
 import '../../../goals/presentation/pages/create_goal_page.dart';
 import '../widgets/navigation/date_picker_bar.dart';
-import 'home_content_page.dart';
 
 class HomePage extends StatefulWidget {
   final int currentPageIndex;
@@ -138,11 +138,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _loadGoals() {
-    _goalBloc.add(LoadGoals());
+    _goalBloc.add(LoadActiveGoals());
   }
 
   List<Widget> get _pages => [
-        HomeContentPage(
+        DashboardPage(
           key: ValueKey(_currentSelectedDate),
           currentSelectedDate: _currentSelectedDate,
           currentPeriodOfTimeType: _currentPeriodOfTime,
@@ -208,7 +208,7 @@ class _HomePageState extends State<HomePage> {
             IconButton(
               icon: FaIcon(FontAwesomeIcons.gear, size: 20.0),
               onPressed: () {
-                // TODO Dashboard bearbeiten Seite aufrufen
+                Navigator.pushNamed(context, updateDashboardRoute);
               },
             )
           else if (_selectedPageIndex == 1)
@@ -325,6 +325,16 @@ class _HomePageState extends State<HomePage> {
               onTap: () => {
                 _onItemTapped(4),
                 Navigator.pop(context),
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.beenhere_rounded, color: Colors.white),
+              title: Text(t.translate('completed_goals'), style: TextStyle(color: Colors.white)),
+              onTap: () => {
+                Navigator.popAndPushNamed(
+                  context,
+                  completedGoalListRoute,
+                ),
               },
             ),
             ListTile(

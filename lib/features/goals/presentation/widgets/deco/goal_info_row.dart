@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import '../../../../../core/utils/currency_formatter.dart';
+import '../../../../../data/enums/goal_state_type.dart';
 import '../../../../../data/models/goal.dart';
 import '../../../../../l10n/app_localizations.dart';
 
@@ -54,33 +55,21 @@ class GoalInfoRow extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                     ),
-                    Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            // TODO Ziel archivieren implementieren
-                          },
-                          child: const Icon(Icons.archive_rounded, size: 26.0),
-                        ),
-                        Container(
-                          height: 28,
-                          width: 1.3,
-                          color: Colors.white30,
-                          margin: const EdgeInsets.symmetric(horizontal: 12.0),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            // TODO Buchungsziel erstellen implementieren
-                          },
-                          child: const Icon(Icons.add_circle, color: Colors.cyanAccent, size: 26.0),
-                        ),
-                      ],
-                    ),
+                    goal.goalState == GoalStateType.active
+                        ? GestureDetector(
+                            onTap: () {
+                              // TODO Buchungsziel erstellen implementieren
+                            },
+                            child: const Icon(Icons.add_circle, color: Colors.cyanAccent, size: 26.0),
+                          )
+                        : SizedBox.shrink(),
                   ],
                 ),
                 SizedBox(height: 10.0),
                 Text(
-                  '${t.translate('progress')}: ${formatCurrency(goal.currentAmount ?? 0.0, 'EUR')} / ${formatCurrency(goal.goalAmount, 'EUR')}',
+                  goal.goalState == GoalStateType.active
+                      ? '${t.translate('progress')}: ${formatCurrency(goal.currentAmount ?? 0.0, 'EUR')} / ${formatCurrency(goal.goalAmount, 'EUR')}'
+                      : '${formatCurrency(goal.currentAmount ?? 0.0, 'EUR')} / ${formatCurrency(goal.goalAmount, 'EUR')}',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16.0,

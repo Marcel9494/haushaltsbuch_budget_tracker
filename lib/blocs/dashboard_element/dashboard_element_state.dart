@@ -13,6 +13,10 @@ class DashboardElementsCreated extends DashboardElementState {
   DashboardElementsCreated();
 }
 
+class UsersDashboardElementsUpdated extends DashboardElementState {
+  UsersDashboardElementsUpdated();
+}
+
 class DashboardElementLoading extends DashboardElementState {}
 
 class DashboardElementsLoaded extends DashboardElementState {

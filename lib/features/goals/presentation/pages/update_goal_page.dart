@@ -88,6 +88,7 @@ class _UpdateGoalPageState extends State<UpdateGoalPage> {
         currentAmount: widget.goal.currentAmount,
         goalName: _goalNameController.text.trim(),
         goalType: _selectedGoalType,
+        goalState: widget.goal.goalState,
         startDate: parsedStartDate,
         endDate: parsedEndDate,
       );
