@@ -79,11 +79,11 @@ class BudgetOverviewStatCard extends StatelessWidget {
                               children: [
                                 Text(
                                   '${t.translate('monthly_budget')}:',
-                                  style: const TextStyle(fontSize: 16.0),
+                                  style: const TextStyle(fontSize: 16.0, color: Colors.grey),
                                 ),
                                 Text(
                                   formatCurrency(overallBudgetAmount, 'EUR'),
-                                  style: const TextStyle(fontSize: 16.0, color: Colors.green),
+                                  style: const TextStyle(fontSize: 16.0),
                                 ),
                               ],
                             ),
@@ -108,11 +108,11 @@ class BudgetOverviewStatCard extends StatelessWidget {
                               children: [
                                 Text(
                                   '${t.translate('consumed')}:',
-                                  style: const TextStyle(fontSize: 16.0),
+                                  style: const TextStyle(fontSize: 16.0, color: Colors.grey),
                                 ),
                                 Text(
                                   formatCurrency(overallUsedBudgetAmount, 'EUR'),
-                                  style: const TextStyle(fontSize: 16.0, color: Colors.redAccent),
+                                  style: const TextStyle(fontSize: 16.0),
                                 ),
                               ],
                             ),
@@ -137,14 +137,11 @@ class BudgetOverviewStatCard extends StatelessWidget {
                               children: [
                                 Text(
                                   '${t.translate('remaining')}:',
-                                  style: const TextStyle(fontSize: 16.0),
+                                  style: const TextStyle(fontSize: 16.0, color: Colors.grey),
                                 ),
                                 Text(
                                   formatCurrency(overallBudgetAmount - overallUsedBudgetAmount, 'EUR'),
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    color: overallBudgetAmount - overallUsedBudgetAmount >= 0 ? Colors.green : Colors.redAccent,
-                                  ),
+                                  style: TextStyle(fontSize: 16.0),
                                 ),
                               ],
                             ),

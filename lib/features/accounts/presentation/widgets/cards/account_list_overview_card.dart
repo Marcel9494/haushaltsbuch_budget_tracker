@@ -6,14 +6,12 @@ import '../../../../../l10n/app_localizations.dart';
 class AccountListOverviewCard extends StatefulWidget {
   final String title;
   final double amount;
-  final Icon icon;
   final Color color;
 
   const AccountListOverviewCard({
     super.key,
     required this.title,
     required this.amount,
-    required this.icon,
     required this.color,
   });
 
@@ -76,12 +74,12 @@ class _AccountListOverviewCardState extends State<AccountListOverviewCard> with 
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      widget.icon,
-                      SizedBox(height: 8.0),
                       Text(
                         t.translate(widget.title),
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: Colors.grey,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),

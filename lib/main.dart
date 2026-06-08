@@ -374,9 +374,7 @@ class MyApp extends StatelessWidget {
                   BlocProvider(create: (context) => BudgetBloc(BudgetRepository())),
                   BlocProvider(create: (context) => GoalBloc(GoalRepository())),
                 ],
-                child: HomePage(
-                  currentPageIndex: args.currentPageIndex,
-                ),
+                child: HomePage(currentPageIndex: args.currentPageIndex),
               ),
             );
           case categoryListRoute:

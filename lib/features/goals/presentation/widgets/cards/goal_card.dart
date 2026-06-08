@@ -33,7 +33,7 @@ class _GoalCardState extends State<GoalCard> {
       builder: (context, state) {
         if (state is BookingLoading) {
           return CircularLoadingIndicator();
-        } else if (state is GoalBookingListLoaded) {
+        } else if (state is BookingListLoaded) {
           // TODO hier weitermachen und richtige Seite laden auch mit completed
           return GestureDetector(
             onTap: () => Navigator.pushNamed(
@@ -41,7 +41,7 @@ class _GoalCardState extends State<GoalCard> {
               goalBookingsRoute,
               arguments: GoalBookingsPageArguments(
                 widget.goal,
-                state.goalBookings.where((b) => b.goalId == widget.goal.id).toList(),
+                state.bookings.where((b) => b.goalId == widget.goal.id).toList(),
               ),
             ),
             child: Card(
@@ -53,7 +53,7 @@ class _GoalCardState extends State<GoalCard> {
                     GoalInfoRow(goal: widget.goal),
                     GoalLineChart(
                       goal: widget.goal,
-                      goalBookings: state.goalBookings.where((b) => b.goalId == widget.goal.id).toList(),
+                      goalBookings: state.bookings.where((b) => b.goalId == widget.goal.id).toList(),
                     ),
                     widget.goal.goalState == GoalStateType.active ? GoalStatRow(goal: widget.goal) : CompletedGoalStatRow(goal: widget.goal),
                     widget.goal.currentAmount! >= widget.goal.goalAmount && widget.goal.goalState == GoalStateType.active

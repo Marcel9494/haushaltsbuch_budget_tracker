@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
   bool _showBookingChart = false;
   bool _showUpcomingBookings = false;
   DateTime _currentSelectedDate = DateTime.now();
-  PeriodOfTimeType _currentPeriodOfTime = PeriodOfTimeType.monthly;
+  late PeriodOfTimeType _currentPeriodOfTime = PeriodOfTimeType.monthly;
   int _selectedPageIndex = 0;
 
   @override
@@ -146,9 +146,6 @@ class _HomePageState extends State<HomePage> {
           key: ValueKey(_currentSelectedDate),
           currentSelectedDate: _currentSelectedDate,
           currentPeriodOfTimeType: _currentPeriodOfTime,
-          onPeriodOfTimeChanged: (newPeriodOfTime) {
-            onPeriodOfTimeChanged(newPeriodOfTime);
-          },
         ),
         BookingListPage(
           key: ValueKey(_currentSelectedDate),
@@ -162,9 +159,6 @@ class _HomePageState extends State<HomePage> {
             onShowUpcomingBookingsChanged(showUpcomingBookings);
           },
           currentPeriodOfTimeType: _currentPeriodOfTime,
-          onPeriodOfTimeChanged: (newPeriodOfTime) {
-            onPeriodOfTimeChanged(newPeriodOfTime);
-          },
         ),
         BlocProvider(
           create: (context) => AccountBloc(AccountRepository()),
@@ -377,10 +371,11 @@ class _HomePageState extends State<HomePage> {
                     Divider(height: 0.5),
                     DatePickerBar(
                       initialDate: _currentSelectedDate,
-                      onDateChanged: (newDate, isYearView) {
+                      currentPeriodOfTime: _currentPeriodOfTime,
+                      onDateChanged: (newDate, currentPeriodOfTime) {
                         setState(() {
                           _currentSelectedDate = newDate;
-                          if (isYearView) {
+                          if (currentPeriodOfTime == PeriodOfTimeType.monthly) {
                             _currentSelectedDate = DateTime(_currentSelectedDate.year, _currentSelectedDate.month, 1);
                             onPeriodOfTimeChanged(PeriodOfTimeType.yearly);
                           } else {

@@ -4,8 +4,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../core/consts/repeat_number_consts.dart';
+import '../enums/amount_type.dart';
 import '../enums/booking_type.dart';
 import '../enums/repetition_type.dart';
+import '../helper_models/amount_type_stats.dart';
 import '../models/booking.dart';
 
 class BookingRepository {
@@ -236,14 +238,27 @@ class BookingRepository {
     return allGoalBookings;
   }
 
-  List<BookingCategoryStats> calculateBookingsByCategory(List<Booking> bookings, BookingType selectedBookingType) {
+  List<BookingCategoryStats> calculateBookingsByCategory(List<Booking> bookings, BookingType selectedBookingType, String selectedAmountType) {
     final Map<String, double> categoryAmount = {};
     for (final booking in bookings) {
-      if (booking.bookingType == selectedBookingType && booking.bookingType != BookingType.transfer) {
-        if (booking.category == null) {
-          break;
+      if (selectedAmountType == 'overall') {
+        if (booking.bookingType == selectedBookingType && booking.bookingType != BookingType.transfer) {
+          if (booking.category == null) {
+            categoryAmount['no_category'] = (categoryAmount['no_category'] ?? 0) + booking.amount;
+          } else {
+            categoryAmount[booking.category!.categoryName] = (categoryAmount[booking.category!.categoryName] ?? 0) + booking.amount;
+          }
         }
-        categoryAmount[booking.category!.categoryName] = (categoryAmount[booking.category!.categoryName] ?? 0) + booking.amount;
+      } else {
+        if (booking.bookingType == selectedBookingType &&
+            booking.bookingType != BookingType.transfer &&
+            booking.amountType.name == selectedAmountType) {
+          if (booking.category == null) {
+            categoryAmount['no_category'] = (categoryAmount['no_category'] ?? 0) + booking.amount;
+          } else {
+            categoryAmount[booking.category!.categoryName] = (categoryAmount[booking.category!.categoryName] ?? 0) + booking.amount;
+          }
+        }
       }
     }
 
@@ -259,6 +274,76 @@ class BookingRepository {
 
     bookingCategoryStats.sort((a, b) => b.percentage.compareTo(a.percentage));
     return bookingCategoryStats;
+  }
+
+  List<AmountTypeStats> calculateBookingsByIncomeAmountType(List<Booking> bookings) {
+    double activeIncome = 0;
+    double passiveIncome = 0;
+
+    for (final booking in bookings) {
+      if (booking.amountType == AmountType.active) {
+        activeIncome += booking.amount;
+      } else if (booking.amountType == AmountType.passive) {
+        passiveIncome += booking.amount;
+      }
+    }
+
+    final double totalAmountIncome = activeIncome + passiveIncome;
+    final double passivePercentage = totalAmountIncome == 0 ? 0 : (passiveIncome / totalAmountIncome) * 100;
+    final double activePercentage = totalAmountIncome == 0 ? 0 : (activeIncome / totalAmountIncome) * 100;
+
+    return [
+      AmountTypeStats(
+        amount: totalAmountIncome,
+        percentage: 100.0,
+        name: 'overall',
+      ),
+      AmountTypeStats(
+        amount: activeIncome,
+        percentage: activePercentage,
+        name: AmountType.active.name,
+      ),
+      AmountTypeStats(
+        amount: passiveIncome,
+        percentage: passivePercentage,
+        name: AmountType.passive.name,
+      ),
+    ];
+  }
+
+  List<AmountTypeStats> calculateBookingsByExpensesAmountType(List<Booking> bookings) {
+    double variableExpenses = 0;
+    double fixExpenses = 0;
+
+    for (final booking in bookings) {
+      if (booking.amountType == AmountType.variable) {
+        variableExpenses += booking.amount;
+      } else if (booking.amountType == AmountType.fix) {
+        fixExpenses += booking.amount;
+      }
+    }
+
+    final double totalAmountExpenses = variableExpenses + fixExpenses;
+    final double fixPercentage = totalAmountExpenses == 0 ? 0 : (fixExpenses / totalAmountExpenses) * 100;
+    final double variablePercentage = totalAmountExpenses == 0 ? 0 : (variableExpenses / totalAmountExpenses) * 100;
+
+    return [
+      AmountTypeStats(
+        amount: totalAmountExpenses,
+        percentage: 100.0,
+        name: 'overall',
+      ),
+      AmountTypeStats(
+        amount: variableExpenses,
+        percentage: variablePercentage,
+        name: AmountType.variable.name,
+      ),
+      AmountTypeStats(
+        amount: fixExpenses,
+        percentage: fixPercentage,
+        name: AmountType.fix.name,
+      ),
+    ];
   }
 
   double calculateRevenue(List<Booking> bookings) {

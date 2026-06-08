@@ -7,6 +7,7 @@ import '../models/dashboard_element.dart';
 
 // Start Ausgabekategorien
 final List<StartCategory> expensesStartCategories = [
+  // TODO categoryName mehrsprachig implementieren
   StartCategory(categoryName: 'Lebensmittel', categoryType: CategoryType.expense, isSelected: true),
   StartCategory(categoryName: 'Haushaltswaren', categoryType: CategoryType.expense, isSelected: true),
   StartCategory(categoryName: 'Wohnen / Miete', categoryType: CategoryType.expense, isSelected: true),
@@ -32,6 +33,7 @@ final List<StartCategory> expensesStartCategories = [
 
 // Start Einnahmekategorien
 final List<StartCategory> revenueStartCategories = [
+  // TODO categoryName mehrsprachig implementieren
   StartCategory(categoryName: 'Gehalt', categoryType: CategoryType.income, isSelected: true),
   StartCategory(categoryName: 'Zinsen', categoryType: CategoryType.income, isSelected: true),
   StartCategory(categoryName: 'Weihnachtsgeld', categoryType: CategoryType.income, isSelected: true),
@@ -47,6 +49,7 @@ final List<StartCategory> revenueStartCategories = [
 
 // Startkonten
 final List<StartAccount> allStartAccounts = [
+  // TODO accountName mehrsprachig implementieren
   StartAccount(accountName: 'Girokonto', accountType: AccountType.account, balance: 0.0, isSelected: true),
   StartAccount(accountName: 'Sparbuch', accountType: AccountType.account, balance: 0.0, isSelected: true),
   StartAccount(accountName: 'Bausparvertrag', accountType: AccountType.account, balance: 0.0, isSelected: false),

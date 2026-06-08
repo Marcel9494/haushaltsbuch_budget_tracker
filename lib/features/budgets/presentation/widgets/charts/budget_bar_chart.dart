@@ -26,22 +26,22 @@ class BudgetBarChart extends StatefulWidget {
 }
 
 class _BudgetBarChartState extends State<BudgetBarChart> with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+  late AnimationController _animationController;
   late Animation<double> _animation;
   double maxY = 0.0;
 
   @override
   void initState() {
     maxY = calculateMaxY(widget.barGroups);
-    _controller = AnimationController(
+    _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1600),
     );
     _animation = CurvedAnimation(
-      parent: _controller,
+      parent: _animationController,
       curve: Curves.easeOutCubic,
     );
-    _controller.forward();
+    _animationController.forward();
     super.initState();
   }
 
@@ -114,6 +114,12 @@ class _BudgetBarChartState extends State<BudgetBarChart> with SingleTickerProvid
       return 1.0;
     }
     return maxValue / 3;
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   @override

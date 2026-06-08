@@ -52,7 +52,7 @@ class _GoalListPageState extends State<GoalListPage> {
         return BlocBuilder<BookingBloc, BookingState>(builder: (context, bookingState) {
           if (state is GoalLoading || bookingState is BookingLoading) {
             return CircularLoadingIndicator();
-          } else if (state is GoalListLoaded && bookingState is GoalBookingListLoaded) {
+          } else if (state is GoalListLoaded && bookingState is BookingListLoaded) {
             return Column(
               children: [
                 SizedBox(height: 8.0),

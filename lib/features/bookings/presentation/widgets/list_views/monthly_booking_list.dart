@@ -12,6 +12,8 @@ import '../../../../../core/utils/currency_formatter.dart';
 import '../../../../../core/utils/date_helper.dart';
 import '../../../../../data/enums/category_type.dart';
 import '../../../../../data/models/booking.dart';
+import '../../../../../data/repositories/account_repository.dart';
+import '../../../../../data/repositories/booking_repository.dart';
 import '../../../../../l10n/app_localizations.dart';
 import '../../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../../../../shared/presentation/widgets/deco/empty_list.dart';
@@ -27,7 +29,6 @@ class MonthlyBookingList extends StatefulWidget {
   final ValueChanged<bool>? onShowBookingChartChanged;
   final ValueChanged<bool>? onShowUpcomingBookingsChanged;
   PeriodOfTimeType currentPeriodOfTimeType;
-  final ValueChanged<PeriodOfTimeType>? onPeriodOfTimeChanged;
 
   MonthlyBookingList({
     super.key,
@@ -37,7 +38,6 @@ class MonthlyBookingList extends StatefulWidget {
     required this.showUpcomingBookings,
     required this.onShowUpcomingBookingsChanged,
     required this.currentPeriodOfTimeType,
-    required this.onPeriodOfTimeChanged,
   });
 
   @override
@@ -171,223 +171,227 @@ class _MonthlyBookingListState extends State<MonthlyBookingList> {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
-    return BlocBuilder<BookingBloc, BookingState>(
-      builder: (context, state) {
-        if (state is BookingLoading) {
-          return CircularLoadingIndicator();
-        } else if (state is BookingListLoaded) {
-          _prepareBookingList(state.bookings);
-          _prepareBarChartData(state.bookings);
-          return Column(
-            children: [
-              BookingListOverview(
-                bookings: state.bookings,
-                averageDivider: DateTime(widget.currentSelectedDate.year, widget.currentSelectedDate.month + 1, 0).day,
-                averageText: 'per_day',
-              ),
-              widget.showBookingChart
-                  ? Card(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 6.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+    return BlocProvider(
+      key: ValueKey(widget.currentSelectedDate),
+      create: (_) => BookingBloc(BookingRepository(), AccountRepository())..add(LoadMonthlyBookings(selectedDate: widget.currentSelectedDate)),
+      child: BlocBuilder<BookingBloc, BookingState>(
+        builder: (context, state) {
+          if (state is BookingLoading) {
+            return CircularLoadingIndicator();
+          } else if (state is BookingListLoaded) {
+            _prepareBookingList(state.bookings);
+            _prepareBarChartData(state.bookings);
+            return Column(
+              children: [
+                BookingListOverview(
+                  bookings: state.bookings,
+                  averageDivider: DateTime(widget.currentSelectedDate.year, widget.currentSelectedDate.month + 1, 0).day,
+                  averageText: 'per_day',
+                ),
+                widget.showBookingChart
+                    ? Card(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 6.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                                child: Row(
+                                  children: incomeStack.map((stackItem) {
+                                    final index = incomeStack.indexOf(stackItem);
+                                    final color = incomeColors[index % incomeColors.length];
+
+                                    return Padding(
+                                      padding: const EdgeInsets.only(right: 8.0),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                        decoration: BoxDecoration(
+                                          color: color.withValues(alpha: 0.2),
+                                          borderRadius: BorderRadius.circular(16),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              width: 12,
+                                              height: 12,
+                                              decoration: BoxDecoration(
+                                                color: color,
+                                                shape: BoxShape.circle,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black12,
+                                                    blurRadius: 2,
+                                                    offset: Offset(0, 1),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            const SizedBox(width: 6),
+                                            Text(
+                                              '${formatCurrency(incomeMap.values.elementAt(index), 'EUR', decimalDigits: 2)} ${incomeMap.keys.elementAt(index)}',
+                                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                child: MonthlyLineChart(bookings: state.bookings),
+                              ),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+                                child: Row(
+                                  children: expenseStack.map((stackItem) {
+                                    final index = expenseStack.indexOf(stackItem);
+                                    final color = expenseColors[index % expenseColors.length];
+
+                                    return Padding(
+                                      padding: const EdgeInsets.only(right: 8.0),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                                        decoration: BoxDecoration(
+                                          color: color.withValues(alpha: 0.2),
+                                          borderRadius: BorderRadius.circular(16),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              width: 12,
+                                              height: 12,
+                                              decoration: BoxDecoration(
+                                                color: color,
+                                                shape: BoxShape.circle,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black12,
+                                                    blurRadius: 2,
+                                                    offset: Offset(0, 1),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            const SizedBox(width: 6),
+                                            Text(
+                                              '${formatCurrency(expenseMap.values.elementAt(index), 'EUR', decimalDigits: 2)} ${expenseMap.keys.elementAt(index)}',
+                                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    : SizedBox.shrink(),
+                _upcomingBookings.isNotEmpty
+                    ? TextButton(
+                        onPressed: () {
+                          setState(() {
+                            widget.onShowUpcomingBookingsChanged?.call(!widget.showUpcomingBookings);
+
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              _scrollController.animateTo(
+                                0,
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.easeInOut,
+                              );
+                            });
+                          });
+                        },
+                        child: Row(
                           children: [
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-                              child: Row(
-                                children: incomeStack.map((stackItem) {
-                                  final index = incomeStack.indexOf(stackItem);
-                                  final color = incomeColors[index % incomeColors.length];
-
-                                  return Padding(
-                                    padding: const EdgeInsets.only(right: 8.0),
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                      decoration: BoxDecoration(
-                                        color: color.withValues(alpha: 0.2),
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            width: 12,
-                                            height: 12,
-                                            decoration: BoxDecoration(
-                                              color: color,
-                                              shape: BoxShape.circle,
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.black12,
-                                                  blurRadius: 2,
-                                                  offset: Offset(0, 1),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(width: 6),
-                                          Text(
-                                            '${formatCurrency(incomeMap.values.elementAt(index), 'EUR', decimalDigits: 2)} ${incomeMap.keys.elementAt(index)}',
-                                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
+                            Icon(
+                              widget.showUpcomingBookings ? Icons.keyboard_arrow_down_rounded : Icons.keyboard_arrow_up_rounded,
+                              color: Colors.white70,
                             ),
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
-                              child: Row(
-                                children: expenseStack.map((stackItem) {
-                                  final index = expenseStack.indexOf(stackItem);
-                                  final color = expenseColors[index % expenseColors.length];
-
-                                  return Padding(
-                                    padding: const EdgeInsets.only(right: 8.0),
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                                      decoration: BoxDecoration(
-                                        color: color.withValues(alpha: 0.2),
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            width: 12,
-                                            height: 12,
-                                            decoration: BoxDecoration(
-                                              color: color,
-                                              shape: BoxShape.circle,
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.black12,
-                                                  blurRadius: 2,
-                                                  offset: Offset(0, 1),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(width: 6),
-                                          Text(
-                                            '${formatCurrency(expenseMap.values.elementAt(index), 'EUR', decimalDigits: 2)} ${expenseMap.keys.elementAt(index)}',
-                                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 8.0),
-                              child: MonthlyLineChart(bookings: state.bookings),
+                            SizedBox(width: 4.0),
+                            Text(
+                              '${t.translate('upcoming_bookings')} (${_upcomingBookings.length})',
+                              style: TextStyle(color: Colors.white70),
                             ),
                           ],
                         ),
-                      ),
-                    )
-                  : SizedBox.shrink(),
-              _upcomingBookings.isNotEmpty
-                  ? TextButton(
-                      onPressed: () {
-                        setState(() {
-                          widget.onShowUpcomingBookingsChanged?.call(!widget.showUpcomingBookings);
-
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            _scrollController.animateTo(
-                              0,
-                              duration: const Duration(milliseconds: 500),
-                              curve: Curves.easeInOut,
-                            );
-                          });
-                        });
-                      },
-                      child: Row(
-                        children: [
-                          Icon(
-                            widget.showUpcomingBookings ? Icons.keyboard_arrow_down_rounded : Icons.keyboard_arrow_up_rounded,
-                            color: Colors.white70,
-                          ),
-                          SizedBox(width: 4.0),
-                          Text(
-                            '${t.translate('upcoming_bookings')} (${_upcomingBookings.length})',
-                            style: TextStyle(color: Colors.white70),
-                          ),
-                        ],
-                      ),
-                    )
-                  : SizedBox.shrink(),
-              state.bookings.isEmpty
-                  ? EmptyList(
-                      text: 'no_bookings',
-                      icon: FaIcon(
-                        FontAwesomeIcons.book,
-                        size: 42.0,
-                        color: Colors.white70,
-                      ),
-                    )
-                  : Expanded(
-                      child: AnimationLimiter(
-                        child: ListView.builder(
-                          controller: _scrollController,
-                          shrinkWrap: true,
-                          itemCount: _combinedBookings.length,
-                          itemBuilder: (context, index) {
-                            final bookingDate = _combinedBookings[index].bookingDate;
-                            final bool showHeader = index == 0
-                                ? true
-                                : !isSameDay(
-                                    bookingDate,
-                                    _combinedBookings[index - 1].bookingDate,
-                                  );
-                            final bool isDividerPosition = index == _pastStartIndex && index != 0;
-                            final blockContent = Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                isDividerPosition
-                                    ? Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 12.0),
-                                        child: Row(
-                                          children: [
-                                            const Expanded(child: Divider(indent: 10.0, endIndent: 18.0)),
-                                            Text(t.translate('past_bookings')),
-                                            const Expanded(child: Divider(indent: 18.0, endIndent: 10.0)),
-                                          ],
-                                        ),
-                                      )
-                                    : const SizedBox.shrink(),
-                                showHeader
-                                    ? BookingListDailyHeader(bookings: _combinedBookings, bookingDate: bookingDate, index: index)
-                                    : const SizedBox.shrink(),
-                                BookingCard(booking: _combinedBookings[index]),
-                                _combinedBookings.length - 1 == index ? SizedBox(height: 42.0) : SizedBox.shrink(),
-                              ],
-                            );
-                            return AnimationConfiguration.staggeredList(
-                              position: index,
-                              duration: const Duration(milliseconds: listAnimationDurationInMs),
-                              child: SlideAnimation(
-                                verticalOffset: 40.0,
-                                child: FadeInAnimation(
-                                  child: blockContent,
+                      )
+                    : SizedBox.shrink(),
+                state.bookings.isEmpty
+                    ? EmptyList(
+                        text: 'no_bookings',
+                        icon: FaIcon(
+                          FontAwesomeIcons.book,
+                          size: 42.0,
+                          color: Colors.white70,
+                        ),
+                      )
+                    : Expanded(
+                        child: AnimationLimiter(
+                          child: ListView.builder(
+                            controller: _scrollController,
+                            shrinkWrap: true,
+                            itemCount: _combinedBookings.length,
+                            itemBuilder: (context, index) {
+                              final bookingDate = _combinedBookings[index].bookingDate;
+                              final bool showHeader = index == 0
+                                  ? true
+                                  : !isSameDay(
+                                      bookingDate,
+                                      _combinedBookings[index - 1].bookingDate,
+                                    );
+                              final bool isDividerPosition = index == _pastStartIndex && index != 0;
+                              final blockContent = Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  isDividerPosition
+                                      ? Padding(
+                                          padding: const EdgeInsets.symmetric(vertical: 12.0),
+                                          child: Row(
+                                            children: [
+                                              const Expanded(child: Divider(indent: 10.0, endIndent: 18.0)),
+                                              Text(t.translate('past_bookings')),
+                                              const Expanded(child: Divider(indent: 18.0, endIndent: 10.0)),
+                                            ],
+                                          ),
+                                        )
+                                      : const SizedBox.shrink(),
+                                  showHeader
+                                      ? BookingListDailyHeader(bookings: _combinedBookings, bookingDate: bookingDate, index: index)
+                                      : const SizedBox.shrink(),
+                                  BookingCard(booking: _combinedBookings[index]),
+                                  _combinedBookings.length - 1 == index ? SizedBox(height: 42.0) : SizedBox.shrink(),
+                                ],
+                              );
+                              return AnimationConfiguration.staggeredList(
+                                position: index,
+                                duration: const Duration(milliseconds: listAnimationDurationInMs),
+                                child: SlideAnimation(
+                                  verticalOffset: 40.0,
+                                  child: FadeInAnimation(
+                                    child: blockContent,
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
                       ),
-                    ),
-            ],
-          );
-        } else if (state is BookingError) {
-          return ErrorText(errorMessage: state.message);
-        }
-        return SizedBox.shrink();
-      },
+              ],
+            );
+          } else if (state is BookingError) {
+            return ErrorText(errorMessage: state.message);
+          }
+          return SizedBox.shrink();
+        },
+      ),
     );
   }
 }
