@@ -8,22 +8,22 @@ import 'package:intl/intl.dart';
 import '../../../../../core/consts/animation_consts.dart';
 import '../../../../../data/enums/booking_type.dart';
 import '../../../../../data/enums/period_of_time_type.dart';
+import '../../../../../data/helper_models/amount_type_stats.dart';
 import '../../../../../data/helper_models/booking_category_stats.dart';
 import '../../../../../data/models/booking.dart';
+import '../cards/amount_type_card.dart';
 import '../cards/category_stat_card.dart';
 
 class CategoryStats extends StatefulWidget {
   final List<Booking> bookings;
   final DateTime currentSelectedDate;
   final PeriodOfTimeType currentPeriodOfTimeType;
-  final ValueChanged<PeriodOfTimeType>? onPeriodOfTimeChanged;
 
   const CategoryStats({
     super.key,
     required this.bookings,
     required this.currentSelectedDate,
     required this.currentPeriodOfTimeType,
-    required this.onPeriodOfTimeChanged,
   });
 
   @override
@@ -32,9 +32,10 @@ class CategoryStats extends StatefulWidget {
 
 class _CategoryStatsState extends State<CategoryStats> with TickerProviderStateMixin {
   final BookingRepository _bookingRepository = BookingRepository();
-  int _touchedIndex = -1;
   List<BookingCategoryStats> _bookingCategoryStats = [];
+  List<AmountTypeStats> _amountTypeStats = [];
   BookingType _selectedBookingType = BookingType.expense;
+  String _selectedAmountType = 'overall';
   final List<Color> _pieCategoryColors = [
     Colors.cyanAccent.shade700,
     Colors.blueAccent,
@@ -44,11 +45,21 @@ class _CategoryStatsState extends State<CategoryStats> with TickerProviderStateM
     Colors.redAccent,
     Colors.teal,
   ];
+  int _touchedIndex = -1;
 
   @override
   void initState() {
     super.initState();
-    _bookingCategoryStats = _bookingRepository.calculateBookingsByCategory(widget.bookings, _selectedBookingType);
+    setBookingCategoryState();
+  }
+
+  void setBookingCategoryState() {
+    if (_selectedBookingType == BookingType.expense) {
+      _amountTypeStats = _bookingRepository.calculateBookingsByExpensesAmountType(widget.bookings);
+    } else {
+      _amountTypeStats = _bookingRepository.calculateBookingsByIncomeAmountType(widget.bookings);
+    }
+    _bookingCategoryStats = _bookingRepository.calculateBookingsByCategory(widget.bookings, _selectedBookingType, _selectedAmountType);
   }
 
   @override
@@ -79,8 +90,9 @@ class _CategoryStatsState extends State<CategoryStats> with TickerProviderStateM
                   onSelectionChanged: (newSelection) {
                     setState(() {
                       _selectedBookingType = newSelection.first;
+                      _selectedAmountType = 'overall';
                     });
-                    _bookingCategoryStats = _bookingRepository.calculateBookingsByCategory(widget.bookings, _selectedBookingType);
+                    setBookingCategoryState();
                   },
                   showSelectedIcon: false,
                   style: ButtonStyle(
@@ -91,7 +103,7 @@ class _CategoryStatsState extends State<CategoryStats> with TickerProviderStateM
                     ),
                     backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
                       if (states.contains(WidgetState.selected)) {
-                        return Colors.cyanAccent.withAlpha(60);
+                        return Colors.cyanAccent.withAlpha(50);
                       }
                       return Colors.transparent;
                     }),
@@ -100,6 +112,22 @@ class _CategoryStatsState extends State<CategoryStats> with TickerProviderStateM
               ),
             ],
           ),
+        ),
+        SizedBox(height: 8.0),
+        Row(
+          children: [
+            for (final stats in _amountTypeStats)
+              AmountTypeCard(
+                amountTypeStats: stats,
+                selected: _selectedAmountType == stats.name,
+                onTap: () {
+                  setState(() {
+                    _selectedAmountType = stats.name;
+                  });
+                  setBookingCategoryState();
+                },
+              ),
+          ],
         ),
         Card(
           child: ClipRRect(

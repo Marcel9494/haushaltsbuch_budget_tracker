@@ -215,7 +215,7 @@ const Map<String, String> de = {
   'exceeded': 'Überschritten',
   'unknown': 'Unbekannt',
   'no_category': 'Keine Kategorie',
-  'not_assigned': 'Nicht zugeordnet',
+  'no_account': 'Kein Konto',
   'optional_fields': 'Optionale Felder',
   'update': 'Aktualisieren',
   'complete_goal': 'Ziel abschließen',
@@ -224,6 +224,7 @@ const Map<String, String> de = {
   'completed_at': 'Abgeschlossen am',
   'completed_early': 'früher abgeschlossen',
   'completed_late': 'später abgeschlossen',
+  'overall': 'Gesamt',
   // Wiederholungstypen
   'no_repetition': 'Keine Wiederholung',
   'weekly': 'Jede Woche',

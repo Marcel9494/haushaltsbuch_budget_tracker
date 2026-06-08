@@ -11,7 +11,6 @@ class BookingListPage extends StatefulWidget {
   final ValueChanged<bool>? onShowBookingChartChanged;
   final ValueChanged<bool>? onShowUpcomingBookingsChanged;
   final PeriodOfTimeType currentPeriodOfTimeType;
-  final ValueChanged<PeriodOfTimeType>? onPeriodOfTimeChanged;
 
   const BookingListPage({
     super.key,
@@ -21,7 +20,6 @@ class BookingListPage extends StatefulWidget {
     required this.showUpcomingBookings,
     required this.onShowUpcomingBookingsChanged,
     required this.currentPeriodOfTimeType,
-    required this.onPeriodOfTimeChanged,
   });
 
   @override
@@ -44,14 +42,12 @@ class _BookingListPageState extends State<BookingListPage> {
                     showUpcomingBookings: widget.showUpcomingBookings,
                     onShowUpcomingBookingsChanged: widget.onShowUpcomingBookingsChanged,
                     currentPeriodOfTimeType: widget.currentPeriodOfTimeType,
-                    onPeriodOfTimeChanged: widget.onPeriodOfTimeChanged,
                   ),
                 )
               : Expanded(
                   child: YearlyBookingList(
                     currentSelectedYear: widget.currentSelectedDate.year,
                     currentPeriodOfTimeType: widget.currentPeriodOfTimeType,
-                    onPeriodOfTimeChanged: widget.onPeriodOfTimeChanged,
                     showBookingChart: widget.showBookingChart,
                     onShowBookingChartChanged: widget.onShowUpcomingBookingsChanged,
                   ),

@@ -85,7 +85,6 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
       final monthlyBookings = await _bookingRepository.loadMonthlyBookings(DateTime.now());
       emit(BookingListLoaded(monthlyBookings));
     } catch (e) {
-      print(e);
       emit(BookingError('delete_booking_error'));
     }
   }
@@ -114,7 +113,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     emit(BookingLoading());
     try {
       final List<Booking> goalBookings = await _bookingRepository.loadGoalBookings();
-      emit(GoalBookingListLoaded(goalBookings));
+      emit(BookingListLoaded(goalBookings));
     } catch (e) {
       emit(BookingError('load_goal_bookings_error'));
     }

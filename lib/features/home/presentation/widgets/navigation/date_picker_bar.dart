@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:haushaltsbuch_budget_tracker/data/enums/period_of_time_type.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 
 import '../../../../../core/utils/date_formatter.dart';
@@ -7,11 +8,13 @@ import '../../../../../l10n/app_localizations.dart';
 
 class DatePickerBar extends StatefulWidget {
   final DateTime initialDate;
-  final void Function(DateTime date, bool isYearView) onDateChanged;
+  final PeriodOfTimeType currentPeriodOfTime;
+  final void Function(DateTime date, PeriodOfTimeType currentPeriodOfTime) onDateChanged;
 
   const DatePickerBar({
     super.key,
     required this.initialDate,
+    required this.currentPeriodOfTime,
     required this.onDateChanged,
   });
 
@@ -23,7 +26,6 @@ class _DatePickerBarState extends State<DatePickerBar> {
   late PageController _controller;
   late DateTime _selectedDate;
   late int _currentIndex;
-  bool _isYearView = false;
 
   @override
   void initState() {
@@ -54,9 +56,9 @@ class _DatePickerBarState extends State<DatePickerBar> {
     }
   }
 
-  DateTime _getDateFromIndex(int index, bool isYearView) {
+  DateTime _getDateFromIndex(int index, PeriodOfTimeType currentPeriodOfTime) {
     int offset = index - 1000;
-    if (isYearView) {
+    if (currentPeriodOfTime == PeriodOfTimeType.yearly) {
       return DateTime(widget.initialDate.year + offset, widget.initialDate.month, 1);
     } else {
       return DateTime(widget.initialDate.year, widget.initialDate.month + offset, 1);
@@ -77,7 +79,7 @@ class _DatePickerBarState extends State<DatePickerBar> {
   void _onMonthSelected(int index, DateTime currentDate) {
     setState(() {
       _currentIndex = index;
-      _selectedDate = _getDateFromIndex(_currentIndex, _isYearView);
+      _selectedDate = _getDateFromIndex(_currentIndex, widget.currentPeriodOfTime);
     });
 
     _controller.animateToPage(
@@ -85,7 +87,7 @@ class _DatePickerBarState extends State<DatePickerBar> {
       duration: Duration(milliseconds: 300),
       curve: Curves.easeOut,
     );
-    widget.onDateChanged(_selectedDate, _isYearView);
+    widget.onDateChanged(_selectedDate, widget.currentPeriodOfTime);
   }
 
   @override
@@ -100,21 +102,21 @@ class _DatePickerBarState extends State<DatePickerBar> {
             child: PageView.builder(
               controller: _controller,
               onPageChanged: (index) {
-                final newDate = _getDateFromIndex(index, _isYearView);
+                final newDate = _getDateFromIndex(index, widget.currentPeriodOfTime);
                 _currentIndex = index;
                 _selectedDate = newDate;
                 WidgetsBinding.instance.addPostFrameCallback((_) {
-                  widget.onDateChanged(newDate, _isYearView);
+                  widget.onDateChanged(newDate, widget.currentPeriodOfTime);
                 });
               },
               itemBuilder: (context, index) {
-                final currentDate = _getDateFromIndex(index, _isYearView);
+                final currentDate = _getDateFromIndex(index, widget.currentPeriodOfTime);
                 final isSelected = index == _currentIndex;
                 return GestureDetector(
                   onTap: () async {
                     if (isSelected) {
-                      final pickedDate;
-                      if (_isYearView) {
+                      final DateTime? pickedDate;
+                      if (widget.currentPeriodOfTime == PeriodOfTimeType.yearly) {
                         final pickedYear = await showYearPicker(
                           context: context,
                           initialDate: currentDate,
@@ -158,7 +160,7 @@ class _DatePickerBarState extends State<DatePickerBar> {
                             curve: Curves.easeInOut,
                           );
 
-                          widget.onDateChanged(_selectedDate, _isYearView);
+                          widget.onDateChanged(_selectedDate, widget.currentPeriodOfTime);
                         }
                         return;
                       } else {
@@ -205,7 +207,7 @@ class _DatePickerBarState extends State<DatePickerBar> {
                           curve: Curves.easeInOut,
                         );
 
-                        widget.onDateChanged(_selectedDate, _isYearView);
+                        widget.onDateChanged(_selectedDate, widget.currentPeriodOfTime);
                       }
                     } else {
                       _onMonthSelected(index, currentDate);
@@ -225,7 +227,7 @@ class _DatePickerBarState extends State<DatePickerBar> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           isSelected
-                              ? _isYearView
+                              ? widget.currentPeriodOfTime == PeriodOfTimeType.yearly
                                   ? Card(
                                       margin: EdgeInsets.only(bottom: 2.0),
                                       elevation: 8.0,
@@ -272,7 +274,9 @@ class _DatePickerBarState extends State<DatePickerBar> {
                                       ),
                                     )
                               : Text(
-                                  _isYearView ? formatYear(context, currentDate) : formatShortMonth(context, currentDate),
+                                  widget.currentPeriodOfTime == PeriodOfTimeType.yearly
+                                      ? formatYear(context, currentDate)
+                                      : formatShortMonth(context, currentDate),
                                   style: TextStyle(
                                     fontSize: isSelected ? 16.0 : 14.0,
                                     color: isSelected ? Colors.cyanAccent : Colors.grey,
@@ -297,18 +301,18 @@ class _DatePickerBarState extends State<DatePickerBar> {
               child: TextButton(
                 onPressed: () {
                   setState(() {
-                    _isYearView = !_isYearView;
-                    widget.onDateChanged(_selectedDate, _isYearView);
+                    widget.onDateChanged(_selectedDate, widget.currentPeriodOfTime);
                   });
                 },
                 style: TextButton.styleFrom(overlayColor: Colors.transparent),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    FaIcon(_isYearView ? FontAwesomeIcons.calendar : FontAwesomeIcons.calendarDays, size: 16.0, color: Colors.cyanAccent),
+                    FaIcon(widget.currentPeriodOfTime == PeriodOfTimeType.yearly ? FontAwesomeIcons.calendar : FontAwesomeIcons.calendarDays,
+                        size: 16.0, color: Colors.cyanAccent),
                     SizedBox(height: 2.0),
                     Text(
-                      _isYearView ? t.translate('year') : t.translate('month'),
+                      widget.currentPeriodOfTime == PeriodOfTimeType.yearly ? t.translate('year') : t.translate('month'),
                       style: TextStyle(fontSize: 12.0, color: Colors.cyanAccent),
                     ),
                   ],

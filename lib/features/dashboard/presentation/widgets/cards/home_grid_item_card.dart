@@ -97,7 +97,7 @@ class _HomeGridItemCardState extends State<HomeGridItemCard> with TickerProvider
                       ),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -109,7 +109,8 @@ class _HomeGridItemCardState extends State<HomeGridItemCard> with TickerProvider
                               ),
                               Text(
                                 t.translate(widget.title),
-                                style: TextStyle(color: Colors.white, fontSize: 14.0, fontWeight: FontWeight.bold),
+                                style: TextStyle(color: Colors.grey, fontSize: 14.0, fontWeight: FontWeight.bold),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ],
                           ),
@@ -117,7 +118,7 @@ class _HomeGridItemCardState extends State<HomeGridItemCard> with TickerProvider
                             padding: const EdgeInsets.only(top: 10.0, bottom: 6.0),
                             child: Text(
                               formatCurrency(widget.stat, 'EUR'),
-                              style: TextStyle(fontSize: 21.0, fontWeight: FontWeight.bold),
+                              style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold, color: Colors.white),
                             ),
                           ),
                           Text(

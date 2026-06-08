@@ -19,7 +19,6 @@ class YearlyBookingList extends StatefulWidget {
   PeriodOfTimeType currentPeriodOfTimeType;
   bool showBookingChart;
   final ValueChanged<bool>? onShowBookingChartChanged;
-  final ValueChanged<PeriodOfTimeType>? onPeriodOfTimeChanged;
 
   YearlyBookingList({
     super.key,
@@ -27,7 +26,6 @@ class YearlyBookingList extends StatefulWidget {
     required this.showBookingChart,
     required this.onShowBookingChartChanged,
     required this.currentPeriodOfTimeType,
-    required this.onPeriodOfTimeChanged,
   });
 
   @override
@@ -39,6 +37,7 @@ class _YearlyBookingListState extends State<YearlyBookingList> {
   Widget build(BuildContext context) {
     final List<String> months = getAllMonthNames('de_DE');
     return BlocProvider(
+      key: ValueKey(widget.currentSelectedYear),
       create: (_) => BookingBloc(BookingRepository(), AccountRepository())..add(LoadYearlyBookings(selectedYear: widget.currentSelectedYear)),
       child: BlocBuilder<BookingBloc, BookingState>(
         builder: (context, state) {

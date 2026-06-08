@@ -119,17 +119,17 @@ class AccountRepository {
 
     String? debitAccountId = bookings[0].debitAccountId;
 
-    // Falls kein Konto vorhanden -> not_assigned laden oder erstellen
+    // Falls kein Konto vorhanden -> no_account laden oder erstellen
     if (debitAccountId == null) {
       Account? existingAccount = await accountRepository.getAccountByName(
         supabase.auth.currentUser!.id,
-        t.translate('not_assigned'),
+        t.translate('no_account'),
       );
 
       existingAccount ??= await accountRepository.createAccount(
         Account(
           userId: supabase.auth.currentUser!.id,
-          name: t.translate('not_assigned'),
+          name: t.translate('no_account'),
           accountType: AccountType.other,
           balance: 0.0,
         ),
@@ -178,17 +178,17 @@ class AccountRepository {
 
     String? debitAccountId = oldBooking.debitAccountId;
 
-    // Falls kein Konto vorhanden -> not_assigned laden oder erstellen
+    // Falls kein Konto vorhanden -> no_account laden oder erstellen
     if (debitAccountId == null) {
       Account? existingAccount = await accountRepository.getAccountByName(
         supabase.auth.currentUser!.id,
-        t.translate('not_assigned'),
+        t.translate('no_account'),
       );
 
       existingAccount ??= await accountRepository.createAccount(
         Account(
           userId: supabase.auth.currentUser!.id,
-          name: t.translate('not_assigned'),
+          name: t.translate('no_account'),
           accountType: AccountType.other,
           balance: 0.0,
         ),

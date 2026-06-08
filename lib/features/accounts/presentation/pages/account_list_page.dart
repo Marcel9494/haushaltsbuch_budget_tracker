@@ -4,7 +4,6 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:haushaltsbuch_budget_tracker/data/repositories/account_repository.dart';
 import 'package:haushaltsbuch_budget_tracker/features/accounts/presentation/widgets/cards/account_list_overview_card.dart';
-import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 
 import '../../../../blocs/account/account_bloc.dart';
 import '../../../../blocs/account/account_event.dart';
@@ -30,7 +29,6 @@ class _AccountListPageState extends State<AccountListPage> {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context);
     return Scaffold(
       body: BlocProvider(
         create: (context) => AccountBloc(AccountRepository())..add(LoadAccounts()),
@@ -48,19 +46,16 @@ class _AccountListPageState extends State<AccountListPage> {
                       AccountListOverviewCard(
                         title: 'assets',
                         amount: assets,
-                        icon: FaIcon(FontAwesomeIcons.piggyBank, size: 22.0),
                         color: Colors.green,
                       ),
                       AccountListOverviewCard(
                         title: 'debts',
                         amount: debts,
-                        icon: FaIcon(FontAwesomeIcons.cashRegister, size: 22.0),
                         color: Colors.redAccent,
                       ),
                       AccountListOverviewCard(
-                        title: 'total_assets',
+                        title: 'balance',
                         amount: assets - debts,
-                        icon: FaIcon(FontAwesomeIcons.coins, size: 22.0),
                         color: assets - debts >= 0 ? Colors.green : Colors.redAccent,
                       ),
                     ],
