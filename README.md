@@ -28,33 +28,37 @@ Egal ob du deine monatlichen Ausgaben kontrollieren, Geld sparen oder dein Verm�
 
 Die Haushaltsbuch - Budget Tracker App bietet dir folgende Funktionen:
 
-✓ Einnahmen und Ausgaben erfassen
+:heavy_check_mark: Einnahmen und Ausgaben erfassen
 Erstelle, bearbeite und lösche Buchungen mit wenigen Klicks.
 
-✓ Wiederholungsbuchungen
+:repeat: Wiederholungsbuchungen
 Automatisiere regelmäßige Einnahmen und Ausgaben wie Gehalt, Miete, Versicherungen oder Abonnements.
 
-✓ Dashboard für deine Finanzen
+:bar_chart: Dashboard für deine Finanzen
 Alle wichtigen Finanzdaten auf einen Blick – inklusive Ausgaben, Einnahmen, Vermögen, Schulden und Budgetstatus.
 
-✓ Konto- und Vermögensübersicht
+:bank: Konto- und Vermögensübersicht
 Behalte den Überblick über Konten, Bargeld, Ersparnisse, Kapitalanlagen und dein gesamtes Vermögen.
 
-✓ Budgetplanung & Budgetkontrolle
+:money_with_wings: Budgetplanung & Budgetkontrolle
 Lege individuelle monatliche und jährliche Budgets fest und verfolge jederzeit, wie viel Geld dir noch zur Verfügung steht.
 
-✓ Finanzielle Ziele erreichen
+:dart: Finanzielle Ziele erreichen
 Definiere Sparziele und verfolge deinen Fortschritt Schritt für Schritt.
 
-✓ Individuelle Kategorien
+:label: Individuelle Kategorien
 Erstelle eigene Einnahmen- und Ausgabekategorien, die perfekt zu deinem Alltag passen.
 
 Warum diese Haushaltsbuch-App?
 
 • Einfache und intuitive Bedienung
+
 • Übersichtliche Auswertungen und Statistiken deiner Finanzen
+
 • Perfekt für private Finanzplanung
+
 • Hilft beim Sparen und Budgetieren
+
 • Volle Kontrolle über deine persönlichen Finanzen
 
 Mit diesem Haushaltsbuch und Budget Tracker verwaltest du deine Einnahmen, Ausgaben, Budgets und Sparziele an einem Ort. Starte noch heute deine persönliche Finanzplanung und bringe Ordnung in deine Finanzen.
