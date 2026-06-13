@@ -63,6 +63,8 @@ Haushaltsbuch, Budgetplaner, Finanzmanager, Ausgaben Tracker, Einnahmen-Ausgaben
 
 # Verwendete Technologien & Tools:
 
+## Technologien
+
 - Flutter
 - Dart
 - Bloc State Management
@@ -75,4 +77,11 @@ Haushaltsbuch, Budgetplaner, Finanzmanager, Ausgaben Tracker, Einnahmen-Ausgaben
   - Email ändern
   - Passwort ändern
 - SQL (Schema Entwurf, CRUD Operationen)
-- Git & Github
+- Git
+
+## Tools & Plattformen
+
+- Android Studio
+- Supabase
+- Github
+- Google Play Store
