@@ -1,5 +1,7 @@
 # Haushaltsbuch - Budget Tracker App GUI
 
+Haushaltsbuch & Budget Tracker – Deine Finanzen einfach im Griff.
+
 <img style="width: 30%; height: auto;" alt="Screenshot_20260612_120318" src="https://github.com/user-attachments/assets/ce8fb89f-e6d1-4bf6-9654-32ce64fd261d" />
 
 <img style="width: 30%; height: auto;" alt="Screenshot_20260612_120432" src="https://github.com/user-attachments/assets/3b59ffe8-cf4f-406b-84c4-291b04f276bd" />
@@ -20,7 +22,7 @@
 
 # Haushaltsbuch - Budget Tracker
 
-Haushaltsbuch & Budget Tracker – Deine Finanzen einfach im Griff
+Haushaltsbuch & Budget Tracker – Deine Finanzen einfach im Griff.
 
 Behalte mit einem Haushaltsbuch den Überblick über deine persönlichen Finanzen. Verwalte Einnahmen und Ausgaben, plane Budgets, verfolge Sparziele und analysiere deine finanzielle Entwicklung – alles in einer übersichtlichen Finanzapp.
 
