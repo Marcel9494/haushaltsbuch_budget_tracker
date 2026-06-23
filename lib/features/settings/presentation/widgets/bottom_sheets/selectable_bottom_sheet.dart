@@ -53,7 +53,7 @@ class SelectableBottomSheet extends StatelessWidget {
                       ),
                     ),
                     title: Text(
-                      t.translate(AppLocalizations.supportedLocales[index].languageCode),
+                      t.translate(AppLocalizations.supportedLocales[index].toString()),
                       style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                     trailing: Icon(Icons.keyboard_arrow_right_rounded, size: 24, color: Colors.white),

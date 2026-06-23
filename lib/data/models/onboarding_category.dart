@@ -1,18 +1,18 @@
 import '../enums/category_type.dart';
 
-class StartCategory {
+class OnboardingCategory {
   final String categoryName;
   final CategoryType categoryType;
   bool isSelected;
 
-  StartCategory({
+  OnboardingCategory({
     required this.categoryName,
     required this.categoryType,
     required this.isSelected,
   });
 
-  factory StartCategory.fromMap(Map<String, dynamic> map) {
-    return StartCategory(
+  factory OnboardingCategory.fromMap(Map<String, dynamic> map) {
+    return OnboardingCategory(
       categoryName: map['category_name'],
       categoryType: CategoryType.fromString(map['category_type']),
       isSelected: map['is_selected'],

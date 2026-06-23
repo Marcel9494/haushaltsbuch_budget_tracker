@@ -21,6 +21,8 @@ import 'blocs/budget/budget_bloc.dart';
 import 'blocs/category/category_bloc.dart';
 import 'blocs/dashboard_element/dashboard_element_bloc.dart';
 import 'blocs/goal/goal_bloc.dart';
+import 'blocs/onboarding_account/onboarding_account_bloc.dart';
+import 'blocs/onboarding_category/onboarding_category_bloc.dart';
 import 'blocs/user/user_bloc.dart';
 import 'blocs/user/user_event.dart';
 import 'core/consts/route_consts.dart';
@@ -40,6 +42,8 @@ import 'data/repositories/booking_repository.dart';
 import 'data/repositories/budget_repository.dart';
 import 'data/repositories/dashboard_element_repository.dart';
 import 'data/repositories/goal_repository.dart';
+import 'data/repositories/onboarding_account_repository.dart';
+import 'data/repositories/onboarding_category_repository.dart';
 import 'data/repositories/user_repository.dart';
 import 'features/accounts/presentation/pages/account_list_page.dart';
 import 'features/accounts/presentation/pages/create_account_page.dart';
@@ -102,10 +106,8 @@ void main() async {
 
         final newUser = User(
           id: Supabase.instance.client.auth.currentUser!.id,
-          language: locale.languageCode,
-          country: locale.countryCode ?? '',
-          currencySymbol: NumberFormat.simpleCurrency(locale: localeString).currencySymbol,
-          currencyName: NumberFormat.simpleCurrency(locale: localeString).currencyName ?? '',
+          locale: locale,
+          currency: NumberFormat.simpleCurrency(locale: localeString).currencyName ?? '',
           hasOnboardingCompleted: false,
           dashboardConfig: {},
         );
@@ -181,275 +183,299 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  static _MyAppState? of(BuildContext context) {
+    return context.findAncestorStateOfType<_MyAppState>();
+  }
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  // Wenn _locale null ist, verwendet MaterialApp die Systemsprache des Geräts
+  Locale? _locale;
+
+  void setLocale(Locale locale) {
+    setState(() {
+      _locale = locale;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Haushaltsbuch - Budget Tracker',
-      debugShowCheckedModeBanner: false,
-      locale: const Locale('de', 'DE'),
-      supportedLocales: AppLocalizations.supportedLocales,
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => OnboardingCategoryBloc(OnboardingCategoryRepository())),
+        BlocProvider(create: (context) => OnboardingAccountBloc(OnboardingAccountRepository())),
       ],
-      builder: (context, child) {
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(
-            textScaler: TextScaler.linear(1.0),
-          ),
-          child: child!,
-        );
-      },
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyanAccent),
-        useMaterial3: true,
-      ),
-      darkTheme: ThemeData.dark().copyWith(
-        appBarTheme: AppBarTheme(
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
-          elevation: 0,
+      child: MaterialApp(
+        title: 'Haushaltsbuch - Budget Tracker',
+        debugShowCheckedModeBanner: false,
+        locale: _locale,
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        builder: (context, child) {
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              textScaler: TextScaler.linear(1.0),
+            ),
+            child: child!,
+          );
+        },
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyanAccent),
+          useMaterial3: true,
         ),
-        textSelectionTheme: const TextSelectionThemeData(
-          cursorColor: Colors.cyanAccent,
-          selectionColor: Color(0x5526C6DA),
-          selectionHandleColor: Colors.cyanAccent,
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          labelStyle: TextStyle(color: Colors.grey[600]),
-          floatingLabelStyle: WidgetStateTextStyle.resolveWith(
-            (Set<WidgetState> states) {
-              if (states.contains(WidgetState.error)) {
-                return const TextStyle(color: Colors.white70, fontWeight: FontWeight.w500);
-              }
-              if (states.contains(WidgetState.focused)) {
-                return const TextStyle(color: Colors.cyanAccent, fontWeight: FontWeight.w500);
-              }
-              return const TextStyle(color: Colors.grey); // Standard
-            },
+        darkTheme: ThemeData.dark().copyWith(
+          appBarTheme: AppBarTheme(
+            backgroundColor: Colors.transparent,
+            surfaceTintColor: Colors.transparent,
+            elevation: 0,
           ),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey.shade700),
-            borderRadius: BorderRadius.circular(8),
+          textSelectionTheme: const TextSelectionThemeData(
+            cursorColor: Colors.cyanAccent,
+            selectionColor: Color(0x5526C6DA),
+            selectionHandleColor: Colors.cyanAccent,
           ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.cyanAccent, width: 0.7),
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
-        textButtonTheme: TextButtonThemeData(
-          style: TextButton.styleFrom(
-            foregroundColor: Colors.cyanAccent,
-          ),
-        ),
-        datePickerTheme: DatePickerThemeData(
-          todayForegroundColor: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.selected)) {
-              return Colors.black87;
-            }
-            return Colors.white70;
-          }),
-          todayBackgroundColor: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.selected)) {
-              return Colors.cyanAccent;
-            }
-            return null;
-          }),
-          dayOverlayColor: WidgetStateProperty.all(Colors.cyanAccent.withAlpha(100)),
-          dayBackgroundColor: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.selected)) {
-              return Colors.cyanAccent;
-            }
-            return null;
-          }),
-          yearBackgroundColor: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.selected)) {
-              return Colors.cyanAccent;
-            }
-            return null;
-          }),
-          cancelButtonStyle: ButtonStyle(
-            foregroundColor: WidgetStatePropertyAll(Colors.grey),
-          ),
-        ),
-        outlinedButtonTheme: OutlinedButtonThemeData(
-          style: OutlinedButton.styleFrom(
-            foregroundColor: Colors.cyanAccent,
-            side: BorderSide(color: Colors.grey),
-            shape: RoundedRectangleBorder(
+          inputDecorationTheme: InputDecorationTheme(
+            labelStyle: TextStyle(color: Colors.grey[600]),
+            floatingLabelStyle: WidgetStateTextStyle.resolveWith(
+              (Set<WidgetState> states) {
+                if (states.contains(WidgetState.error)) {
+                  return const TextStyle(color: Colors.white70, fontWeight: FontWeight.w500);
+                }
+                if (states.contains(WidgetState.focused)) {
+                  return const TextStyle(color: Colors.cyanAccent, fontWeight: FontWeight.w500);
+                }
+                return const TextStyle(color: Colors.grey); // Standard
+              },
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey.shade700),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.cyanAccent, width: 0.7),
               borderRadius: BorderRadius.circular(8),
             ),
           ),
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.cyanAccent,
-          ),
-        ),
-        tabBarTheme: TabBarThemeData(
-          labelColor: Colors.cyanAccent,
-          unselectedLabelColor: Colors.white,
-          labelStyle: const TextStyle(fontWeight: FontWeight.w600),
-          unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w400),
-          indicator: const UnderlineTabIndicator(
-            borderSide: BorderSide(
-              color: Colors.cyanAccent,
-              width: 3.0,
+          textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.cyanAccent,
             ),
           ),
-          indicatorSize: TabBarIndicatorSize.tab,
-        ),
-      ),
-      themeMode: ThemeMode.system,
-      navigatorKey: navigatorKey,
-      home: const AuthenticationGatePage(),
-      routes: {
-        forgotPasswordRoute: (context) => const ForgotPasswordPage(),
-        createBookingRoute: (context) => const CreateBookingPage(),
-        createAccountRoute: (context) => const CreateAccountPage(),
-        createBudgetRoute: (context) => const CreateBudgetPage(),
-        createGoalRoute: (context) => const CreateGoalPage(),
-        accountListRoute: (context) => const AccountListPage(),
-        goalListRoute: (context) => const GoalListPage(),
-        completedGoalListRoute: (context) => const CompletedGoalListPage(),
-        settingsRoute: (context) => const SettingsPage(),
-        changeEmailRoute: (context) => const ChangeEmailPage(),
-        changePasswordRoute: (context) => const ChangePasswordPage(),
-        upgradeAccountRoute: (context) => const UpgradeAccountPage(),
-        updateDashboardRoute: (context) => const UpdateDashboardPage(),
-        categoryOnboardingRoute: (context) => const CategoryOnboardingPage(),
-        dashboardOnboardingRoute: (context) => const DashboardOnboardingPage(),
-        accountOnboardingRoute: (context) => const AccountOnboardingPage(),
-        completedOnboardingRoute: (context) => MultiBlocProvider(
-              providers: [
-                BlocProvider(
-                  create: (context) => OnboardingBloc(
-                    categoryRepository: CategoryRepository(),
-                    accountRepository: AccountRepository(),
-                    dashboardRepository: DashboardElementRepository(),
-                  ),
-                ),
-                BlocProvider(create: (context) => CategoryBloc(CategoryRepository())),
-                BlocProvider(create: (context) => AccountBloc(AccountRepository())),
-                BlocProvider(create: (context) => DashboardElementBloc(DashboardElementRepository())),
-              ],
-              child: const CompletedOnboardingPage(),
+          datePickerTheme: DatePickerThemeData(
+            todayForegroundColor: WidgetStateProperty.resolveWith((states) {
+              if (states.contains(WidgetState.selected)) {
+                return Colors.black87;
+              }
+              return Colors.white70;
+            }),
+            todayBackgroundColor: WidgetStateProperty.resolveWith((states) {
+              if (states.contains(WidgetState.selected)) {
+                return Colors.cyanAccent;
+              }
+              return null;
+            }),
+            dayOverlayColor: WidgetStateProperty.all(Colors.cyanAccent.withAlpha(100)),
+            dayBackgroundColor: WidgetStateProperty.resolveWith((states) {
+              if (states.contains(WidgetState.selected)) {
+                return Colors.cyanAccent;
+              }
+              return null;
+            }),
+            yearBackgroundColor: WidgetStateProperty.resolveWith((states) {
+              if (states.contains(WidgetState.selected)) {
+                return Colors.cyanAccent;
+              }
+              return null;
+            }),
+            cancelButtonStyle: ButtonStyle(
+              foregroundColor: WidgetStatePropertyAll(Colors.grey),
             ),
-      },
-      onGenerateRoute: (settings) {
-        switch (settings.name) {
-          case registerRoute:
-            return PageTransition(
-              type: PageTransitionType.fade,
-              settings: settings,
-              child: MultiBlocProvider(
-                providers: [
-                  BlocProvider<UserBloc>.value(value: userBloc),
-                ],
-                child: RegisterPage(),
+          ),
+          outlinedButtonTheme: OutlinedButtonThemeData(
+            style: OutlinedButton.styleFrom(
+              foregroundColor: Colors.cyanAccent,
+              side: BorderSide(color: Colors.grey),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
               ),
-            );
-          case loginRoute:
-            return PageTransition(
-              type: PageTransitionType.fade,
-              settings: settings,
-              child: LoginPage(),
-            );
-          case homeRoute:
-            final args = settings.arguments as HomePageArguments;
-            return PageTransition(
-              type: PageTransitionType.fade,
-              settings: settings,
-              child: MultiBlocProvider(
+            ),
+          ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.cyanAccent,
+            ),
+          ),
+          tabBarTheme: TabBarThemeData(
+            labelColor: Colors.cyanAccent,
+            unselectedLabelColor: Colors.white,
+            labelStyle: const TextStyle(fontWeight: FontWeight.w600),
+            unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w400),
+            indicator: const UnderlineTabIndicator(
+              borderSide: BorderSide(
+                color: Colors.cyanAccent,
+                width: 3.0,
+              ),
+            ),
+            indicatorSize: TabBarIndicatorSize.tab,
+          ),
+        ),
+        themeMode: ThemeMode.system,
+        navigatorKey: navigatorKey,
+        home: const AuthenticationGatePage(),
+        routes: {
+          forgotPasswordRoute: (context) => const ForgotPasswordPage(),
+          createBookingRoute: (context) => const CreateBookingPage(),
+          createAccountRoute: (context) => const CreateAccountPage(),
+          createBudgetRoute: (context) => const CreateBudgetPage(),
+          createGoalRoute: (context) => const CreateGoalPage(),
+          accountListRoute: (context) => const AccountListPage(),
+          goalListRoute: (context) => const GoalListPage(),
+          completedGoalListRoute: (context) => const CompletedGoalListPage(),
+          settingsRoute: (context) => const SettingsPage(),
+          changeEmailRoute: (context) => const ChangeEmailPage(),
+          changePasswordRoute: (context) => const ChangePasswordPage(),
+          upgradeAccountRoute: (context) => const UpgradeAccountPage(),
+          updateDashboardRoute: (context) => const UpdateDashboardPage(),
+          categoryOnboardingRoute: (context) => const CategoryOnboardingPage(),
+          dashboardOnboardingRoute: (context) => const DashboardOnboardingPage(),
+          accountOnboardingRoute: (context) => const AccountOnboardingPage(),
+          completedOnboardingRoute: (context) => MultiBlocProvider(
                 providers: [
-                  BlocProvider(create: (context) => BookingBloc(BookingRepository(), AccountRepository())),
-                  BlocProvider(create: (context) => DashboardElementBloc(DashboardElementRepository())),
+                  BlocProvider(
+                    create: (context) => OnboardingBloc(
+                      categoryRepository: CategoryRepository(),
+                      accountRepository: AccountRepository(),
+                      dashboardRepository: DashboardElementRepository(),
+                    ),
+                  ),
                   BlocProvider(create: (context) => CategoryBloc(CategoryRepository())),
                   BlocProvider(create: (context) => AccountBloc(AccountRepository())),
-                  BlocProvider(create: (context) => BudgetBloc(BudgetRepository())),
-                  BlocProvider(create: (context) => GoalBloc(GoalRepository())),
+                  BlocProvider(create: (context) => DashboardElementBloc(DashboardElementRepository())),
                 ],
-                child: HomePage(currentPageIndex: args.currentPageIndex),
+                child: const CompletedOnboardingPage(),
               ),
-            );
-          case categoryListRoute:
-            final args = settings.arguments as CategoryListPageArguments;
-            return MaterialPageRoute<String>(
-              builder: (context) => CategoryListPage(
-                categoryType: args.categoryType,
-              ),
-              settings: settings,
-            );
-          case budgetBookingsRoute:
-            final args = settings.arguments as BudgetBookingsPageArguments;
-            return MaterialPageRoute<String>(
-              builder: (context) => BudgetBookingsPage(
-                budget: args.budget,
-                bookings: args.bookings,
-                currentSelectedDate: args.currentSelectedDate,
-              ),
-              settings: settings,
-            );
-          case goalBookingsRoute:
-            final args = settings.arguments as GoalBookingsPageArguments;
-            return MaterialPageRoute<String>(
-              builder: (context) => GoalBookingsPage(
-                goal: args.goal,
-                goalBookings: args.goalBookings,
-              ),
-              settings: settings,
-            );
-          case updateBookingRoute:
-            final args = settings.arguments as UpdateBookingPageArguments;
-            return MaterialPageRoute<String>(
-              builder: (context) => UpdateBookingPage(
-                booking: args.booking,
-                bookingSelectionType: args.bookingSelectionType,
-              ),
-              settings: settings,
-            );
-          case updateCategoryRoute:
-            final args = settings.arguments as UpdateCategoryPageArguments;
-            return MaterialPageRoute<String>(
-              builder: (context) => UpdateCategoryPage(
-                category: args.category,
-              ),
-              settings: settings,
-            );
-          case updateAccountRoute:
-            final args = settings.arguments as UpdateAccountPageArguments;
-            return MaterialPageRoute<String>(
-              builder: (context) => UpdateAccountPage(
-                account: args.account,
-              ),
-              settings: settings,
-            );
-          case updateBudgetRoute:
-            final args = settings.arguments as UpdateBudgetPageArguments;
-            return MaterialPageRoute<String>(
-              builder: (context) => UpdateBudgetPage(
-                budget: args.budget,
-                budgetSelectionType: args.budgetSelectionType,
-              ),
-              settings: settings,
-            );
-          case updateGoalRoute:
-            final args = settings.arguments as UpdateGoalPageArguments;
-            return MaterialPageRoute<String>(
-              builder: (context) => UpdateGoalPage(
-                goal: args.goal,
-              ),
-              settings: settings,
-            );
-          default:
-            return null;
-        }
-      },
+        },
+        onGenerateRoute: (settings) {
+          switch (settings.name) {
+            case registerRoute:
+              return PageTransition(
+                type: PageTransitionType.fade,
+                settings: settings,
+                child: MultiBlocProvider(
+                  providers: [
+                    BlocProvider<UserBloc>.value(value: userBloc),
+                  ],
+                  child: RegisterPage(),
+                ),
+              );
+            case loginRoute:
+              return PageTransition(
+                type: PageTransitionType.fade,
+                settings: settings,
+                child: LoginPage(),
+              );
+            case homeRoute:
+              final args = settings.arguments as HomePageArguments;
+              return PageTransition(
+                type: PageTransitionType.fade,
+                settings: settings,
+                child: MultiBlocProvider(
+                  providers: [
+                    BlocProvider(create: (context) => BookingBloc(BookingRepository(), AccountRepository())),
+                    BlocProvider(create: (context) => DashboardElementBloc(DashboardElementRepository())),
+                    BlocProvider(create: (context) => CategoryBloc(CategoryRepository())),
+                    BlocProvider(create: (context) => AccountBloc(AccountRepository())),
+                    BlocProvider(create: (context) => BudgetBloc(BudgetRepository())),
+                    BlocProvider(create: (context) => GoalBloc(GoalRepository())),
+                  ],
+                  child: HomePage(currentPageIndex: args.currentPageIndex),
+                ),
+              );
+            case categoryListRoute:
+              final args = settings.arguments as CategoryListPageArguments;
+              return MaterialPageRoute<String>(
+                builder: (context) => CategoryListPage(
+                  categoryType: args.categoryType,
+                ),
+                settings: settings,
+              );
+            case budgetBookingsRoute:
+              final args = settings.arguments as BudgetBookingsPageArguments;
+              return MaterialPageRoute<String>(
+                builder: (context) => BudgetBookingsPage(
+                  budget: args.budget,
+                  bookings: args.bookings,
+                  currentSelectedDate: args.currentSelectedDate,
+                ),
+                settings: settings,
+              );
+            case goalBookingsRoute:
+              final args = settings.arguments as GoalBookingsPageArguments;
+              return MaterialPageRoute<String>(
+                builder: (context) => GoalBookingsPage(
+                  goal: args.goal,
+                  goalBookings: args.goalBookings,
+                ),
+                settings: settings,
+              );
+            case updateBookingRoute:
+              final args = settings.arguments as UpdateBookingPageArguments;
+              return MaterialPageRoute<String>(
+                builder: (context) => UpdateBookingPage(
+                  booking: args.booking,
+                  bookingSelectionType: args.bookingSelectionType,
+                ),
+                settings: settings,
+              );
+            case updateCategoryRoute:
+              final args = settings.arguments as UpdateCategoryPageArguments;
+              return MaterialPageRoute<String>(
+                builder: (context) => UpdateCategoryPage(
+                  category: args.category,
+                ),
+                settings: settings,
+              );
+            case updateAccountRoute:
+              final args = settings.arguments as UpdateAccountPageArguments;
+              return MaterialPageRoute<String>(
+                builder: (context) => UpdateAccountPage(
+                  account: args.account,
+                ),
+                settings: settings,
+              );
+            case updateBudgetRoute:
+              final args = settings.arguments as UpdateBudgetPageArguments;
+              return MaterialPageRoute<String>(
+                builder: (context) => UpdateBudgetPage(
+                  budget: args.budget,
+                  budgetSelectionType: args.budgetSelectionType,
+                ),
+                settings: settings,
+              );
+            case updateGoalRoute:
+              final args = settings.arguments as UpdateGoalPageArguments;
+              return MaterialPageRoute<String>(
+                builder: (context) => UpdateGoalPage(
+                  goal: args.goal,
+                ),
+                settings: settings,
+              );
+            default:
+              return null;
+          }
+        },
+      ),
     );
   }
 }

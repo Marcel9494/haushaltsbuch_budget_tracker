@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../data/helper_models/start_account.dart';
+import '../../../../../data/models/onboarding_account.dart';
 
 class SelectableAccountCard extends StatelessWidget {
-  final StartAccount account;
+  final OnboardingAccount account;
   final VoidCallback onPressed;
 
   const SelectableAccountCard({

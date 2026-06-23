@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:haushaltsbuch_budget_tracker/data/helper_models/start_category.dart';
+import 'package:haushaltsbuch_budget_tracker/data/models/onboarding_category.dart';
 
 class SelectableCategoryCard extends StatelessWidget {
-  final StartCategory category;
+  final OnboardingCategory category;
   final VoidCallback onPressed;
 
   const SelectableCategoryCard({

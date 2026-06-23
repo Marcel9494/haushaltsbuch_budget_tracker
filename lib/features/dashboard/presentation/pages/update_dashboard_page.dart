@@ -15,8 +15,8 @@ import '../../../../core/page_arguments/home_page_arguments.dart';
 import '../../../../core/utils/app_flushbar.dart';
 import '../../../../core/utils/icon_helper.dart';
 import '../../../../data/enums/dashboard_element_type.dart';
-import '../../../../data/helper_models/onboarding_models.dart';
 import '../../../../data/models/dashboard_element.dart';
+import '../../../../data/models/onboarding_dashboard_elements.dart';
 import '../../../../data/repositories/dashboard_element_repository.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../shared/presentation/widgets/buttons/animated_loading_button.dart';
@@ -60,7 +60,7 @@ class _UpdateDashboardPageState extends State<UpdateDashboardPage> with SingleTi
       } else {
         _selectedDashboardElementType = DashboardElementType.year;
       }
-      selectedStartDashboardElements = dashboardElements.where((element) => element.isSelected == true).toList();
+      selectedOnboardingDashboardElements = dashboardElements.where((element) => element.isSelected == true).toList();
       filteredDashboardElementList = dashboardElements.where((element) => element.dashboardElementType == _selectedDashboardElementType).toList();
     });
   }
@@ -87,7 +87,7 @@ class _UpdateDashboardPageState extends State<UpdateDashboardPage> with SingleTi
             return CircularLoadingIndicator();
           } else if (state is DashboardElementsLoaded) {
             if (filteredDashboardElementList.isEmpty) {
-              selectedStartDashboardElements = state.dashboardElements.where((element) => element.isSelected == true).toList();
+              selectedOnboardingDashboardElements = state.dashboardElements.where((element) => element.isSelected == true).toList();
               filteredDashboardElementList =
                   state.dashboardElements.where((element) => element.dashboardElementType == _selectedDashboardElementType).toList();
             }
@@ -186,9 +186,9 @@ class _UpdateDashboardPageState extends State<UpdateDashboardPage> with SingleTi
                                   setState(() {
                                     dashboardElement.isSelected = !dashboardElement.isSelected;
                                     if (dashboardElement.isSelected) {
-                                      selectedStartDashboardElements.add(dashboardElement);
+                                      selectedOnboardingDashboardElements.add(dashboardElement);
                                     } else {
-                                      selectedStartDashboardElements.removeWhere(
+                                      selectedOnboardingDashboardElements.removeWhere(
                                         (element) => element.id == dashboardElement.id,
                                       );
                                     }

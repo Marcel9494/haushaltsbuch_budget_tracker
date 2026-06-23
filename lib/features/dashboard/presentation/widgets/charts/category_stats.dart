@@ -234,7 +234,8 @@ class _CategoryStatsState extends State<CategoryStats> with TickerProviderStateM
       return PieChartSectionData(
         color: _pieCategoryColors[i % _pieCategoryColors.length],
         value: bookingCategoryStats[i].percentage,
-        title: '${NumberFormat('#,##0.0', locale).format(bookingCategoryStats[i].percentage)}% ${bookingCategoryStats[i].category}',
+        title:
+            '${NumberFormat('#,##0.0', locale).format(bookingCategoryStats[i].percentage)}% ${bookingCategoryStats[i].category == 'no_category' ? AppLocalizations.of(context).translate('no_category') : bookingCategoryStats[i].category}',
         radius: radius,
         titleStyle: TextStyle(
           fontSize: fontSize,

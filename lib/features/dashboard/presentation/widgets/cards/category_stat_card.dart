@@ -4,6 +4,7 @@ import 'package:haushaltsbuch_budget_tracker/data/helper_models/booking_category
 import 'package:intl/intl.dart';
 
 import '../../../../../core/utils/currency_formatter.dart';
+import '../../../../../l10n/app_localizations.dart';
 
 class CategoryStatCard extends StatelessWidget {
   final BookingCategoryStats bookingCategoryStats;
@@ -35,7 +36,7 @@ class CategoryStatCard extends StatelessWidget {
                 child: ListTile(
                   dense: true,
                   title: Text(
-                    '${NumberFormat('#,##0.0', locale).format(bookingCategoryStats.percentage)}% ${bookingCategoryStats.category}',
+                    '${NumberFormat('#,##0.0', locale).format(bookingCategoryStats.percentage)}% ${bookingCategoryStats.category == 'no_category' ? AppLocalizations.of(context).translate('no_category') : bookingCategoryStats.category}',
                     style: TextStyle(fontSize: 15.0),
                   ),
                   trailing: Text(

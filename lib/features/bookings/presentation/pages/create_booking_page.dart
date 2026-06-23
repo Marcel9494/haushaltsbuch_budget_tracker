@@ -69,9 +69,9 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
   final RoundedLoadingButtonController _createBookingButtonController = RoundedLoadingButtonController();
 
   @override
-  void initState() {
-    super.initState();
-    _dateController.text = DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(DateTime.now());
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _dateController.text = DateFormat.yMEd(Localizations.localeOf(context).toString()).format(DateTime.now());
   }
 
   Future<void> _createBooking(BuildContext contextForBloc) async {
@@ -93,8 +93,7 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
         _amountController.text.replaceAll('.', '').replaceAll(',', '.').replaceAll('€', '').trim(),
       );
 
-      final DateTime parsedDate =
-          DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).parse(_dateController.text);
+      final DateTime parsedDate = DateFormat.yMEd(Localizations.localeOf(context).toString()).parseStrict(_dateController.text);
 
       final Booking newBooking = Booking(
         userId: supabase.auth.currentUser!.id,
@@ -102,7 +101,7 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
         title: _titleController.text.trim(),
         amount: amount!,
         amountType: _amountType,
-        bookingDate: parsedDate, // TODO
+        bookingDate: parsedDate,
         repetitionType: _repetitionType, // TODO
         categoryId: _selectedCategory?.id,
         debitAccountId: _selectedDebitAccount?.id,

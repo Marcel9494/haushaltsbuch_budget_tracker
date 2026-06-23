@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:haushaltsbuch_budget_tracker/data/helper_models/onboarding_models.dart';
+import 'package:haushaltsbuch_budget_tracker/data/models/onboarding_dashboard_elements.dart';
 import 'package:haushaltsbuch_budget_tracker/data/repositories/dashboard_element_repository.dart';
 import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 
@@ -135,7 +135,7 @@ class _DashboardOnboardingPageState extends State<DashboardOnboardingPage> with 
                     if (state is DashboardElementLoading) {
                       return CircularLoadingIndicator();
                     } else if (state is DashboardElementsLoaded) {
-                      selectedStartDashboardElements = state.dashboardElements.where((element) => element.isSelected == true).toList();
+                      selectedOnboardingDashboardElements = state.dashboardElements.where((element) => element.isSelected == true).toList();
                       final filteredDashboardElementList =
                           state.dashboardElements.where((element) => element.dashboardElementType == _selectedDashboardElementType).toList();
                       return Expanded(
@@ -162,9 +162,9 @@ class _DashboardOnboardingPageState extends State<DashboardOnboardingPage> with 
                                 setState(() {
                                   dashboardElement.isSelected = !dashboardElement.isSelected;
                                   if (dashboardElement.isSelected == true) {
-                                    selectedStartDashboardElements.add(dashboardElement);
+                                    selectedOnboardingDashboardElements.add(dashboardElement);
                                   } else {
-                                    selectedStartDashboardElements.removeWhere((element) => element.id == dashboardElement.id);
+                                    selectedOnboardingDashboardElements.removeWhere((element) => element.id == dashboardElement.id);
                                   }
                                 });
                               },

@@ -12,6 +12,12 @@ String formatShortMonth(BuildContext context, DateTime date) {
   return month.endsWith('.') ? month : '$month.';
 }
 
+String formatLongMonth(BuildContext context, DateTime date) {
+  final locale = Localizations.localeOf(context).toString();
+  final month = DateFormat("MMMM", locale).format(date);
+  return month;
+}
+
 String formatYear(BuildContext context, DateTime date) {
   final locale = Localizations.localeOf(context).toString();
   return DateFormat("yyy", locale).format(date);

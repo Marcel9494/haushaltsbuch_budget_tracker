@@ -342,11 +342,6 @@ class _HomePageState extends State<HomePage> {
                 ),
               },
             ),
-            ListTile(
-              leading: FaIcon(FontAwesomeIcons.solidAddressBook, color: Colors.white),
-              title: Text(t.translate('household_members'), style: TextStyle(color: Colors.white)),
-              onTap: () {},
-            ),
             Divider(),
             ListTile(
               leading: Icon(Icons.stars_rounded, color: Colors.white),

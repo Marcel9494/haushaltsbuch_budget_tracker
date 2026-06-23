@@ -224,7 +224,7 @@ class _DateInputFieldState extends State<DateInputField> {
             DateTime? pickedDate = await showDatePicker(
               context: context,
               locale: Localizations.localeOf(context),
-              initialDate: DateFormat('(E) dd.MM.yyyy', Localizations.localeOf(context).languageCode).parse(widget.dateController.text),
+              initialDate: DateFormat.yMEd(Localizations.localeOf(context).toString()).parseStrict(widget.dateController.text),
               firstDate: DateTime(2000),
               lastDate: DateTime(2100),
               confirmText: t.translate('ok'),
@@ -232,9 +232,9 @@ class _DateInputFieldState extends State<DateInputField> {
             );
 
             if (pickedDate != null) {
-              String formattedDate = DateFormat('(E) dd.MM.yyyy', Localizations.localeOf(context).languageCode).format(pickedDate);
               setState(() {
-                widget.dateController.text = formattedDate;
+                final DateTime dateTime = DateTime.parse(pickedDate.toString());
+                widget.dateController.text = DateFormat.yMEd(Localizations.localeOf(context).toString()).format(dateTime);
               });
             }
           },
