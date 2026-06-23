@@ -35,7 +35,7 @@ class YearlyBookingList extends StatefulWidget {
 class _YearlyBookingListState extends State<YearlyBookingList> {
   @override
   Widget build(BuildContext context) {
-    final List<String> months = getAllMonthNames('de_DE');
+    final List<String> months = getAllMonthNames(Localizations.localeOf(context).toString());
     return BlocProvider(
       key: ValueKey(widget.currentSelectedYear),
       create: (_) => BookingBloc(BookingRepository(), AccountRepository())..add(LoadYearlyBookings(selectedYear: widget.currentSelectedYear)),

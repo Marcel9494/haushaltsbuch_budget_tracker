@@ -1,18 +1,16 @@
+import 'dart:ui';
+
 class User {
   final String? id;
-  final String language;
-  final String country;
-  final String currencySymbol;
-  final String currencyName;
+  final Locale locale;
+  final String currency;
   final bool hasOnboardingCompleted;
   final Map<String, dynamic> dashboardConfig;
 
   User({
     this.id,
-    required this.language,
-    required this.country,
-    required this.currencySymbol,
-    required this.currencyName,
+    required this.locale,
+    required this.currency,
     required this.hasOnboardingCompleted,
     required this.dashboardConfig,
   });
@@ -20,10 +18,8 @@ class User {
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
       id: map['id'],
-      language: map['language'],
-      country: map['country'],
-      currencySymbol: map['currency_symbol'],
-      currencyName: map['currency_name'],
+      locale: Locale(map['locale']),
+      currency: map['currency'],
       hasOnboardingCompleted: map['has_onboarding_completed'],
       dashboardConfig: map['dashboard_config'] ?? {},
     );
@@ -31,10 +27,8 @@ class User {
 
   Map<String, dynamic> toMap() {
     return {
-      'language': language,
-      'country': country,
-      'currency_symbol': currencySymbol,
-      'currency_name': currencyName,
+      'locale': locale.toString(),
+      'currency': currency,
       'has_onboarding_completed': hasOnboardingCompleted,
       'dashboard_config': dashboardConfig,
     };

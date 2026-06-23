@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'app_de.dart';
+import 'app_en.dart';
 
 class AppLocalizations {
   final Locale locale;
@@ -15,6 +16,7 @@ class AppLocalizations {
 
   static final Map<String, Map<String, String>> _localizedValues = {
     'de': de,
+    'en': en,
   };
 
   String translate(String key) {
@@ -31,7 +33,7 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   const _AppLocalizationsDelegate();
 
   @override
-  bool isSupported(Locale locale) => ['de'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => ['de', 'en'].contains(locale.languageCode);
 
   @override
   Future<AppLocalizations> load(Locale locale) async {

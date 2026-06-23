@@ -26,7 +26,7 @@ class OnboardingNavigation extends StatelessWidget {
       children: [
         showBackRoute
             ? TextButton(
-                onPressed: () => Navigator.pushNamed(context, backRoute),
+                onPressed: () => Navigator.pop(context),
                 child: Row(
                   children: [
                     Icon(

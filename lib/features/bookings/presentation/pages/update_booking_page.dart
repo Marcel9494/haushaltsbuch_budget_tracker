@@ -109,13 +109,17 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
     }
     _titleController.text = widget.booking.title;
     _amountController.text = formatCurrency(widget.booking.amount, 'EUR');
-    _dateController.text =
-        DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(widget.booking.bookingDate);
     _categorieController.text = _selectedCategory!.categoryName;
     _debitAccountController.text = _selectedDebitAccount!.name;
     _targetAccountController.text = _selectedTargetAccount!.name;
     _goalController.text = _selectedGoal.goalName;
     _backupOldBooking();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _dateController.text = DateFormat.yMEd(Localizations.localeOf(context).toString()).format(widget.booking.bookingDate);
   }
 
   void _backupOldBooking() {
@@ -141,8 +145,7 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
         _amountController.text.replaceAll('.', '').replaceAll(',', '.').replaceAll('€', '').trim(),
       );
 
-      final DateTime parsedDate =
-          DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).parse(_dateController.text);
+      final DateTime parsedDate = DateFormat.yMEd(Localizations.localeOf(context).toString()).parseStrict(_dateController.text);
 
       final Booking updatedBooking = Booking(
         id: widget.booking.id,
@@ -151,7 +154,7 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
         title: _titleController.text.trim(),
         amount: amount!,
         amountType: _amountType,
-        bookingDate: parsedDate, // TODO
+        bookingDate: parsedDate,
         repetitionId: widget.booking.repetitionId,
         repetitionType: _repetitionType, // TODO
         categoryId: _bookingType == BookingType.transfer ? null : _selectedCategory?.id,
