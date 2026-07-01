@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:haushaltsbuch_budget_tracker/blocs/budget/budget_event.dart';
 import 'package:haushaltsbuch_budget_tracker/core/utils/bottom_sheets/delete_budget_bottom_sheet.dart';
 import 'package:haushaltsbuch_budget_tracker/data/repositories/budget_repository.dart';
@@ -18,6 +19,7 @@ import '../../../../data/models/booking.dart';
 import '../../../../data/models/budget.dart';
 import '../../../bookings/presentation/widgets/deco/booking_list_daily_header.dart';
 import '../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
+import '../../../shared/presentation/widgets/deco/empty_list.dart';
 import '../../../shared/presentation/widgets/deco/error_text.dart';
 import '../widgets/charts/budget_bar_chart.dart';
 import '../widgets/deco/budget_info_row.dart';
@@ -122,57 +124,66 @@ class _BudgetBookingsPageState extends State<BudgetBookingsPage> {
                         ),
                       ),
                     ),
-                    Expanded(
-                      child: AnimationLimiter(
-                        child: ListView.builder(
-                          controller: _scrollController,
-                          shrinkWrap: true,
-                          itemCount: filteredBookings.length,
-                          itemBuilder: (context, index) {
-                            final bookingDate = filteredBookings[index].bookingDate;
-                            final bool showHeader = index == 0
-                                ? true
-                                : !isSameDay(
-                                    bookingDate,
-                                    filteredBookings[index - 1].bookingDate,
+                    filteredBookings.isEmpty
+                        ? EmptyList(
+                            text: 'no_bookings_for_budget',
+                            icon: FaIcon(
+                              FontAwesomeIcons.book,
+                              size: 42.0,
+                              color: Colors.white70,
+                            ),
+                          )
+                        : Expanded(
+                            child: AnimationLimiter(
+                              child: ListView.builder(
+                                controller: _scrollController,
+                                shrinkWrap: true,
+                                itemCount: filteredBookings.length,
+                                itemBuilder: (context, index) {
+                                  final bookingDate = filteredBookings[index].bookingDate;
+                                  final bool showHeader = index == 0
+                                      ? true
+                                      : !isSameDay(
+                                          bookingDate,
+                                          filteredBookings[index - 1].bookingDate,
+                                        );
+                                  final bool isDividerPosition = index == _pastStartIndex && index != 0;
+                                  final blockContent = Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      isDividerPosition
+                                          ? Padding(
+                                              padding: const EdgeInsets.symmetric(vertical: 12.0),
+                                              child: Row(
+                                                children: [
+                                                  const Expanded(child: Divider(indent: 10.0, endIndent: 18.0)),
+                                                  Text(t.translate('past_bookings')),
+                                                  const Expanded(child: Divider(indent: 18.0, endIndent: 10.0)),
+                                                ],
+                                              ),
+                                            )
+                                          : const SizedBox.shrink(),
+                                      showHeader
+                                          ? BookingListDailyHeader(bookings: filteredBookings, bookingDate: bookingDate, index: index)
+                                          : const SizedBox.shrink(),
+                                      BookingCard(booking: filteredBookings[index]),
+                                      filteredBookings.length - 1 == index ? SizedBox(height: 42.0) : SizedBox.shrink(),
+                                    ],
                                   );
-                            final bool isDividerPosition = index == _pastStartIndex && index != 0;
-                            final blockContent = Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                isDividerPosition
-                                    ? Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 12.0),
-                                        child: Row(
-                                          children: [
-                                            const Expanded(child: Divider(indent: 10.0, endIndent: 18.0)),
-                                            Text(t.translate('past_bookings')),
-                                            const Expanded(child: Divider(indent: 18.0, endIndent: 10.0)),
-                                          ],
-                                        ),
-                                      )
-                                    : const SizedBox.shrink(),
-                                showHeader
-                                    ? BookingListDailyHeader(bookings: filteredBookings, bookingDate: bookingDate, index: index)
-                                    : const SizedBox.shrink(),
-                                BookingCard(booking: filteredBookings[index]),
-                                filteredBookings.length - 1 == index ? SizedBox(height: 42.0) : SizedBox.shrink(),
-                              ],
-                            );
-                            return AnimationConfiguration.staggeredList(
-                              position: index,
-                              duration: const Duration(milliseconds: listAnimationDurationInMs),
-                              child: SlideAnimation(
-                                verticalOffset: 40.0,
-                                child: FadeInAnimation(
-                                  child: blockContent,
-                                ),
+                                  return AnimationConfiguration.staggeredList(
+                                    position: index,
+                                    duration: const Duration(milliseconds: listAnimationDurationInMs),
+                                    child: SlideAnimation(
+                                      verticalOffset: 40.0,
+                                      child: FadeInAnimation(
+                                        child: blockContent,
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
+                            ),
+                          ),
                   ],
                 );
               }),

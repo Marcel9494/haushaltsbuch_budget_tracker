@@ -52,7 +52,7 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
   // TODO Kein Ziel auf Mehrsprachigkeit erweitern
   late Goal _selectedGoal = Goal(
       goalAmount: 0.0,
-      goalName: 'Kein Ziel',
+      goalName: '',
       goalType: GoalType.undefined,
       startDate: DateTime.now(),
       endDate: DateTime.now(),
@@ -199,7 +199,7 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
                           onRepetitionTypeChanged: (RepetitionType newRepetitionType) {
                             setState(() {
                               _repetitionType = newRepetitionType;
-                              _dateController.text = setDateForRepetitionType(_dateController.text, _repetitionType);
+                              _dateController.text = setDateForRepetitionType(_dateController.text, _repetitionType, context);
                             });
                           },
                         ),
@@ -214,7 +214,7 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
                                         text: 'debit_account',
                                         showSuffixIcon: false,
                                         isOptional: false,
-                                        onAccountChanged: (Account newDebitAccount) {
+                                        onAccountChanged: (Account? newDebitAccount) {
                                           setState(() {
                                             _selectedDebitAccount = newDebitAccount;
                                           });
@@ -234,7 +234,7 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
                                         text: 'target_account',
                                         showSuffixIcon: false,
                                         isOptional: false,
-                                        onAccountChanged: (Account newTargetAccount) {
+                                        onAccountChanged: (Account? newTargetAccount) {
                                           setState(() {
                                             _selectedTargetAccount = newTargetAccount;
                                           });
@@ -265,7 +265,7 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
                                 categorieController: _categorieController,
                                 bookingType: _bookingType,
                                 isOptional: true,
-                                onCategorieChanged: (Category newCategory) {
+                                onCategorieChanged: (Category? newCategory) {
                                   setState(() {
                                     _selectedCategory = newCategory;
                                   });
@@ -278,7 +278,7 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
                                 text: 'account',
                                 showSuffixIcon: true,
                                 isOptional: true,
-                                onAccountChanged: (Account newDebitAccount) {
+                                onAccountChanged: (Account? newDebitAccount) {
                                   setState(() {
                                     _selectedDebitAccount = newDebitAccount;
                                   });
@@ -292,7 +292,6 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
                             });
                           },
                         ),
-                        // TODO implementieren, wenn Haushaltsmitglieder hinzugefügt werden: PersonInputField(personController: _personController),
                         SizedBox(height: 30.0),
                         Hero(
                           tag: 'create_booking_fab',

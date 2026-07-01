@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:haushaltsbuch_budget_tracker/data/repositories/budget_repository.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
@@ -19,6 +20,8 @@ class BudgetInfoRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final locale = Localizations.localeOf(context).toString();
+    BudgetRepository budgetRepository = BudgetRepository();
+    double overallUsedBudgetPercent = budgetRepository.calculateOverallUsedBudgetPercent(usedAmount, budgetAmount);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -26,9 +29,9 @@ class BudgetInfoRow extends StatelessWidget {
           radius: 32.0,
           lineWidth: 6.0,
           animation: true,
-          percent: (usedAmount / budgetAmount).clamp(0.0, 1.0),
+          percent: (overallUsedBudgetPercent).clamp(0.0, 1.0),
           center: Text(
-            '${NumberFormat('#,##0.0', locale).format((usedAmount / budgetAmount) * 100)}%',
+            '${NumberFormat('#,##0.0', locale).format(overallUsedBudgetPercent)}%',
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 13.0,

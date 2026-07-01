@@ -24,7 +24,7 @@ class AccountCard extends StatelessWidget {
           ),
           child: Container(
             decoration: BoxDecoration(
-              border: Border(right: BorderSide(color: account.balance >= 0 ? Colors.green : Colors.redAccent, width: 3.5)),
+              border: Border(right: BorderSide(color: account.balance >= 0 ? Colors.green : Colors.redAccent, width: 4.0)),
             ),
             child: ListTile(
               title: Text(

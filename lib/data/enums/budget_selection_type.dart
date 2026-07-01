@@ -35,7 +35,7 @@ extension SelectionTypeExtension on BudgetSelectionType {
     }
   }
 
-  String deleteDescription(String budgetName) {
+  String getDeleteDescription() {
     switch (this) {
       case BudgetSelectionType.single:
         return 'delete_single_budget_description';

@@ -7,6 +7,7 @@ import '../../../../../blocs/account/account_bloc.dart';
 import '../../../../../blocs/account/account_state.dart';
 import '../../../../../data/models/account.dart';
 import '../../../../../l10n/app_localizations.dart';
+import '../../../../shared/presentation/widgets/deco/bottom_sheet_line.dart';
 import '../../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../buttons/grid_item_button.dart';
 
@@ -15,7 +16,7 @@ class AccountInputField extends StatefulWidget {
   final String text;
   final bool showSuffixIcon;
   final bool isOptional;
-  final ValueChanged<Account> onAccountChanged;
+  final ValueChanged<Account?> onAccountChanged;
 
   const AccountInputField({
     super.key,
@@ -99,7 +100,15 @@ class _AccountInputFieldState extends State<AccountInputField> {
                     padding: const EdgeInsets.only(left: 16, right: 12, top: 12),
                     child: const FaIcon(FontAwesomeIcons.buildingColumns, size: 22.0),
                   ),
-                  suffixIcon: widget.showSuffixIcon ? Icon(Icons.keyboard_arrow_right_rounded, size: 24.0) : null,
+                  suffixIcon: widget.showSuffixIcon
+                      ? IconButton(
+                          onPressed: () {
+                            widget.accountController.text = '';
+                            widget.onAccountChanged(null);
+                          },
+                          icon: const Icon(Icons.clear_rounded, size: 22.0),
+                        )
+                      : null,
                   counterText: '',
                 ),
                 onTap: () {
@@ -121,6 +130,7 @@ class _AccountInputFieldState extends State<AccountInputField> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                BottomSheetLine(),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [

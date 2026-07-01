@@ -53,7 +53,6 @@ class _AccountOnboardingPageState extends State<AccountOnboardingPage> {
         if (state is OnboardingAccountLoading) {
           return CircularLoadingIndicator();
         } else if (state is OnboardingAccountsLoaded) {
-          print('Test 2');
           return SafeArea(
             child: Scaffold(
               body: Column(
@@ -109,7 +108,6 @@ class _AccountOnboardingPageState extends State<AccountOnboardingPage> {
                                 onboardingAccount:
                                     OnboardingAccount(accountName: name, accountType: AccountType.account, isSelected: true, balance: 0.0),
                               ));
-                          print('Test');
                           _scrollToListEnd();
                         },
                       ),

@@ -57,7 +57,7 @@ void showDeleteBudgetBottomSheet(BuildContext context, Budget budget, BudgetBloc
                       style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      '${t.translate(selectionType.deleteDescription(budget.category!.categoryName))} '
+                      '${t.translate(selectionType.getDeleteDescription())}'
                       '${selectionType == BudgetSelectionType.single ? '(${formatMonthYear(context, budget.budgetDate!)})' : ''}',
                       style: const TextStyle(fontSize: 12.0, color: Colors.grey),
                     ),
@@ -70,7 +70,7 @@ void showDeleteBudgetBottomSheet(BuildContext context, Budget budget, BudgetBloc
                       final bool confirmed = await showDeleteDialog(
                         context,
                         t.translate('delete_budget'),
-                        budgetSelectionType.deleteDescription(budget.category!.categoryName),
+                        budgetSelectionType.getDeleteDescription(),
                       );
 
                       if (confirmed == true) {

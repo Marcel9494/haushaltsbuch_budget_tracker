@@ -122,9 +122,9 @@ class _CreateBudgetPageState extends State<CreateBudgetPage> {
                         CategorieInputField(
                           categorieController: _categoryController,
                           bookingType: BookingType.expense,
-                          onCategorieChanged: (Category newCategory) {
+                          onCategorieChanged: (Category? newCategory) {
                             setState(() {
-                              _selectedCategory = newCategory;
+                              _selectedCategory = newCategory!;
                             });
                           },
                         ),

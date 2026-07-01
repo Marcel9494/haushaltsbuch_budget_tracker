@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 
 import '../../../../../data/enums/account_type.dart';
+import '../../../../shared/presentation/widgets/deco/bottom_sheet_line.dart';
 
 class AccountTypeInputField extends StatefulWidget {
   final TextEditingController accountTypeController;
@@ -84,6 +85,7 @@ class _AccountTypeInputFieldState extends State<AccountTypeInputField> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          BottomSheetLine(),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [

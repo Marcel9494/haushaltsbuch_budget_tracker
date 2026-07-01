@@ -141,7 +141,7 @@ class _BudgetBarChartState extends State<BudgetBarChart> with SingleTickerProvid
                     sideTitles: SideTitles(
                       showTitles: true,
                       getTitlesWidget: (value, meta) {
-                        final List<String> months = getAllShortMonthNames('de_DE');
+                        final List<String> months = getAllShortMonthNames(Localizations.localeOf(context).toString());
                         return Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(

@@ -149,9 +149,9 @@ class _UpdateAccountPageState extends State<UpdateAccountPage> {
                       confirmed = await showTransferAccountDialog(
                         context,
                         _accountController,
-                        (Account newAccount) {
+                        (Account? newAccount) {
                           setState(() {
-                            _selectedAccount = newAccount;
+                            _selectedAccount = newAccount!;
                           });
                         },
                       );

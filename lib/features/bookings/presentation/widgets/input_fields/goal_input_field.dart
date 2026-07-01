@@ -6,6 +6,7 @@ import '../../../../../blocs/goal/goal_bloc.dart';
 import '../../../../../blocs/goal/goal_state.dart';
 import '../../../../../data/models/goal.dart';
 import '../../../../../l10n/app_localizations.dart';
+import '../../../../shared/presentation/widgets/deco/bottom_sheet_line.dart';
 import '../../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../buttons/add_button.dart';
 
@@ -81,7 +82,7 @@ class _GoalInputFieldState extends State<GoalInputField> {
                   ),
                   suffixIcon: IconButton(
                     onPressed: () {
-                      widget.goalController.text = 'Kein Ziel';
+                      widget.goalController.text = '';
                     },
                     icon: const Icon(Icons.clear_rounded, size: 22.0),
                   ),
@@ -106,6 +107,7 @@ class _GoalInputFieldState extends State<GoalInputField> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                BottomSheetLine(),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [

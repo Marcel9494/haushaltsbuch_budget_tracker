@@ -265,16 +265,6 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
                             });
                           },
                         ),
-                        DateInputField(
-                          dateController: _dateController,
-                          repetitionType: _repetitionType,
-                          onRepetitionTypeChanged: (RepetitionType newRepetitionType) {
-                            setState(() {
-                              _repetitionType = newRepetitionType;
-                              _dateController.text = setDateForRepetitionType(_dateController.text, _repetitionType);
-                            });
-                          },
-                        ),
                         AmountInputField(
                           amountController: _amountController,
                           bookingType: _bookingType,
@@ -282,6 +272,16 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
                           onAmountTypeChanged: (AmountType newAmountType) {
                             setState(() {
                               _amountType = newAmountType;
+                            });
+                          },
+                        ),
+                        DateInputField(
+                          dateController: _dateController,
+                          repetitionType: _repetitionType,
+                          onRepetitionTypeChanged: (RepetitionType newRepetitionType) {
+                            setState(() {
+                              _repetitionType = newRepetitionType;
+                              _dateController.text = setDateForRepetitionType(_dateController.text, _repetitionType, context);
                             });
                           },
                         ),
@@ -296,7 +296,7 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
                                         text: 'debit_account',
                                         showSuffixIcon: false,
                                         isOptional: false,
-                                        onAccountChanged: (Account newDebitAccount) {
+                                        onAccountChanged: (Account? newDebitAccount) {
                                           setState(() {
                                             _selectedDebitAccount = newDebitAccount;
                                           });
@@ -316,7 +316,7 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
                                         text: 'target_account',
                                         showSuffixIcon: false,
                                         isOptional: false,
-                                        onAccountChanged: (Account newTargetAccount) {
+                                        onAccountChanged: (Account? newTargetAccount) {
                                           setState(() {
                                             _selectedTargetAccount = newTargetAccount;
                                           });
@@ -347,7 +347,7 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
                                 categorieController: _categorieController,
                                 bookingType: _bookingType,
                                 isOptional: true,
-                                onCategorieChanged: (Category newCategory) {
+                                onCategorieChanged: (Category? newCategory) {
                                   setState(() {
                                     _selectedCategory = newCategory;
                                   });
@@ -360,7 +360,7 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
                                 text: 'account',
                                 showSuffixIcon: true,
                                 isOptional: true,
-                                onAccountChanged: (Account newDebitAccount) {
+                                onAccountChanged: (Account? newDebitAccount) {
                                   setState(() {
                                     _selectedDebitAccount = newDebitAccount;
                                   });
@@ -374,7 +374,6 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
                             });
                           },
                         ),
-                        // TODO implementieren, wenn Haushaltsmitglieder hinzugefügt werden: PersonInputField(personController: _personController),
                         SizedBox(height: 30.0),
                         Hero(
                           tag: 'update_booking_fab',

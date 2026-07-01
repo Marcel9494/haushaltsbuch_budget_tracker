@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:haushaltsbuch_budget_tracker/core/utils/currency_formatter.dart';
 import 'package:haushaltsbuch_budget_tracker/data/enums/account_type.dart';
 
 import '../../../../../data/models/account.dart';
@@ -6,11 +7,13 @@ import '../../../../../l10n/app_localizations.dart';
 
 class AccountListHeader extends StatefulWidget {
   final List<Account> accounts;
+  final double accountTypeBalance;
   final int index;
 
   const AccountListHeader({
     super.key,
     required this.accounts,
+    required this.accountTypeBalance,
     required this.index,
   });
 
@@ -23,7 +26,7 @@ class _AccountListHeaderState extends State<AccountListHeader> {
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 6.0),
+      padding: const EdgeInsets.fromLTRB(12.0, 12.0, 31.0, 6.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -33,6 +36,14 @@ class _AccountListHeaderState extends State<AccountListHeader> {
               fontSize: 18.0,
               fontWeight: FontWeight.bold,
               color: Colors.white,
+            ),
+          ),
+          Text(
+            formatCurrency(widget.accountTypeBalance, 'EUR'),
+            style: TextStyle(
+              fontSize: 15.0,
+              fontWeight: FontWeight.bold,
+              color: widget.accountTypeBalance >= 0.0 ? Colors.green : Colors.redAccent,
             ),
           ),
         ],

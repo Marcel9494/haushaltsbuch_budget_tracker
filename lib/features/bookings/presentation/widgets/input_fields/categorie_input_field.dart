@@ -9,13 +9,14 @@ import '../../../../../blocs/category/category_state.dart';
 import '../../../../../data/enums/category_type.dart';
 import '../../../../../data/models/category.dart';
 import '../../../../../l10n/app_localizations.dart';
+import '../../../../shared/presentation/widgets/deco/bottom_sheet_line.dart';
 import '../../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../buttons/grid_item_button.dart';
 
 class CategorieInputField extends StatefulWidget {
   final TextEditingController categorieController;
   final BookingType bookingType;
-  final ValueChanged<Category> onCategorieChanged;
+  final ValueChanged<Category?> onCategorieChanged;
   final bool isOptional;
 
   const CategorieInputField({
@@ -113,7 +114,13 @@ class _CategorieInputFieldState extends State<CategorieInputField> {
                     padding: const EdgeInsets.only(left: 16, right: 12, top: 12),
                     child: const FaIcon(FontAwesomeIcons.grip, size: 22.0),
                   ),
-                  suffixIcon: Icon(Icons.keyboard_arrow_right_rounded, size: 24.0),
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      widget.categorieController.text = '';
+                      widget.onCategorieChanged(null);
+                    },
+                    icon: const Icon(Icons.clear_rounded, size: 22.0),
+                  ),
                   counterText: '',
                 ),
                 onTap: () {
@@ -137,6 +144,7 @@ class _CategorieInputFieldState extends State<CategorieInputField> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  BottomSheetLine(),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [

@@ -33,7 +33,7 @@ class BudgetOverviewStatCard extends StatelessWidget {
         final locale = Localizations.localeOf(context).toString();
         final double overallBudgetAmount = budgetRepository.calculateOverallBudgetAmount(budgets);
         final double overallUsedBudgetAmount = budgetRepository.calculateMonthlyUsedAmount(budgets, bookings);
-        final double overallUsedBudgetPercent = (overallUsedBudgetAmount / overallBudgetAmount) * 100;
+        final double overallUsedBudgetPercent = budgetRepository.calculateOverallUsedBudgetPercent(overallUsedBudgetAmount, overallBudgetAmount);
         return Card(
           child: Padding(
             padding: const EdgeInsets.all(16.0),

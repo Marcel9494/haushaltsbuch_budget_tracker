@@ -23,6 +23,7 @@ Future<bool> showAddAccountDialog(
             titleController: accountNameController,
             text: t.translate('account_name'),
             showTitle: false,
+            autoFocus: true,
           ),
         ],
       ),

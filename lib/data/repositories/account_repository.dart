@@ -76,12 +76,13 @@ class AccountRepository {
   }
 
   Future<List<Account>> loadAccounts() async {
-    final accounts = await Supabase.instance.client.from('accounts').select().order('account_type', ascending: true);
+    final accounts =
+        await Supabase.instance.client.from('accounts').select().order('account_type', ascending: true).order('balance', ascending: false);
     return (accounts as List).map((data) => Account.fromMap(data)).toList();
   }
 
   double calculateAssets(List<Account> accounts) {
-    double totalAssets = 0;
+    double totalAssets = 0.0;
     for (Account account in accounts) {
       if (account.balance >= 0 && account.accountType != AccountType.credit) {
         totalAssets += account.balance;
@@ -91,13 +92,25 @@ class AccountRepository {
   }
 
   double calculateDebts(List<Account> accounts) {
-    double totalDebts = 0;
+    double totalDebts = 0.0;
     for (Account account in accounts) {
       if (account.balance < 0 || account.accountType == AccountType.credit) {
         totalDebts += account.balance;
       }
     }
     return totalDebts;
+  }
+
+  Map<String, double> calculateAccountTypeBalances(List<Account> accounts) {
+    Map<String, double> accountTypeBalances = {};
+
+    for (Account account in accounts) {
+      String type = account.accountType.name;
+      double balance = account.balance;
+      accountTypeBalances[type] = (accountTypeBalances[type] ?? 0.0) + balance;
+    }
+
+    return accountTypeBalances;
   }
 
   Future<void> updateAccountBalance(List<Booking> bookings, BuildContext context) async {

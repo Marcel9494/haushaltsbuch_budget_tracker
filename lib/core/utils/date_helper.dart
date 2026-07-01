@@ -79,6 +79,7 @@ List<String> getAllShortMonthNames(String locale) {
   return shortMonthNames;
 }
 
+// TODO Code könnte hier noch verbessert werden bzgl. Mehrsprachigkeit
 DateTime tryParseSelectedDate(String date) {
   try {
     return DateFormat(
@@ -90,21 +91,20 @@ DateTime tryParseSelectedDate(String date) {
   }
 }
 
-String setDateForRepetitionType(String currentDate, RepetitionType repetitionType) {
+String setDateForRepetitionType(String currentDate, RepetitionType repetitionType, BuildContext context) {
   String dateString = '';
-  final date = tryParseSelectedDate(currentDate);
+  final DateTime date = tryParseSelectedDate(currentDate);
+
   if (repetitionType == RepetitionType.beginningOfMonth) {
-    dateString =
-        DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(DateTime(date.year, date.month, 1));
+    dateString = DateFormat.yMEd(Localizations.localeOf(context).toString()).format(DateTime(date.year, date.month + 1, 1));
   } else if (repetitionType == RepetitionType.endOfMonth) {
-    dateString =
-        DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(DateTime(date.year, date.month + 1, 0));
+    dateString = DateFormat.yMEd(Localizations.localeOf(context).toString()).format(DateTime(date.year, date.month + 1, 0));
   } else if (repetitionType == RepetitionType.beginningOfYear) {
-    dateString = DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(DateTime(date.year, 1, 1));
+    dateString = DateFormat.yMEd(Localizations.localeOf(context).toString()).format(DateTime(date.year + 1, 1, 1));
   } else if (repetitionType == RepetitionType.endOfYear) {
-    dateString = DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(DateTime(date.year, 12, 31));
+    dateString = DateFormat.yMEd(Localizations.localeOf(context).toString()).format(DateTime(date.year, 12, 31));
   } else {
-    dateString = DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(date);
+    dateString = DateFormat.yMEd(Localizations.localeOf(context).toString()).format(date);
   }
   return dateString;
 }

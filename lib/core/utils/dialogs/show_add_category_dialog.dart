@@ -23,6 +23,7 @@ Future<bool> showAddCategoryDialog(
             titleController: categorieNameController,
             text: t.translate('category_name'),
             showTitle: false,
+            autoFocus: true,
           ),
         ],
       ),

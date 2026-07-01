@@ -54,7 +54,7 @@ class _BudgetPeriodSelectionButtonState extends State<BudgetPeriodSelectionButto
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const FaIcon(FontAwesomeIcons.solidCalendar, size: 24.0),
+                const FaIcon(FontAwesomeIcons.calendar, size: 24.0),
                 const SizedBox(height: 8),
                 Text(
                   '${t.translate('yearly_budget')}\n${formatCurrency(widget.currentBudgetAmount * 12, 'EUR')}',

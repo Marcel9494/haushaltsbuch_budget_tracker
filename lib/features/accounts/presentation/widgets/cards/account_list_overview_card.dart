@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../core/utils/currency_formatter.dart';
+import '../../../../../core/utils/dialogs/show_info_dialog.dart';
 import '../../../../../l10n/app_localizations.dart';
 
 class AccountListOverviewCard extends StatefulWidget {
   final String title;
   final double amount;
   final Color color;
+  final String dialogTitle;
+  final String dialogContent;
 
   const AccountListOverviewCard({
     super.key,
     required this.title,
     required this.amount,
     required this.color,
+    required this.dialogTitle,
+    required this.dialogContent,
   });
 
   @override
@@ -74,14 +79,32 @@ class _AccountListOverviewCardState extends State<AccountListOverviewCard> with 
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        t.translate(widget.title),
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            t.translate(widget.title),
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 6.0, right: 2.0),
+                            child: GestureDetector(
+                              onTap: () async {
+                                await showInfoDialog(context, widget.dialogTitle, widget.dialogContent);
+                              },
+                              child: const Icon(
+                                Icons.info_outline_rounded,
+                                color: Colors.grey,
+                                size: 18.0,
+                              ),
+                            ),
+                          )
+                        ],
                       ),
                       TweenAnimationBuilder<double>(
                         duration: const Duration(milliseconds: 1200),
