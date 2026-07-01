@@ -11,7 +11,7 @@ import '../../../l10n/app_localizations.dart';
 Future<bool> showTransferAccountDialog(
   BuildContext context,
   TextEditingController accountController,
-  final ValueChanged<Account> onAccountChanged,
+  final ValueChanged<Account?> onAccountChanged,
 ) async {
   final t = AppLocalizations.of(context);
   final bool? confirmed = await showDialog<bool>(

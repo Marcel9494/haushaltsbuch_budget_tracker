@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../core/utils/currency_formatter.dart';
@@ -79,6 +80,16 @@ class _MonthlyLineChartState extends State<MonthlyLineChart> with SingleTickerPr
     return spots.take(visibleCount.clamp(0, spots.length)).toList();
   }
 
+  double getInterval(double minY, double maxY) {
+    double interval = 0.0;
+    if (minY.abs() <= maxY.abs()) {
+      interval = maxY == 0 ? maxY.abs() : maxY.abs() / 2;
+    } else {
+      interval = minY == 0 ? minY.abs() : minY.abs() / 2;
+    }
+    return interval;
+  }
+
   @override
   void dispose() {
     _animationController.dispose();
@@ -130,12 +141,60 @@ class _MonthlyLineChartState extends State<MonthlyLineChart> with SingleTickerPr
     double minY,
     double maxY,
   ) {
+    final t = AppLocalizations.of(context);
     return LineChartData(
       minX: 1,
       maxX: daysInMonth.toDouble(),
       minY: minY,
       maxY: maxY,
       gridData: FlGridData(show: true),
+      lineTouchData: LineTouchData(
+        enabled: true,
+        handleBuiltInTouches: true,
+        touchTooltipData: LineTouchTooltipData(
+          getTooltipColor: (_) => Colors.grey.shade800,
+          getTooltipItems: (List<LineBarSpot> touchedSpots) {
+            if (touchedSpots.isEmpty) {
+              return [];
+            }
+
+            final day = touchedSpots.first.x.toInt();
+            final date = DateTime(now.year, now.month, day);
+            final revenue = touchedSpots.firstWhere((s) => s.barIndex == 0).y;
+            final expenses = touchedSpots.firstWhere((s) => s.barIndex == 1).y;
+
+            return touchedSpots.map((spot) {
+              if (spot.barIndex != 0) {
+                return null;
+              }
+
+              return LineTooltipItem(
+                '${DateFormat.yMEd(Localizations.localeOf(context).toString()).format(date)}:\n'
+                '${t.translate('revenue')}: ${formatCurrency(revenue, 'EUR')}\n'
+                '${t.translate('expenses')}: ${formatCurrency(expenses.abs(), 'EUR')}\n'
+                '${t.translate('balance')}: ${formatCurrency(revenue - expenses.abs(), 'EUR')}',
+                textAlign: TextAlign.start,
+                const TextStyle(color: Colors.white, fontSize: 11.0),
+              );
+            }).toList();
+          },
+        ),
+        getTouchedSpotIndicator: (barData, spotIndexes) {
+          return spotIndexes.map((index) {
+            return TouchedSpotIndicatorData(
+              FlLine(color: Colors.white30),
+              FlDotData(
+                getDotPainter: (spot, percent, bar, index) {
+                  return FlDotCirclePainter(
+                    radius: 6.0,
+                    color: barData.color == Colors.green ? Colors.green : Colors.red,
+                  );
+                },
+              ),
+            );
+          }).toList();
+        },
+      ),
       titlesData: FlTitlesData(
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
@@ -159,12 +218,12 @@ class _MonthlyLineChartState extends State<MonthlyLineChart> with SingleTickerPr
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: 64.0,
-            interval: maxY != 0 ? maxY / 2 : 1,
+            interval: getInterval(minY, maxY),
             getTitlesWidget: (value, meta) {
               return Transform.rotate(
                 angle: 0.15,
                 child: Text(
-                  formatCurrency(value, 'EUR', decimalDigits: 0),
+                  formatCurrency(value.abs(), 'EUR', decimalDigits: 0),
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
                 ),

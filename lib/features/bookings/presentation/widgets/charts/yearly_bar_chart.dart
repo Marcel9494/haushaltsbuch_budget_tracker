@@ -8,6 +8,7 @@ import '../../../../../core/utils/date_helper.dart';
 import '../../../../../data/models/booking.dart';
 import '../../../../../data/repositories/booking_repository.dart';
 import '../../../../../l10n/app_localizations.dart';
+import '../deco/chart_title.dart';
 
 class YearlyBarChart extends StatefulWidget {
   final Map<int, List<Booking>> bookings;
@@ -120,85 +121,89 @@ class _YearlyBarChartState extends State<YearlyBarChart> with SingleTickerProvid
     final t = AppLocalizations.of(context);
     return Card(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(4.0, 24.0, 16.0, 14.0),
-        child: SizedBox(
-          height: 150.0,
-          child: AnimatedBuilder(
-            animation: _animation,
-            builder: (context, child) {
-              return BarChart(
-                BarChartData(
-                  barGroups: getBarGroups(),
-                  alignment: BarChartAlignment.spaceAround,
-                  titlesData: FlTitlesData(
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        getTitlesWidget: (value, meta) {
-                          final List<String> months = getAllShortMonthNames('de_DE');
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Text(
-                              months[value.toInt()],
-                              style: const TextStyle(fontSize: 11.0, fontWeight: FontWeight.bold),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    leftTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 70.0,
-                        interval: getInterval(),
-                        getTitlesWidget: (value, meta) {
-                          return Transform.rotate(
-                            angle: 0.22,
-                            child: Text(
-                              formatCurrency(value, 'EUR', decimalDigits: 0),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    rightTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                    topTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                  ),
-                  gridData: FlGridData(show: true),
-                  borderData: FlBorderData(show: false),
-                  barTouchData: BarTouchData(
-                    enabled: true,
-                    handleBuiltInTouches: true,
-                    touchTooltipData: BarTouchTooltipData(
-                      getTooltipColor: (_) => Colors.grey.shade800,
-                      getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                        final monthIndex = group.x.toInt();
-                        final List<String> months = getAllMonthNames('de_DE');
-
-                        return BarTooltipItem(
-                          '${months[monthIndex]}:\n'
-                          '${t.translate('revenue')}: ${formatCurrency(_monthlyRevenue[monthIndex], 'EUR', decimalDigits: 2)}\n'
-                          '${t.translate('expenses')}: ${formatCurrency(_monthlyExpenses[monthIndex], 'EUR', decimalDigits: 2)}\n'
-                          '${t.translate('balance')}: ${formatCurrency(_monthlyRevenue[monthIndex] - _monthlyExpenses[monthIndex], 'EUR', decimalDigits: 2)}',
-                          textAlign: TextAlign.start,
-                          const TextStyle(
-                            color: Colors.white,
-                            fontSize: 11.0,
+        padding: const EdgeInsets.fromLTRB(4.0, 6.0, 16.0, 14.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ChartTitle(leftPadding: 12.0),
+            SizedBox(height: 32.0),
+            SizedBox(
+              height: 150.0,
+              child: AnimatedBuilder(
+                animation: _animation,
+                builder: (context, child) {
+                  return BarChart(
+                    BarChartData(
+                      barGroups: getBarGroups(),
+                      alignment: BarChartAlignment.spaceAround,
+                      titlesData: FlTitlesData(
+                        bottomTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            getTitlesWidget: (value, meta) {
+                              final List<String> months = getAllShortMonthNames(Localizations.localeOf(context).toString());
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Text(
+                                  months[value.toInt()],
+                                  style: const TextStyle(fontSize: 11.0, fontWeight: FontWeight.bold),
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
+                        ),
+                        leftTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            reservedSize: 76.0,
+                            interval: getInterval(),
+                            getTitlesWidget: (value, meta) {
+                              return Transform.rotate(
+                                angle: 0.22,
+                                child: Text(
+                                  formatCurrency(value, 'EUR', decimalDigits: 0),
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        rightTitles: const AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
+                        topTitles: const AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
+                      ),
+                      gridData: FlGridData(show: true),
+                      borderData: FlBorderData(show: false),
+                      barTouchData: BarTouchData(
+                        enabled: true,
+                        handleBuiltInTouches: true,
+                        touchTooltipData: BarTouchTooltipData(
+                          getTooltipColor: (_) => Colors.grey.shade800,
+                          getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                            final monthIndex = group.x.toInt();
+                            final List<String> months = getAllMonthNames('de_DE');
+
+                            return BarTooltipItem(
+                              '${months[monthIndex]}:\n'
+                              '${t.translate('revenue')}: ${formatCurrency(_monthlyRevenue[monthIndex], 'EUR', decimalDigits: 2)}\n'
+                              '${t.translate('expenses')}: ${formatCurrency(_monthlyExpenses[monthIndex], 'EUR', decimalDigits: 2)}\n'
+                              '${t.translate('balance')}: ${formatCurrency(_monthlyRevenue[monthIndex] - _monthlyExpenses[monthIndex], 'EUR', decimalDigits: 2)}',
+                              textAlign: TextAlign.start,
+                              const TextStyle(color: Colors.white, fontSize: 11.0),
+                            );
+                          },
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              );
-            },
-          ),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );

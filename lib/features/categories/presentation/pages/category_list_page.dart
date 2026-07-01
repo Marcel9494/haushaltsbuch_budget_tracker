@@ -13,6 +13,7 @@ import '../../../../core/consts/animation_consts.dart';
 import '../../../../data/enums/category_type.dart';
 import '../../../../data/models/category.dart';
 import '../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
+import '../../../shared/presentation/widgets/deco/empty_list.dart';
 import '../../../shared/presentation/widgets/deco/error_text.dart';
 import '../widgets/cards/category_card.dart';
 import 'create_category_page.dart';
@@ -131,44 +132,70 @@ class _CategoryListPageState extends State<CategoryListPage> with SingleTickerPr
                 return TabBarView(
                   controller: _tabController,
                   children: <Widget>[
-                    AnimationLimiter(
-                      key: _expenseListKey,
-                      child: ListView.builder(
-                        itemCount: expenseCategories.length,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return AnimationConfiguration.staggeredList(
-                            position: index,
-                            duration: const Duration(milliseconds: listAnimationDurationInMs),
-                            child: SlideAnimation(
-                              verticalOffset: 40.0,
-                              child: FadeInAnimation(
-                                child: CategoryCard(category: expenseCategories[index]),
+                    expenseCategories.isEmpty
+                        ? Column(
+                            children: [
+                              EmptyList(
+                                text: 'no_expense_categories',
+                                icon: FaIcon(
+                                  FontAwesomeIcons.sistrix,
+                                  size: 48.0,
+                                  color: Colors.white70,
+                                ),
                               ),
+                            ],
+                          )
+                        : AnimationLimiter(
+                            key: _expenseListKey,
+                            child: ListView.builder(
+                              itemCount: expenseCategories.length,
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                return AnimationConfiguration.staggeredList(
+                                  position: index,
+                                  duration: const Duration(milliseconds: listAnimationDurationInMs),
+                                  child: SlideAnimation(
+                                    verticalOffset: 40.0,
+                                    child: FadeInAnimation(
+                                      child: CategoryCard(category: expenseCategories[index]),
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
-                          );
-                        },
-                      ),
-                    ),
-                    AnimationLimiter(
-                      key: _revenueListKey,
-                      child: ListView.builder(
-                        itemCount: revenueCategories.length,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return AnimationConfiguration.staggeredList(
-                            position: index,
-                            duration: const Duration(milliseconds: listAnimationDurationInMs),
-                            child: SlideAnimation(
-                              verticalOffset: 40.0,
-                              child: FadeInAnimation(
-                                child: CategoryCard(category: revenueCategories[index]),
+                          ),
+                    revenueCategories.isEmpty
+                        ? Column(
+                            children: [
+                              EmptyList(
+                                text: 'no_revenue_categories',
+                                icon: FaIcon(
+                                  FontAwesomeIcons.sistrix,
+                                  size: 48.0,
+                                  color: Colors.white70,
+                                ),
                               ),
+                            ],
+                          )
+                        : AnimationLimiter(
+                            key: _revenueListKey,
+                            child: ListView.builder(
+                              itemCount: revenueCategories.length,
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                return AnimationConfiguration.staggeredList(
+                                  position: index,
+                                  duration: const Duration(milliseconds: listAnimationDurationInMs),
+                                  child: SlideAnimation(
+                                    verticalOffset: 40.0,
+                                    child: FadeInAnimation(
+                                      child: CategoryCard(category: revenueCategories[index]),
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
-                          );
-                        },
-                      ),
-                    ),
+                          ),
                   ],
                 );
               } else if (state is CategoryError) {

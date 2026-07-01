@@ -177,4 +177,12 @@ class BudgetRepository {
     }
     return overallBudgetAmount;
   }
+
+  double calculateOverallUsedBudgetPercent(double overallUsedBudgetAmount, double overallBudgetAmount) {
+    if (overallBudgetAmount == 0) {
+      return 0;
+    }
+    double overallUsedBudgetPercent = (overallUsedBudgetAmount / overallBudgetAmount) * 100;
+    return overallUsedBudgetPercent;
+  }
 }

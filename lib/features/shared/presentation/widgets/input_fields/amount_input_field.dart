@@ -7,6 +7,7 @@ import '../../../../../data/enums/booking_type.dart';
 import '../../../../../l10n/app_localizations.dart';
 import '../../../../bookings/presentation/widgets/bottom_sheets/show_amount_type_bottom_sheet.dart';
 import '../../../../bookings/presentation/widgets/buttons/grid_item_button.dart';
+import '../deco/bottom_sheet_line.dart';
 
 class AmountInputField extends StatefulWidget {
   final TextEditingController amountController;
@@ -312,11 +313,12 @@ class _AmountInputFieldState extends State<AmountInputField> {
       ),
       builder: (context) {
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              BottomSheetLine(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

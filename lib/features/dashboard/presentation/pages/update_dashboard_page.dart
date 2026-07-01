@@ -139,7 +139,7 @@ class _UpdateDashboardPageState extends State<UpdateDashboardPage> with SingleTi
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                FaIcon(FontAwesomeIcons.solidCalendar, size: 16.0),
+                                FaIcon(FontAwesomeIcons.calendar, size: 16.0),
                                 SizedBox(width: 8.0),
                                 Text(t.translate(DashboardElementType.year.name)),
                               ],

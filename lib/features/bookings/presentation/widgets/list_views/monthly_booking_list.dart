@@ -10,7 +10,7 @@ import '../../../../../blocs/booking/booking_bloc.dart';
 import '../../../../../core/consts/animation_consts.dart';
 import '../../../../../core/utils/currency_formatter.dart';
 import '../../../../../core/utils/date_helper.dart';
-import '../../../../../data/enums/category_type.dart';
+import '../../../../../data/enums/booking_type.dart';
 import '../../../../../data/models/booking.dart';
 import '../../../../../data/repositories/account_repository.dart';
 import '../../../../../data/repositories/booking_repository.dart';
@@ -21,6 +21,7 @@ import '../cards/booking_card.dart';
 import '../charts/monthly_line_chart.dart';
 import '../deco/booking_list_daily_header.dart';
 import '../deco/booking_list_overview.dart';
+import '../deco/chart_title.dart';
 
 class MonthlyBookingList extends StatefulWidget {
   final DateTime currentSelectedDate;
@@ -45,17 +46,17 @@ class MonthlyBookingList extends StatefulWidget {
 }
 
 class _MonthlyBookingListState extends State<MonthlyBookingList> {
+  final ScrollController _scrollController = ScrollController();
   List<Booking> _pastBookings = [];
   List<Booking> _upcomingBookings = [];
   List<Booking> _combinedBookings = [];
-  int _pastStartIndex = 0;
-  final ScrollController _scrollController = ScrollController();
-  double incomeTotal = 0;
-  double expenseTotal = 0;
   List<BarChartRodStackItem> incomeStack = [];
   List<BarChartRodStackItem> expenseStack = [];
   Map<String, double> incomeMap = {};
   Map<String, double> expenseMap = {};
+  int _pastStartIndex = 0;
+  double incomeTotal = 0;
+  double expenseTotal = 0;
   final incomeColors = [
     Colors.green.shade800,
     Colors.green.shade600,
@@ -83,18 +84,27 @@ class _MonthlyBookingListState extends State<MonthlyBookingList> {
   }
 
   void _prepareBarChartData(List<Booking> bookings) {
+    final t = AppLocalizations.of(context);
     incomeMap = {};
     expenseMap = {};
 
     for (Booking booking in bookings) {
-      final type = booking.category?.categoryType.name;
       final categoryName = booking.category?.categoryName;
+      final bookingType = booking.bookingType.name;
       final amount = booking.amount;
 
-      if (type == CategoryType.income.name) {
-        incomeMap[categoryName!] = (incomeMap[categoryName] ?? 0) + amount;
-      } else if (type == CategoryType.expense.name) {
-        expenseMap[categoryName!] = (expenseMap[categoryName] ?? 0) + amount;
+      if (bookingType == BookingType.income.name) {
+        if (categoryName == null) {
+          incomeMap[t.translate('no_category')] = (incomeMap[t.translate('no_category')] ?? 0) + amount;
+        } else {
+          incomeMap[categoryName] = (incomeMap[categoryName] ?? 0) + amount;
+        }
+      } else if (bookingType == BookingType.expense.name) {
+        if (categoryName == null) {
+          expenseMap[t.translate('no_category')] = (expenseMap[t.translate('no_category')] ?? 0) + amount;
+        } else {
+          expenseMap[categoryName] = (expenseMap[categoryName] ?? 0) + amount;
+        }
       }
     }
 
@@ -195,6 +205,7 @@ class _MonthlyBookingListState extends State<MonthlyBookingList> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              ChartTitle(),
                               SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),

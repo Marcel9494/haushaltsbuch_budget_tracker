@@ -2,6 +2,7 @@ import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../l10n/app_localizations.dart';
+import '../../../../shared/presentation/widgets/deco/bottom_sheet_line.dart';
 
 class SelectableBottomSheet extends StatelessWidget {
   final String title;
@@ -24,6 +25,7 @@ class SelectableBottomSheet extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              BottomSheetLine(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

@@ -124,8 +124,8 @@ class _GoalLineChartState extends State<GoalLineChart> {
     // Format dynamisch je nach Dauer
     String text;
     if (totalDays > 365) {
-      final month = DateFormat.MMM('de_DE').format(date);
-      final year = DateFormat.y('de_DE').format(date);
+      final month = DateFormat.MMM(Localizations.localeOf(context).toString()).format(date);
+      final year = DateFormat.y(Localizations.localeOf(context).toString()).format(date);
       return SideTitleWidget(
         meta: meta,
         child: Column(
@@ -149,13 +149,13 @@ class _GoalLineChartState extends State<GoalLineChart> {
         ),
       );
     } else if (totalDays > 60) {
-      text = DateFormat.MMM('de_DE').format(date); // "Jan"
+      text = DateFormat.MMM(Localizations.localeOf(context).toString()).format(date); // "Jan"
       return SideTitleWidget(
         meta: meta,
         child: Text(text, style: style),
       );
     } else {
-      text = DateFormat('dd.MM').format(date); // "12.01"
+      text = DateFormat('Md', Localizations.localeOf(context).languageCode).format(DateTime(date.year, date.month, value.toInt()));
       return SideTitleWidget(
         meta: meta,
         child: Text(text, style: style),

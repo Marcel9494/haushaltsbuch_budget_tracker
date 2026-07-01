@@ -63,7 +63,7 @@ class _DateSelectionButtonsState extends State<DateSelectionButtons> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const FaIcon(FontAwesomeIcons.solidCalendar, size: 24.0),
+                        const FaIcon(FontAwesomeIcons.calendar, size: 24.0),
                         const SizedBox(height: 8),
                         Text(
                           '${t.translate('start_date')}\n${widget.startDateController.text}',

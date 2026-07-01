@@ -4,6 +4,7 @@ import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../data/enums/repetition_type.dart';
+import '../../../../shared/presentation/widgets/deco/bottom_sheet_line.dart';
 
 class DateInputField extends StatefulWidget {
   final TextEditingController dateController;
@@ -67,6 +68,7 @@ class _DateInputFieldState extends State<DateInputField> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
+                                      BottomSheetLine(),
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [

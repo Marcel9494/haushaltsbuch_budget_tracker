@@ -33,7 +33,7 @@ class _PeriodOfTimeSegmentedButtonState extends State<PeriodOfTimeSegmentedButto
           ButtonSegment<PeriodOfTimeType>(
             value: PeriodOfTimeType.yearly,
             label: Text(t.translate('year'), style: TextStyle(fontSize: 14.0)),
-            icon: FaIcon(FontAwesomeIcons.solidCalendar, size: 16.0),
+            icon: FaIcon(FontAwesomeIcons.calendar, size: 16.0),
           ),
         ],
         selected: <PeriodOfTimeType>{widget.periodOfTimeType},
