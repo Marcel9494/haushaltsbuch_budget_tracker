@@ -15,6 +15,14 @@ class UserRepository {
     return User.fromMap(userData);
   }
 
+  Future<bool> existsUser(String userId) async {
+    final userResponse = await Supabase.instance.client.from('users').select('id').eq('id', userId).maybeSingle();
+    if (userResponse == null) {
+      return false;
+    }
+    return true;
+  }
+
   Future<void> updateUserLocale(String userId, Locale locale) async {
     await Supabase.instance.client.from('users').update({'locale': locale.toString()}).eq('id', userId);
   }

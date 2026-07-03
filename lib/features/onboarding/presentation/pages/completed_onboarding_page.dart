@@ -54,7 +54,7 @@ class _CompletedOnboardingPageState extends State<CompletedOnboardingPage> {
 
     if (categoryState is OnboardingCategoriesLoaded && accountState is OnboardingAccountsLoaded) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.read<OnboardingBloc>().add(StartOnboarding(
+        context.read<OnboardingBloc>().add(RunOnboarding(
               startCategories: categoryState.onboardingCategories
                   .where((startCategory) => startCategory.isSelected)
                   .map(
@@ -77,6 +77,7 @@ class _CompletedOnboardingPageState extends State<CompletedOnboardingPage> {
                   )
                   .toList(),
               startDashboardElements: startDashboardElements,
+              userId: Supabase.instance.client.auth.currentUser!.id,
             ));
       });
       return BlocConsumer<OnboardingBloc, OnboardingState>(
@@ -112,7 +113,7 @@ class _CompletedOnboardingPageState extends State<CompletedOnboardingPage> {
                     animateFromLastPercent: true,
                     center: AppIcon(),
                     circularStrokeCap: CircularStrokeCap.round,
-                    progressColor: Colors.green,
+                    progressColor: Colors.cyanAccent.shade700,
                   ),
                 ),
               ],

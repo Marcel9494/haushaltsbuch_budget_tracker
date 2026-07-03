@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/repositories/account_repository.dart';
 import '../../data/repositories/category_repository.dart';
 import '../../data/repositories/dashboard_element_repository.dart';
+import '../../data/repositories/user_repository.dart';
 import 'on_boarding_event.dart';
 import 'on_boarding_state.dart';
 
@@ -10,17 +11,19 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
   final CategoryRepository categoryRepository;
   final AccountRepository accountRepository;
   final DashboardElementRepository dashboardRepository;
+  final UserRepository userRepository;
 
   OnboardingBloc({
     required this.categoryRepository,
     required this.accountRepository,
     required this.dashboardRepository,
+    required this.userRepository,
   }) : super(OnboardingState(step: 0, totalSteps: 3, finished: false, message: 'categories_are_created')) {
-    on<StartOnboarding>(_onStart);
+    on<RunOnboarding>(_onRunOnboarding);
   }
 
-  Future<void> _onStart(
-    StartOnboarding event,
+  Future<void> _onRunOnboarding(
+    RunOnboarding event,
     Emitter<OnboardingState> emit,
   ) async {
     await Future.delayed(const Duration(milliseconds: 400));
@@ -36,6 +39,8 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
     await Future.delayed(const Duration(milliseconds: 1200));
 
     await dashboardRepository.createDashboardElements(event.startDashboardElements);
+    await userRepository.updateUserHasOnboardingCompleted(event.userId, true);
+
     emit(state.copyWith(step: 3, finished: true, message: 'you_are_ready_to_go'));
   }
 }
