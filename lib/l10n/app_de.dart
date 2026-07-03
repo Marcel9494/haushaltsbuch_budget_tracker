@@ -214,6 +214,7 @@ const Map<String, String> de = {
   'exceeded': 'Überschritten',
   'unknown': 'Unbekannt',
   'no_category': 'Keine Kategorie',
+  'no_categories': 'Noch keine Kategorien vorhanden.',
   'no_revenue_categories': 'Noch keine Einnahme Kategorien vorhanden.',
   'no_expense_categories': 'Noch keine Ausgabe Kategorien vorhanden.',
   'no_account': 'Kein Konto',

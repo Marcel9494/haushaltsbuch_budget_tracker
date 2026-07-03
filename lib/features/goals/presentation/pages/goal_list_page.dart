@@ -60,8 +60,8 @@ class _GoalListPageState extends State<GoalListPage> {
                     ? EmptyList(
                         text: 'no_goals',
                         icon: FaIcon(
-                          FontAwesomeIcons.book,
-                          size: 42.0,
+                          FontAwesomeIcons.bullseye,
+                          size: 48.0,
                           color: Colors.white70,
                         ),
                       )

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:haushaltsbuch_budget_tracker/data/enums/booking_type.dart';
-import 'package:haushaltsbuch_budget_tracker/features/bookings/presentation/widgets/buttons/add_button.dart';
 
 import '../../../../../blocs/category/category_bloc.dart';
 import '../../../../../blocs/category/category_state.dart';
@@ -11,6 +10,7 @@ import '../../../../../data/models/category.dart';
 import '../../../../../l10n/app_localizations.dart';
 import '../../../../shared/presentation/widgets/deco/bottom_sheet_line.dart';
 import '../../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
+import '../../../../shared/presentation/widgets/deco/empty_list.dart';
 import '../buttons/grid_item_button.dart';
 
 class CategorieInputField extends StatefulWidget {
@@ -132,8 +132,8 @@ class _CategorieInputFieldState extends State<CategorieInputField> {
                     ),
                     builder: (context) {
                       final double screenHeight = MediaQuery.of(context).size.height;
-                      final double bottomSheetHeight = screenHeight * 0.56;
-                      final double gridHeight = bottomSheetHeight * 0.56;
+                      final double bottomSheetHeight = screenHeight * 0.48;
+                      final double gridHeight = bottomSheetHeight * 0.68;
                       return BlocProvider.value(
                         value: _categoryBloc,
                         child: SafeArea(
@@ -159,43 +159,39 @@ class _CategorieInputFieldState extends State<CategorieInputField> {
                                     ],
                                   ),
                                   const SizedBox(height: 12),
-                                  SizedBox(
-                                    height: gridHeight,
-                                    child: GridView.count(
-                                      crossAxisCount: 4,
-                                      physics: const AlwaysScrollableScrollPhysics(),
-                                      mainAxisSpacing: 6,
-                                      crossAxisSpacing: 0,
-                                      childAspectRatio: 1.3,
-                                      children: filteredCategories.map((category) {
-                                        return GridItemButton(
-                                          text: category.categoryName,
-                                          textSize: 16,
-                                          color: Colors.cyanAccent,
-                                          borderRadius: 4,
-                                          onTap: () {
-                                            setState(() {
-                                              widget.categorieController.text = category.categoryName;
-                                            });
-                                            widget.onCategorieChanged(category);
-                                            Navigator.pop(context);
-                                          },
-                                        );
-                                      }).toList(),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 6),
-                                  const Divider(),
-                                  const SizedBox(height: 6),
-                                  Expanded(
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: AddButton(
-                                        text: t.translate('create_category'),
-                                        onPressed: () {},
-                                      ),
-                                    ),
-                                  ),
+                                  filteredCategories.isEmpty
+                                      ? EmptyList(
+                                          text: 'no_categories',
+                                          icon: Icon(
+                                            FontAwesomeIcons.grip,
+                                            size: 48.0,
+                                            color: Colors.white70,
+                                          ))
+                                      : SizedBox(
+                                          height: gridHeight,
+                                          child: GridView.count(
+                                            crossAxisCount: 4,
+                                            physics: const AlwaysScrollableScrollPhysics(),
+                                            mainAxisSpacing: 6,
+                                            crossAxisSpacing: 0,
+                                            childAspectRatio: 1.3,
+                                            children: filteredCategories.map((category) {
+                                              return GridItemButton(
+                                                text: category.categoryName,
+                                                textSize: 16,
+                                                color: Colors.cyanAccent,
+                                                borderRadius: 4,
+                                                onTap: () {
+                                                  setState(() {
+                                                    widget.categorieController.text = category.categoryName;
+                                                  });
+                                                  widget.onCategorieChanged(category);
+                                                  Navigator.pop(context);
+                                                },
+                                              );
+                                            }).toList(),
+                                          ),
+                                        ),
                                 ],
                               ),
                             ),

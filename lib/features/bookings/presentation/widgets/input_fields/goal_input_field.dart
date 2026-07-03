@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:haushaltsbuch_budget_tracker/features/shared/presentation/widgets/deco/empty_list.dart';
 
 import '../../../../../blocs/goal/goal_bloc.dart';
 import '../../../../../blocs/goal/goal_state.dart';
@@ -8,7 +9,6 @@ import '../../../../../data/models/goal.dart';
 import '../../../../../l10n/app_localizations.dart';
 import '../../../../shared/presentation/widgets/deco/bottom_sheet_line.dart';
 import '../../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
-import '../buttons/add_button.dart';
 
 class GoalInputField extends StatefulWidget {
   final TextEditingController goalController;
@@ -97,8 +97,8 @@ class _GoalInputFieldState extends State<GoalInputField> {
                     ),
                     builder: (context) {
                       final double screenHeight = MediaQuery.of(context).size.height;
-                      final double bottomSheetHeight = screenHeight * 0.56;
-                      final double gridHeight = bottomSheetHeight * 0.56;
+                      final double bottomSheetHeight = screenHeight * 0.48;
+                      final double gridHeight = bottomSheetHeight * 0.68;
                       return SafeArea(
                         child: SizedBox(
                           height: bottomSheetHeight,
@@ -122,39 +122,35 @@ class _GoalInputFieldState extends State<GoalInputField> {
                                   ],
                                 ),
                                 const SizedBox(height: 12),
-                                SizedBox(
-                                  height: gridHeight,
-                                  child: ListView.separated(
-                                    physics: const AlwaysScrollableScrollPhysics(),
-                                    itemCount: state.goals.length,
-                                    itemBuilder: (BuildContext context, int index) {
-                                      return ListTile(
-                                        title: Text(state.goals[index].goalName),
-                                        trailing: const Icon(Icons.keyboard_arrow_right_rounded, size: 24.0),
-                                        onTap: () {
-                                          setState(() {
-                                            widget.goalController.text = state.goals[index].goalName;
-                                          });
-                                          widget.onGoalChanged(state.goals[index]);
-                                          Navigator.pop(context);
-                                        },
-                                      );
-                                    },
-                                    separatorBuilder: (BuildContext context, int index) => const Divider(height: 1),
-                                  ),
-                                ),
-                                const SizedBox(height: 6),
-                                const Divider(),
-                                const SizedBox(height: 6),
-                                Expanded(
-                                  child: Align(
-                                    alignment: Alignment.center,
-                                    child: AddButton(
-                                      text: t.translate('create_goal'),
-                                      onPressed: () {},
-                                    ),
-                                  ),
-                                ),
+                                state.goals.isEmpty
+                                    ? EmptyList(
+                                        text: 'no_goals',
+                                        icon: Icon(
+                                          FontAwesomeIcons.bullseye,
+                                          size: 48.0,
+                                          color: Colors.white70,
+                                        ))
+                                    : SizedBox(
+                                        height: gridHeight,
+                                        child: ListView.separated(
+                                          physics: const AlwaysScrollableScrollPhysics(),
+                                          itemCount: state.goals.length,
+                                          itemBuilder: (BuildContext context, int index) {
+                                            return ListTile(
+                                              title: Text(state.goals[index].goalName),
+                                              trailing: const Icon(Icons.keyboard_arrow_right_rounded, size: 24.0),
+                                              onTap: () {
+                                                setState(() {
+                                                  widget.goalController.text = state.goals[index].goalName;
+                                                });
+                                                widget.onGoalChanged(state.goals[index]);
+                                                Navigator.pop(context);
+                                              },
+                                            );
+                                          },
+                                          separatorBuilder: (BuildContext context, int index) => const Divider(height: 1),
+                                        ),
+                                      ),
                               ],
                             ),
                           ),
