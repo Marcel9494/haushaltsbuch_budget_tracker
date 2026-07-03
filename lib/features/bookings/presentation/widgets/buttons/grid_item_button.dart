@@ -41,6 +41,8 @@ class GridItemButton extends StatelessWidget {
                 text!,
                 style: TextStyle(fontSize: textSize, color: color),
                 textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
               ),
             ],
           ],

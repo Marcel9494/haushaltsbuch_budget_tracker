@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:haushaltsbuch_budget_tracker/features/bookings/presentation/widgets/buttons/add_button.dart';
 
 import '../../../../../blocs/account/account_bloc.dart';
 import '../../../../../blocs/account/account_state.dart';
@@ -9,6 +8,7 @@ import '../../../../../data/models/account.dart';
 import '../../../../../l10n/app_localizations.dart';
 import '../../../../shared/presentation/widgets/deco/bottom_sheet_line.dart';
 import '../../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
+import '../../../../shared/presentation/widgets/deco/empty_list.dart';
 import '../buttons/grid_item_button.dart';
 
 class AccountInputField extends StatefulWidget {
@@ -120,8 +120,8 @@ class _AccountInputFieldState extends State<AccountInputField> {
                     ),
                     builder: (context) {
                       final double screenHeight = MediaQuery.of(context).size.height;
-                      final double bottomSheetHeight = screenHeight * 0.56;
-                      final double gridHeight = bottomSheetHeight * 0.56;
+                      final double bottomSheetHeight = screenHeight * 0.48;
+                      final double gridHeight = bottomSheetHeight * 0.68;
                       return SafeArea(
                         child: SizedBox(
                           height: bottomSheetHeight,
@@ -145,43 +145,39 @@ class _AccountInputFieldState extends State<AccountInputField> {
                                   ],
                                 ),
                                 const SizedBox(height: 12),
-                                SizedBox(
-                                  height: gridHeight,
-                                  child: GridView.count(
-                                    crossAxisCount: 4,
-                                    physics: const AlwaysScrollableScrollPhysics(),
-                                    mainAxisSpacing: 6,
-                                    crossAxisSpacing: 0,
-                                    childAspectRatio: 1.3,
-                                    children: state.accounts.map((account) {
-                                      return GridItemButton(
-                                        text: account.name,
-                                        textSize: 16,
-                                        color: Colors.cyanAccent,
-                                        borderRadius: 4,
-                                        onTap: () {
-                                          setState(() {
-                                            widget.accountController.text = account.name;
-                                          });
-                                          widget.onAccountChanged(account);
-                                          Navigator.pop(context);
-                                        },
-                                      );
-                                    }).toList(),
-                                  ),
-                                ),
-                                const SizedBox(height: 6),
-                                const Divider(),
-                                const SizedBox(height: 6),
-                                Expanded(
-                                  child: Align(
-                                    alignment: Alignment.center,
-                                    child: AddButton(
-                                      text: t.translate('create_account'),
-                                      onPressed: () {},
-                                    ),
-                                  ),
-                                ),
+                                state.accounts.isEmpty
+                                    ? EmptyList(
+                                        text: 'no_accounts',
+                                        icon: Icon(
+                                          FontAwesomeIcons.buildingColumns,
+                                          size: 48.0,
+                                          color: Colors.white70,
+                                        ))
+                                    : SizedBox(
+                                        height: gridHeight,
+                                        child: GridView.count(
+                                          crossAxisCount: 4,
+                                          physics: const AlwaysScrollableScrollPhysics(),
+                                          mainAxisSpacing: 6,
+                                          crossAxisSpacing: 0,
+                                          childAspectRatio: 1.3,
+                                          children: state.accounts.map((account) {
+                                            return GridItemButton(
+                                              text: account.name,
+                                              textSize: 16,
+                                              color: Colors.cyanAccent,
+                                              borderRadius: 4,
+                                              onTap: () {
+                                                setState(() {
+                                                  widget.accountController.text = account.name;
+                                                });
+                                                widget.onAccountChanged(account);
+                                                Navigator.pop(context);
+                                              },
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ),
                               ],
                             ),
                           ),
