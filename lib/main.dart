@@ -101,24 +101,55 @@ void main() async {
       if (event == AuthChangeEvent.initialSession) {
         // TODO
       } else if (event == AuthChangeEvent.signedIn) {
-        final locale = PlatformDispatcher.instance.locale;
-        final localeString = locale.countryCode != null ? locale.toString() : '${locale.languageCode}_US';
+        UserRepository userRepository = UserRepository();
+        bool userExists = await userRepository.existsUser(Supabase.instance.client.auth.currentUser!.id);
 
-        final newUser = User(
-          id: Supabase.instance.client.auth.currentUser!.id,
-          locale: locale,
-          currency: NumberFormat.simpleCurrency(locale: localeString).currencyName ?? '',
-          hasOnboardingCompleted: false,
-          dashboardConfig: {},
-        );
+        if (userExists == false) {
+          final locale = PlatformDispatcher.instance.locale;
+          final localeString = locale.countryCode != null ? locale.toString() : '${locale.languageCode}_US';
 
-        userBloc.add(CreateUser(user: newUser));
-        navigatorKey.currentState?.pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (_) => const CategoryOnboardingPage(),
-          ),
-          (route) => false,
-        );
+          final newUser = User(
+            id: Supabase.instance.client.auth.currentUser!.id,
+            locale: locale,
+            currency: NumberFormat.simpleCurrency(locale: localeString).currencyName ?? '',
+            hasOnboardingCompleted: false,
+          );
+
+          userBloc.add(CreateUser(user: newUser));
+          navigatorKey.currentState?.pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (_) => const CategoryOnboardingPage(),
+            ),
+            (route) => false,
+          );
+        } else {
+          User user = await userRepository.loadUser(Supabase.instance.client.auth.currentUser!.id);
+          if (user.hasOnboardingCompleted) {
+            navigatorKey.currentState?.pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (_) => MultiBlocProvider(
+                  providers: [
+                    BlocProvider(create: (context) => BookingBloc(BookingRepository(), AccountRepository())),
+                    BlocProvider(create: (context) => DashboardElementBloc(DashboardElementRepository())),
+                    BlocProvider(create: (context) => CategoryBloc(CategoryRepository())),
+                    BlocProvider(create: (context) => AccountBloc(AccountRepository())),
+                    BlocProvider(create: (context) => BudgetBloc(BudgetRepository())),
+                    BlocProvider(create: (context) => GoalBloc(GoalRepository())),
+                  ],
+                  child: HomePage(currentPageIndex: 0),
+                ),
+              ),
+              (route) => false,
+            );
+          } else {
+            navigatorKey.currentState?.pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (_) => const CategoryOnboardingPage(),
+              ),
+              (route) => false,
+            );
+          }
+        }
       } else if (event == AuthChangeEvent.userUpdated) {
         navigatorKey.currentState?.pushAndRemoveUntil(
           MaterialPageRoute(
@@ -357,6 +388,7 @@ class _MyAppState extends State<MyApp> {
                       categoryRepository: CategoryRepository(),
                       accountRepository: AccountRepository(),
                       dashboardRepository: DashboardElementRepository(),
+                      userRepository: UserRepository(),
                     ),
                   ),
                   BlocProvider(create: (context) => CategoryBloc(CategoryRepository())),
