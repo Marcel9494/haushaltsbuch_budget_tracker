@@ -27,6 +27,7 @@ import 'blocs/user/user_bloc.dart';
 import 'blocs/user/user_event.dart';
 import 'core/consts/route_consts.dart';
 import 'core/page_arguments/budget_bookings_page_arguments.dart';
+import 'core/page_arguments/category_bookings_page_arguments.dart';
 import 'core/page_arguments/category_list_page_arguments.dart';
 import 'core/page_arguments/goal_bookings_page_arguments.dart';
 import 'core/page_arguments/home_page_arguments.dart';
@@ -56,6 +57,7 @@ import 'features/bookings/presentation/pages/create_booking_page.dart';
 import 'features/bookings/presentation/pages/update_booking_page.dart';
 import 'features/budgets/presentation/pages/create_budget_page.dart';
 import 'features/budgets/presentation/pages/update_budget_page.dart';
+import 'features/categories/presentation/pages/category_bookings_page.dart';
 import 'features/categories/presentation/pages/category_list_page.dart';
 import 'features/categories/presentation/pages/update_category_page.dart';
 import 'features/dashboard/presentation/pages/update_dashboard_page.dart';
@@ -447,6 +449,16 @@ class _MyAppState extends State<MyApp> {
               return MaterialPageRoute<String>(
                 builder: (context) => BudgetBookingsPage(
                   budget: args.budget,
+                  bookings: args.bookings,
+                  currentSelectedDate: args.currentSelectedDate,
+                ),
+                settings: settings,
+              );
+            case categoryBookingsRoute:
+              final args = settings.arguments as CategoryBookingsPageArguments;
+              return MaterialPageRoute<String>(
+                builder: (context) => CategoryBookingsPage(
+                  category: args.category,
                   bookings: args.bookings,
                   currentSelectedDate: args.currentSelectedDate,
                 ),

@@ -211,6 +211,8 @@ class _CategoryStatsState extends State<CategoryStats> with TickerProviderStateM
                       child: CategoryStatCard(
                         bookingCategoryStats: _bookingCategoryStats[index],
                         pieCategoryColor: _pieCategoryColors[index],
+                        bookings: widget.bookings,
+                        currentSelectedDate: widget.currentSelectedDate,
                       ),
                     );
                   },

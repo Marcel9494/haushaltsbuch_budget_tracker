@@ -115,7 +115,6 @@ class _BudgetBookingsPageState extends State<BudgetBookingsPage> {
                                 barGroups: budgetStats.barGroups,
                                 currentSelectedYear: widget.currentSelectedDate.year,
                               ),
-
                               BudgetStatRow(
                                 usedBudgetAmounts: budgetStats.usedAmounts,
                               ),
