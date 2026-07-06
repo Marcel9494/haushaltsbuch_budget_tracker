@@ -8,14 +8,18 @@ import '../../../../../l10n/app_localizations.dart';
 
 class DatePickerBar extends StatefulWidget {
   final DateTime initialDate;
-  final PeriodOfTimeType currentPeriodOfTime;
+  PeriodOfTimeType currentPeriodOfTime;
   final void Function(DateTime date, PeriodOfTimeType currentPeriodOfTime) onDateChanged;
+  final void Function(DateTime date, PeriodOfTimeType currentPeriodOfTime) onPageChanged;
+  final void Function(PeriodOfTimeType currentPeriodOfTime)? onPeriodOfTimeChanged;
 
-  const DatePickerBar({
+  DatePickerBar({
     super.key,
     required this.initialDate,
-    required this.currentPeriodOfTime,
+    this.currentPeriodOfTime = PeriodOfTimeType.monthly,
     required this.onDateChanged,
+    required this.onPageChanged,
+    required this.onPeriodOfTimeChanged,
   });
 
   @override
@@ -76,20 +80,6 @@ class _DatePickerBarState extends State<DatePickerBar> {
     return 1000 + totalMonthDiff;
   }
 
-  void _onMonthSelected(int index, DateTime currentDate) {
-    setState(() {
-      _currentIndex = index;
-      _selectedDate = _getDateFromIndex(_currentIndex, widget.currentPeriodOfTime);
-    });
-
-    _controller.animateToPage(
-      index,
-      duration: Duration(milliseconds: 300),
-      curve: Curves.easeOut,
-    );
-    widget.onDateChanged(_selectedDate, widget.currentPeriodOfTime);
-  }
-
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
@@ -106,7 +96,7 @@ class _DatePickerBarState extends State<DatePickerBar> {
                 _currentIndex = index;
                 _selectedDate = newDate;
                 WidgetsBinding.instance.addPostFrameCallback((_) {
-                  widget.onDateChanged(newDate, widget.currentPeriodOfTime);
+                  widget.onPageChanged(newDate, widget.currentPeriodOfTime);
                 });
               },
               itemBuilder: (context, index) {
@@ -210,7 +200,17 @@ class _DatePickerBarState extends State<DatePickerBar> {
                         widget.onDateChanged(_selectedDate, widget.currentPeriodOfTime);
                       }
                     } else {
-                      _onMonthSelected(index, currentDate);
+                      setState(() {
+                        _currentIndex = index;
+                        _selectedDate = _getDateFromIndex(_currentIndex, widget.currentPeriodOfTime);
+                      });
+
+                      _controller.animateToPage(
+                        index,
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.easeOut,
+                      );
+                      widget.onDateChanged(_selectedDate, widget.currentPeriodOfTime);
                     }
                   },
                   child: Center(
@@ -301,7 +301,10 @@ class _DatePickerBarState extends State<DatePickerBar> {
               child: TextButton(
                 onPressed: () {
                   setState(() {
-                    widget.onDateChanged(_selectedDate, widget.currentPeriodOfTime);
+                    widget.currentPeriodOfTime == PeriodOfTimeType.yearly
+                        ? widget.currentPeriodOfTime = PeriodOfTimeType.monthly
+                        : widget.currentPeriodOfTime = PeriodOfTimeType.yearly;
+                    widget.onPeriodOfTimeChanged?.call(widget.currentPeriodOfTime);
                   });
                 },
                 style: TextButton.styleFrom(overlayColor: Colors.transparent),

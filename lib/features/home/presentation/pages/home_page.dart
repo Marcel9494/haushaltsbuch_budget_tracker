@@ -370,13 +370,17 @@ class _HomePageState extends State<HomePage> {
                       onDateChanged: (newDate, currentPeriodOfTime) {
                         setState(() {
                           _currentSelectedDate = newDate;
-                          if (currentPeriodOfTime == PeriodOfTimeType.monthly) {
-                            _currentSelectedDate = DateTime(_currentSelectedDate.year, _currentSelectedDate.month, 1);
-                            onPeriodOfTimeChanged(PeriodOfTimeType.yearly);
-                          } else {
-                            onPeriodOfTimeChanged(PeriodOfTimeType.monthly);
-                          }
+                          onPeriodOfTimeChanged(currentPeriodOfTime);
                         });
+                      },
+                      onPageChanged: (newDate, currentPeriodOfTime) {
+                        setState(() {
+                          _currentSelectedDate = newDate;
+                          onPeriodOfTimeChanged(currentPeriodOfTime);
+                        });
+                      },
+                      onPeriodOfTimeChanged: (newPeriodOfTime) {
+                        onPeriodOfTimeChanged(newPeriodOfTime);
                       },
                     ),
                   ],
