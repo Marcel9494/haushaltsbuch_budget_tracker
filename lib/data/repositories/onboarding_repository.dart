@@ -19,7 +19,7 @@ class OnboardingRepository {
       OnboardingCategory(categoryName: t.translate('gifts'), categoryType: CategoryType.expense, isSelected: true),
       OnboardingCategory(categoryName: t.translate('donation'), categoryType: CategoryType.expense, isSelected: true),
       OnboardingCategory(categoryName: t.translate('restaurant'), categoryType: CategoryType.expense, isSelected: true),
-      OnboardingCategory(categoryName: t.translate('Mobility'), categoryType: CategoryType.expense, isSelected: true),
+      OnboardingCategory(categoryName: t.translate('mobility'), categoryType: CategoryType.expense, isSelected: true),
       OnboardingCategory(categoryName: t.translate('subscription'), categoryType: CategoryType.expense, isSelected: true),
       OnboardingCategory(categoryName: t.translate('technology'), categoryType: CategoryType.expense, isSelected: true),
       OnboardingCategory(categoryName: t.translate('vacation'), categoryType: CategoryType.expense, isSelected: true),
