@@ -16,6 +16,7 @@ const accountListRoute = 'account_list';
 const createBudgetRoute = 'create_budget';
 const updateBudgetRoute = 'update_budget';
 const budgetBookingsRoute = 'budget_bookings';
+const categoryBookingsRoute = 'category_bookings';
 const goalBookingsRoute = 'goal_bookings';
 const goalListRoute = 'goal_list';
 const completedGoalListRoute = 'completed_goal_list';

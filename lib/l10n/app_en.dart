@@ -217,6 +217,7 @@ const Map<String, String> en = {
   'no_categories': 'No categories exist yet.',
   'no_revenue_categories': 'No revenue categories exist yet.',
   'no_expense_categories': 'No expense categories exist yet.',
+  'no_bookings_for_category': 'No bookings exist for this category yet.',
   'no_account': 'No account',
   'optional_fields': 'Optional fields',
   'update': 'Refresh',
