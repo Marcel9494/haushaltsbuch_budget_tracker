@@ -4,9 +4,12 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
+import '../../../../../blocs/account/account_bloc.dart';
+import '../../../../../blocs/booking/booking_bloc.dart';
 import '../../../../../blocs/category/category_bloc.dart';
+import '../../../../../blocs/goal/goal_bloc.dart';
 import '../../../../../core/utils/currency_formatter.dart';
-import '../../../../../core/utils/slow_hero_animation.dart';
+import '../../../../../data/enums/period_of_time_type.dart';
 import '../../../../../data/models/booking.dart';
 import '../../../../../data/models/budget.dart';
 import '../../../../../l10n/app_localizations.dart';
@@ -18,6 +21,7 @@ class BudgetCard extends StatelessWidget {
   final double usedBudgetAmount;
   final double percentageUsed;
   final DateTime currentSelectedDate;
+  final PeriodOfTimeType currentPeriodOfTime;
 
   const BudgetCard({
     super.key,
@@ -26,6 +30,7 @@ class BudgetCard extends StatelessWidget {
     required this.usedBudgetAmount,
     required this.percentageUsed,
     required this.currentSelectedDate,
+    required this.currentPeriodOfTime,
   });
 
   @override
@@ -39,13 +44,19 @@ class BudgetCard extends StatelessWidget {
         child: GestureDetector(
           onTap: () => Navigator.push(
             context,
-            slowHeroRoute(
-              BlocProvider.value(
-                value: context.read<CategoryBloc>(),
+            MaterialPageRoute(
+              builder: (_) => MultiBlocProvider(
+                providers: [
+                  BlocProvider.value(value: context.read<BookingBloc>()),
+                  BlocProvider.value(value: context.read<CategoryBloc>()),
+                  BlocProvider.value(value: context.read<AccountBloc>()),
+                  BlocProvider.value(value: context.read<GoalBloc>()),
+                ],
                 child: BudgetBookingsPage(
                   budget: budget,
                   bookings: bookings,
                   currentSelectedDate: currentSelectedDate,
+                  currentPeriodOfTimeType: currentPeriodOfTime,
                 ),
               ),
             ),

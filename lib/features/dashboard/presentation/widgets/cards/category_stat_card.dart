@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:haushaltsbuch_budget_tracker/core/consts/route_consts.dart';
-import 'package:haushaltsbuch_budget_tracker/core/page_arguments/category_bookings_page_arguments.dart';
+import 'package:haushaltsbuch_budget_tracker/data/enums/period_of_time_type.dart';
 import 'package:haushaltsbuch_budget_tracker/data/helper_models/booking_category_stats.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../../blocs/account/account_bloc.dart';
+import '../../../../../blocs/booking/booking_bloc.dart';
+import '../../../../../blocs/category/category_bloc.dart';
+import '../../../../../blocs/goal/goal_bloc.dart';
 import '../../../../../core/utils/currency_formatter.dart';
 import '../../../../../data/models/booking.dart';
 import '../../../../../l10n/app_localizations.dart';
+import '../../../../categories/presentation/pages/category_bookings_page.dart';
 
 class CategoryStatCard extends StatelessWidget {
   final BookingCategoryStats bookingCategoryStats;
   final Color pieCategoryColor;
   final List<Booking> bookings;
   final DateTime currentSelectedDate;
+  final PeriodOfTimeType currentPeriodOfTimeType;
 
   const CategoryStatCard({
     super.key,
@@ -21,6 +27,7 @@ class CategoryStatCard extends StatelessWidget {
     required this.pieCategoryColor,
     required this.bookings,
     required this.currentSelectedDate,
+    required this.currentPeriodOfTimeType,
   });
 
   @override
@@ -31,13 +38,23 @@ class CategoryStatCard extends StatelessWidget {
       child: FadeInAnimation(
         child: GestureDetector(
           onTap: () {
-            Navigator.pushNamed(
+            Navigator.push(
               context,
-              categoryBookingsRoute,
-              arguments: CategoryBookingsPageArguments(
-                bookingCategoryStats.category,
-                bookings,
-                currentSelectedDate,
+              MaterialPageRoute(
+                builder: (_) => MultiBlocProvider(
+                  providers: [
+                    BlocProvider.value(value: context.read<BookingBloc>()),
+                    BlocProvider.value(value: context.read<CategoryBloc>()),
+                    BlocProvider.value(value: context.read<AccountBloc>()),
+                    BlocProvider.value(value: context.read<GoalBloc>()),
+                  ],
+                  child: CategoryBookingsPage(
+                    category: bookingCategoryStats.category,
+                    bookings: bookings,
+                    currentSelectedDate: currentSelectedDate,
+                    currentPeriodOfTimeType: currentPeriodOfTimeType,
+                  ),
+                ),
               ),
             );
           },

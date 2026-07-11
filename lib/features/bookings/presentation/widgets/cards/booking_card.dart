@@ -16,10 +16,12 @@ import '../../pages/update_booking_page.dart';
 
 class BookingCard extends StatelessWidget {
   final Booking booking;
+  final VoidCallback? onUpdateSuccess;
 
   const BookingCard({
     super.key,
     required this.booking,
+    required this.onUpdateSuccess,
   });
 
   @override
@@ -40,12 +42,13 @@ class BookingCard extends StatelessWidget {
                 child: UpdateBookingPage(
                   booking: booking,
                   bookingSelectionType: BookingSelectionType.single,
+                  onSuccess: onUpdateSuccess,
                 ),
               ),
             ),
           );
         } else {
-          showUpdateBookingBottomSheet(context, booking);
+          showUpdateBookingBottomSheet(context, booking, onUpdateSuccess);
         }
       },
       child: Card(

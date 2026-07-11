@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../../core/consts/route_consts.dart';
+import '../../../../../core/page_arguments/home_page_arguments.dart';
 import '../../../../../core/utils/currency_formatter.dart';
 import '../../../../../core/utils/date_helper.dart';
 import '../../../../../data/models/booking.dart';
@@ -112,7 +114,17 @@ class UpcomingBookingList extends StatelessWidget {
                       ),
                     )
                   : SizedBox.shrink(),
-              BookingCard(booking: bookings[index]),
+              BookingCard(
+                booking: bookings[index],
+                onUpdateSuccess: () {
+                  Navigator.pop(context);
+                  Navigator.popAndPushNamed(
+                    context,
+                    homeRoute,
+                    arguments: HomePageArguments(1),
+                  );
+                },
+              ),
             ],
           );
         },

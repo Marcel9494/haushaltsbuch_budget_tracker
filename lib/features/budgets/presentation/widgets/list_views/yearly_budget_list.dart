@@ -177,6 +177,7 @@ class _YearlyBudgetListState extends State<YearlyBudgetList> with TickerProvider
                                               usedBudgetAmount: totalUsedAmount,
                                               percentageUsed: totalUsedAmount / totalBudgetAmount,
                                               currentSelectedDate: widget.currentSelectedDate,
+                                              currentPeriodOfTime: widget.currentPeriodOfTimeType,
                                             );
                                           },
                                         ),
