@@ -451,6 +451,7 @@ class _MyAppState extends State<MyApp> {
                   budget: args.budget,
                   bookings: args.bookings,
                   currentSelectedDate: args.currentSelectedDate,
+                  currentPeriodOfTimeType: args.currentPeriodOfTimeType,
                 ),
                 settings: settings,
               );
@@ -461,6 +462,7 @@ class _MyAppState extends State<MyApp> {
                   category: args.category,
                   bookings: args.bookings,
                   currentSelectedDate: args.currentSelectedDate,
+                  currentPeriodOfTimeType: args.currentPeriodOfTimeType,
                 ),
                 settings: settings,
               );
@@ -479,6 +481,7 @@ class _MyAppState extends State<MyApp> {
                 builder: (context) => UpdateBookingPage(
                   booking: args.booking,
                   bookingSelectionType: args.bookingSelectionType,
+                  onSuccess: args.onSuccess,
                 ),
                 settings: settings,
               );

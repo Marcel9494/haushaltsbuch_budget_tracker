@@ -5,13 +5,15 @@ import 'package:haushaltsbuch_budget_tracker/features/goals/presentation/widgets
 import 'package:haushaltsbuch_budget_tracker/features/goals/presentation/widgets/deco/goal_info_row.dart';
 import 'package:haushaltsbuch_budget_tracker/features/goals/presentation/widgets/deco/goal_stat_row.dart';
 
+import '../../../../../blocs/account/account_bloc.dart';
 import '../../../../../blocs/booking/booking_bloc.dart';
-import '../../../../../core/consts/route_consts.dart';
-import '../../../../../core/page_arguments/goal_bookings_page_arguments.dart';
+import '../../../../../blocs/category/category_bloc.dart';
+import '../../../../../blocs/goal/goal_bloc.dart';
 import '../../../../../data/enums/goal_state_type.dart';
 import '../../../../../data/models/goal.dart';
 import '../../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../../../../shared/presentation/widgets/deco/error_text.dart';
+import '../../pages/goal_bookings_page.dart';
 import '../deco/completed_goal_stat_row.dart';
 
 class GoalCard extends StatefulWidget {
@@ -34,14 +36,22 @@ class _GoalCardState extends State<GoalCard> {
         if (state is BookingLoading) {
           return CircularLoadingIndicator();
         } else if (state is BookingListLoaded) {
-          // TODO hier weitermachen und richtige Seite laden auch mit completed
           return GestureDetector(
-            onTap: () => Navigator.pushNamed(
+            onTap: () => Navigator.push(
               context,
-              goalBookingsRoute,
-              arguments: GoalBookingsPageArguments(
-                widget.goal,
-                state.bookings.where((b) => b.goalId == widget.goal.id).toList(),
+              MaterialPageRoute(
+                builder: (_) => MultiBlocProvider(
+                  providers: [
+                    BlocProvider.value(value: context.read<BookingBloc>()),
+                    BlocProvider.value(value: context.read<CategoryBloc>()),
+                    BlocProvider.value(value: context.read<AccountBloc>()),
+                    BlocProvider.value(value: context.read<GoalBloc>()),
+                  ],
+                  child: GoalBookingsPage(
+                    goal: widget.goal,
+                    goalBookings: state.bookings.where((b) => b.goalId == widget.goal.id).toList(),
+                  ),
+                ),
               ),
             ),
             child: Card(

@@ -42,11 +42,13 @@ import '../widgets/input_fields/title_input_field.dart';
 class UpdateBookingPage extends StatefulWidget {
   final Booking booking;
   final BookingSelectionType bookingSelectionType;
+  final VoidCallback? onSuccess;
 
   const UpdateBookingPage({
     super.key,
     required this.booking,
     required this.bookingSelectionType,
+    required this.onSuccess,
   });
 
   @override
@@ -209,7 +211,7 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
             if (state is BookingUpdated) {
               _updateBookingButtonController.success();
               Future.delayed(Duration(milliseconds: 1000), () {
-                Navigator.popAndPushNamed(context, homeRoute, arguments: HomePageArguments(1));
+                widget.onSuccess?.call();
               });
             } else if (state is BookingListLoaded) {
               Navigator.of(context).pushNamedAndRemoveUntil(

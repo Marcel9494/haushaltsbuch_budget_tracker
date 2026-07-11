@@ -88,6 +88,7 @@ class _MonthlyBudgetListState extends State<MonthlyBudgetList> {
                                             usedBudgetAmount: usedBudgetAmount,
                                             percentageUsed: percentageUsed,
                                             currentSelectedDate: widget.currentSelectedDate,
+                                            currentPeriodOfTime: widget.currentPeriodOfTimeType,
                                           );
                                         },
                                       ),

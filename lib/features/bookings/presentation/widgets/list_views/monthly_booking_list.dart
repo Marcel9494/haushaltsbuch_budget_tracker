@@ -8,6 +8,8 @@ import 'package:haushaltsbuch_budget_tracker/features/shared/presentation/widget
 
 import '../../../../../blocs/booking/booking_bloc.dart';
 import '../../../../../core/consts/animation_consts.dart';
+import '../../../../../core/consts/route_consts.dart';
+import '../../../../../core/page_arguments/home_page_arguments.dart';
 import '../../../../../core/utils/currency_formatter.dart';
 import '../../../../../core/utils/date_helper.dart';
 import '../../../../../data/enums/booking_type.dart';
@@ -377,7 +379,17 @@ class _MonthlyBookingListState extends State<MonthlyBookingList> {
                                   showHeader
                                       ? BookingListDailyHeader(bookings: _combinedBookings, bookingDate: bookingDate, index: index)
                                       : const SizedBox.shrink(),
-                                  BookingCard(booking: _combinedBookings[index]),
+                                  BookingCard(
+                                    booking: _combinedBookings[index],
+                                    onUpdateSuccess: () {
+                                      Navigator.pop(context);
+                                      Navigator.popAndPushNamed(
+                                        context,
+                                        homeRoute,
+                                        arguments: HomePageArguments(1),
+                                      );
+                                    },
+                                  ),
                                   _combinedBookings.length - 1 == index ? SizedBox(height: 42.0) : SizedBox.shrink(),
                                 ],
                               );

@@ -10,7 +10,7 @@ import '../../../data/models/booking.dart';
 import '../../../features/bookings/presentation/pages/update_booking_page.dart';
 import '../../../l10n/app_localizations.dart';
 
-void showUpdateBookingBottomSheet(BuildContext parentContext, Booking booking) {
+void showUpdateBookingBottomSheet(BuildContext parentContext, Booking booking, VoidCallback? onUpdateSuccess) {
   final t = AppLocalizations.of(parentContext);
   showModalBottomSheet(
     context: parentContext,
@@ -74,6 +74,7 @@ void showUpdateBookingBottomSheet(BuildContext parentContext, Booking booking) {
                             child: UpdateBookingPage(
                               booking: booking,
                               bookingSelectionType: bookingSelectionType,
+                              onSuccess: onUpdateSuccess,
                             ),
                           ),
                         ),

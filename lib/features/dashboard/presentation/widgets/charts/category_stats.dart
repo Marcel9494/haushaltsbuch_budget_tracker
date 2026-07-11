@@ -213,6 +213,7 @@ class _CategoryStatsState extends State<CategoryStats> with TickerProviderStateM
                         pieCategoryColor: _pieCategoryColors[index],
                         bookings: widget.bookings,
                         currentSelectedDate: widget.currentSelectedDate,
+                        currentPeriodOfTimeType: widget.currentPeriodOfTimeType,
                       ),
                     );
                   },
