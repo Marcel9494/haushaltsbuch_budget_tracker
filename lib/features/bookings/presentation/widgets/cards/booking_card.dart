@@ -9,7 +9,7 @@ import '../../../../../blocs/account/account_bloc.dart';
 import '../../../../../blocs/booking/booking_bloc.dart';
 import '../../../../../blocs/category/category_bloc.dart';
 import '../../../../../blocs/goal/goal_bloc.dart';
-import '../../../../../core/utils/currency_formatter.dart';
+import '../../../../../core/utils/currency_helper.dart';
 import '../../../../../data/enums/booking_selection_type.dart';
 import '../../../../../data/models/booking.dart';
 import '../../pages/update_booking_page.dart';
@@ -136,7 +136,7 @@ class BookingCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            formatCurrency(booking.amount, 'EUR'),
+                            CurrencyHelper.instance.formatCurrency(booking.amount, context),
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(color: booking.bookingType.color),
                           ),

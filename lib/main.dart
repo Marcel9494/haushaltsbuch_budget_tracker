@@ -37,6 +37,7 @@ import 'core/page_arguments/update_budget_page_arguments.dart';
 import 'core/page_arguments/update_category_page_arguments.dart';
 import 'core/page_arguments/update_goal_page_arguments.dart';
 import 'core/utils/app_flushbar.dart';
+import 'core/utils/currency_helper.dart';
 import 'data/models/user.dart';
 import 'data/repositories/account_repository.dart';
 import 'data/repositories/booking_repository.dart';
@@ -78,6 +79,8 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 final userBloc = UserBloc(UserRepository());
 
 void main() async {
+  Locale? initialLocale;
+
   WidgetsFlutterBinding.ensureInitialized();
 
   await SystemChrome.setPreferredOrientations([
@@ -101,7 +104,14 @@ void main() async {
       final event = data.event;
 
       if (event == AuthChangeEvent.initialSession) {
-        // TODO
+        UserRepository userRepository = UserRepository();
+        User user = await userRepository.loadUser(Supabase.instance.client.auth.currentUser!.id);
+        CurrencyHelper.instance.setCurrency(user.currencyCode);
+        initialLocale = user.locale;
+        final context = navigatorKey.currentContext;
+        if (context != null) {
+          MyApp.of(context)?.setLocale(user.locale);
+        }
       } else if (event == AuthChangeEvent.signedIn) {
         UserRepository userRepository = UserRepository();
         bool userExists = await userRepository.existsUser(Supabase.instance.client.auth.currentUser!.id);
@@ -113,7 +123,7 @@ void main() async {
           final newUser = User(
             id: Supabase.instance.client.auth.currentUser!.id,
             locale: locale,
-            currency: NumberFormat.simpleCurrency(locale: localeString).currencyName ?? '',
+            currencyCode: NumberFormat.simpleCurrency(locale: localeString).currencyName ?? '',
             hasOnboardingCompleted: false,
           );
 
@@ -126,11 +136,18 @@ void main() async {
           );
         } else {
           User user = await userRepository.loadUser(Supabase.instance.client.auth.currentUser!.id);
+          CurrencyHelper.instance.setCurrency(user.currencyCode);
+          initialLocale = user.locale;
+          final context = navigatorKey.currentContext;
+          if (context != null) {
+            MyApp.of(context)?.setLocale(user.locale);
+          }
           if (user.hasOnboardingCompleted) {
             navigatorKey.currentState?.pushAndRemoveUntil(
               MaterialPageRoute(
                 builder: (_) => MultiBlocProvider(
                   providers: [
+                    BlocProvider.value(value: userBloc),
                     BlocProvider(create: (context) => BookingBloc(BookingRepository(), AccountRepository())),
                     BlocProvider(create: (context) => DashboardElementBloc(DashboardElementRepository())),
                     BlocProvider(create: (context) => CategoryBloc(CategoryRepository())),
@@ -213,11 +230,16 @@ void main() async {
     },
   );
 
-  runApp(const MyApp());
+  runApp(MyApp(initialLocale: initialLocale));
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  final Locale? initialLocale;
+
+  const MyApp({
+    super.key,
+    required this.initialLocale,
+  });
 
   static _MyAppState? of(BuildContext context) {
     return context.findAncestorStateOfType<_MyAppState>();
@@ -231,9 +253,15 @@ class _MyAppState extends State<MyApp> {
   // Wenn _locale null ist, verwendet MaterialApp die Systemsprache des Geräts
   Locale? _locale;
 
+  @override
+  void initState() {
+    super.initState();
+    _locale = widget.initialLocale;
+  }
+
   void setLocale(Locale locale) {
     setState(() {
-      _locale = locale;
+      _locale = Locale(locale.toString().split('_').first);
     });
   }
 

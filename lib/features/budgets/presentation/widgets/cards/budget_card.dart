@@ -8,7 +8,7 @@ import '../../../../../blocs/account/account_bloc.dart';
 import '../../../../../blocs/booking/booking_bloc.dart';
 import '../../../../../blocs/category/category_bloc.dart';
 import '../../../../../blocs/goal/goal_bloc.dart';
-import '../../../../../core/utils/currency_formatter.dart';
+import '../../../../../core/utils/currency_helper.dart';
 import '../../../../../data/enums/period_of_time_type.dart';
 import '../../../../../data/models/booking.dart';
 import '../../../../../data/models/budget.dart';
@@ -145,19 +145,16 @@ class BudgetCard extends StatelessWidget {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          formatCurrency(budget.budgetAmount, 'EUR'),
+                                          CurrencyHelper.instance.formatCurrency(budget.budgetAmount, context),
                                           style: const TextStyle(color: Colors.green),
                                         ),
                                         Text(
-                                          formatCurrency(usedBudgetAmount, 'EUR'),
+                                          CurrencyHelper.instance.formatCurrency(usedBudgetAmount, context),
                                           style: const TextStyle(color: Colors.redAccent),
                                         ),
                                         const Divider(height: 8.0, endIndent: 12.0),
                                         Text(
-                                          formatCurrency(
-                                            budget.budgetAmount - usedBudgetAmount,
-                                            'EUR',
-                                          ),
+                                          CurrencyHelper.instance.formatCurrency(budget.budgetAmount - usedBudgetAmount, context),
                                           style: TextStyle(color: color),
                                         ),
                                       ],

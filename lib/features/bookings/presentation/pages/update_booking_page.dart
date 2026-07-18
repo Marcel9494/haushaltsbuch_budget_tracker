@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:haushaltsbuch_budget_tracker/core/consts/route_consts.dart';
 import 'package:haushaltsbuch_budget_tracker/core/page_arguments/home_page_arguments.dart';
-import 'package:haushaltsbuch_budget_tracker/core/utils/currency_formatter.dart';
+import 'package:haushaltsbuch_budget_tracker/core/utils/currency_helper.dart';
 import 'package:haushaltsbuch_budget_tracker/data/enums/booking_selection_type.dart';
 import 'package:haushaltsbuch_budget_tracker/data/enums/goal_type.dart';
 import 'package:haushaltsbuch_budget_tracker/data/repositories/booking_repository.dart';
@@ -110,7 +110,6 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
       );
     }
     _titleController.text = widget.booking.title;
-    _amountController.text = formatCurrency(widget.booking.amount, 'EUR');
     _categorieController.text = _selectedCategory!.categoryName;
     _debitAccountController.text = _selectedDebitAccount!.name;
     _targetAccountController.text = _selectedTargetAccount!.name;
@@ -121,6 +120,7 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _amountController.text = CurrencyHelper.instance.formatCurrency(widget.booking.amount, context);
     _dateController.text = DateFormat.yMEd(Localizations.localeOf(context).toString()).format(widget.booking.bookingDate);
   }
 

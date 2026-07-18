@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../core/utils/currency_formatter.dart';
+import '../../../../../core/utils/currency_helper.dart';
 import '../../../../../core/utils/dialogs/show_info_dialog.dart';
 import '../../../../../l10n/app_localizations.dart';
 
@@ -114,7 +114,7 @@ class _AccountListOverviewCardState extends State<AccountListOverviewCard> with 
                           return Padding(
                             padding: const EdgeInsets.only(top: 4.0, bottom: 8.0),
                             child: Text(
-                              formatCurrency(value, 'EUR'),
+                              CurrencyHelper.instance.formatCurrency(value, context),
                               style: TextStyle(
                                 fontSize: 16.0,
                                 color: widget.color,

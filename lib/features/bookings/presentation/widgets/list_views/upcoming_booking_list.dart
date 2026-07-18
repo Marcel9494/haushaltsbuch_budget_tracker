@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../../core/consts/route_consts.dart';
 import '../../../../../core/page_arguments/home_page_arguments.dart';
-import '../../../../../core/utils/currency_formatter.dart';
+import '../../../../../core/utils/currency_helper.dart';
 import '../../../../../core/utils/date_helper.dart';
 import '../../../../../data/models/booking.dart';
 import '../../../../../data/repositories/booking_repository.dart';
@@ -84,7 +84,7 @@ class UpcomingBookingList extends StatelessWidget {
                               child: Align(
                                 alignment: Alignment.centerRight,
                                 child: Text(
-                                  formatCurrency(revenue, 'EUR'),
+                                  CurrencyHelper.instance.formatCurrency(revenue, context),
                                   style: const TextStyle(
                                     fontSize: 14,
                                     color: Colors.greenAccent,
@@ -100,7 +100,7 @@ class UpcomingBookingList extends StatelessWidget {
                               child: Align(
                                 alignment: Alignment.centerRight,
                                 child: Text(
-                                  formatCurrency(expenses, 'EUR'),
+                                  CurrencyHelper.instance.formatCurrency(expenses, context),
                                   style: const TextStyle(
                                     fontSize: 14,
                                     color: Colors.redAccent,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:haushaltsbuch_budget_tracker/core/utils/currency_formatter.dart';
+import 'package:haushaltsbuch_budget_tracker/core/utils/currency_helper.dart';
 import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
@@ -48,7 +48,7 @@ class AmountTypeCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4.0),
                 Text(
-                  formatCurrency(amountTypeStats.amount, 'EUR'),
+                  CurrencyHelper.instance.formatCurrency(amountTypeStats.amount, context),
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,

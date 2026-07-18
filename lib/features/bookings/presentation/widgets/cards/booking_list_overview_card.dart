@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:haushaltsbuch_budget_tracker/core/utils/currency_formatter.dart';
+import 'package:haushaltsbuch_budget_tracker/core/utils/currency_helper.dart';
 
 import '../../../../../l10n/app_localizations.dart';
 
@@ -93,7 +93,7 @@ class _BookingListOverviewCardState extends State<BookingListOverviewCard> with 
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 2.0),
                             child: Text(
-                              formatCurrency(value, 'EUR'),
+                              CurrencyHelper.instance.formatCurrency(value, context),
                               style: TextStyle(fontSize: 16.0, color: widget.color),
                             ),
                           );
@@ -104,7 +104,7 @@ class _BookingListOverviewCardState extends State<BookingListOverviewCard> with 
                         child: AnimatedSwitcher(
                           duration: const Duration(milliseconds: 400),
                           child: Text(
-                            '\u00D8 ${formatCurrency(widget.amount / widget.averageDivider, 'EUR')} ${t.translate(widget.averageText)}',
+                            '\u00D8 ${CurrencyHelper.instance.formatCurrency(widget.amount / widget.averageDivider, context)} ${t.translate(widget.averageText)}',
                             key: ValueKey(widget.amount),
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(color: Colors.grey),

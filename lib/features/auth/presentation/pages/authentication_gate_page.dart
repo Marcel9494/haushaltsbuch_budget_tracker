@@ -17,9 +17,14 @@ import '../../../../data/repositories/category_repository.dart';
 import '../../../../data/repositories/goal_repository.dart';
 import '../../../home/presentation/pages/home_page.dart';
 
-class AuthenticationGatePage extends StatelessWidget {
+class AuthenticationGatePage extends StatefulWidget {
   const AuthenticationGatePage({super.key});
 
+  @override
+  State<AuthenticationGatePage> createState() => _AuthenticationGatePageState();
+}
+
+class _AuthenticationGatePageState extends State<AuthenticationGatePage> {
   @override
   Widget build(BuildContext context) {
     final session = Supabase.instance.client.auth.currentSession;

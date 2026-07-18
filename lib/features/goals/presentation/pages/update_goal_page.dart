@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:haushaltsbuch_budget_tracker/core/page_arguments/home_page_arguments.dart';
-import 'package:haushaltsbuch_budget_tracker/core/utils/currency_formatter.dart';
+import 'package:haushaltsbuch_budget_tracker/core/utils/currency_helper.dart';
 import 'package:haushaltsbuch_budget_tracker/features/goals/presentation/widgets/buttons/date_selection_buttons.dart';
 import 'package:intl/intl.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
@@ -50,11 +50,18 @@ class _UpdateGoalPageState extends State<UpdateGoalPage> {
   void initState() {
     super.initState();
     _goalNameController.text = widget.goal.goalName;
-    _goalAmountController.text = formatCurrency(widget.goal.goalAmount, 'EUR');
+    // TODO hier locale richtig setzen, damit die Datumsanzeige korrekt ist (WidgetsBinding.instance.platformDispatcher.locale) ist falsch,
+    // TODO weil dies immer die platform locale auswählt und nicht die vom Benutzer + Datumsformat auch hier Mehrsprachig machen.
     _startDateController.text =
         DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(widget.goal.startDate);
     _endDateController.text = DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(widget.goal.endDate);
     _selectedGoalType = widget.goal.goalType;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _goalAmountController.text = CurrencyHelper.instance.formatCurrency(widget.goal.goalAmount, context);
   }
 
   void _updateGoal(BuildContext context) {

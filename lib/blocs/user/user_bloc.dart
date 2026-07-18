@@ -50,8 +50,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   Future<void> _onUpdateUserCurrency(UpdateUserCurrency event, Emitter<UserState> emit) async {
     emit(UserLoading());
     try {
-      await _userRepository.updateUserCurrency(event.userId, event.currency);
-      emit(UserCurrencyUpdated());
+      await _userRepository.updateUserCurrency(event.userId, event.currencyCode);
+      final User updatedUser = await _userRepository.loadUser(event.userId);
+      emit(UserLoaded(updatedUser));
     } catch (e) {
       emit(UserError('update_user_currency_error'));
     }

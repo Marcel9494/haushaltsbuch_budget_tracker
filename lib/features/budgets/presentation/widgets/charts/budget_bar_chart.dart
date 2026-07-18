@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../../core/utils/currency_formatter.dart';
+import '../../../../../core/utils/currency_helper.dart';
 import '../../../../../core/utils/date_helper.dart';
 import '../../../../../l10n/app_localizations.dart';
 
@@ -161,7 +161,7 @@ class _BudgetBarChartState extends State<BudgetBarChart> with SingleTickerProvid
                         return Transform.rotate(
                           angle: 0.22,
                           child: Text(
-                            formatCurrency(value, 'EUR', decimalDigits: 0),
+                            CurrencyHelper.instance.formatCurrency(value, context, decimalDigits: 0),
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -193,9 +193,9 @@ class _BudgetBarChartState extends State<BudgetBarChart> with SingleTickerProvid
 
                       return BarTooltipItem(
                         '${months[monthIndex]}:\n'
-                        '${t.translate('budget')}: ${formatCurrency(widget.totalBudgets[monthIndex], 'EUR', decimalDigits: 2)}\n'
-                        '${t.translate('consumed')}: ${formatCurrency(widget.usedAmounts[monthIndex], 'EUR', decimalDigits: 2)}\n'
-                        '${t.translate('balance')}: ${formatCurrency(widget.totalBudgets[monthIndex] - widget.usedAmounts[monthIndex], 'EUR', decimalDigits: 2)}',
+                        '${t.translate('budget')}: ${CurrencyHelper.instance.formatCurrency(widget.totalBudgets[monthIndex], context)}\n'
+                        '${t.translate('consumed')}: ${CurrencyHelper.instance.formatCurrency(widget.usedAmounts[monthIndex], context)}\n'
+                        '${t.translate('balance')}: ${CurrencyHelper.instance.formatCurrency(widget.totalBudgets[monthIndex] - widget.usedAmounts[monthIndex], context)}',
                         textAlign: TextAlign.start,
                         const TextStyle(
                           color: Colors.white,

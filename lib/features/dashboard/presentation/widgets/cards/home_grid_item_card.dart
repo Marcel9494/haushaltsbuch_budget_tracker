@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:haushaltsbuch_budget_tracker/core/utils/currency_formatter.dart';
+import 'package:haushaltsbuch_budget_tracker/core/utils/currency_helper.dart';
 import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 
 class HomeGridItemCard extends StatefulWidget {
@@ -117,7 +117,7 @@ class _HomeGridItemCardState extends State<HomeGridItemCard> with TickerProvider
                           Padding(
                             padding: const EdgeInsets.only(top: 10.0, bottom: 6.0),
                             child: Text(
-                              formatCurrency(widget.stat, 'EUR'),
+                              CurrencyHelper.instance.formatCurrency(widget.stat, context),
                               style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold, color: Colors.white),
                             ),
                           ),

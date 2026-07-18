@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:haushaltsbuch_budget_tracker/core/utils/currency_formatter.dart';
+import 'package:haushaltsbuch_budget_tracker/core/utils/currency_helper.dart';
 
 import '../../../../../core/consts/route_consts.dart';
 import '../../../../../core/page_arguments/update_account_page_arguments.dart';
@@ -32,7 +32,7 @@ class AccountCard extends StatelessWidget {
                 style: TextStyle(color: Colors.white),
               ),
               trailing: Text(
-                formatCurrency(account.balance, 'EUR'),
+                CurrencyHelper.instance.formatCurrency(account.balance, context),
                 style: TextStyle(
                   fontSize: 14.0,
                   color: Colors.white,

@@ -12,10 +12,12 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../blocs/user/user_bloc.dart';
 import '../../../../blocs/user/user_state.dart';
 import '../../../../core/consts/route_consts.dart';
+import '../../../../core/utils/currency_helper.dart';
 import '../../../../main.dart';
 import '../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../../../shared/presentation/widgets/deco/error_text.dart';
-import '../widgets/bottom_sheets/show_selectable_bottom_sheet.dart';
+import '../widgets/bottom_sheets/show_selectable_country_bottom_sheet.dart';
+import '../widgets/bottom_sheets/show_selectable_currency_bottom_sheet.dart';
 import '../widgets/dialogs/show_guest_logout_dialog.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -26,8 +28,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  String _currentCurrency = 'Euro';
-
   Future<void> _logout() async {
     final supabase = Supabase.instance.client;
     final user = supabase.auth.currentUser;
@@ -74,7 +74,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           ),
                         ),
                         title: '${t.translate('change_language')}: ${t.translate(state.user.locale.languageCode)}',
-                        onTap: () => ShowSelectableBottomSheet.show(
+                        onTap: () => ShowSelectableCountryBottomSheet.show(
                           context,
                           title: 'change_language',
                           onChanged: (Locale newLocale) {
@@ -85,8 +85,15 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                       SettingsCard(
                         leading: Icon(Icons.currency_exchange_rounded),
-                        title: '${t.translate('change_currency')}: $_currentCurrency',
-                        onTap: () {/* TODO */},
+                        title: '${t.translate('change_currency')}: ${state.user.currencyCode}',
+                        onTap: () => ShowSelectableCurrencyBottomSheet.show(
+                          context,
+                          title: 'change_currency',
+                          onChanged: (String newCurrencyCode) {
+                            CurrencyHelper.instance.setCurrency(newCurrencyCode);
+                            context.read<UserBloc>().add(UpdateUserCurrency(userId: currentUser.id, currencyCode: newCurrencyCode));
+                          },
+                        ),
                       ),
                       currentUser.isAnonymous
                           ? SizedBox.shrink()
