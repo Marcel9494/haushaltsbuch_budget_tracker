@@ -3,13 +3,13 @@ import 'dart:ui';
 class User {
   final String? id;
   final Locale locale;
-  final String currency;
+  final String currencyCode;
   final bool hasOnboardingCompleted;
 
   User({
     this.id,
     required this.locale,
-    required this.currency,
+    required this.currencyCode,
     required this.hasOnboardingCompleted,
   });
 
@@ -17,7 +17,7 @@ class User {
     return User(
       id: map['id'],
       locale: Locale(map['locale']),
-      currency: map['currency'],
+      currencyCode: map['currency_code'],
       hasOnboardingCompleted: map['has_onboarding_completed'],
     );
   }
@@ -25,7 +25,7 @@ class User {
   Map<String, dynamic> toMap() {
     return {
       'locale': locale.toString(),
-      'currency': currency,
+      'currency_code': currencyCode,
       'has_onboarding_completed': hasOnboardingCompleted,
     };
   }

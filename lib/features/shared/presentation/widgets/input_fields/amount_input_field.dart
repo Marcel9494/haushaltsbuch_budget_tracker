@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:haushaltsbuch_budget_tracker/core/utils/currency_formatter.dart';
+import 'package:haushaltsbuch_budget_tracker/core/utils/currency_helper.dart';
 
 import '../../../../../data/enums/amount_type.dart';
 import '../../../../../data/enums/booking_type.dart';

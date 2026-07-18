@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:haushaltsbuch_budget_tracker/core/utils/currency_formatter.dart';
+import 'package:haushaltsbuch_budget_tracker/core/utils/currency_helper.dart';
 import 'package:haushaltsbuch_budget_tracker/data/enums/account_type.dart';
 
 import '../../../../../data/models/account.dart';
@@ -39,7 +39,7 @@ class _AccountListHeaderState extends State<AccountListHeader> {
             ),
           ),
           Text(
-            formatCurrency(widget.accountTypeBalance, 'EUR'),
+            CurrencyHelper.instance.formatCurrency(widget.accountTypeBalance, context),
             style: TextStyle(
               fontSize: 15.0,
               fontWeight: FontWeight.bold,

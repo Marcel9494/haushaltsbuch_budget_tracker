@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:haushaltsbuch_budget_tracker/core/utils/currency_formatter.dart';
+import 'package:haushaltsbuch_budget_tracker/core/utils/currency_helper.dart';
 import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 
 class BudgetStatRow extends StatelessWidget {
@@ -19,7 +19,7 @@ class BudgetStatRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Text(
-          '${t.translate('minimum')}\n${formatCurrency(usedBudgetAmounts.reduce(min), 'EUR')}',
+          '${t.translate('minimum')}\n${CurrencyHelper.instance.formatCurrency(usedBudgetAmounts.reduce(min), context)}',
           textAlign: TextAlign.center,
         ),
         Container(
@@ -29,7 +29,7 @@ class BudgetStatRow extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 12.0),
         ),
         Text(
-          '\u00D8 ${t.translate('average')}\n${formatCurrency(usedBudgetAmounts.fold<double>(0, (sum, v) => sum + v) / usedBudgetAmounts.length, 'EUR')}',
+          '\u00D8 ${t.translate('average')}\n${CurrencyHelper.instance.formatCurrency(usedBudgetAmounts.fold<double>(0, (sum, v) => sum + v) / usedBudgetAmounts.length, context)}',
           textAlign: TextAlign.center,
         ),
         Container(
@@ -39,7 +39,7 @@ class BudgetStatRow extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 12.0),
         ),
         Text(
-          '${t.translate('maximum')}\n${formatCurrency(usedBudgetAmounts.reduce(max), 'EUR')}',
+          '${t.translate('maximum')}\n${CurrencyHelper.instance.formatCurrency(usedBudgetAmounts.reduce(max), context)}',
           textAlign: TextAlign.center,
         ),
       ],

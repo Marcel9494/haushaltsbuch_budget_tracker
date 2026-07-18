@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:haushaltsbuch_budget_tracker/core/utils/currency_formatter.dart';
+import 'package:haushaltsbuch_budget_tracker/core/utils/currency_helper.dart';
 import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 
 import '../../../../../data/models/booking.dart';
@@ -96,18 +96,18 @@ class _BookingMonthOverviewCardState extends State<BookingMonthOverviewCard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            formatCurrency(_monthlyRevenue, 'EUR'),
+                            CurrencyHelper.instance.formatCurrency(_monthlyRevenue, context),
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(color: Colors.green),
                           ),
                           Text(
-                            formatCurrency(_monthlyExpenses, 'EUR'),
+                            CurrencyHelper.instance.formatCurrency(_monthlyExpenses, context),
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(color: Colors.redAccent),
                           ),
                           Divider(height: 8.0, endIndent: 12.0),
                           Text(
-                            formatCurrency(_monthlyBalance, 'EUR'),
+                            CurrencyHelper.instance.formatCurrency(_monthlyBalance, context),
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(color: _monthlyBalance >= 0 ? Colors.green : Colors.redAccent),
                           ),

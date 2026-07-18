@@ -32,11 +32,11 @@ class UpdateUserLocale extends UserEvent {
 
 class UpdateUserCurrency extends UserEvent {
   final String userId;
-  final String currency;
+  final String currencyCode;
 
   UpdateUserCurrency({
     required this.userId,
-    required this.currency,
+    required this.currencyCode,
   });
 }
 

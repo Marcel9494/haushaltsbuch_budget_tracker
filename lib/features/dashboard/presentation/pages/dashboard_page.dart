@@ -56,12 +56,16 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      key: ValueKey('${widget.currentPeriodOfTimeType}_${widget.currentSelectedDate}'),
-      create: (_) => BookingBloc(BookingRepository(), AccountRepository())
-        ..add(widget.currentPeriodOfTimeType == PeriodOfTimeType.monthly
-            ? LoadMonthlyBookings(selectedDate: widget.currentSelectedDate)
-            : LoadYearlyBookings(selectedYear: widget.currentSelectedDate.year)),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          key: ValueKey('${widget.currentPeriodOfTimeType}_${widget.currentSelectedDate}'),
+          create: (_) => BookingBloc(BookingRepository(), AccountRepository())
+            ..add(widget.currentPeriodOfTimeType == PeriodOfTimeType.monthly
+                ? LoadMonthlyBookings(selectedDate: widget.currentSelectedDate)
+                : LoadYearlyBookings(selectedYear: widget.currentSelectedDate.year)),
+        ),
+      ],
       child: BlocBuilder<AccountBloc, AccountState>(
         builder: (context, accountState) {
           return BlocBuilder<DashboardElementBloc, DashboardElementState>(

@@ -44,6 +44,7 @@ dependencies:
   flutter_localization: ^0.3.3
   font_awesome_flutter: ^10.12.0
   country_flags: ^4.1.0
+  flag: ^7.0.2
   month_picker_dialog: ^6.7.0
   flutter_staggered_animations: ^1.1.1
   animations: ^2.1.1

@@ -27,8 +27,8 @@ class UserRepository {
     await Supabase.instance.client.from('users').update({'locale': locale.toString()}).eq('id', userId);
   }
 
-  Future<void> updateUserCurrency(String userId, String currency) async {
-    await Supabase.instance.client.from('users').update({'currency': currency}).eq('id', userId);
+  Future<void> updateUserCurrency(String userId, String currencyCode) async {
+    await Supabase.instance.client.from('users').update({'currency_code': currencyCode}).eq('id', userId);
   }
 
   Future<void> updateUserHasOnboardingCompleted(String userId, bool hasOnboardingCompleted) async {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../core/utils/currency_formatter.dart';
+import '../../../../../core/utils/currency_helper.dart';
 import '../../../../../data/models/goal.dart';
 import '../../../../../l10n/app_localizations.dart';
 
@@ -41,7 +41,7 @@ class GoalStatRow extends StatelessWidget {
           flex: 4,
           child: goal.goalAmount > (goal.currentAmount ?? 0.0)
               ? Text(
-                  '${t.translate('remaining_amount')}\n${formatCurrency(goal.goalAmount - (goal.currentAmount ?? 0.0), 'EUR')}',
+                  '${t.translate('remaining_amount')}\n${CurrencyHelper.instance.formatCurrency(goal.goalAmount - (goal.currentAmount ?? 0.0), context)}',
                   textAlign: TextAlign.center,
                 )
               : Text(
@@ -64,11 +64,11 @@ class GoalStatRow extends StatelessWidget {
           flex: 3,
           child: goal.goalAmount > (goal.currentAmount ?? 0.0)
               ? Text(
-                  '\u00D8 ${t.translate('per_day')} ${t.translate('amount')}\n${formatCurrency(((goal.goalAmount - (goal.currentAmount ?? 0.0)) / remainingDays), 'EUR')}',
+                  '\u00D8 ${t.translate('per_day')} ${t.translate('amount')}\n${CurrencyHelper.instance.formatCurrency(((goal.goalAmount - (goal.currentAmount ?? 0.0)) / remainingDays), context)}',
                   textAlign: TextAlign.center,
                 )
               : Text(
-                  '\u00D8 ${t.translate('per_day')} ${t.translate('amount')}\n${formatCurrency(0.0, 'EUR')}',
+                  '\u00D8 ${t.translate('per_day')} ${t.translate('amount')}\n${CurrencyHelper.instance.formatCurrency(0.0, context)}',
                   textAlign: TextAlign.center,
                 ),
         ),

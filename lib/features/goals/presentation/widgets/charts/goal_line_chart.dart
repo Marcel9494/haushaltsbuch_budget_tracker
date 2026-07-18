@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../../core/utils/currency_formatter.dart';
+import '../../../../../core/utils/currency_helper.dart';
 import '../../../../../data/models/booking.dart';
 import '../../../../../data/models/goal.dart';
 
@@ -218,7 +218,7 @@ class _GoalLineChartState extends State<GoalLineChart> {
               return Transform.rotate(
                 angle: 0.28,
                 child: Text(
-                  formatCurrency(value, 'EUR', decimalDigits: 0),
+                  CurrencyHelper.instance.formatCurrency(value, context, decimalDigits: 0),
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -291,7 +291,7 @@ class _GoalLineChartState extends State<GoalLineChart> {
                   '${date.year}';
 
               return LineTooltipItem(
-                '$formattedDate\n${formatCurrency(spot.y, 'EUR')}',
+                '$formattedDate\n${CurrencyHelper.instance.formatCurrency(spot.y, context)}',
                 const TextStyle(color: Colors.white),
               );
             }).toList();

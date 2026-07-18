@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:haushaltsbuch_budget_tracker/core/utils/currency_formatter.dart';
+import 'package:haushaltsbuch_budget_tracker/core/utils/currency_helper.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
@@ -82,7 +82,7 @@ class BudgetOverviewStatCard extends StatelessWidget {
                                   style: const TextStyle(fontSize: 16.0, color: Colors.grey),
                                 ),
                                 Text(
-                                  formatCurrency(overallBudgetAmount, 'EUR'),
+                                  CurrencyHelper.instance.formatCurrency(overallBudgetAmount, context),
                                   style: const TextStyle(fontSize: 16.0),
                                 ),
                               ],
@@ -111,7 +111,7 @@ class BudgetOverviewStatCard extends StatelessWidget {
                                   style: const TextStyle(fontSize: 16.0, color: Colors.grey),
                                 ),
                                 Text(
-                                  formatCurrency(overallUsedBudgetAmount, 'EUR'),
+                                  CurrencyHelper.instance.formatCurrency(overallUsedBudgetAmount, context),
                                   style: const TextStyle(fontSize: 16.0),
                                 ),
                               ],
@@ -140,7 +140,7 @@ class BudgetOverviewStatCard extends StatelessWidget {
                                   style: const TextStyle(fontSize: 16.0, color: Colors.grey),
                                 ),
                                 Text(
-                                  formatCurrency(overallBudgetAmount - overallUsedBudgetAmount, 'EUR'),
+                                  CurrencyHelper.instance.formatCurrency(overallBudgetAmount - overallUsedBudgetAmount, context),
                                   style: TextStyle(fontSize: 16.0),
                                 ),
                               ],

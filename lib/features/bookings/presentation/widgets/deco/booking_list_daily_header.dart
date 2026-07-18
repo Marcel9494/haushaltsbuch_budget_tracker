@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:haushaltsbuch_budget_tracker/data/repositories/booking_repository.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../../core/utils/currency_formatter.dart';
+import '../../../../../core/utils/currency_helper.dart';
 import '../../../../../data/models/booking.dart';
 
 class BookingListDailyHeader extends StatefulWidget {
@@ -76,7 +76,7 @@ class _BookingListDailyHeaderState extends State<BookingListDailyHeader> {
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  formatCurrency(_revenue, 'EUR'),
+                  CurrencyHelper.instance.formatCurrency(_revenue, context),
                   style: const TextStyle(
                     fontSize: 14,
                     color: Colors.green,
@@ -92,7 +92,7 @@ class _BookingListDailyHeaderState extends State<BookingListDailyHeader> {
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  formatCurrency(_expenses, 'EUR'),
+                  CurrencyHelper.instance.formatCurrency(_expenses, context),
                   style: const TextStyle(
                     fontSize: 14,
                     color: Colors.redAccent,

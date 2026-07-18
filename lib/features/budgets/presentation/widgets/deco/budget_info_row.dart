@@ -3,7 +3,7 @@ import 'package:haushaltsbuch_budget_tracker/data/repositories/budget_repository
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
-import '../../../../../core/utils/currency_formatter.dart';
+import '../../../../../core/utils/currency_helper.dart';
 
 class BudgetInfoRow extends StatelessWidget {
   final String budgetName;
@@ -58,7 +58,7 @@ class BudgetInfoRow extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
-                    formatCurrency(budgetAmount - usedAmount, 'EUR'),
+                    CurrencyHelper.instance.formatCurrency(budgetAmount - usedAmount, context),
                     style: TextStyle(
                       color: budgetAmount >= usedAmount ? Colors.green.shade400 : Colors.red.shade400,
                       fontWeight: FontWeight.bold,
@@ -68,7 +68,7 @@ class BudgetInfoRow extends StatelessWidget {
                 ],
               ),
               Text(
-                '${formatCurrency(usedAmount, 'EUR')} / ${formatCurrency(budgetAmount, 'EUR')}',
+                '${CurrencyHelper.instance.formatCurrency(usedAmount, context)} / ${CurrencyHelper.instance.formatCurrency(budgetAmount, context)}',
                 style: TextStyle(color: Colors.white, fontSize: 16.0),
               ),
             ],

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../../core/utils/currency_formatter.dart';
+import '../../../../../core/utils/currency_helper.dart';
 import '../../../../../data/enums/booking_type.dart';
 import '../../../../../data/models/booking.dart';
 
@@ -170,9 +170,9 @@ class _MonthlyLineChartState extends State<MonthlyLineChart> with SingleTickerPr
 
               return LineTooltipItem(
                 '${DateFormat.yMEd(Localizations.localeOf(context).toString()).format(date)}:\n'
-                '${t.translate('revenue')}: ${formatCurrency(revenue, 'EUR')}\n'
-                '${t.translate('expenses')}: ${formatCurrency(expenses.abs(), 'EUR')}\n'
-                '${t.translate('balance')}: ${formatCurrency(revenue - expenses.abs(), 'EUR')}',
+                '${t.translate('revenue')}: ${CurrencyHelper.instance.formatCurrency(revenue, context)}\n'
+                '${t.translate('expenses')}: ${CurrencyHelper.instance.formatCurrency(expenses.abs(), context)}\n'
+                '${t.translate('balance')}: ${CurrencyHelper.instance.formatCurrency(revenue - expenses.abs(), context)}',
                 textAlign: TextAlign.start,
                 const TextStyle(color: Colors.white, fontSize: 11.0),
               );
@@ -223,7 +223,7 @@ class _MonthlyLineChartState extends State<MonthlyLineChart> with SingleTickerPr
               return Transform.rotate(
                 angle: 0.15,
                 child: Text(
-                  formatCurrency(value.abs(), 'EUR', decimalDigits: 0),
+                  CurrencyHelper.instance.formatCurrency(value.abs(), context, decimalDigits: 0),
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
                 ),

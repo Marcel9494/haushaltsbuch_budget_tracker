@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:haushaltsbuch_budget_tracker/core/utils/currency_formatter.dart';
+import 'package:haushaltsbuch_budget_tracker/core/utils/currency_helper.dart';
 
 import '../../../../../l10n/app_localizations.dart';
 
@@ -36,7 +36,7 @@ class _BudgetPeriodSelectionButtonState extends State<BudgetPeriodSelectionButto
                 const FaIcon(FontAwesomeIcons.calendarDays, size: 24.0),
                 const SizedBox(height: 8),
                 Text(
-                  '${t.translate('monthly_budget')}\n${formatCurrency(widget.currentBudgetAmount, 'EUR')}',
+                  '${t.translate('monthly_budget')}\n${CurrencyHelper.instance.formatCurrency(widget.currentBudgetAmount, context)}',
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -57,7 +57,7 @@ class _BudgetPeriodSelectionButtonState extends State<BudgetPeriodSelectionButto
                 const FaIcon(FontAwesomeIcons.calendar, size: 24.0),
                 const SizedBox(height: 8),
                 Text(
-                  '${t.translate('yearly_budget')}\n${formatCurrency(widget.currentBudgetAmount * 12, 'EUR')}',
+                  '${t.translate('yearly_budget')}\n${CurrencyHelper.instance.formatCurrency(widget.currentBudgetAmount * 12, context)}',
                   textAlign: TextAlign.center,
                 ),
               ],

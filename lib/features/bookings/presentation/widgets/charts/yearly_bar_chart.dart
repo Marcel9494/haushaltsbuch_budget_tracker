@@ -3,7 +3,7 @@ import 'dart:math' show max;
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../../core/utils/currency_formatter.dart';
+import '../../../../../core/utils/currency_helper.dart';
 import '../../../../../core/utils/date_helper.dart';
 import '../../../../../data/models/booking.dart';
 import '../../../../../data/repositories/booking_repository.dart';
@@ -161,7 +161,7 @@ class _YearlyBarChartState extends State<YearlyBarChart> with SingleTickerProvid
                               return Transform.rotate(
                                 angle: 0.22,
                                 child: Text(
-                                  formatCurrency(value, 'EUR', decimalDigits: 0),
+                                  CurrencyHelper.instance.formatCurrency(value, context, decimalDigits: 0),
                                   textAlign: TextAlign.center,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -189,9 +189,9 @@ class _YearlyBarChartState extends State<YearlyBarChart> with SingleTickerProvid
 
                             return BarTooltipItem(
                               '${months[monthIndex]}:\n'
-                              '${t.translate('revenue')}: ${formatCurrency(_monthlyRevenue[monthIndex], 'EUR', decimalDigits: 2)}\n'
-                              '${t.translate('expenses')}: ${formatCurrency(_monthlyExpenses[monthIndex], 'EUR', decimalDigits: 2)}\n'
-                              '${t.translate('balance')}: ${formatCurrency(_monthlyRevenue[monthIndex] - _monthlyExpenses[monthIndex], 'EUR', decimalDigits: 2)}',
+                              '${t.translate('revenue')}: ${CurrencyHelper.instance.formatCurrency(_monthlyRevenue[monthIndex], context)}\n'
+                              '${t.translate('expenses')}: ${CurrencyHelper.instance.formatCurrency(_monthlyExpenses[monthIndex], context)}\n'
+                              '${t.translate('balance')}: ${CurrencyHelper.instance.formatCurrency(_monthlyRevenue[monthIndex] - _monthlyExpenses[monthIndex], context)}',
                               textAlign: TextAlign.start,
                               const TextStyle(color: Colors.white, fontSize: 11.0),
                             );

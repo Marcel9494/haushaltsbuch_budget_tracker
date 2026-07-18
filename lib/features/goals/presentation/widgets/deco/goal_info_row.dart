@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
-import '../../../../../core/utils/currency_formatter.dart';
+import '../../../../../core/utils/currency_helper.dart';
 import '../../../../../data/enums/goal_state_type.dart';
 import '../../../../../data/models/goal.dart';
 import '../../../../../l10n/app_localizations.dart';
@@ -68,8 +68,8 @@ class GoalInfoRow extends StatelessWidget {
                 SizedBox(height: 10.0),
                 Text(
                   goal.goalState == GoalStateType.active
-                      ? '${t.translate('progress')}: ${formatCurrency(goal.currentAmount ?? 0.0, 'EUR')} / ${formatCurrency(goal.goalAmount, 'EUR')}'
-                      : '${formatCurrency(goal.currentAmount ?? 0.0, 'EUR')} / ${formatCurrency(goal.goalAmount, 'EUR')}',
+                      ? '${t.translate('progress')}: ${CurrencyHelper.instance.formatCurrency(goal.currentAmount ?? 0.0, context)} / ${CurrencyHelper.instance.formatCurrency(goal.goalAmount, context)}'
+                      : '${CurrencyHelper.instance.formatCurrency(goal.currentAmount ?? 0.0, context)} / ${CurrencyHelper.instance.formatCurrency(goal.goalAmount, context)}',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16.0,

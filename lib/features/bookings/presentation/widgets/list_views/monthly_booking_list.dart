@@ -10,7 +10,7 @@ import '../../../../../blocs/booking/booking_bloc.dart';
 import '../../../../../core/consts/animation_consts.dart';
 import '../../../../../core/consts/route_consts.dart';
 import '../../../../../core/page_arguments/home_page_arguments.dart';
-import '../../../../../core/utils/currency_formatter.dart';
+import '../../../../../core/utils/currency_helper.dart';
 import '../../../../../core/utils/date_helper.dart';
 import '../../../../../data/enums/booking_type.dart';
 import '../../../../../data/models/booking.dart';
@@ -243,7 +243,7 @@ class _MonthlyBookingListState extends State<MonthlyBookingList> {
                                             ),
                                             const SizedBox(width: 6),
                                             Text(
-                                              '${formatCurrency(incomeMap.values.elementAt(index), 'EUR', decimalDigits: 2)} ${incomeMap.keys.elementAt(index)}',
+                                              '${CurrencyHelper.instance.formatCurrency(incomeMap.values.elementAt(index), context)} ${incomeMap.keys.elementAt(index)}',
                                               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
                                             ),
                                           ],
@@ -292,7 +292,7 @@ class _MonthlyBookingListState extends State<MonthlyBookingList> {
                                             ),
                                             const SizedBox(width: 6),
                                             Text(
-                                              '${formatCurrency(expenseMap.values.elementAt(index), 'EUR', decimalDigits: 2)} ${expenseMap.keys.elementAt(index)}',
+                                              '${CurrencyHelper.instance.formatCurrency(expenseMap.values.elementAt(index), context)} ${expenseMap.keys.elementAt(index)}',
                                               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
                                             ),
                                           ],

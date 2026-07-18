@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:haushaltsbuch_budget_tracker/core/utils/currency_formatter.dart';
+import 'package:haushaltsbuch_budget_tracker/core/utils/currency_helper.dart';
 import 'package:haushaltsbuch_budget_tracker/data/enums/budget_selection_type.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -52,7 +52,12 @@ class _UpdateBudgetPageState extends State<UpdateBudgetPage> {
     _selectedCategory = widget.budget.category!;
     _categoryController.text = widget.budget.category!.categoryName;
     _currentBudgetAmount = widget.budget.budgetAmount;
-    _budgetAmountController.text = formatCurrency(widget.budget.budgetAmount, 'EUR');
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _budgetAmountController.text = CurrencyHelper.instance.formatCurrency(widget.budget.budgetAmount, context);
   }
 
   void _updateBudget(BuildContext contextForBudget) {
