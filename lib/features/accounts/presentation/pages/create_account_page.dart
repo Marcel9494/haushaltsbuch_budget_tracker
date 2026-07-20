@@ -14,6 +14,7 @@ import '../../../../core/consts/animation_consts.dart';
 import '../../../../core/consts/route_consts.dart';
 import '../../../../core/page_arguments/home_page_arguments.dart';
 import '../../../../core/utils/app_flushbar.dart';
+import '../../../../core/utils/currency_helper.dart';
 import '../../../../data/enums/account_type.dart';
 import '../../../../data/models/account.dart';
 import '../../../../data/repositories/account_repository.dart';
@@ -52,14 +53,12 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
         return;
       }
 
-      final amount = double.tryParse(
-        _amountController.text.replaceAll('.', '').replaceAll(',', '.').replaceAll('€', '').trim(),
-      );
+      final double amount = CurrencyHelper.instance.parseAmount(_amountController.text, context);
 
       final Account newAccount = Account(
         userId: supabase.auth.currentUser!.id,
         name: _nameController.text.trim(),
-        balance: amount!,
+        balance: amount,
         accountType: _accountType,
       );
 

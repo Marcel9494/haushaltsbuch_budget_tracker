@@ -52,6 +52,7 @@ class _UpdateGoalPageState extends State<UpdateGoalPage> {
     _goalNameController.text = widget.goal.goalName;
     // TODO hier locale richtig setzen, damit die Datumsanzeige korrekt ist (WidgetsBinding.instance.platformDispatcher.locale) ist falsch,
     // TODO weil dies immer die platform locale auswählt und nicht die vom Benutzer + Datumsformat auch hier Mehrsprachig machen.
+    // TODO Auch bei createGoalPage
     _startDateController.text =
         DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(widget.goal.startDate);
     _endDateController.text = DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(widget.goal.endDate);
@@ -79,9 +80,7 @@ class _UpdateGoalPageState extends State<UpdateGoalPage> {
         return;
       }
 
-      final double? amount = double.tryParse(
-        _goalAmountController.text.replaceAll('.', '').replaceAll(',', '.').replaceAll('€', '').trim(),
-      );
+      final double amount = CurrencyHelper.instance.parseAmount(_goalAmountController.text, context);
 
       final DateTime parsedStartDate =
           DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).parse(_startDateController.text);

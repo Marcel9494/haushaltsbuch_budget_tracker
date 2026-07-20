@@ -14,6 +14,7 @@ import '../../../../blocs/goal/goal_state.dart';
 import '../../../../core/consts/animation_consts.dart';
 import '../../../../core/consts/route_consts.dart';
 import '../../../../core/utils/app_flushbar.dart';
+import '../../../../core/utils/currency_helper.dart';
 import '../../../../data/enums/booking_type.dart';
 import '../../../../data/enums/goal_state_type.dart' as goalStateEnum;
 import '../../../../data/enums/goal_type.dart';
@@ -64,9 +65,7 @@ class _CreateGoalPageState extends State<CreateGoalPage> {
         return;
       }
 
-      final double? amount = double.tryParse(
-        _goalAmountController.text.replaceAll('.', '').replaceAll(',', '.').replaceAll('€', '').trim(),
-      );
+      final double amount = CurrencyHelper.instance.parseAmount(_goalAmountController.text, context);
 
       final DateTime parsedStartDate =
           DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).parse(_startDateController.text);
@@ -75,7 +74,7 @@ class _CreateGoalPageState extends State<CreateGoalPage> {
 
       final Goal newGoal = Goal(
         userId: supabase.auth.currentUser!.id,
-        goalAmount: amount!,
+        goalAmount: amount,
         currentAmount: 0.0,
         goalName: _goalNameController.text.trim(),
         goalType: _selectedGoalType,

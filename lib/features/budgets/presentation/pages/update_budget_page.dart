@@ -75,16 +75,14 @@ class _UpdateBudgetPageState extends State<UpdateBudgetPage> {
         return;
       }
 
-      final budgetAmount = double.tryParse(
-        _budgetAmountController.text.replaceAll('.', '').replaceAll(',', '.').replaceAll('€', '').trim(),
-      );
+      final double budgetAmount = CurrencyHelper.instance.parseAmount(_budgetAmountController.text, context);
 
       final Budget updatedBudget = Budget(
         id: widget.budget.id,
         budgetId: widget.budget.budgetId,
         userId: supabase.auth.currentUser!.id,
         categoryId: _selectedCategory.id!,
-        budgetAmount: budgetAmount!,
+        budgetAmount: budgetAmount,
         budgetDate: widget.budget.budgetDate,
       );
 
