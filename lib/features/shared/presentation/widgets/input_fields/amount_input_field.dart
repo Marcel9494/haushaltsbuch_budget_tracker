@@ -87,47 +87,19 @@ class _AmountInputFieldState extends State<AmountInputField> {
     return null;
   }
 
-  String _formatAmountNumber(String input) {
-    if (input.isEmpty) {
-      return '';
-    }
-
-    input = input.replaceAll('.', '').replaceAll(',', '.');
-    double? value = double.tryParse(input);
-    if (value == null) {
-      return widget.amountController.text;
-    }
-
-    // Beispiel: 1234.56 → 1.234,56
-    String formatted = value.toStringAsFixed(2);
-    List<String> parts = formatted.split('.');
-    String integer = parts[0];
-    String decimals = parts[1];
-
-    if (integer.length > 8) {
-      integer = integer.substring(0, 8);
-    }
-
-    final buffer = StringBuffer();
-    for (int i = 0; i < integer.length; i++) {
-      int position = integer.length - i;
-      buffer.write(integer[i]);
-      if (position > 1 && position % 3 == 1) {
-        buffer.write('.');
-      }
-    }
-
-    return '${buffer.toString()},$decimals €';
-  }
-
   void _addAmountInput(String value) {
     if (_isFirstInput) {
       widget.amountController.clear();
       _isFirstInput = false;
     }
 
-    String text = widget.amountController.text.replaceAll(' €', '');
+    final helper = CurrencyHelper.instance;
+    final symbol = helper.getSymbol();
+    final decimal = helper.getDecimalSeparator(context);
 
+    String text = widget.amountController.text.replaceAll(symbol, '').trim();
+
+    // Minus nur am Anfang erlauben
     if (value == '-') {
       if (text.isEmpty) {
         widget.amountController.text = '-';
@@ -135,41 +107,47 @@ class _AmountInputFieldState extends State<AmountInputField> {
       return;
     }
 
-    if (value == ',') {
-      if (text.contains(',')) {
+    // Dezimaltrennzeichen
+    if (value == decimal) {
+      if (text.contains(decimal)) {
         return;
       }
 
-      if (text.isEmpty) {
-        widget.amountController.text = '0,';
+      if (text.isEmpty || text == '-') {
+        widget.amountController.text = '0$decimal';
         return;
       }
 
-      widget.amountController.text += ',';
+      widget.amountController.text = '$text$decimal';
       return;
     }
 
-    if (RegExp(r'\d').hasMatch(value)) {
-      String integerPart = text.contains(',') ? text.split(',')[0] : text;
-      String decimalPart = text.contains(',') ? text.split(',')[1] : '';
-      // Prüfen: max 2 Nachkommastellen
-      if (text.contains(',') && decimalPart.length >= 2) {
-        return;
-      }
+    // Nur Ziffern zulassen
+    if (!RegExp(r'\d').hasMatch(value)) {
+      return;
+    }
 
-      // Prüfen: max 10 Ziffern insgesamt
-      if (integerPart.length + decimalPart.length >= 10) {
-        return;
-      }
+    final parts = text.split(decimal);
+    final decimalPart = parts.length > 1 ? parts[1] : '';
 
-      // Führende Null korrigieren
-      if (text == '0' && value != ',') {
-        text = value;
-      } else {
-        text += value;
-      }
+    // Maximal zwei Nachkommastellen
+    if (parts.length > 1 && decimalPart.length >= 2) {
+      return;
+    }
 
-      widget.amountController.text += value;
+    // Maximal 10 Ziffern insgesamt (ohne Minus und Dezimaltrennzeichen)
+    final digitCount = text.replaceAll('-', '').replaceAll(decimal, '').length;
+    if (digitCount >= 10) {
+      return;
+    }
+
+    // Führende Null ersetzen
+    if (text == '0') {
+      widget.amountController.text = value;
+    } else if (text == '-0') {
+      widget.amountController.text = '-$value';
+    } else {
+      widget.amountController.text = '$text$value';
     }
   }
 
@@ -181,17 +159,22 @@ class _AmountInputFieldState extends State<AmountInputField> {
   }
 
   void _finalizeAmountInputFormat() {
-    String text = widget.amountController.text;
+    final helper = CurrencyHelper.instance;
+    final decimal = helper.getDecimalSeparator(context);
 
-    if (text.isEmpty || text == ',' || text == '0,' || text == '0' || text == '-') {
-      widget.amountController.text = '0,00 €';
+    String text = widget.amountController.text.trim();
+
+    // Ungültige oder unvollständige Eingaben
+    if (text.isEmpty || text == decimal || text == '0$decimal' || text == '0' || text == '-') {
+      widget.amountController.text = helper.format(0, context);
+
+      widget.onAmountChanged?.call(0);
       return;
     }
 
-    widget.amountController.text = _formatAmountNumber(text.replaceAll('.', ''));
-    if (widget.onAmountChanged != null) {
-      widget.onAmountChanged!(parseAmount(widget.amountController.text));
-    }
+    final amount = helper.parseAmount(text, context);
+    widget.amountController.text = helper.format(amount, context);
+    widget.onAmountChanged?.call(amount);
   }
 
   @override
@@ -359,7 +342,9 @@ class _AmountInputFieldState extends State<AmountInputField> {
                   // Vierte Zeile
                   GridItemButton(text: widget.showMinus == true ? '-' : '', onTap: widget.showMinus == true ? () => _addAmountInput('-') : () {}),
                   GridItemButton(text: '0', onTap: () => _addAmountInput('0')),
-                  GridItemButton(text: ',', onTap: () => _addAmountInput(',')),
+                  GridItemButton(
+                      text: CurrencyHelper.instance.getDecimalSeparator(context),
+                      onTap: () => _addAmountInput(CurrencyHelper.instance.getDecimalSeparator(context))),
                   GridItemButton(text: '', onTap: () {}),
                 ],
               ),

@@ -17,6 +17,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../blocs/booking/booking_bloc.dart';
 import '../../../../core/consts/animation_consts.dart';
 import '../../../../core/utils/app_flushbar.dart';
+import '../../../../core/utils/currency_helper.dart';
 import '../../../../core/utils/date_helper.dart';
 import '../../../../data/enums/amount_type.dart';
 import '../../../../data/enums/booking_type.dart';
@@ -89,17 +90,14 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
         return;
       }
 
-      final double? amount = double.tryParse(
-        _amountController.text.replaceAll('.', '').replaceAll(',', '.').replaceAll('€', '').trim(),
-      );
-
+      final double amount = CurrencyHelper.instance.parseAmount(_amountController.text, context);
       final DateTime parsedDate = DateFormat.yMEd(Localizations.localeOf(context).toString()).parseStrict(_dateController.text);
 
       final Booking newBooking = Booking(
         userId: supabase.auth.currentUser!.id,
         bookingType: _bookingType,
         title: _titleController.text.trim(),
-        amount: amount!,
+        amount: amount,
         amountType: _amountType,
         bookingDate: parsedDate,
         repetitionType: _repetitionType, // TODO

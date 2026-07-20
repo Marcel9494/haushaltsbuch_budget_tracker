@@ -1,15 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
-double parseAmount(String amount) {
-  final cleaned = amount.replaceAll('€', '').replaceAll('.', '').replaceAll(',', '.').trim();
-  return double.parse(cleaned);
-}
-
 class CurrencyHelper {
-  CurrencyHelper._privateConstructor();
+  CurrencyHelper._();
 
-  static final CurrencyHelper instance = CurrencyHelper._privateConstructor();
+  static final CurrencyHelper instance = CurrencyHelper._();
 
   String _currencyCode = 'EUR';
 
@@ -19,11 +14,7 @@ class CurrencyHelper {
     _currencyCode = currencyCode;
   }
 
-  String formatCurrency(
-    double amount,
-    BuildContext context, {
-    int decimalDigits = 2,
-  }) {
+  String formatCurrency(double amount, BuildContext context, {int decimalDigits = 2}) {
     final locale = Localizations.localeOf(context).toString();
 
     final format = NumberFormat.currency(
@@ -35,13 +26,56 @@ class CurrencyHelper {
     return format.format(amount);
   }
 
-  double parseAmount(String amount) {
-    final symbol = NumberFormat.simpleCurrency(
+  NumberFormat formatter(
+    BuildContext context, {
+    int decimalDigits = 2,
+  }) {
+    final locale = Localizations.localeOf(context).toString();
+
+    return NumberFormat.currency(
+      locale: locale,
+      symbol: getSymbol(),
+      decimalDigits: decimalDigits,
+    );
+  }
+
+  String format(
+    double amount,
+    BuildContext context, {
+    int decimalDigits = 2,
+  }) {
+    return formatter(
+      context,
+      decimalDigits: decimalDigits,
+    ).format(amount);
+  }
+
+  double parseAmount(String input, BuildContext context) {
+    final format = formatter(context);
+
+    String cleaned = input
+        .replaceAll(format.currencySymbol, '')
+        .replaceAll(format.symbols.GROUP_SEP, '')
+        .replaceAll(
+          format.symbols.DECIMAL_SEP,
+          '.',
+        )
+        .trim();
+
+    return double.tryParse(cleaned) ?? 0;
+  }
+
+  String getSymbol() {
+    return NumberFormat.simpleCurrency(
       name: _currencyCode,
     ).currencySymbol;
+  }
 
-    final cleaned = amount.replaceAll(symbol, '').replaceAll('.', '').replaceAll(',', '.').trim();
+  String getDecimalSeparator(BuildContext context) {
+    return formatter(context).symbols.DECIMAL_SEP;
+  }
 
-    return double.parse(cleaned);
+  String getGroupSeparator(BuildContext context) {
+    return formatter(context).symbols.GROUP_SEP;
   }
 }

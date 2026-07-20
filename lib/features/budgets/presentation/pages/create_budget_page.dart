@@ -12,6 +12,7 @@ import '../../../../core/consts/animation_consts.dart';
 import '../../../../core/consts/route_consts.dart';
 import '../../../../core/page_arguments/home_page_arguments.dart';
 import '../../../../core/utils/app_flushbar.dart';
+import '../../../../core/utils/currency_helper.dart';
 import '../../../../data/enums/booking_type.dart';
 import '../../../../data/models/budget.dart';
 import '../../../../data/models/category.dart';
@@ -52,14 +53,12 @@ class _CreateBudgetPageState extends State<CreateBudgetPage> {
         return;
       }
 
-      final budgetAmount = double.tryParse(
-        _budgetAmountController.text.replaceAll('.', '').replaceAll(',', '.').replaceAll('€', '').trim(),
-      );
+      final double budgetAmount = CurrencyHelper.instance.parseAmount(_budgetAmountController.text, context);
 
       final Budget newBudget = Budget(
         userId: supabase.auth.currentUser!.id,
         categoryId: _selectedCategory.id!,
-        budgetAmount: budgetAmount!,
+        budgetAmount: budgetAmount,
       );
 
       contextForBudget.read<BudgetBloc>().add(CreateBudget(budget: newBudget));

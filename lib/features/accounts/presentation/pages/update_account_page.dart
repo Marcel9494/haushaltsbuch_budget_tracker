@@ -77,15 +77,13 @@ class _UpdateAccountPageState extends State<UpdateAccountPage> {
         return;
       }
 
-      final amount = double.tryParse(
-        _amountController.text.replaceAll('.', '').replaceAll(',', '.').replaceAll('€', '').trim(),
-      );
+      final double amount = CurrencyHelper.instance.parseAmount(_amountController.text, context);
 
       final Account updatedAccount = Account(
         id: widget.account.id,
         userId: supabase.auth.currentUser!.id,
         name: _nameController.text.trim(),
-        balance: amount!,
+        balance: amount,
         accountType: _selectedAccountType,
       );
 

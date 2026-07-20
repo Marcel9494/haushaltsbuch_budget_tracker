@@ -143,10 +143,7 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
         return;
       }
 
-      final double? amount = double.tryParse(
-        _amountController.text.replaceAll('.', '').replaceAll(',', '.').replaceAll('€', '').trim(),
-      );
-
+      final double amount = CurrencyHelper.instance.parseAmount(_amountController.text, context);
       final DateTime parsedDate = DateFormat.yMEd(Localizations.localeOf(context).toString()).parseStrict(_dateController.text);
 
       final Booking updatedBooking = Booking(
@@ -154,7 +151,7 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
         userId: supabase.auth.currentUser!.id,
         bookingType: _bookingType,
         title: _titleController.text.trim(),
-        amount: amount!,
+        amount: amount,
         amountType: _amountType,
         bookingDate: parsedDate,
         repetitionId: widget.booking.repetitionId,
