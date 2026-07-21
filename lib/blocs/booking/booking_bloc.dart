@@ -27,7 +27,9 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     emit(BookingLoading());
     try {
       final List<Booking> createdBookings = await _bookingRepository.createBooking(event.booking);
-      _accountRepository.updateAccountBalance(createdBookings, event.context);
+      if (event.updateAccountBalance) {
+        _accountRepository.updateAccountBalance(createdBookings, event.context);
+      }
       emit(BookingCreated());
     } catch (e) {
       emit(BookingError('create_booking_error'));
