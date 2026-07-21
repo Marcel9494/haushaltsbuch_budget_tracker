@@ -236,6 +236,9 @@ const Map<String, String> de = {
   'debts_dialog_content': 'Die Konten, die vom Kontotyp Kredit sind oder einen negativen Betrag aufweisen, werden als Schulden klassifiziert.',
   'balance_dialog_title': 'Saldo',
   'balance_dialog_content': 'Der Saldo berechnet sich aus allen Vermögenswerten abzüglich aller Schulden.\nVermögen - Schulden = Saldo',
+  'should_booking_created_title': 'Buchung erstellen?',
+  'should_booking_created_text': 'Soll eine Buchung zur Kontostandänderung erstellt werden?',
+  'balance_adjustment': 'Saldoanpassung',
   // Startausgabekategorien
   'groceries': 'Lebensmittel',
   'household_goods': 'Haushaltswaren',

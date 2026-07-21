@@ -4,10 +4,12 @@ abstract class BookingEvent {}
 
 class CreateBooking extends BookingEvent {
   final Booking booking;
+  final bool updateAccountBalance;
   final BuildContext context;
 
   CreateBooking({
     required this.booking,
+    this.updateAccountBalance = true,
     required this.context,
   });
 }

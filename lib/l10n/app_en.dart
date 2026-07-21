@@ -235,6 +235,9 @@ const Map<String, String> en = {
   'debts_dialog_content': 'Accounts that are of the Credit type or have a negative balance are classified as debits.',
   'balance_dialog_title': 'Balance',
   'balance_dialog_content': 'The balance is calculated by subtracting all debts from all assets.\nAssets - Debts = Balance',
+  'should_booking_created_title': 'Create booking?',
+  'should_booking_created_text': 'Should a booking be created to reflect the change in account balance?',
+  'balance_adjustment': 'Balance adjustment',
   // Startausgabekategorien (Start expense categories)
   'groceries': 'Groceries',
   'household_goods': 'Household goods',

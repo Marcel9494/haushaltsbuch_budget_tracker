@@ -3,7 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:haushaltsbuch_budget_tracker/core/utils/currency_helper.dart';
+import 'package:haushaltsbuch_budget_tracker/core/utils/dialogs/show_should_booking_created_dialog.dart';
 import 'package:haushaltsbuch_budget_tracker/data/enums/booking_type.dart';
+import 'package:haushaltsbuch_budget_tracker/data/enums/repetition_type.dart';
+import 'package:haushaltsbuch_budget_tracker/data/repositories/booking_repository.dart';
 import 'package:haushaltsbuch_budget_tracker/features/accounts/presentation/widgets/input_fields/account_type_input_field.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -11,6 +14,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../blocs/account/account_bloc.dart';
 import '../../../../blocs/account/account_event.dart';
 import '../../../../blocs/account/account_state.dart';
+import '../../../../blocs/booking/booking_bloc.dart';
 import '../../../../core/consts/animation_consts.dart';
 import '../../../../core/consts/route_consts.dart';
 import '../../../../core/page_arguments/home_page_arguments.dart';
@@ -18,7 +22,9 @@ import '../../../../core/utils/app_flushbar.dart';
 import '../../../../core/utils/dialogs/show_delete_dialog.dart';
 import '../../../../core/utils/dialogs/show_transfer_account_dialog.dart';
 import '../../../../data/enums/account_type.dart';
+import '../../../../data/enums/amount_type.dart';
 import '../../../../data/models/account.dart';
+import '../../../../data/models/booking.dart';
 import '../../../../data/repositories/account_repository.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../bookings/presentation/widgets/input_fields/title_input_field.dart';
@@ -62,7 +68,7 @@ class _UpdateAccountPageState extends State<UpdateAccountPage> {
     _accountTypeController.text = AppLocalizations.of(context).translate(widget.account.accountType.name);
   }
 
-  Future<void> _updateAccount(BuildContext contextForAccount) async {
+  Future<void> _updateAccount(BuildContext contextForBloc) async {
     final t = AppLocalizations.of(context);
     final supabase = Supabase.instance.client;
 
@@ -79,6 +85,38 @@ class _UpdateAccountPageState extends State<UpdateAccountPage> {
 
       final double amount = CurrencyHelper.instance.parseAmount(_amountController.text, context);
 
+      if (amount != widget.account.balance) {
+        bool shouldBookingCreated = await showShouldBookingCreatedDialog(context);
+        if (shouldBookingCreated) {
+          final double bookingDifference = amount - widget.account.balance;
+          final BookingType bookingType = bookingDifference > 0 ? BookingType.income : BookingType.expense;
+          final AmountType amountType = bookingDifference > 0 ? AmountType.active : AmountType.variable;
+          final DateTime bookingDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+          final double bookingAmount = bookingDifference.abs();
+
+          final Booking newBooking = Booking(
+            userId: supabase.auth.currentUser!.id,
+            bookingType: bookingType,
+            title: t.translate('balance_adjustment'),
+            amount: bookingAmount,
+            amountType: amountType,
+            bookingDate: bookingDate,
+            repetitionType: RepetitionType.noRepetition,
+            categoryId: null,
+            debitAccountId: null,
+            targetAccountId: null,
+            goalId: null,
+            person: '',
+            isBooked: true,
+          );
+          contextForBloc.read<BookingBloc>().add(CreateBooking(
+                booking: newBooking,
+                updateAccountBalance: false,
+                context: contextForBloc,
+              ));
+        }
+      }
+
       final Account updatedAccount = Account(
         id: widget.account.id,
         userId: supabase.auth.currentUser!.id,
@@ -87,7 +125,7 @@ class _UpdateAccountPageState extends State<UpdateAccountPage> {
         accountType: _selectedAccountType,
       );
 
-      contextForAccount.read<AccountBloc>().add(UpdateAccount(account: updatedAccount));
+      contextForBloc.read<AccountBloc>().add(UpdateAccount(account: updatedAccount));
     } on PostgrestException catch (_) {
       AppFlushbar.show(context, message: t.translate('database_error'));
       _updateAccountButtonController.error();
@@ -112,8 +150,11 @@ class _UpdateAccountPageState extends State<UpdateAccountPage> {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
-    return BlocProvider(
-      create: (_) => AccountBloc(AccountRepository()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => AccountBloc(AccountRepository())),
+        BlocProvider(create: (context) => BookingBloc(BookingRepository(), AccountRepository())),
+      ],
       child: Builder(builder: (context) {
         return BlocListener<AccountBloc, AccountState>(
           listener: (context, state) {
