@@ -88,10 +88,16 @@ class _DashboardPageState extends State<DashboardPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           GuestInfoCard(),
+                          SizedBox(height: 6.0),
+                          CategoryStats(
+                            bookings: bookingState.bookings,
+                            currentSelectedDate: widget.currentSelectedDate,
+                            currentPeriodOfTimeType: widget.currentPeriodOfTimeType,
+                          ),
                           generalDashboardElement.isEmpty
                               ? SizedBox.shrink()
                               : Padding(
-                                  padding: const EdgeInsets.only(top: 12.0, bottom: 16.0),
+                                  padding: const EdgeInsets.only(top: 24.0, bottom: 16.0),
                                   child: SubtitleText(text: 'overview'),
                                 ),
                           generalDashboardElement.isEmpty
@@ -156,7 +162,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           monthlyDashboardElements.isEmpty
                               ? SizedBox.shrink()
                               : Padding(
-                                  padding: const EdgeInsets.only(top: 12.0, bottom: 16.0),
+                                  padding: const EdgeInsets.only(top: 24.0, bottom: 16.0),
                                   child: SubtitleText(text: 'monthly_values'),
                                 ),
                           monthlyDashboardElements.isEmpty
@@ -185,14 +191,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                     ],
                                   ),
                                 ),
-                          SizedBox(height: 20.0),
-                          SubtitleText(text: 'categories'),
-                          SizedBox(height: 12.0),
-                          CategoryStats(
-                            bookings: bookingState.bookings,
-                            currentSelectedDate: widget.currentSelectedDate,
-                            currentPeriodOfTimeType: widget.currentPeriodOfTimeType,
-                          ),
+                          SizedBox(height: 64.0),
                         ],
                       ),
                     );
@@ -211,10 +210,16 @@ class _DashboardPageState extends State<DashboardPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           GuestInfoCard(),
+                          SizedBox(height: 6.0),
+                          CategoryStats(
+                            bookings: yearlyBookings,
+                            currentSelectedDate: widget.currentSelectedDate,
+                            currentPeriodOfTimeType: widget.currentPeriodOfTimeType,
+                          ),
                           generalDashboardElement.isEmpty
                               ? SizedBox.shrink()
                               : Padding(
-                                  padding: const EdgeInsets.only(top: 12.0, bottom: 16.0),
+                                  padding: const EdgeInsets.only(top: 24.0, bottom: 16.0),
                                   child: SubtitleText(text: 'overview'),
                                 ),
                           generalDashboardElement.isEmpty
@@ -272,7 +277,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           yearlyDashboardElements.isEmpty
                               ? SizedBox.shrink()
                               : Padding(
-                                  padding: const EdgeInsets.only(top: 12.0, bottom: 16.0),
+                                  padding: const EdgeInsets.only(top: 24.0, bottom: 16.0),
                                   child: SubtitleText(text: 'yearly_values'),
                                 ),
                           yearlyDashboardElements.isEmpty
@@ -301,14 +306,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                     ],
                                   ),
                                 ),
-                          SizedBox(height: 20.0),
-                          SubtitleText(text: 'categories'),
-                          SizedBox(height: 12.0),
-                          CategoryStats(
-                            bookings: yearlyBookings,
-                            currentSelectedDate: widget.currentSelectedDate,
-                            currentPeriodOfTimeType: widget.currentPeriodOfTimeType,
-                          ),
+                          SizedBox(height: 64.0),
                         ],
                       ),
                     );

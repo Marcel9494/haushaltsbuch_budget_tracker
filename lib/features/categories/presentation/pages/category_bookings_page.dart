@@ -7,6 +7,7 @@ import 'package:haushaltsbuch_budget_tracker/data/enums/period_of_time_type.dart
 import '../../../../blocs/booking/booking_bloc.dart';
 import '../../../../core/consts/animation_consts.dart';
 import '../../../../core/utils/date_helper.dart';
+import '../../../../data/enums/booking_type.dart';
 import '../../../../data/models/booking.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../bookings/presentation/widgets/cards/booking_card.dart';
@@ -17,6 +18,7 @@ import '../../../shared/presentation/widgets/deco/error_text.dart';
 
 class CategoryBookingsPage extends StatefulWidget {
   final String category;
+  final BookingType bookingType;
   final List<Booking> bookings;
   final DateTime currentSelectedDate;
   final PeriodOfTimeType currentPeriodOfTimeType;
@@ -24,6 +26,7 @@ class CategoryBookingsPage extends StatefulWidget {
   const CategoryBookingsPage({
     super.key,
     required this.category,
+    required this.bookingType,
     required this.bookings,
     required this.currentSelectedDate,
     required this.currentPeriodOfTimeType,
@@ -34,14 +37,13 @@ class CategoryBookingsPage extends StatefulWidget {
 }
 
 class _CategoryBookingsPageState extends State<CategoryBookingsPage> {
-  final int _pastStartIndex = 0;
-  List<Booking> categoryBookings = [];
   final ScrollController _scrollController = ScrollController();
 
-  @override
-  void initState() {
-    super.initState();
-    categoryBookings = widget.bookings.where((booking) => booking.category?.categoryName == widget.category).toList();
+  List<Booking> _filterCategoryBookings(List<Booking> bookings) {
+    List<Booking> categoryBookings = bookings.where((booking) {
+      return booking.category?.categoryName == widget.category && booking.bookingType == widget.bookingType;
+    }).toList();
+    return categoryBookings;
   }
 
   @override
@@ -69,14 +71,9 @@ class _CategoryBookingsPageState extends State<CategoryBookingsPage> {
           } else if (state is BookingListLoaded || state is YearlyBookingListLoaded) {
             List<Booking> categoryBookings = [];
             if (state is BookingListLoaded) {
-              categoryBookings = state.bookings.where((b) => b.category?.categoryName == widget.category).toList();
+              categoryBookings = _filterCategoryBookings(state.bookings);
             } else if (state is YearlyBookingListLoaded) {
-              categoryBookings = state.yearlyBookings.values
-                  .expand((bookingList) => bookingList)
-                  .where((b) => b.category?.categoryName == widget.category)
-                  .toList()
-                  .reversed
-                  .toList();
+              categoryBookings = _filterCategoryBookings(state.yearlyBookings.values.expand((bookingList) => bookingList).toList());
             }
             return Column(
               children: [
@@ -103,7 +100,7 @@ class _CategoryBookingsPageState extends State<CategoryBookingsPage> {
                                       bookingDate,
                                       categoryBookings[index - 1].bookingDate,
                                     );
-                              final bool isDividerPosition = index == _pastStartIndex && index != 0;
+                              final bool isDividerPosition = index == 0 && index != 0;
                               final blockContent = Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [

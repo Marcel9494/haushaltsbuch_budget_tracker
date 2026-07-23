@@ -25,7 +25,6 @@ class Booking {
   final Account? targetAccount;
   final Goal? goal;
   final String? goalId;
-  final String person;
   final bool isBooked;
 
   Booking({
@@ -47,7 +46,6 @@ class Booking {
     required this.targetAccountId,
     this.goal,
     required this.goalId,
-    required this.person,
     required this.isBooked,
   });
 
@@ -71,7 +69,6 @@ class Booking {
       targetAccountId: map['target_account_id'],
       goal: map['goals'] != null ? Goal.fromMap(map['goals']) : null,
       goalId: map['goal_id'],
-      person: map['person'],
       isBooked: map['is_booked'],
     );
   }
@@ -90,7 +87,6 @@ class Booking {
       'debit_account_id': debitAccountId,
       'target_account_id': targetAccountId,
       'goal_id': goalId,
-      'person': person,
       'is_booked': isBooked,
     };
   }

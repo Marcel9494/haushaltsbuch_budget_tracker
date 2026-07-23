@@ -65,7 +65,6 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
   final TextEditingController _categorieController = TextEditingController();
   final TextEditingController _debitAccountController = TextEditingController();
   final TextEditingController _targetAccountController = TextEditingController();
-  final TextEditingController _personController = TextEditingController();
   final TextEditingController _goalController = TextEditingController();
   final RoundedLoadingButtonController _createBookingButtonController = RoundedLoadingButtonController();
 
@@ -105,7 +104,6 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
         debitAccountId: _selectedDebitAccount?.id,
         targetAccountId: _bookingType == BookingType.transfer ? _selectedTargetAccount?.id : null,
         goalId: _selectedGoal.id,
-        person: _personController.text.trim(),
         isBooked: _bookingRepository.getIsBookingDateBefore(parsedDate),
       );
 
@@ -158,7 +156,6 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
             }
           },
           child: Scaffold(
-            resizeToAvoidBottomInset: false,
             appBar: AppBar(
               title: Text(t.translate('create_booking')),
             ),
@@ -217,6 +214,7 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
                                             _selectedDebitAccount = newDebitAccount;
                                           });
                                         },
+                                        bottomSheetTitle: 'select_debit_account',
                                       ),
                                     ),
                                   ),
@@ -237,6 +235,7 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
                                             _selectedTargetAccount = newTargetAccount;
                                           });
                                         },
+                                        bottomSheetTitle: 'select_target_account',
                                       ),
                                     ),
                                   ),

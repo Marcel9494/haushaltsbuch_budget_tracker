@@ -107,7 +107,7 @@ class BudgetRepository {
         .select('*, categories(*)')
         .gte('budget_date', startOfMonth)
         .lt('budget_date', endOfMonth)
-        .order('budget_date', ascending: false);
+        .order('budget_amount', ascending: false);
     return (monthlyBudgets as List).map((data) => Budget.fromMap(data)).toList();
   }
 
@@ -119,7 +119,7 @@ class BudgetRepository {
         .select('*, categories(*)')
         .gte('budget_date', startOfYear)
         .lt('budget_date', endOfYear)
-        .order('budget_date', ascending: false);
+        .order('budget_amount', ascending: false);
     final List<Budget> allBudgets = (yearlyBudgets as List).map((data) => Budget.fromMap(data)).toList();
     final Map<String, List<Budget>> budgetCategories = groupBy(allBudgets, (budget) {
       return budget.categoryId;

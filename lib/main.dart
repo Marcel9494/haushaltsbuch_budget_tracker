@@ -488,6 +488,7 @@ class _MyAppState extends State<MyApp> {
               return MaterialPageRoute<String>(
                 builder: (context) => CategoryBookingsPage(
                   category: args.category,
+                  bookingType: args.bookingType,
                   bookings: args.bookings,
                   currentSelectedDate: args.currentSelectedDate,
                   currentPeriodOfTimeType: args.currentPeriodOfTimeType,

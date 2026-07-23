@@ -106,7 +106,6 @@ class _UpdateAccountPageState extends State<UpdateAccountPage> {
             debitAccountId: null,
             targetAccountId: null,
             goalId: null,
-            person: '',
             isBooked: true,
           );
           contextForBloc.read<BookingBloc>().add(CreateBooking(
