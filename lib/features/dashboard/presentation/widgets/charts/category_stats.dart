@@ -44,6 +44,9 @@ class _CategoryStatsState extends State<CategoryStats> with TickerProviderStateM
     Colors.orange,
     Colors.redAccent,
     Colors.teal,
+    Colors.indigo,
+    Colors.amber.shade700,
+    Colors.deepOrange,
   ];
   int _touchedIndex = -1;
 
@@ -210,16 +213,16 @@ class _CategoryStatsState extends State<CategoryStats> with TickerProviderStateM
                       duration: const Duration(milliseconds: listAnimationDurationInMs),
                       child: CategoryStatCard(
                         bookingCategoryStats: _bookingCategoryStats[index],
-                        pieCategoryColor: _pieCategoryColors[index],
+                        pieCategoryColor: _pieCategoryColors[index % _pieCategoryColors.length],
                         bookings: widget.bookings,
                         currentSelectedDate: widget.currentSelectedDate,
                         currentPeriodOfTimeType: widget.currentPeriodOfTimeType,
+                        bookingType: _selectedBookingType,
                       ),
                     );
                   },
                 ),
               ),
-              SizedBox(height: 54.0),
             ],
           ),
         ),

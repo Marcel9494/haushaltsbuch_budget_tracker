@@ -141,11 +141,7 @@ class BookingCard extends StatelessWidget {
                             style: TextStyle(color: booking.bookingType.color),
                           ),
                           SizedBox(height: 4.0),
-                          Text(
-                            booking.person,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(color: Colors.grey),
-                          ),
+                          Text(''),
                         ],
                       ),
                     ),

@@ -17,6 +17,7 @@ class AccountInputField extends StatefulWidget {
   final bool showSuffixIcon;
   final bool isOptional;
   final ValueChanged<Account?> onAccountChanged;
+  final String bottomSheetTitle;
 
   const AccountInputField({
     super.key,
@@ -25,6 +26,7 @@ class AccountInputField extends StatefulWidget {
     required this.onAccountChanged,
     this.showSuffixIcon = true,
     this.isOptional = false,
+    this.bottomSheetTitle = 'select_account',
   });
 
   @override
@@ -135,7 +137,7 @@ class _AccountInputFieldState extends State<AccountInputField> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      '${t.translate('select_account')}:',
+                                      '${t.translate(widget.bottomSheetTitle)}:',
                                       style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                                     ),
                                     IconButton(

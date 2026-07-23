@@ -54,7 +54,7 @@ class BudgetOverviewStatCard extends StatelessWidget {
                       ),
                     ),
                     circularStrokeCap: CircularStrokeCap.round,
-                    progressColor: Colors.cyan,
+                    progressColor: overallUsedBudgetPercent <= 100.0 ? Colors.green : Colors.redAccent,
                   ),
                 ),
                 const SizedBox(width: 16),

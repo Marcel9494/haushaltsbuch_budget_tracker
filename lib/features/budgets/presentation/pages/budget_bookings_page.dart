@@ -4,6 +4,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:haushaltsbuch_budget_tracker/blocs/budget/budget_event.dart';
 import 'package:haushaltsbuch_budget_tracker/core/utils/bottom_sheets/delete_budget_bottom_sheet.dart';
+import 'package:haushaltsbuch_budget_tracker/data/enums/booking_type.dart';
 import 'package:haushaltsbuch_budget_tracker/data/repositories/account_repository.dart';
 import 'package:haushaltsbuch_budget_tracker/data/repositories/budget_repository.dart';
 import 'package:haushaltsbuch_budget_tracker/features/bookings/presentation/widgets/cards/booking_card.dart';
@@ -48,14 +49,13 @@ class BudgetBookingsPage extends StatefulWidget {
 }
 
 class _BudgetBookingsPageState extends State<BudgetBookingsPage> {
-  final int _pastStartIndex = 0;
-  List<Booking> filteredBookings = [];
   final ScrollController _scrollController = ScrollController();
 
-  @override
-  void initState() {
-    super.initState();
-    filteredBookings = widget.bookings.where((booking) => booking.category?.categoryName == widget.budget.category?.categoryName).toList();
+  List<Booking> _filterBudgetBookings(List<Booking> bookings) {
+    List<Booking> budgetBookings = widget.bookings
+        .where((booking) => booking.category?.categoryName == widget.budget.category?.categoryName && booking.bookingType == BookingType.expense)
+        .toList();
+    return budgetBookings;
   }
 
   @override
@@ -105,13 +105,9 @@ class _BudgetBookingsPageState extends State<BudgetBookingsPage> {
                   (bookingState is YearlyBookingListLoaded || bookingState is BookingListLoaded)) {
                 List<Booking> filteredBookings = [];
                 if (bookingState is BookingListLoaded) {
-                  filteredBookings =
-                      bookingState.bookings.where((booking) => booking.category?.categoryName == widget.budget.category?.categoryName).toList();
+                  filteredBookings = _filterBudgetBookings(bookingState.bookings);
                 } else if (bookingState is YearlyBookingListLoaded) {
-                  filteredBookings = bookingState.yearlyBookings.values
-                      .expand((bookingList) => bookingList)
-                      .where((booking) => booking.category?.categoryName == widget.budget.category?.categoryName)
-                      .toList();
+                  filteredBookings = _filterBudgetBookings(bookingState.yearlyBookings.values.expand((bookingList) => bookingList).toList());
                 }
                 return Scaffold(
                   appBar: AppBar(
@@ -190,7 +186,7 @@ class _BudgetBookingsPageState extends State<BudgetBookingsPage> {
                                               bookingDate,
                                               filteredBookings[index - 1].bookingDate,
                                             );
-                                      final bool isDividerPosition = index == _pastStartIndex && index != 0;
+                                      final bool isDividerPosition = index == 0 && index != 0;
                                       final blockContent = Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [

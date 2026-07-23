@@ -10,6 +10,7 @@ import '../../../../../blocs/booking/booking_bloc.dart';
 import '../../../../../blocs/category/category_bloc.dart';
 import '../../../../../blocs/goal/goal_bloc.dart';
 import '../../../../../core/utils/currency_helper.dart';
+import '../../../../../data/enums/booking_type.dart';
 import '../../../../../data/models/booking.dart';
 import '../../../../../l10n/app_localizations.dart';
 import '../../../../categories/presentation/pages/category_bookings_page.dart';
@@ -20,6 +21,7 @@ class CategoryStatCard extends StatelessWidget {
   final List<Booking> bookings;
   final DateTime currentSelectedDate;
   final PeriodOfTimeType currentPeriodOfTimeType;
+  final BookingType bookingType;
 
   const CategoryStatCard({
     super.key,
@@ -28,6 +30,7 @@ class CategoryStatCard extends StatelessWidget {
     required this.bookings,
     required this.currentSelectedDate,
     required this.currentPeriodOfTimeType,
+    required this.bookingType,
   });
 
   @override
@@ -50,6 +53,7 @@ class CategoryStatCard extends StatelessWidget {
                   ],
                   child: CategoryBookingsPage(
                     category: bookingCategoryStats.category,
+                    bookingType: bookingType,
                     bookings: bookings,
                     currentSelectedDate: currentSelectedDate,
                     currentPeriodOfTimeType: currentPeriodOfTimeType,
