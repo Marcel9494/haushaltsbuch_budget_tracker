@@ -78,7 +78,8 @@ Haushaltsbuch, Budgetplaner, Finanzmanager, Ausgaben Tracker, Einnahmen-Ausgaben
   - Email Authentication
   - Google Authentication
   - Anonymously Authentication
-  - Postgres Database + DB Functions
+  - Postgres Database + PostgreSQL Functions
+  - Edge Functions (Typescript)
   - Cron Job Integration
   - Email ändern
   - Passwort ändern
