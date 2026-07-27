@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:haushaltsbuch_budget_tracker/blocs/on_boarding/on_boarding_bloc.dart';
 import 'package:haushaltsbuch_budget_tracker/data/repositories/category_repository.dart';
 import 'package:haushaltsbuch_budget_tracker/features/auth/presentation/pages/forgot_password_page.dart';
@@ -105,12 +106,14 @@ void main() async {
 
       if (event == AuthChangeEvent.initialSession) {
         UserRepository userRepository = UserRepository();
-        User user = await userRepository.loadUser(Supabase.instance.client.auth.currentUser!.id);
-        CurrencyHelper.instance.setCurrency(user.currencyCode);
-        initialLocale = user.locale;
-        final context = navigatorKey.currentContext;
-        if (context != null) {
-          MyApp.of(context)?.setLocale(user.locale);
+        if (Supabase.instance.client.auth.currentUser != null) {
+          User user = await userRepository.loadUser(Supabase.instance.client.auth.currentUser!.id);
+          CurrencyHelper.instance.setCurrency(user.currencyCode);
+          initialLocale = user.locale;
+          final context = navigatorKey.currentContext;
+          if (context != null) {
+            MyApp.of(context)?.setLocale(user.locale);
+          }
         }
       } else if (event == AuthChangeEvent.signedIn) {
         UserRepository userRepository = UserRepository();
@@ -119,10 +122,12 @@ void main() async {
         if (userExists == false) {
           final locale = PlatformDispatcher.instance.locale;
           final localeString = locale.countryCode != null ? locale.toString() : '${locale.languageCode}_US';
+          final timezone = await FlutterTimezone.getLocalTimezone();
 
           final newUser = User(
             id: Supabase.instance.client.auth.currentUser!.id,
             locale: locale,
+            timezone: timezone.identifier,
             currencyCode: NumberFormat.simpleCurrency(locale: localeString).currencyName ?? '',
             hasOnboardingCompleted: false,
           );

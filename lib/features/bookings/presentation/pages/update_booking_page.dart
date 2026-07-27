@@ -144,6 +144,7 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
 
       final double amount = CurrencyHelper.instance.parseAmount(_amountController.text, context);
       final DateTime parsedDate = DateFormat.yMEd(Localizations.localeOf(context).toString()).parseStrict(_dateController.text);
+      final bookingDate = DateTime(parsedDate.year, parsedDate.month, parsedDate.day);
 
       final Booking updatedBooking = Booking(
         id: widget.booking.id,
@@ -152,7 +153,7 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
         title: _titleController.text.trim(),
         amount: amount,
         amountType: _amountType,
-        bookingDate: parsedDate,
+        bookingDate: bookingDate,
         repetitionId: widget.booking.repetitionId,
         repetitionType: _repetitionType, // TODO
         categoryId: _bookingType == BookingType.transfer ? null : _selectedCategory?.id,

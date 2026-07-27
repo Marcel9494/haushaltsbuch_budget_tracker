@@ -187,7 +187,7 @@ class BookingRepository {
         .from('bookings')
         .select()
         .eq('repetition_id', repetitionId)
-        .gte('booking_date', fromDate)
+        .gte('booking_date', fromDate.toUtc())
         .order('booking_date');
     return (futureRepetitionBookings as List).map((data) => Booking.fromMap(data)).toList();
   }
@@ -204,8 +204,8 @@ class BookingRepository {
         .from('bookings')
         .select(
             '*, categories(*), debit_account:accounts!bookings_debit_account_id_fkey(*), target_account:accounts!bookings_target_account_id_fkey(*), goals(*)')
-        .gte('booking_date', startOfMonth)
-        .lt('booking_date', endOfMonth)
+        .gte('booking_date', startOfMonth.toUtc())
+        .lt('booking_date', endOfMonth.toUtc())
         .order('booking_date', ascending: false);
     return (monthlyBookings as List).map((data) => Booking.fromMap(data)).toList();
   }
@@ -217,8 +217,8 @@ class BookingRepository {
         .from('bookings')
         .select(
             '*, categories(*), debit_account:accounts!bookings_debit_account_id_fkey(*), target_account:accounts!bookings_target_account_id_fkey(*), goals(*)')
-        .gte('booking_date', startOfYear)
-        .lt('booking_date', endOfYear)
+        .gte('booking_date', startOfYear.toUtc())
+        .lt('booking_date', endOfYear.toUtc())
         .order('booking_date', ascending: false);
     final List<Booking> allBookings = (yearlyBookings as List).map((data) => Booking.fromMap(data)).toList();
     final Map<int, List<Booking>> groupedMonthlyBookings = groupBy(allBookings, (booking) {
