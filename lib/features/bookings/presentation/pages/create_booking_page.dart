@@ -91,6 +91,7 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
 
       final double amount = CurrencyHelper.instance.parseAmount(_amountController.text, context);
       final DateTime parsedDate = DateFormat.yMEd(Localizations.localeOf(context).toString()).parseStrict(_dateController.text);
+      final bookingDate = DateTime(parsedDate.year, parsedDate.month, parsedDate.day);
 
       final Booking newBooking = Booking(
         userId: supabase.auth.currentUser!.id,
@@ -98,7 +99,7 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
         title: _titleController.text.trim(),
         amount: amount,
         amountType: _amountType,
-        bookingDate: parsedDate,
+        bookingDate: bookingDate,
         repetitionType: _repetitionType, // TODO
         categoryId: _selectedCategory?.id,
         debitAccountId: _selectedDebitAccount?.id,

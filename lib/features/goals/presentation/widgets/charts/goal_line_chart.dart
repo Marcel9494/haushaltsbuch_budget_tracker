@@ -4,6 +4,7 @@ import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../core/utils/currency_helper.dart';
+import '../../../../../data/enums/goal_type.dart';
 import '../../../../../data/models/booking.dart';
 import '../../../../../data/models/goal.dart';
 
@@ -39,9 +40,11 @@ class _GoalLineChartState extends State<GoalLineChart> {
   }
 
   List<FlSpot> buildGoalLine() {
+    final double goalValue = widget.goal.goalType == GoalType.payOff ? 0.0 : widget.goal.goalAmount.toDouble();
+
     return [
-      FlSpot(0, widget.goal.goalAmount.toDouble()),
-      FlSpot(totalDays.toDouble(), widget.goal.goalAmount.toDouble()),
+      FlSpot(0, goalValue),
+      FlSpot(totalDays.toDouble(), goalValue),
     ];
   }
 
@@ -50,28 +53,43 @@ class _GoalLineChartState extends State<GoalLineChart> {
 
     for (int i = 0; i <= totalDays; i++) {
       final progress = i / totalDays;
-      final value = progress * widget.goal.goalAmount;
-      spots.add(FlSpot(i.toDouble(), value));
+
+      final value = widget.goal.goalType == GoalType.payOff ? widget.goal.goalAmount * (1 - progress) : widget.goal.goalAmount * progress;
+
+      spots.add(FlSpot(i.toDouble(), value.toDouble()));
     }
 
     return spots;
   }
 
-  List<FlSpot> buildCurrentProgressLine(List<Booking> goalBookings) {
-    goalBookings.sort((a, b) => a.bookingDate.compareTo(b.bookingDate));
-
-    double cumulative = 0.0;
+  List<FlSpot> buildCurrentProgressLine(List<Booking> bookings) {
+    bookings.sort((a, b) => a.bookingDate.compareTo(b.bookingDate));
     final spots = <FlSpot>[];
 
-    for (final goalBooking in goalBookings) {
-      final dayIndex = goalBooking.bookingDate.difference(widget.goal.startDate).inDays.toDouble();
-      cumulative += goalBooking.amount;
-      if (cumulative > widget.goal.goalAmount) {
-        cumulative = widget.goal.goalAmount.toDouble();
-      }
-      spots.add(FlSpot(dayIndex, cumulative));
-    }
+    if (widget.goal.goalType == GoalType.payOff) {
+      double remaining = widget.goal.goalAmount.toDouble();
+      for (final booking in bookings) {
+        final day = booking.bookingDate.difference(widget.goal.startDate).inDays.toDouble();
+        remaining -= booking.amount;
 
+        if (remaining < 0) {
+          remaining = 0;
+        }
+        spots.add(FlSpot(day, remaining));
+      }
+    } else {
+      double cumulative = 0;
+
+      for (final booking in bookings) {
+        final day = booking.bookingDate.difference(widget.goal.startDate).inDays.toDouble();
+        cumulative += booking.amount;
+
+        if (cumulative > widget.goal.goalAmount) {
+          cumulative = widget.goal.goalAmount.toDouble();
+        }
+        spots.add(FlSpot(day, cumulative));
+      }
+    }
     return spots;
   }
 
@@ -240,7 +258,7 @@ class _GoalLineChartState extends State<GoalLineChart> {
         LineChartBarData(
           spots: buildCurrentProgressLine(widget.goalBookings),
           isCurved: false,
-          color: Colors.green.shade500,
+          color: widget.goal.goalType == GoalType.payOff ? Colors.redAccent : Colors.green,
           barWidth: 3,
           dotData: FlDotData(show: true),
         ),
@@ -249,7 +267,7 @@ class _GoalLineChartState extends State<GoalLineChart> {
         LineChartBarData(
           spots: buildIdealLine(),
           isCurved: false,
-          color: Colors.cyanAccent,
+          color: widget.goal.goalType == GoalType.payOff ? Colors.orange : Colors.cyanAccent,
           dashArray: [10, 10], // gestrichelte Linie
           barWidth: 2,
           dotData: FlDotData(show: false),
