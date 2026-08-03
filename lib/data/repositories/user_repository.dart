@@ -31,6 +31,10 @@ class UserRepository {
     await Supabase.instance.client.from('users').update({'currency_code': currencyCode}).eq('id', userId);
   }
 
+  Future<void> updateUserTimezone(String userId, String timezone) async {
+    await Supabase.instance.client.from('users').update({'timezone': timezone}).eq('id', userId);
+  }
+
   Future<void> updateUserHasOnboardingCompleted(String userId, bool hasOnboardingCompleted) async {
     await Supabase.instance.client.from('users').update({'has_onboarding_completed': hasOnboardingCompleted}).eq('id', userId);
   }

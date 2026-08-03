@@ -109,6 +109,10 @@ void main() async {
         if (Supabase.instance.client.auth.currentUser != null) {
           User user = await userRepository.loadUser(Supabase.instance.client.auth.currentUser!.id);
           CurrencyHelper.instance.setCurrency(user.currencyCode);
+
+          final timezone = await FlutterTimezone.getLocalTimezone();
+          await userRepository.updateUserTimezone(user.id!, timezone.identifier);
+
           initialLocale = user.locale;
           final context = navigatorKey.currentContext;
           if (context != null) {
@@ -142,6 +146,10 @@ void main() async {
         } else {
           User user = await userRepository.loadUser(Supabase.instance.client.auth.currentUser!.id);
           CurrencyHelper.instance.setCurrency(user.currencyCode);
+
+          final timezone = await FlutterTimezone.getLocalTimezone();
+          await userRepository.updateUserTimezone(user.id!, timezone.identifier);
+
           initialLocale = user.locale;
           final context = navigatorKey.currentContext;
           if (context != null) {

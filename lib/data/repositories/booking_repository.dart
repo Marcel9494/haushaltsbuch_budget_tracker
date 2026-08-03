@@ -40,7 +40,7 @@ class BookingRepository {
       while (currentBookingDate.isBefore(endDate)) {
         createdBookingsMap.add({
           ...baseBookingMap,
-          'booking_date': currentBookingDate.toIso8601String(),
+          'booking_date': currentBookingDate.toUtc().toIso8601String(),
           'is_booked': getIsBookingDateBefore(currentBookingDate),
         });
         currentBookingDate = RepetitionType.getNextBookingDate(currentBookingDate, newBooking.repetitionType);
@@ -77,7 +77,7 @@ class BookingRepository {
     );
 
     // 1. Lösche alle zukünftigen Buchungen
-    await supabase.from('bookings').delete().eq('repetition_id', repetitionId).gte('booking_date', startDate.toIso8601String());
+    await supabase.from('bookings').delete().eq('repetition_id', repetitionId).gte('booking_date', startDate.toUtc().toIso8601String());
 
     // 2. Neue Buchungen generieren (wie bei createBooking)
     final createdBookingsMap = <Map<String, dynamic>>[];
@@ -97,7 +97,7 @@ class BookingRepository {
     while (currentBookingDate.isBefore(endDate)) {
       createdBookingsMap.add({
         ...baseBookingMap,
-        'booking_date': currentBookingDate.toIso8601String(),
+        'booking_date': currentBookingDate.toUtc().toIso8601String(),
         'is_booked': getIsBookingDateBefore(currentBookingDate),
       });
 
@@ -141,7 +141,7 @@ class BookingRepository {
     while (currentBookingDate.isBefore(endDate)) {
       createdBookingsMap.add({
         ...baseBookingMap,
-        'booking_date': currentBookingDate.toIso8601String(),
+        'booking_date': currentBookingDate.toUtc().toIso8601String(),
         'is_booked': getIsBookingDateBefore(currentBookingDate),
       });
 
@@ -167,7 +167,7 @@ class BookingRepository {
         .from('bookings')
         .delete()
         .eq('repetition_id', repetitionId)
-        .gte('booking_date', fromDate.toIso8601String())
+        .gte('booking_date', fromDate.toUtc().toIso8601String())
         .eq('user_id', supabase.auth.currentUser!.id);
   }
 
@@ -390,6 +390,16 @@ class BookingRepository {
       }
     }
     return totalExpenses;
+  }
+
+  Map<int, List<Booking>> groupBookingsByDay(List<Booking> bookings) {
+    final grouped = <int, List<Booking>>{};
+
+    for (final booking in bookings) {
+      grouped.putIfAbsent(booking.bookingDate.day, () => []).add(booking);
+    }
+
+    return grouped;
   }
 
   bool getIsBookingDateBefore(DateTime bookingDate) {
