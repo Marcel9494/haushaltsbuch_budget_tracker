@@ -2,9 +2,9 @@ import 'dart:math' show max;
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../../core/utils/currency_helper.dart';
-import '../../../../../core/utils/date_helper.dart';
 import '../../../../../data/enums/chart_filter_type.dart';
 import '../../../../../data/models/booking.dart';
 import '../../../../../data/repositories/booking_repository.dart';
@@ -12,60 +12,85 @@ import '../../../../../l10n/app_localizations.dart';
 import '../buttons/chart_filter_segmented_button.dart';
 import '../deco/chart_title.dart';
 
-class YearlyBarChart extends StatefulWidget {
+class MonthlyBarChart extends StatefulWidget {
   final Map<int, List<Booking>> bookings;
-  final int currentSelectedYear;
+  final DateTime currentSelectedDate;
 
-  const YearlyBarChart({
+  const MonthlyBarChart({
     super.key,
     required this.bookings,
-    required this.currentSelectedYear,
+    required this.currentSelectedDate,
   });
 
   @override
-  State<YearlyBarChart> createState() => _YearlyBarChartState();
+  State<MonthlyBarChart> createState() => _MonthlyBarChartState();
 }
 
-class _YearlyBarChartState extends State<YearlyBarChart> with SingleTickerProviderStateMixin {
+class _MonthlyBarChartState extends State<MonthlyBarChart> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
   final BookingRepository _bookingRepository = BookingRepository();
-  final List<double> _monthlyRevenue = [];
-  final List<double> _monthlyExpenses = [];
-  ChartFilterType _selectedFilter = ChartFilterType.comparison;
+  final List<double> _dailyRevenue = [];
+  final List<double> _dailyExpenses = [];
+  late final int _daysInMonth;
+  ChartFilterType _selectedFilter = ChartFilterType.expenses;
 
   @override
   void initState() {
     super.initState();
+
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1600),
     );
+
     _animation = CurvedAnimation(
       parent: _controller,
       curve: Curves.easeOutCubic,
     );
+
     _controller.forward();
 
-    for (int i = 0; i < 12; i++) {
-      final month = i + 1;
-      _monthlyRevenue.add(_bookingRepository.calculateRevenue(widget.bookings[month] ?? []));
-      _monthlyExpenses.add(_bookingRepository.calculateExpenses(widget.bookings[month] ?? []));
+    _daysInMonth = DateUtils.getDaysInMonth(
+      widget.currentSelectedDate.year,
+      widget.currentSelectedDate.month,
+    );
+
+    for (int day = 1; day <= _daysInMonth; day++) {
+      final bookings = widget.bookings[day] ?? [];
+
+      _dailyRevenue.add(
+        _bookingRepository.calculateRevenue(bookings),
+      );
+
+      _dailyExpenses.add(
+        _bookingRepository.calculateExpenses(bookings),
+      );
     }
   }
 
   List<BarChartGroupData> getBarGroups() {
-    final currentMonth = DateTime.now().month - 1;
-    final currentYear = DateTime.now().year;
+    final today = DateTime.now();
+    final showRevenue = _selectedFilter == ChartFilterType.revenue || _selectedFilter == ChartFilterType.comparison;
+    final showExpenses = _selectedFilter == ChartFilterType.expenses || _selectedFilter == ChartFilterType.comparison;
 
-    return List.generate(12, (index) {
-      final isCurrentYear = widget.currentSelectedYear == currentYear;
-      final isFutureYear = widget.currentSelectedYear > currentYear;
-      final isFutureMonth = isFutureYear || (isCurrentYear && index > currentMonth);
+    return List.generate(_daysInMonth, (index) {
+      final day = index + 1;
+
+      final currentDate = DateTime(
+        widget.currentSelectedDate.year,
+        widget.currentSelectedDate.month,
+        day,
+      );
+
+      final isFutureDay = currentDate.isAfter(
+        DateTime(today.year, today.month, today.day),
+      );
 
       const delayPerItem = 0.08;
-      final start = index * delayPerItem;
-      final end = start + (1 - delayPerItem * 12);
+
+      final start = index * delayPerItem / _daysInMonth * 12;
+      final end = start + (1 - delayPerItem);
 
       double progress;
 
@@ -77,51 +102,30 @@ class _YearlyBarChartState extends State<YearlyBarChart> with SingleTickerProvid
         progress = (_animation.value - start) / (end - start);
       }
 
-      final List<BarChartRodData> rods = [];
+      progress = progress.clamp(0.0, 1.0);
 
-      switch (_selectedFilter) {
-        case ChartFilterType.revenue:
-          rods.add(
-            BarChartRodData(
-              fromY: 0,
-              toY: _monthlyRevenue[index] * progress,
-              width: 6,
-              color: isFutureMonth ? Colors.green.withValues(alpha: 0.6) : Colors.green,
-              borderRadius: BorderRadius.circular(6),
-            ),
-          );
-          break;
+      final rods = <BarChartRodData>[];
 
-        case ChartFilterType.expenses:
-          rods.add(
-            BarChartRodData(
-              fromY: 0,
-              toY: _monthlyExpenses[index] * progress,
-              width: 6,
-              color: isFutureMonth ? Colors.red.withValues(alpha: 0.6) : Colors.red,
-              borderRadius: BorderRadius.circular(6),
-            ),
-          );
-          break;
+      if (showRevenue) {
+        rods.add(
+          BarChartRodData(
+            toY: _dailyRevenue[index] * progress,
+            color: Colors.green,
+            width: 6,
+            borderRadius: BorderRadius.circular(6),
+          ),
+        );
+      }
 
-        case ChartFilterType.comparison:
-          rods.addAll([
-            BarChartRodData(
-              fromY: 0,
-              toY: _monthlyRevenue[index] * progress,
-              width: 6,
-              color: isFutureMonth ? Colors.green.withValues(alpha: 0.6) : Colors.green,
-              borderRadius: BorderRadius.circular(6),
-            ),
-            BarChartRodData(
-              fromY: 0,
-              toY: _monthlyExpenses[index] * progress,
-              width: 6,
-              color: isFutureMonth ? Colors.red.withValues(alpha: 0.6) : Colors.red,
-              borderRadius: BorderRadius.circular(6),
-            ),
-          ]);
-          break;
+      if (showExpenses) {
+        rods.add(
+          BarChartRodData(
+            toY: _dailyExpenses[index] * progress,
+            color: Colors.red,
+            width: 6,
+            borderRadius: BorderRadius.circular(6),
+          ),
+        );
       }
 
       return BarChartGroupData(
@@ -135,11 +139,11 @@ class _YearlyBarChartState extends State<YearlyBarChart> with SingleTickerProvid
   double getInterval() {
     double maxRevenue = 0.0;
     double maxExpenses = 0.0;
-    if (_monthlyRevenue.isNotEmpty) {
-      maxRevenue = _monthlyRevenue.reduce(max);
+    if (_dailyRevenue.isNotEmpty) {
+      maxRevenue = _dailyRevenue.reduce(max);
     }
-    if (_monthlyExpenses.isNotEmpty) {
-      maxExpenses = _monthlyExpenses.reduce(max);
+    if (_dailyExpenses.isNotEmpty) {
+      maxExpenses = _dailyExpenses.reduce(max);
     }
     final double maxValue = max(maxRevenue, maxExpenses);
     if (maxValue == 0.0) {
@@ -159,7 +163,7 @@ class _YearlyBarChartState extends State<YearlyBarChart> with SingleTickerProvid
     final t = AppLocalizations.of(context);
     return Card(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(4.0, 16.0, 16.0, 14.0),
+        padding: const EdgeInsets.fromLTRB(4.0, 6.0, 16.0, 14.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -196,12 +200,21 @@ class _YearlyBarChartState extends State<YearlyBarChart> with SingleTickerProvid
                           sideTitles: SideTitles(
                             showTitles: true,
                             getTitlesWidget: (value, meta) {
-                              final List<String> months = getAllShortMonthNames(Localizations.localeOf(context).toString());
+                              final day = value.toInt() + 1;
+
+                              if ((day != 1 || day == 31) && day % 5 != 0) {
+                                return const SizedBox.shrink();
+                              }
+                              String dateText = DateFormat('Md', Localizations.localeOf(context).languageCode)
+                                  .format(DateTime(widget.currentSelectedDate.year, widget.currentSelectedDate.month, day));
                               return Padding(
                                 padding: const EdgeInsets.only(top: 8.0),
                                 child: Text(
-                                  months[value.toInt()],
-                                  style: const TextStyle(fontSize: 11.0, fontWeight: FontWeight.bold),
+                                  dateText,
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               );
                             },
@@ -239,16 +252,22 @@ class _YearlyBarChartState extends State<YearlyBarChart> with SingleTickerProvid
                         touchTooltipData: BarTouchTooltipData(
                           getTooltipColor: (_) => Colors.grey.shade800,
                           getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                            final monthIndex = group.x.toInt();
-                            final List<String> months = getAllMonthNames('de_DE');
+                            final dayIndex = group.x.toInt();
+                            final day = dayIndex + 1;
 
                             return BarTooltipItem(
-                              '${months[monthIndex]}:\n'
-                              '${t.translate('revenue')}: ${CurrencyHelper.instance.formatCurrency(_monthlyRevenue[monthIndex], context)}\n'
-                              '${t.translate('expenses')}: ${CurrencyHelper.instance.formatCurrency(_monthlyExpenses[monthIndex], context)}\n'
-                              '${t.translate('balance')}: ${CurrencyHelper.instance.formatCurrency(_monthlyRevenue[monthIndex] - _monthlyExpenses[monthIndex], context)}',
+                              '$day.${widget.currentSelectedDate.month}.${widget.currentSelectedDate.year}\n'
+                              '${t.translate('revenue')}: '
+                              '${CurrencyHelper.instance.formatCurrency(_dailyRevenue[dayIndex], context)}\n'
+                              '${t.translate('expenses')}: '
+                              '${CurrencyHelper.instance.formatCurrency(_dailyExpenses[dayIndex], context)}\n'
+                              '${t.translate('balance')}: '
+                              '${CurrencyHelper.instance.formatCurrency(_dailyRevenue[dayIndex] - _dailyExpenses[dayIndex], context)}',
                               textAlign: TextAlign.start,
-                              const TextStyle(color: Colors.white, fontSize: 11.0),
+                              const TextStyle(
+                                color: Colors.white,
+                                fontSize: 11,
+                              ),
                             );
                           },
                         ),

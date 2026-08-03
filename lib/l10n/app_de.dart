@@ -45,7 +45,7 @@ const Map<String, String> de = {
   'available': 'Verfügbar',
   'expenses': 'Ausgaben',
   'revenue': 'Einnahmen',
-  'balance': 'Saldo',
+  'balance': 'Verfügbar',
   'per_day': 'tgl.',
   'per_month': 'mtl.',
   'booking_date': 'Buchungsdatum',

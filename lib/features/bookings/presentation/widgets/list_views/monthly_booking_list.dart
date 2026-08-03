@@ -4,13 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:haushaltsbuch_budget_tracker/data/enums/period_of_time_type.dart';
+import 'package:haushaltsbuch_budget_tracker/features/bookings/presentation/widgets/charts/monthly_bar_chart.dart';
 import 'package:haushaltsbuch_budget_tracker/features/shared/presentation/widgets/deco/error_text.dart';
 
 import '../../../../../blocs/booking/booking_bloc.dart';
 import '../../../../../core/consts/animation_consts.dart';
 import '../../../../../core/consts/route_consts.dart';
 import '../../../../../core/page_arguments/home_page_arguments.dart';
-import '../../../../../core/utils/currency_helper.dart';
 import '../../../../../core/utils/date_helper.dart';
 import '../../../../../data/enums/booking_type.dart';
 import '../../../../../data/models/booking.dart';
@@ -20,10 +20,8 @@ import '../../../../../l10n/app_localizations.dart';
 import '../../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../../../../shared/presentation/widgets/deco/empty_list.dart';
 import '../cards/booking_card.dart';
-import '../charts/monthly_line_chart.dart';
 import '../deco/booking_list_daily_header.dart';
 import '../deco/booking_list_overview.dart';
-import '../deco/chart_title.dart';
 
 class MonthlyBookingList extends StatefulWidget {
   final DateTime currentSelectedDate;
@@ -193,6 +191,8 @@ class _MonthlyBookingListState extends State<MonthlyBookingList> {
           } else if (state is BookingListLoaded) {
             _prepareBookingList(state.bookings);
             _prepareBarChartData(state.bookings);
+            BookingRepository bookingRepository = BookingRepository();
+            final Map<int, List<Booking>> bookingsByDay = bookingRepository.groupBookingsByDay(state.bookings);
             return Column(
               children: [
                 BookingListOverview(
@@ -207,99 +207,11 @@ class _MonthlyBookingListState extends State<MonthlyBookingList> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              ChartTitle(),
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-                                child: Row(
-                                  children: incomeStack.map((stackItem) {
-                                    final index = incomeStack.indexOf(stackItem);
-                                    final color = incomeColors[index % incomeColors.length];
-
-                                    return Padding(
-                                      padding: const EdgeInsets.only(right: 8.0),
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                        decoration: BoxDecoration(
-                                          color: color.withValues(alpha: 0.2),
-                                          borderRadius: BorderRadius.circular(16),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              width: 12,
-                                              height: 12,
-                                              decoration: BoxDecoration(
-                                                color: color,
-                                                shape: BoxShape.circle,
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.black12,
-                                                    blurRadius: 2,
-                                                    offset: Offset(0, 1),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                            const SizedBox(width: 6),
-                                            Text(
-                                              '${CurrencyHelper.instance.formatCurrency(incomeMap.values.elementAt(index), context)} ${incomeMap.keys.elementAt(index)}',
-                                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  }).toList(),
-                                ),
-                              ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                child: MonthlyLineChart(bookings: state.bookings),
-                              ),
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
-                                child: Row(
-                                  children: expenseStack.map((stackItem) {
-                                    final index = expenseStack.indexOf(stackItem);
-                                    final color = expenseColors[index % expenseColors.length];
-
-                                    return Padding(
-                                      padding: const EdgeInsets.only(right: 8.0),
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                                        decoration: BoxDecoration(
-                                          color: color.withValues(alpha: 0.2),
-                                          borderRadius: BorderRadius.circular(16),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              width: 12,
-                                              height: 12,
-                                              decoration: BoxDecoration(
-                                                color: color,
-                                                shape: BoxShape.circle,
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.black12,
-                                                    blurRadius: 2,
-                                                    offset: Offset(0, 1),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                            const SizedBox(width: 6),
-                                            Text(
-                                              '${CurrencyHelper.instance.formatCurrency(expenseMap.values.elementAt(index), context)} ${expenseMap.keys.elementAt(index)}',
-                                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  }).toList(),
+                                child: MonthlyBarChart(
+                                  bookings: bookingsByDay,
+                                  currentSelectedDate: widget.currentSelectedDate,
                                 ),
                               ),
                             ],
