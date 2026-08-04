@@ -80,6 +80,7 @@ Haushaltsbuch, Budgetplaner, Finanzmanager, Ausgaben Tracker, Einnahmen-Ausgaben
   - Anonymously Authentication
   - PostgreSQL Database
   - PostgreSQL Database Functions
+  - Edge Functions
   - Cron Job Integration
   - Email ändern
   - Passwort ändern
