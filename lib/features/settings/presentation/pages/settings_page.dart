@@ -18,6 +18,7 @@ import '../../../shared/presentation/widgets/deco/circular_loading_indicator.dar
 import '../../../shared/presentation/widgets/deco/error_text.dart';
 import '../widgets/bottom_sheets/show_selectable_country_bottom_sheet.dart';
 import '../widgets/bottom_sheets/show_selectable_currency_bottom_sheet.dart';
+import '../widgets/dialogs/show_delete_user_account_dialog.dart';
 import '../widgets/dialogs/show_guest_logout_dialog.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -42,6 +43,15 @@ class _SettingsPageState extends State<SettingsPage> {
 
     if (confirmed == true) {
       await supabase.auth.signOut();
+    }
+  }
+
+  Future<void> _deleteUserAccount() async {
+    bool confirmed = false;
+
+    confirmed = await showDeleteUserAccountDialog(context);
+    if (confirmed == true) {
+      UserRepository().deleteUserAccount();
     }
   }
 
@@ -118,13 +128,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           : SizedBox.shrink(),
                       SettingsTitle(title: 'general'),
                       SettingsCard(
-                        leading: Icon(Icons.person_add_rounded),
-                        title: t.translate('send_invitation_link'),
-                        onTap: () {},
-                      ),
-                      SettingsCard(
-                        leading: Icon(Icons.star_rounded),
-                        title: t.translate('evaluate_app'),
+                        leading: Icon(Icons.info_outline_rounded),
+                        title: t.translate('over_the_app'),
                         onTap: () {},
                       ),
                       SettingsTitle(title: 'legal'),
@@ -152,7 +157,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       SettingsCard(
                         leading: Icon(Icons.delete_forever_rounded, color: Colors.redAccent),
                         title: t.translate('delete_all_data'),
-                        onTap: () {},
+                        onTap: () => _deleteUserAccount(),
                         color: Colors.redAccent,
                       ),
                     ],

@@ -19,6 +19,7 @@ import '../../../../blocs/budget/budget_event.dart';
 import '../../../../blocs/category/category_bloc.dart';
 import '../../../../blocs/goal/goal_bloc.dart';
 import '../../../../blocs/goal/goal_event.dart';
+import '../../../../core/utils/app_review_service.dart';
 import '../../../../core/utils/slow_hero_animation.dart';
 import '../../../../data/enums/period_of_time_type.dart';
 import '../../../../data/repositories/account_repository.dart';
@@ -347,6 +348,13 @@ class _HomePageState extends State<HomePage> {
               leading: Icon(Icons.stars_rounded, color: Colors.white),
               title: Text(t.translate('premium'), style: TextStyle(color: Colors.white)),
               onTap: () {},
+            ),
+            ListTile(
+              leading: Icon(Icons.star_rounded, color: Colors.white),
+              title: Text(t.translate('evaluate_app'), style: TextStyle(color: Colors.white)),
+              onTap: () async {
+                await AppReviewService().openStore();
+              },
             ),
             ListTile(
               leading: FaIcon(FontAwesomeIcons.gear, color: Colors.white),
