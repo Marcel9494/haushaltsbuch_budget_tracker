@@ -240,6 +240,13 @@ const Map<String, String> en = {
   'should_booking_created_title': 'Create booking?',
   'should_booking_created_text': 'Should a booking be created to reflect the change in account balance?',
   'balance_adjustment': 'Balance adjustment',
+  'over_the_app': 'Over the App',
+  'delete': 'Delete',
+  'delete_user_account_confirmation_word': 'Delete',
+  'delete_user_account_confirmation_failed': 'Confirmation failed. Please enter the word “Delete” if you want to delete your account permanently.',
+  'delete_user_account': 'Delete account',
+  'delete_user_account_description_important':
+      'IMPORTANT: Deleting your account will permanently delete all your data. This action cannot be undone. If you still want to delete your account, please confirm by entering the word: Delete',
   // Startausgabekategorien (Start expense categories)
   'groceries': 'Groceries',
   'household_goods': 'Household goods',

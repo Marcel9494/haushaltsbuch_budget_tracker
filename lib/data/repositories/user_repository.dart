@@ -38,4 +38,13 @@ class UserRepository {
   Future<void> updateUserHasOnboardingCompleted(String userId, bool hasOnboardingCompleted) async {
     await Supabase.instance.client.from('users').update({'has_onboarding_completed': hasOnboardingCompleted}).eq('id', userId);
   }
+
+  Future<void> deleteUserAccount() async {
+    try {
+      await Supabase.instance.client.functions.invoke('delete-user-account');
+      await Supabase.instance.client.auth.signOut();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 }

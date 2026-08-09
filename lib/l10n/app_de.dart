@@ -241,6 +241,14 @@ const Map<String, String> de = {
   'should_booking_created_title': 'Buchung erstellen?',
   'should_booking_created_text': 'Soll eine Buchung zur Kontostandänderung erstellt werden?',
   'balance_adjustment': 'Saldoanpassung',
+  'over_the_app': 'Über die App',
+  'delete': 'Löschen',
+  'delete_user_account_confirmation_word': 'Löschen',
+  'delete_user_account_confirmation_failed':
+      'Die Bestätigung ist fehlgeschlagen. Bitte bestätige mit dem Wort: Löschen, wenn du dein Konto unwiderruflich löschen möchtest.',
+  'delete_user_account': 'Konto löschen',
+  'delete_user_account_description_important':
+      'WICHTIG: Wenn du dein Konto löschst, werden alle deine Daten unwiderruflich gelöscht. Diese Aktion kann nicht rückgängig gemacht werden. Wenn du dein Konto trotzdem löschen möchtest bestätige bitte mit dem Wort: Löschen',
   // Startausgabekategorien
   'groceries': 'Lebensmittel',
   'household_goods': 'Haushaltswaren',
