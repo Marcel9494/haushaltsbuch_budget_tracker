@@ -1,1 +1,361 @@
+# Datenschutzerklärung
 
+**Stand: 10. August 2026**
+
+## 1. Verantwortlicher
+
+Verantwortlicher für die Verarbeitung personenbezogener Daten im Zusammenhang mit der App **„Haushaltsbuch – Budget Tracker“** ist:
+
+**Marcel Geirhos**
+Gartenstraße 8
+73550 Waldstetten
+Deutschland
+
+E-Mail: **[[Marcel.Geirhos@gmail.com](mailto:Marcel.Geirhos@gmail.com)](mailto:Marcel.Geirhos@gmail.com)**
+
+---
+
+## 2. Allgemeine Informationen zur Datenverarbeitung
+
+Der Schutz deiner persönlichen Daten ist mir wichtig. Ich verarbeite personenbezogene Daten ausschließlich im Rahmen der geltenden datenschutzrechtlichen Vorschriften, insbesondere der Datenschutz-Grundverordnung (DSGVO).
+
+Die App „Haushaltsbuch – Budget Tracker“ ermöglicht es dir, persönliche Finanzdaten wie Einnahmen, Ausgaben, Konten, Budgets und finanzielle Ziele digital zu verwalten.
+
+Dabei gilt insbesondere:
+
+* Es findet **keine Verbindung zu Banken oder anderen Finanzinstituten** statt.
+* Es werden **keine Bankkonten automatisch ausgelesen**.
+* Es werden **keine Online-Banking-Zugangsdaten** verarbeitet.
+* Es werden **keine IBANs oder Kreditkartennummern** benötigt oder gespeichert.
+* Finanzdaten werden grundsätzlich **durch dich selbst in die App eingegeben**.
+* Es werden **keine Werbe- oder Trackingdienste** eingesetzt.
+* Es werden **keine Analyse- oder Crash-Reporting-Dienste** eingesetzt.
+
+---
+
+# 3. Welche personenbezogenen Daten werden verarbeitet?
+
+Je nach Nutzung der App können folgende Daten verarbeitet werden.
+
+### 3.1 Benutzerkonto und Authentifizierung
+
+Bei der Nutzung eines Benutzerkontos werden die für die Authentifizierung erforderlichen Daten verarbeitet.
+
+Je nach gewählter Anmeldemethode kann dies insbesondere umfassen:
+
+* eine E-Mail-Adresse bei Registrierung mit E-Mail und Passwort,
+* die von Google im Rahmen der Google-Anmeldung bereitgestellten Authentifizierungsinformationen,
+* eine technische Benutzerkennung,
+* Authentifizierungs- und Sitzungsinformationen.
+
+Die E-Mail-Adresse wird **nicht in der von der App verwendeten `users`-Tabelle gespeichert**. Sie kann jedoch im Rahmen der Authentifizierung durch den Authentifizierungsdienst verarbeitet werden.
+
+Bei Nutzung der Gastanmeldung ist keine Angabe einer E-Mail-Adresse erforderlich.
+
+### 3.2 Vom Nutzer eingegebene Haushalts- und Finanzdaten
+
+Die App ermöglicht die Speicherung von Daten, die du selbst eingibst oder innerhalb der App erstellst. Hierzu können insbesondere gehören:
+
+* Buchungen bzw. Einnahmen und Ausgaben,
+* Buchungsbezeichnungen und Verwendungszwecke,
+* Beträge,
+* Buchungsdaten,
+* Konten und Kontobezeichnungen,
+* Budgets,
+* Kategorien,
+* finanzielle Ziele,
+* Angaben zu Personen, die du freiwillig bei einer Buchung einträgst,
+* weitere von dir innerhalb der App eingegebene Inhalte.
+
+Da du bei Buchungen grundsätzlich auch die Namen anderer Personen eingeben kannst, solltest du dabei nur solche personenbezogenen Daten anderer Personen eingeben, deren Verarbeitung für deinen persönlichen Zweck erforderlich ist.
+
+### 3.3 Einstellungen
+
+Zur Bereitstellung und Personalisierung der App können außerdem folgende Einstellungen gespeichert werden:
+
+* bevorzugte Sprache,
+* Währung,
+* Zeitzone,
+* Dashboard-Einstellungen,
+* weitere persönliche App-Einstellungen.
+
+### 3.4 Abonnementstatus
+
+Sofern die App Funktionen abhängig von einem Premium- bzw. Abonnementstatus bereitstellt, kann der entsprechende Status mit deinem Benutzerkonto verknüpft und gespeichert werden.
+
+Die Verarbeitung von Zahlungs- und Abonnementdaten über externe Zahlungsdienstleister wird in dieser Datenschutzerklärung erst ergänzt, sobald entsprechende Zahlungsfunktionen tatsächlich implementiert und aktiviert werden.
+
+---
+
+# 4. Zwecke der Verarbeitung
+
+Die Verarbeitung personenbezogener Daten erfolgt insbesondere zu folgenden Zwecken:
+
+1. **Bereitstellung der App und ihrer Funktionen**
+
+   Damit du deine Buchungen, Konten, Budgets, Kategorien und finanziellen Ziele speichern und verwalten kannst.
+
+2. **Verwaltung deines Benutzerkontos**
+
+   Zur Registrierung, Anmeldung, Authentifizierung und Verwaltung deines Benutzerkontos.
+
+3. **Synchronisation deiner Daten**
+
+   Damit deine innerhalb der App gespeicherten Daten auf deinen Geräten verfügbar sind.
+
+4. **Personalisierung der App**
+
+   Zur Speicherung und Anwendung deiner Sprache, Währung, Zeitzone und Dashboard-Einstellungen.
+
+5. **Durchführung der von dir gewünschten Funktionen**
+
+   Beispielsweise zur Berechnung und Darstellung von Budgets, Einnahmen, Ausgaben und finanziellen Zielen.
+
+6. **Gewährleistung der Sicherheit**
+
+   Zum Schutz der App, der Benutzerkonten und der gespeicherten Daten vor unbefugtem Zugriff und Missbrauch.
+
+7. **Erfüllung gesetzlicher Verpflichtungen**
+
+   Soweit dies gesetzlich erforderlich ist.
+
+Die Verarbeitung erfolgt nach den Grundsätzen der Zweckbindung, Datenminimierung und Speicherbegrenzung.
+
+---
+
+# 5. Rechtsgrundlagen der Verarbeitung
+
+Die Verarbeitung personenbezogener Daten erfolgt je nach Verarbeitungsvorgang auf Grundlage von Art. 6 Abs. 1 DSGVO.
+
+### Art. 6 Abs. 1 lit. b DSGVO – Vertragserfüllung
+
+Soweit die Verarbeitung für die Bereitstellung der von dir gewünschten Funktionen und die Nutzung der App erforderlich ist, erfolgt sie zur Durchführung bzw. Erfüllung des Nutzungsverhältnisses.
+
+Dies betrifft insbesondere:
+
+* Verwaltung des Benutzerkontos,
+* Speicherung deiner Buchungen,
+* Speicherung deiner Konten,
+* Speicherung deiner Budgets,
+* Speicherung deiner Kategorien,
+* Speicherung deiner finanziellen Ziele,
+* Speicherung deiner persönlichen Einstellungen.
+
+### Art. 6 Abs. 1 lit. c DSGVO – rechtliche Verpflichtung
+
+Soweit personenbezogene Daten aufgrund gesetzlicher Verpflichtungen verarbeitet werden müssen, erfolgt die Verarbeitung auf Grundlage von Art. 6 Abs. 1 lit. c DSGVO.
+
+### Art. 6 Abs. 1 lit. f DSGVO – berechtigte Interessen
+
+Soweit erforderlich, kann eine Verarbeitung auf Grundlage berechtigter Interessen gemäß Art. 6 Abs. 1 lit. f DSGVO erfolgen, insbesondere zur Sicherstellung der technischen und informationstechnischen Sicherheit sowie zur Verhinderung von Missbrauch.
+
+---
+
+# 6. Supabase
+
+Für die Authentifizierung und Speicherung der Daten wird **Supabase** eingesetzt.
+
+Supabase stellt unter anderem folgende technische Dienste bereit:
+
+* Benutzerverwaltung und Authentifizierung,
+* Datenbank,
+* Speicherung und Abruf der von dir innerhalb der App gespeicherten Daten.
+
+Die von der App verwendete Supabase-Datenbank befindet sich in der Region **Stockholm, Schweden** und damit innerhalb der Europäischen Union.
+
+Supabase verarbeitet personenbezogene Daten im Rahmen der Bereitstellung seiner Dienste als technischer Dienstleister. Supabase stellt hierfür unter anderem ein Data Processing Addendum (DPA) zur Verfügung.
+
+Die App verwendet geeignete technische Zugriffskontrollen, um sicherzustellen, dass Benutzer grundsätzlich nur auf ihre eigenen Daten zugreifen können.
+
+Weitere Informationen zu den Sicherheitsfunktionen von Supabase findest du in der [[Supabase Security Documentation](https://supabase.com/docs/guides/security?utm_source=chatgpt.com)](https://supabase.com/docs/guides/security?utm_source=chatgpt.com).
+
+---
+
+# 7. Anmeldung mit Google
+
+Du kannst dich optional über dein Google-Konto anmelden.
+
+Wenn du diese Anmeldemethode verwendest, wird die Authentifizierung über Google durchgeführt. Dabei können personenbezogene Daten an Google übermittelt bzw. von Google im Rahmen der Anmeldung verarbeitet werden.
+
+Die Verarbeitung durch Google erfolgt nach den Datenschutzbestimmungen von Google.
+
+Die Google-Anmeldung ist optional. Du kannst alternativ ein Benutzerkonto mit E-Mail-Adresse und Passwort verwenden oder – sofern verfügbar – die App ohne Angabe einer E-Mail-Adresse als Gast nutzen.
+
+---
+
+# 8. Gastnutzung
+
+Die App kann auch ohne Registrierung eines persönlichen Benutzerkontos mit E-Mail-Adresse genutzt werden.
+
+Bei der Gastnutzung ist keine E-Mail-Adresse erforderlich.
+
+Auch bei einer Gastnutzung können die von dir innerhalb der App eingegebenen Daten verarbeitet und mit einer technischen Benutzerkennung verknüpft werden, soweit dies für die Bereitstellung und Speicherung der App-Funktionen erforderlich ist.
+
+---
+
+# 9. Keine Bankanbindung
+
+Die App verfügt über **keine Schnittstelle zu Banken oder anderen Finanzinstituten**.
+
+Insbesondere:
+
+* werden keine Bankkonten automatisch ausgelesen,
+* werden keine Kontostände von Banken abgerufen,
+* werden keine Banktransaktionen automatisch importiert,
+* werden keine Online-Banking-Zugangsdaten gespeichert,
+* werden keine IBANs benötigt oder gespeichert,
+* werden keine Kreditkartendaten benötigt oder gespeichert.
+
+Die in der App dargestellten Finanzdaten stammen grundsätzlich aus Eingaben des Nutzers.
+
+---
+
+# 10. Weitergabe personenbezogener Daten
+
+Personenbezogene Daten werden grundsätzlich nicht zu Werbe- oder Marketingzwecken an Dritte verkauft oder weitergegeben.
+
+Eine Verarbeitung durch technische Dienstleister erfolgt nur, soweit dies zur Bereitstellung der App erforderlich ist.
+
+Aktuell werden insbesondere folgende Dienstleister eingesetzt:
+
+* **Supabase** für Authentifizierung und Datenbankbetrieb,
+* **Google**, sofern du die Google-Anmeldung verwendest.
+
+Darüber hinaus werden derzeit keine Analyse-, Werbe-, Tracking- oder Crash-Reporting-Dienste eingesetzt.
+
+---
+
+# 11. Datenübermittlung in Drittländer
+
+Die von der App für die eigentliche Datenhaltung verwendete Datenbank befindet sich in der Europäischen Union.
+
+Eine Übermittlung deiner gespeicherten Haushalts- und Finanzdaten in ein Drittland ist für die eigentliche Datenhaltung der App nicht vorgesehen.
+
+Bei der Nutzung bestimmter externer Dienste, insbesondere der optionalen Google-Anmeldung, kann eine Verarbeitung nach den jeweiligen Datenschutzbestimmungen des betreffenden Dienstes erfolgen.
+
+---
+
+# 12. Speicherdauer
+
+Personenbezogene Daten werden grundsätzlich nur so lange gespeichert, wie dies für die jeweiligen Zwecke erforderlich ist.
+
+Die von dir in der App gespeicherten Daten bleiben grundsätzlich so lange gespeichert, wie dein Benutzerkonto besteht und du die Daten nicht selbst löschst.
+
+Du kannst dein Benutzerkonto über die hierfür in der App bereitgestellte Funktion löschen.
+
+Bei der Löschung des Benutzerkontos werden die mit deinem Benutzerkonto verbundenen App-Daten gelöscht, soweit keine gesetzlichen Aufbewahrungspflichten oder andere rechtlich zulässige Gründe einer sofortigen Löschung entgegenstehen.
+
+Gesetzliche Aufbewahrungsfristen bleiben unberührt.
+
+---
+
+# 13. Löschung des Benutzerkontos
+
+Du kannst dein Benutzerkonto jederzeit über die dafür vorgesehene Funktion innerhalb der App löschen.
+
+Mit der Löschung werden grundsätzlich auch die mit deinem Benutzerkonto verbundenen Daten gelöscht. Dazu gehören insbesondere:
+
+* Buchungen,
+* Konten,
+* Budgets,
+* Kategorien,
+* finanzielle Ziele,
+* Dashboard-Einstellungen,
+* weitere gespeicherte App-Daten.
+
+Die Löschung betrifft nicht zwingend Daten, die aufgrund gesetzlicher Verpflichtungen weiterhin aufbewahrt werden müssen.
+
+---
+
+# 14. Datensicherheit
+
+Zum Schutz deiner personenbezogenen Daten werden geeignete technische und organisatorische Maßnahmen eingesetzt.
+
+Hierzu gehören insbesondere:
+
+* Authentifizierung des Zugriffs auf Benutzerkonten,
+* Zugriffskontrollen auf Datenbankebene,
+* Beschränkung des Datenzugriffs auf die jeweils erforderlichen Daten,
+* verschlüsselte Übertragung der Daten zwischen App und Server,
+* sichere Speicherung der Daten innerhalb der eingesetzten Infrastruktur.
+
+Die konkreten Sicherheitsmaßnahmen werden entsprechend dem Stand der Technik und den bestehenden technischen Möglichkeiten fortlaufend überprüft und angepasst.
+
+---
+
+# 15. Deine Rechte
+
+Nach der DSGVO stehen dir insbesondere folgende Rechte zu:
+
+### Recht auf Auskunft
+
+Du kannst Auskunft darüber verlangen, ob personenbezogene Daten über dich verarbeitet werden und welche Daten dies betrifft.
+
+### Recht auf Berichtigung
+
+Du kannst die Berichtigung unrichtiger oder die Vervollständigung unvollständiger personenbezogener Daten verlangen.
+
+### Recht auf Löschung
+
+Du kannst unter den gesetzlichen Voraussetzungen die Löschung deiner personenbezogenen Daten verlangen.
+
+### Recht auf Einschränkung der Verarbeitung
+
+Du kannst unter bestimmten gesetzlichen Voraussetzungen die Einschränkung der Verarbeitung deiner personenbezogenen Daten verlangen.
+
+### Recht auf Datenübertragbarkeit
+
+Unter den gesetzlichen Voraussetzungen hast du das Recht, personenbezogene Daten, die du bereitgestellt hast, in einem strukturierten, gängigen und maschinenlesbaren Format zu erhalten oder deren Übermittlung an einen anderen Verantwortlichen zu verlangen.
+
+### Recht auf Widerspruch
+
+Soweit die Verarbeitung auf Art. 6 Abs. 1 lit. f DSGVO beruht, kannst du aus Gründen, die sich aus deiner besonderen Situation ergeben, Widerspruch gegen die Verarbeitung einlegen.
+
+### Recht auf Widerruf einer Einwilligung
+
+Soweit eine Verarbeitung auf deiner Einwilligung beruht, kannst du diese jederzeit mit Wirkung für die Zukunft widerrufen. Die Rechtmäßigkeit der bis zum Widerruf erfolgten Verarbeitung bleibt davon unberührt.
+
+---
+
+# 16. Beschwerderecht bei einer Aufsichtsbehörde
+
+Du hast das Recht, dich bei einer Datenschutzaufsichtsbehörde über die Verarbeitung deiner personenbezogenen Daten zu beschweren.
+
+Die Beschwerde kann insbesondere bei einer Aufsichtsbehörde des Mitgliedstaats deines gewöhnlichen Aufenthalts, deines Arbeitsplatzes oder des Orts des mutmaßlichen Verstoßes eingereicht werden.
+
+Für den Verantwortlichen mit Sitz in Baden-Württemberg ist insbesondere der
+
+**Landesbeauftragte für den Datenschutz und die Informationsfreiheit Baden-Württemberg (LfDI BW)**
+
+zuständig.
+
+---
+
+# 17. Keine automatisierte Entscheidungsfindung und kein Profiling
+
+Im Rahmen der App findet keine automatisierte Entscheidungsfindung im Sinne des Art. 22 DSGVO statt.
+
+Es wird außerdem kein Profiling zu Werbe- oder Marketingzwecken durchgeführt.
+
+---
+
+# 18. Änderungen dieser Datenschutzerklärung
+
+Diese Datenschutzerklärung kann geändert werden, wenn sich die Funktionen der App, die eingesetzten technischen Dienste oder die gesetzlichen Anforderungen ändern.
+
+Die jeweils aktuelle Fassung wird innerhalb der App bzw. an der dafür vorgesehenen Stelle veröffentlicht.
+
+**Stand dieser Datenschutzerklärung: 10. August 2026**
+
+---
+
+## Kontakt
+
+Bei Fragen zum Datenschutz oder zur Verarbeitung deiner personenbezogenen Daten kannst du dich jederzeit an folgende Kontaktadresse wenden:
+
+**Marcel Geirhos**
+Gartenstraße 8
+73550 Waldstetten
+Deutschland
+
+**E-Mail:** [[Marcel.Geirhos@gmail.com](mailto:Marcel.Geirhos@gmail.com)](mailto:Marcel.Geirhos@gmail.com)
