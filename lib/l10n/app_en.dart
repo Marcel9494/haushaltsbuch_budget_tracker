@@ -247,6 +247,15 @@ const Map<String, String> en = {
   'delete_user_account': 'Delete account',
   'delete_user_account_description_important':
       'IMPORTANT: Deleting your account will permanently delete all your data. This action cannot be undone. If you still want to delete your account, please confirm by entering the word: Delete',
+  'licenses': 'Licenses',
+  'above': 'Above',
+  'current_app_version': 'Current App Version',
+  'current_database_version': 'Current Database Version',
+  'app_developer': 'App Developer',
+  'contact': 'Contact',
+  'made_in_germany': 'Made in Germany',
+  'terms_of_use': 'Terms of Use',
+  'right_of_withdrawal_information': 'Right of Withdrawal Information',
   // Startausgabekategorien (Start expense categories)
   'groceries': 'Groceries',
   'household_goods': 'Household goods',
@@ -372,6 +381,7 @@ const Map<String, String> en = {
   'google_identity_already_exists_error':
       'This Google email address is already linked to another account. Please sign out of the guest account and sign in with your Google email address.',
   'wrong_current_password_error': 'The current password is incorrect. Please enter your current password correctly.',
+  'privacy_policy_open_error': 'Could not open the privacy policy. Please check your internet connection or try again later.',
   'database_error': 'Database error. Please try again later.',
   'unknown_error': 'An unknown error has occurred. Please try again later.',
 };

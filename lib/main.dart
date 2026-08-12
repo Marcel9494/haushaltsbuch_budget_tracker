@@ -72,7 +72,9 @@ import 'features/home/presentation/pages/home_page.dart';
 import 'features/onboarding/presentation/pages/account_onboarding_page.dart';
 import 'features/onboarding/presentation/pages/completed_onboarding_page.dart';
 import 'features/onboarding/presentation/pages/dashboard_onboarding_page.dart';
+import 'features/settings/presentation/pages/above_page.dart';
 import 'features/settings/presentation/pages/change_password_page.dart';
+import 'features/settings/presentation/pages/imprint_page.dart';
 import 'features/settings/presentation/pages/settings_page.dart';
 import 'l10n/app_localizations.dart';
 
@@ -424,6 +426,8 @@ class _MyAppState extends State<MyApp> {
           categoryOnboardingRoute: (context) => const CategoryOnboardingPage(),
           dashboardOnboardingRoute: (context) => const DashboardOnboardingPage(),
           accountOnboardingRoute: (context) => const AccountOnboardingPage(),
+          aboveRoute: (context) => const AbovePage(),
+          imprintRoute: (context) => const ImprintPage(),
           completedOnboardingRoute: (context) => MultiBlocProvider(
                 providers: [
                   BlocProvider(

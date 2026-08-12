@@ -28,3 +28,5 @@ const categoryOnboardingRoute = 'category_onboarding';
 const dashboardOnboardingRoute = 'dashboard_onboarding';
 const accountOnboardingRoute = 'account_onboarding';
 const completedOnboardingRoute = 'completed_onboarding';
+const aboveRoute = 'above';
+const imprintRoute = 'imprint';

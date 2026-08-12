@@ -101,7 +101,6 @@ const Map<String, String> de = {
   'credits': 'Credits',
   'further': 'Weiteres',
   'logout': 'Abmelden',
-  'delete_all_data': 'Alle Daten löschen',
   'month': 'Monat',
   'year': 'Jahr',
   'upcoming_bookings': 'Bevorstehende Buchungen',
@@ -249,6 +248,20 @@ const Map<String, String> de = {
   'delete_user_account': 'Konto löschen',
   'delete_user_account_description_important':
       'WICHTIG: Wenn du dein Konto löschst, werden alle deine Daten unwiderruflich gelöscht. Diese Aktion kann nicht rückgängig gemacht werden. Wenn du dein Konto trotzdem löschen möchtest bestätige bitte mit dem Wort: Löschen',
+  'licenses': 'Lizenzen',
+  'above': 'Über',
+  'current_app_version': 'Aktuelle App Version',
+  'current_database_version': 'Aktuelle Datenbank Version',
+  'app_developer': 'App Entwickler',
+  'contact': 'Kontakt',
+  'made_in_germany': 'Made in Germany',
+  'information_in_accordance_with': 'Angaben gemäß § 5 DDG',
+  'phone': 'Telefon',
+  'no_ustidnr': 'Keine USt-IdNr. vorhanden.',
+  'responsible_for_content': 'Verantwortlich für den Inhalt',
+  'status': 'Stand',
+  'terms_of_use': 'Nutzungsbedingungen / AGB',
+  'right_of_withdrawal_information': 'Widerrufsbelehrung',
   // Startausgabekategorien
   'groceries': 'Lebensmittel',
   'household_goods': 'Haushaltswaren',
@@ -374,6 +387,8 @@ const Map<String, String> de = {
   'google_identity_already_exists_error':
       'Diese Google E-Mail ist bereits mit einem anderen Konto verknüpft. Bitte melde dich mit dem Gast Konto ab und logge dich mit deiner Google E-Mail ein.',
   'wrong_current_password_error': 'Das aktuelle Passwort ist nicht korrekt. Bitte geben Sie Ihr aktuelles Passwort korrekt ein.',
+  'privacy_policy_open_error':
+      'Fehler beim Öffnen der Datenschutzerklärung. Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.',
   'database_error': 'Datenbankfehler. Bitte versuchen Sie es später erneut.',
   'unknown_error': 'Ein unbekannter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.',
 };
