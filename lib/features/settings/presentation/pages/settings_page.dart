@@ -8,6 +8,7 @@ import 'package:haushaltsbuch_budget_tracker/features/settings/presentation/widg
 import 'package:haushaltsbuch_budget_tracker/features/settings/presentation/widgets/dialogs/show_user_logout_dialog.dart';
 import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../blocs/user/user_bloc.dart';
 import '../../../../blocs/user/user_state.dart';
@@ -52,6 +53,15 @@ class _SettingsPageState extends State<SettingsPage> {
     confirmed = await showDeleteUserAccountDialog(context);
     if (confirmed == true) {
       UserRepository().deleteUserAccount();
+    }
+  }
+
+  Future<void> _openPrivacyPolicy() async {
+    final uri =
+        Uri.parse('https://marcel9494.github.io/haushaltsbuch_budget_tracker/privacyPolicy_${Localizations.localeOf(context).languageCode}.html');
+
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      throw Exception('privacy_policy_open_error');
     }
   }
 
@@ -130,23 +140,49 @@ class _SettingsPageState extends State<SettingsPage> {
                       SettingsCard(
                         leading: Icon(Icons.info_outline_rounded),
                         title: t.translate('over_the_app'),
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pushNamed(context, aboveRoute);
+                        },
                       ),
                       SettingsTitle(title: 'legal'),
                       SettingsCard(
-                        leading: Icon(Icons.security_rounded),
-                        title: t.translate('privacy_policy'),
-                        onTap: () {},
-                      ),
-                      SettingsCard(
                         leading: Icon(Icons.description_rounded),
                         title: t.translate('imprint'),
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pushNamed(context, imprintRoute);
+                        },
+                      ),
+                      SettingsCard(
+                        leading: Icon(Icons.security_rounded),
+                        title: t.translate('privacy_policy'),
+                        onTap: () {
+                          _openPrivacyPolicy();
+                        },
+                      ),
+                      SettingsCard(
+                        leading: Icon(Icons.receipt_long_rounded),
+                        title: t.translate('terms_of_use'),
+                        onTap: () {
+                          // TODO
+                        },
+                      ),
+                      SettingsCard(
+                        leading: Icon(Icons.assignment_rounded),
+                        title: t.translate('right_of_withdrawal_information'),
+                        onTap: () {
+                          // TODO
+                        },
                       ),
                       SettingsCard(
                         leading: Icon(Icons.copyright_rounded),
-                        title: t.translate('credits'),
-                        onTap: () {},
+                        title: t.translate('licenses'),
+                        onTap: () {
+                          showLicensePage(
+                            context: context,
+                            applicationName: t.translate('app_name'),
+                            applicationVersion: '1.0.0',
+                          );
+                        },
                       ),
                       SettingsTitle(title: 'further'),
                       SettingsCard(
@@ -156,7 +192,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                       SettingsCard(
                         leading: Icon(Icons.delete_forever_rounded, color: Colors.redAccent),
-                        title: t.translate('delete_all_data'),
+                        title: t.translate('delete_user_account'),
                         onTap: () => _deleteUserAccount(),
                         color: Colors.redAccent,
                       ),
