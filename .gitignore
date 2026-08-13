@@ -120,3 +120,4 @@ app.*.symbols
 
 # Other
 .env
+lib/core/consts/github_consts.dart

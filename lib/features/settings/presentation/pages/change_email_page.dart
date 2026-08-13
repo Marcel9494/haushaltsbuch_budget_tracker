@@ -9,7 +9,7 @@ import '../../../../core/utils/app_flushbar.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../auth/presentation/widgets/deco/title_text.dart';
 import '../../../shared/presentation/widgets/buttons/animated_loading_button.dart';
-import '../../../shared/presentation/widgets/input_fields/email_input_field.dart';
+import '../../../shared/presentation/widgets/input_fields/email_auth_input_field.dart';
 
 class ChangeEmailPage extends StatefulWidget {
   const ChangeEmailPage({super.key});
@@ -94,7 +94,7 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
                       SizedBox(height: 2),
                       Text(t.translate('change_email_description'), textAlign: TextAlign.justify),
                       SizedBox(height: 24),
-                      EmailInputField(
+                      EmailAuthInputField(
                         emailController: _emailController,
                         text: 'new_email',
                       ),

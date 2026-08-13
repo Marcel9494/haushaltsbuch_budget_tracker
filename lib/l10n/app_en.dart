@@ -256,6 +256,16 @@ const Map<String, String> en = {
   'made_in_germany': 'Made in Germany',
   'terms_of_use': 'Terms of Use',
   'right_of_withdrawal_information': 'Right of Withdrawal Information',
+  'give_feedback': 'Give Feedback',
+  'feedback_description': 'I would be very happy to receive your feedback.',
+  'feedback_sended_successfully': 'Thank you for your feedback.',
+  'feedback_long_description_title': 'Feedback',
+  'bug_report': 'Bug Report',
+  'bug_report_description':
+      'If you have found a bug in the app, please report it here. Please describe the bug as detailed as possible, so that I can check and fix it.',
+  'bug_report_sended_successfully': 'Thank you for your bug report.',
+  'bug_report_long_description_title': 'Bug Report',
+  'send': 'Send',
   // Startausgabekategorien (Start expense categories)
   'groceries': 'Groceries',
   'household_goods': 'Household goods',

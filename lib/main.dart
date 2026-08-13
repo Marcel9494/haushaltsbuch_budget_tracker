@@ -32,6 +32,7 @@ import 'core/page_arguments/category_bookings_page_arguments.dart';
 import 'core/page_arguments/category_list_page_arguments.dart';
 import 'core/page_arguments/goal_bookings_page_arguments.dart';
 import 'core/page_arguments/home_page_arguments.dart';
+import 'core/page_arguments/issue_page_arguments.dart';
 import 'core/page_arguments/update_account_page_arguments.dart';
 import 'core/page_arguments/update_booking_page_arguments.dart';
 import 'core/page_arguments/update_budget_page_arguments.dart';
@@ -75,6 +76,7 @@ import 'features/onboarding/presentation/pages/dashboard_onboarding_page.dart';
 import 'features/settings/presentation/pages/above_page.dart';
 import 'features/settings/presentation/pages/change_password_page.dart';
 import 'features/settings/presentation/pages/imprint_page.dart';
+import 'features/settings/presentation/pages/issue_page.dart';
 import 'features/settings/presentation/pages/settings_page.dart';
 import 'l10n/app_localizations.dart';
 
@@ -561,6 +563,19 @@ class _MyAppState extends State<MyApp> {
               return MaterialPageRoute<String>(
                 builder: (context) => UpdateGoalPage(
                   goal: args.goal,
+                ),
+                settings: settings,
+              );
+            case issueRoute:
+              final args = settings.arguments as IssuePageArguments;
+              return MaterialPageRoute<String>(
+                builder: (context) => IssuePage(
+                  milestoneTitle: args.milestoneTitle,
+                  label: args.label,
+                  successMessage: args.successMessage,
+                  title: args.title,
+                  description: args.description,
+                  longDescriptionTitle: args.longDescriptionTitle,
                 ),
                 settings: settings,
               );

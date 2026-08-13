@@ -11,7 +11,7 @@ import '../../../auth/presentation/widgets/buttons/google_sign_in_button.dart';
 import '../../../auth/presentation/widgets/deco/divider_with_text.dart';
 import '../../../auth/presentation/widgets/deco/title_text.dart';
 import '../../../shared/presentation/widgets/buttons/animated_loading_button.dart';
-import '../../../shared/presentation/widgets/input_fields/email_input_field.dart';
+import '../../../shared/presentation/widgets/input_fields/email_auth_input_field.dart';
 import '../../../shared/presentation/widgets/input_fields/password_input_field.dart';
 
 class UpgradeAccountPage extends StatefulWidget {
@@ -94,7 +94,7 @@ class _UpgradeAccountPageState extends State<UpgradeAccountPage> {
                     children: [
                       TitleText(text: t.translate('upgrade_account')),
                       SizedBox(height: 24),
-                      EmailInputField(emailController: _emailController),
+                      EmailAuthInputField(emailController: _emailController),
                       SizedBox(height: 16),
                       PasswordInputField(passwordController: _passwordController),
                       SizedBox(height: 24),

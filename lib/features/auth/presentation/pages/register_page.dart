@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:haushaltsbuch_budget_tracker/data/repositories/user_repository.dart';
 import 'package:haushaltsbuch_budget_tracker/features/auth/presentation/widgets/buttons/google_sign_in_button.dart';
 import 'package:haushaltsbuch_budget_tracker/features/auth/presentation/widgets/deco/divider_with_text.dart';
-import 'package:haushaltsbuch_budget_tracker/features/shared/presentation/widgets/input_fields/email_input_field.dart';
+import 'package:haushaltsbuch_budget_tracker/features/shared/presentation/widgets/input_fields/email_auth_input_field.dart';
 import 'package:haushaltsbuch_budget_tracker/features/shared/presentation/widgets/input_fields/password_input_field.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide User;
@@ -131,7 +131,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               children: [
                                 TitleText(text: t.translate('create_account')),
                                 SizedBox(height: 24),
-                                EmailInputField(emailController: _emailController),
+                                EmailAuthInputField(emailController: _emailController),
                                 SizedBox(height: 16),
                                 PasswordInputField(passwordController: _passwordController),
                                 SizedBox(height: 24),
