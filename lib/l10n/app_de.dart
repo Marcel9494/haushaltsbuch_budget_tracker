@@ -262,6 +262,16 @@ const Map<String, String> de = {
   'status': 'Stand',
   'terms_of_use': 'Nutzungsbedingungen / AGB',
   'right_of_withdrawal_information': 'Widerrufsbelehrung',
+  'give_feedback': 'Feedback geben',
+  'feedback_description': 'Ich freue mich über dein Feedback, um die App weiter zu verbessern.',
+  'feedback_sended_successfully': 'Vielen Dank für dein Feedback.',
+  'feedback_long_description_title': 'Feedback',
+  'bug_report': 'Bug melden',
+  'bug_report_description':
+      'Wenn du einen Fehler in der App gefunden hast, freue ich mich über deine Meldung. Bitte beschreibe den Fehler so detailliert wie möglich, damit ich ihn schnellstmöglich untersuchen und beheben kann.',
+  'bug_report_sended_successfully': 'Vielen Dank für deine Meldung.',
+  'bug_report_long_description_title': 'Detaillierte Fehlerbeschreibung',
+  'send': 'Senden',
   // Startausgabekategorien
   'groceries': 'Lebensmittel',
   'household_goods': 'Haushaltswaren',
@@ -389,6 +399,7 @@ const Map<String, String> de = {
   'wrong_current_password_error': 'Das aktuelle Passwort ist nicht korrekt. Bitte geben Sie Ihr aktuelles Passwort korrekt ein.',
   'privacy_policy_open_error':
       'Fehler beim Öffnen der Datenschutzerklärung. Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.',
+  'empty_description_error': 'Bitte geben Sie eine Beschreibung ein.',
   'database_error': 'Datenbankfehler. Bitte versuchen Sie es später erneut.',
   'unknown_error': 'Ein unbekannter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.',
 };

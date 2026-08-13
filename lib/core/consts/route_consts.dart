@@ -30,3 +30,4 @@ const accountOnboardingRoute = 'account_onboarding';
 const completedOnboardingRoute = 'completed_onboarding';
 const aboveRoute = 'above';
 const imprintRoute = 'imprint';
+const issueRoute = 'issue';

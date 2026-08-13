@@ -13,6 +13,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../blocs/user/user_bloc.dart';
 import '../../../../blocs/user/user_state.dart';
 import '../../../../core/consts/route_consts.dart';
+import '../../../../core/page_arguments/issue_page_arguments.dart';
 import '../../../../core/utils/currency_helper.dart';
 import '../../../../main.dart';
 import '../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
@@ -142,6 +143,42 @@ class _SettingsPageState extends State<SettingsPage> {
                         title: t.translate('over_the_app'),
                         onTap: () {
                           Navigator.pushNamed(context, aboveRoute);
+                        },
+                      ),
+                      SettingsCard(
+                        leading: Icon(Icons.feedback_rounded),
+                        title: t.translate('give_feedback'),
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            issueRoute,
+                            arguments: IssuePageArguments(
+                              milestoneTitle: 'User: Feedback',
+                              label: 'user feedback',
+                              successMessage: 'feedback_sended_successfully',
+                              title: 'give_feedback',
+                              description: 'feedback_description',
+                              longDescriptionTitle: 'feedback_long_description_title',
+                            ),
+                          );
+                        },
+                      ),
+                      SettingsCard(
+                        leading: Icon(Icons.bug_report_rounded),
+                        title: t.translate('bug_report'),
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            issueRoute,
+                            arguments: IssuePageArguments(
+                              milestoneTitle: 'User: Bug Report',
+                              label: 'user bug report',
+                              successMessage: 'bug_report_sended_successfully',
+                              title: 'bug_report',
+                              description: 'bug_report_description',
+                              longDescriptionTitle: 'bug_report_long_description_title',
+                            ),
+                          );
                         },
                       ),
                       SettingsTitle(title: 'legal'),

@@ -11,7 +11,7 @@ import '../../../../core/utils/app_flushbar.dart';
 import '../../../../core/utils/app_icon.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../shared/presentation/widgets/buttons/animated_loading_button.dart';
-import '../../../shared/presentation/widgets/input_fields/email_input_field.dart';
+import '../../../shared/presentation/widgets/input_fields/email_auth_input_field.dart';
 import '../../../shared/presentation/widgets/input_fields/password_input_field.dart';
 import '../widgets/buttons/google_sign_in_button.dart';
 import '../widgets/deco/divider_with_text.dart';
@@ -117,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
                             children: [
                               TitleText(text: t.translate('login')),
                               SizedBox(height: 24),
-                              EmailInputField(emailController: _emailController),
+                              EmailAuthInputField(emailController: _emailController),
                               SizedBox(height: 16),
                               PasswordInputField(passwordController: _passwordController),
                               SizedBox(height: 6),

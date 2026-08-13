@@ -3,21 +3,21 @@ import 'package:flutter/material.dart';
 
 import '../../../../../l10n/app_localizations.dart';
 
-class EmailInputField extends StatefulWidget {
+class EmailAuthInputField extends StatefulWidget {
   final TextEditingController emailController;
   final String text;
 
-  const EmailInputField({
+  const EmailAuthInputField({
     super.key,
     required this.emailController,
     this.text = 'email',
   });
 
   @override
-  State<EmailInputField> createState() => _EmailInputFieldState();
+  State<EmailAuthInputField> createState() => _EmailAuthInputFieldState();
 }
 
-class _EmailInputFieldState extends State<EmailInputField> {
+class _EmailAuthInputFieldState extends State<EmailAuthInputField> {
   late FocusNode _focusNode;
 
   @override

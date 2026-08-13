@@ -10,7 +10,7 @@ import '../../../../core/utils/app_flushbar.dart';
 import '../../../../core/utils/app_icon.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../shared/presentation/widgets/buttons/animated_loading_button.dart';
-import '../../../shared/presentation/widgets/input_fields/email_input_field.dart';
+import '../../../shared/presentation/widgets/input_fields/email_auth_input_field.dart';
 import '../widgets/deco/title_text.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
@@ -97,7 +97,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                           children: [
                             TitleText(text: t.translate('reset_password')),
                             SizedBox(height: 24),
-                            EmailInputField(emailController: _emailController),
+                            EmailAuthInputField(emailController: _emailController),
                             SizedBox(height: 24),
                             AnimatedLoadingButton(
                               controller: _forgotPasswordButtonController,
