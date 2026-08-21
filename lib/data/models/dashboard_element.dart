@@ -1,13 +1,16 @@
+import 'package:haushaltsbuch_budget_tracker/data/repositories/budget_repository.dart';
+
 import '../enums/dashboard_element_type.dart';
 import '../repositories/account_repository.dart';
 import '../repositories/booking_repository.dart';
 import 'account.dart';
 import 'booking.dart';
+import 'budget.dart';
 
 class DashboardElement {
   final String? id;
   final String title;
-  final double showValue;
+  final num showValue;
   final String shortDescription;
   final String icon;
   final DashboardElementType dashboardElementType;
@@ -80,23 +83,39 @@ class DashboardElement {
     };
   }
 
-  static double calculateDisplayValue(DashboardElement dashboardElement, List<Booking> bookings, List<Account> accounts) {
+  static num calculateDisplayValue(DashboardElement dashboardElement, List<Booking> bookings, List<Account> accounts, List<Budget> budgets) {
     final BookingRepository bookingRepository = BookingRepository();
     final AccountRepository accountRepository = AccountRepository();
-    if (dashboardElement.title == 'expenses' &&
-        (dashboardElement.shortDescription == 'this_year' || dashboardElement.shortDescription == 'this_month')) {
+    final BudgetRepository budgetRepository = BudgetRepository();
+
+    if (dashboardElement.title.trim() == 'expenses' &&
+        (dashboardElement.shortDescription.trim() == 'this_year' || dashboardElement.shortDescription.trim() == 'this_month')) {
       return bookingRepository.calculateExpenses(bookings);
-    } else if (dashboardElement.title == 'revenue' &&
-        (dashboardElement.shortDescription == 'this_year' || dashboardElement.shortDescription == 'this_month')) {
+    } else if (dashboardElement.title.trim() == 'revenue' &&
+        (dashboardElement.shortDescription.trim() == 'this_year' || dashboardElement.shortDescription.trim() == 'this_month')) {
       return bookingRepository.calculateRevenue(bookings);
-    } else if (dashboardElement.title == 'total_assets') {
+    } else if (dashboardElement.title.trim() == 'balance' &&
+        (dashboardElement.shortDescription.trim() == 'this_year' || dashboardElement.shortDescription.trim() == 'this_month')) {
+      double revenue = bookingRepository.calculateRevenue(bookings);
+      double expenses = bookingRepository.calculateExpenses(bookings);
+      return revenue - expenses;
+    } else if (dashboardElement.title.trim() == 'overall_remaining_budget' &&
+        (dashboardElement.shortDescription.trim() == 'this_year' || dashboardElement.shortDescription.trim() == 'this_month')) {
+      return budgetRepository.calculateOverallBudgetAmount(budgets);
+    } else if (dashboardElement.title.trim() == 'number_of_revenue_bookings') {
+      return bookingRepository.getNumberOfRevenueBookings(bookings);
+    } else if (dashboardElement.title.trim() == 'number_of_expense_bookings') {
+      return bookingRepository.getNumberOfExpenseBookings(bookings);
+    } else if (dashboardElement.title.trim() == 'number_of_transfer_bookings') {
+      return bookingRepository.getNumberOfTransferBookings(bookings);
+    } else if (dashboardElement.title.trim() == 'total_assets') {
       return accountRepository.calculateAssets(accounts);
-    } else if (dashboardElement.title == 'total_debts') {
-      return accountRepository.calculateDebts(accounts);
-    } else if (dashboardElement.title == 'net_assets') {
+    } else if (dashboardElement.title.trim() == 'total_debts') {
+      return accountRepository.calculateDebts(accounts).abs();
+    } else if (dashboardElement.title.trim() == 'account_balance') {
       double assets = accountRepository.calculateAssets(accounts);
       double debts = accountRepository.calculateDebts(accounts);
-      return assets - debts;
+      return assets - debts.abs();
     } else {
       return 0.0;
     }

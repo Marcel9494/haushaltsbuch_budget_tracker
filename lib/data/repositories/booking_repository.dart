@@ -406,4 +406,34 @@ class BookingRepository {
     final DateTime today = DateTime.now();
     return bookingDate.isBefore(DateTime(today.year, today.month, today.day));
   }
+
+  int getNumberOfRevenueBookings(List<Booking> bookings) {
+    int numberOfRevenueBookings = 0;
+    for (Booking booking in bookings) {
+      if (booking.bookingType == BookingType.income) {
+        numberOfRevenueBookings++;
+      }
+    }
+    return numberOfRevenueBookings;
+  }
+
+  int getNumberOfExpenseBookings(List<Booking> bookings) {
+    int numberOfExpenseBookings = 0;
+    for (Booking booking in bookings) {
+      if (booking.bookingType == BookingType.expense) {
+        numberOfExpenseBookings++;
+      }
+    }
+    return numberOfExpenseBookings;
+  }
+
+  int getNumberOfTransferBookings(List<Booking> bookings) {
+    int numberOfTransferBookings = 0;
+    for (Booking booking in bookings) {
+      if (booking.bookingType == BookingType.transfer) {
+        numberOfTransferBookings++;
+      }
+    }
+    return numberOfTransferBookings;
+  }
 }

@@ -5,7 +5,7 @@ import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 class HomeGridItemCard extends StatefulWidget {
   final Icon icon;
   final String title;
-  final double stat;
+  final num stat;
   final String subtitle;
   bool isSelected;
   bool isSelectable;
@@ -107,23 +107,29 @@ class _HomeGridItemCardState extends State<HomeGridItemCard> with TickerProvider
                                 padding: const EdgeInsets.only(right: 10.0),
                                 child: widget.icon,
                               ),
-                              Text(
-                                t.translate(widget.title),
-                                style: TextStyle(color: Colors.grey, fontSize: 14.0, fontWeight: FontWeight.bold),
-                                overflow: TextOverflow.ellipsis,
+                              Expanded(
+                                child: Text(
+                                  t.translate(widget.title),
+                                  style: TextStyle(color: Colors.grey, fontSize: 14.0, fontWeight: FontWeight.bold),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             ],
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 10.0, bottom: 6.0),
                             child: Text(
-                              CurrencyHelper.instance.formatCurrency(widget.stat, context),
+                              widget.stat is int ? widget.stat.toString() : CurrencyHelper.instance.formatCurrency(widget.stat.toDouble(), context),
                               style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold, color: Colors.white),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          Text(
-                            t.translate(widget.subtitle),
-                            style: TextStyle(color: Colors.white54),
+                          Expanded(
+                            child: Text(
+                              t.translate(widget.subtitle),
+                              style: TextStyle(color: Colors.white54),
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ],
                       ),
