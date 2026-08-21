@@ -46,6 +46,7 @@ const Map<String, String> de = {
   'expenses': 'Ausgaben',
   'revenue': 'Einnahmen',
   'balance': 'Verfügbar',
+  'account_balance': 'Saldo',
   'per_day': 'tgl.',
   'per_month': 'mtl.',
   'booking_date': 'Buchungsdatum',
@@ -110,7 +111,7 @@ const Map<String, String> de = {
   'empty_bookings': 'Noch keine Buchungen',
   'assets': 'Vermögen',
   'debts': 'Schulden',
-  'total_assets': 'Gesamtvermögen',
+  'total_assets': 'Vermögen',
   'no_accounts': 'Noch keine Konten vorhanden.',
   'budget': 'Budget',
   'create_budget': 'Budget erstellen',
@@ -143,7 +144,6 @@ const Map<String, String> de = {
   'remaining_amount': 'Restlicher Betrag',
   'total_debts': 'Schulden',
   'current_debts': 'Aktuelle Schulden',
-  'net_assets': 'Nettovermögen',
   'assets_minus_debts': 'Vermögen - Schulden',
   'continue_as_guest': 'Weiter als Gast',
   'guest_info_title': 'Gästekonto upgraden',
@@ -193,6 +193,7 @@ const Map<String, String> de = {
   'delete_single_budget_description': 'Dieses Budget wird gelöscht.',
   'delete_future_budgets_description': 'Dieses und alle zukünftigen Budgets werden gelöscht.',
   'delete_all_budgets_description': 'Möchtest du alle Budgets dieser Kategorie löschen?',
+  'overall_remaining_budget': 'Restl. Budget',
   'single_booking': 'Einzelne Buchung',
   'future_bookings': 'Zukünftige Buchungen',
   'all_bookings': 'Alle Buchungen',
@@ -242,7 +243,6 @@ const Map<String, String> de = {
   'balance_adjustment': 'Saldoanpassung',
   'over_the_app': 'Über die App',
   'delete': 'Löschen',
-  'delete_user_account_confirmation_word': 'Löschen',
   'delete_user_account_confirmation_failed':
       'Die Bestätigung ist fehlgeschlagen. Bitte bestätige mit dem Wort: Löschen, wenn du dein Konto unwiderruflich löschen möchtest.',
   'delete_user_account': 'Konto löschen',
@@ -272,6 +272,9 @@ const Map<String, String> de = {
   'bug_report_sended_successfully': 'Vielen Dank für deine Meldung.',
   'bug_report_long_description_title': 'Detaillierte Fehlerbeschreibung',
   'send': 'Senden',
+  'number_of_revenue_bookings': 'Einnahmen (Anz.)',
+  'number_of_expense_bookings': 'Ausgabe (Anz.)',
+  'number_of_transfer_bookings': 'Übertragungs (Anz.)',
   // Startausgabekategorien
   'groceries': 'Lebensmittel',
   'household_goods': 'Haushaltswaren',
@@ -355,6 +358,7 @@ const Map<String, String> de = {
   'en_US': 'Englisch',
   // Spezial Strings
   'guest_logout_confirmation_word': 'Logout',
+  'delete_user_account_confirmation_word': 'Löschen',
   // Error Messages
   'empty_email_error': 'Bitte geben Sie eine E-Mail Adresse ein.',
   'invalid_email_error': 'Bitte geben Sie eine gültige E-Mail Adresse ein.',

@@ -61,7 +61,7 @@ class _AccountListPageState extends State<AccountListPage> {
                         dialogContent: 'debts_dialog_content',
                       ),
                       AccountListOverviewCard(
-                        title: 'balance',
+                        title: 'account_balance',
                         amount: _assets - _debts.abs(),
                         color: _assets - _debts.abs() >= 0 ? Colors.green : Colors.redAccent,
                         dialogTitle: 'balance_dialog_title',
