@@ -56,6 +56,9 @@ class _HomePageState extends State<HomePage> {
   late GoalBloc _goalBloc;
   bool _showBookingChart = false;
   bool _showUpcomingBookings = false;
+  bool _categoryTileExpanded = false;
+  bool _generalOverviewTileExpanded = false;
+  bool _periodOverviewTileExpanded = false;
   DateTime _currentSelectedDate = DateTime.now();
   late PeriodOfTimeType _currentPeriodOfTime = PeriodOfTimeType.monthly;
   int _selectedPageIndex = 0;
@@ -110,6 +113,24 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void onCategoryTileExpandedChanged(bool categoryTileExpanded) {
+    setState(() {
+      _categoryTileExpanded = categoryTileExpanded;
+    });
+  }
+
+  void onGeneralOverviewTileExpandedChanged(bool generalOverviewTileExpanded) {
+    setState(() {
+      _generalOverviewTileExpanded = generalOverviewTileExpanded;
+    });
+  }
+
+  void onPeriodOverviewTileExpandedChanged(bool periodOverviewTileExpanded) {
+    setState(() {
+      _periodOverviewTileExpanded = periodOverviewTileExpanded;
+    });
+  }
+
   void onShowBookingChartChanged(bool showBookingChart) {
     setState(() {
       _showBookingChart = showBookingChart;
@@ -147,6 +168,18 @@ class _HomePageState extends State<HomePage> {
           key: ValueKey(_currentSelectedDate),
           currentSelectedDate: _currentSelectedDate,
           currentPeriodOfTimeType: _currentPeriodOfTime,
+          categoryTileExpanded: _categoryTileExpanded,
+          onCategoryTileExpandedChanged: (expanded) {
+            onCategoryTileExpandedChanged(expanded);
+          },
+          generalOverviewTileExpanded: _generalOverviewTileExpanded,
+          onGeneralOverviewTileExpandedChanged: (expanded) {
+            onGeneralOverviewTileExpandedChanged(expanded);
+          },
+          periodOverviewTileExpanded: _periodOverviewTileExpanded,
+          onPeriodOverviewTileExpandedChanged: (expanded) {
+            onPeriodOverviewTileExpandedChanged(expanded);
+          },
         ),
         BookingListPage(
           key: ValueKey(_currentSelectedDate),

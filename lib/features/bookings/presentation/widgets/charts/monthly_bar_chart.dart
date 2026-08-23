@@ -163,7 +163,7 @@ class _MonthlyBarChartState extends State<MonthlyBarChart> with SingleTickerProv
     final t = AppLocalizations.of(context);
     return Card(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(4.0, 6.0, 16.0, 14.0),
+        padding: const EdgeInsets.fromLTRB(4.0, 16.0, 16.0, 14.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -250,24 +250,57 @@ class _MonthlyBarChartState extends State<MonthlyBarChart> with SingleTickerProv
                         enabled: true,
                         handleBuiltInTouches: true,
                         touchTooltipData: BarTouchTooltipData(
+                          fitInsideHorizontally: true,
+                          fitInsideVertically: true,
                           getTooltipColor: (_) => Colors.grey.shade800,
+                          tooltipPadding: const EdgeInsets.symmetric(
+                            horizontal: 14.0,
+                            vertical: 10.0,
+                          ),
+                          maxContentWidth: 240.0,
                           getTooltipItem: (group, groupIndex, rod, rodIndex) {
                             final dayIndex = group.x.toInt();
                             final day = dayIndex + 1;
 
                             return BarTooltipItem(
-                              '$day.${widget.currentSelectedDate.month}.${widget.currentSelectedDate.year}\n'
-                              '${t.translate('revenue')}: '
-                              '${CurrencyHelper.instance.formatCurrency(_dailyRevenue[dayIndex], context)}\n'
-                              '${t.translate('expenses')}: '
-                              '${CurrencyHelper.instance.formatCurrency(_dailyExpenses[dayIndex], context)}\n'
-                              '${t.translate('balance')}: '
-                              '${CurrencyHelper.instance.formatCurrency(_dailyRevenue[dayIndex] - _dailyExpenses[dayIndex], context)}',
-                              textAlign: TextAlign.start,
+                              '',
                               const TextStyle(
                                 color: Colors.white,
-                                fontSize: 11,
+                                fontSize: 11.0,
                               ),
+                              textAlign: TextAlign.left,
+                              children: [
+                                TextSpan(
+                                  text: '$day.${widget.currentSelectedDate.month}.${widget.currentSelectedDate.year}:\n',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 11.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: '● ',
+                                  style: const TextStyle(color: Colors.green, fontSize: 14.0),
+                                ),
+                                TextSpan(
+                                    text: '${t.translate('revenue')}: '
+                                        '${CurrencyHelper.instance.formatCurrency(_dailyRevenue[dayIndex], context)}\n'),
+                                TextSpan(
+                                  text: '● ',
+                                  style: const TextStyle(color: Colors.red, fontSize: 14.0),
+                                ),
+                                TextSpan(
+                                    text: '${t.translate('expenses')}: '
+                                        '${CurrencyHelper.instance.formatCurrency(_dailyExpenses[dayIndex], context)}\n'),
+                                TextSpan(
+                                  text: '● ',
+                                  style: const TextStyle(color: Colors.cyanAccent, fontSize: 14.0),
+                                ),
+                                TextSpan(
+                                  text: '${t.translate('balance')}: '
+                                      '${CurrencyHelper.instance.formatCurrency(_dailyRevenue[dayIndex] - _dailyExpenses[dayIndex], context)}',
+                                ),
+                              ],
                             );
                           },
                         ),

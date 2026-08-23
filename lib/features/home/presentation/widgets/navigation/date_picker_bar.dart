@@ -311,8 +311,8 @@ class _DatePickerBarState extends State<DatePickerBar> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    FaIcon(widget.currentPeriodOfTime == PeriodOfTimeType.yearly ? FontAwesomeIcons.calendar : FontAwesomeIcons.calendarDays,
-                        size: 16.0, color: Colors.cyanAccent),
+                    FaIcon(widget.currentPeriodOfTime == PeriodOfTimeType.yearly ? FontAwesomeIcons.calendar : Icons.calendar_month_outlined,
+                        size: widget.currentPeriodOfTime == PeriodOfTimeType.yearly ? 16.0 : 18.0, color: Colors.cyanAccent),
                     SizedBox(height: 2.0),
                     Text(
                       widget.currentPeriodOfTime == PeriodOfTimeType.yearly ? t.translate('year') : t.translate('month'),

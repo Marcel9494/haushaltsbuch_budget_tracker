@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:haushaltsbuch_budget_tracker/core/utils/currency_helper.dart';
-import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
+
+import '../../../../../core/utils/currency_helper.dart';
+import '../../../../../l10n/app_localizations.dart';
 
 class HomeGridItemCard extends StatefulWidget {
   final Icon icon;

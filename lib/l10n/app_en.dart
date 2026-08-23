@@ -270,6 +270,10 @@ const Map<String, String> en = {
   'number_of_revenue_bookings': 'Revenue (No.)',
   'number_of_expense_bookings': 'Expenses (No.)',
   'number_of_transfer_bookings': 'Transfers (No.)',
+  'expenses_and_revenue_by_categories': 'Expenses and Revenue by Categories',
+  'your_key_financial_metrics': 'Your key financial metrics',
+  'your_monthly_financial_overview': 'Your monthly financial overview',
+  'your_yearly_financial_overview': 'Your yearly financial overview',
   // Startausgabekategorien (Start expense categories)
   'groceries': 'Groceries',
   'household_goods': 'Household goods',
