@@ -74,10 +74,16 @@ class DashboardElementRepository {
           dashboard_element_id,
           position
         )
-      ''').order('created_at', ascending: false);
+      ''');
 
-    return (response as List).map((e) {
-      final userElements = (e['users_dashboard_elements'] as List?)?.where((u) => u['user_id'] == supabase.auth.currentUser!.id).toList() ?? [];
+    final elements = (response as List).map((e) {
+      final userElements = (e['users_dashboard_elements'] as List?)
+              ?.where(
+                (u) => u['user_id'] == supabase.auth.currentUser!.id,
+              )
+              .toList() ??
+          [];
+
       final isSelected = userElements.isNotEmpty;
 
       return DashboardElement.fromUsersDashboardElementsMap({
@@ -86,5 +92,23 @@ class DashboardElementRepository {
         'position': isSelected ? userElements.first['position'] : null,
       });
     }).toList();
+
+    elements.sort((a, b) {
+      // Beide selektiert → Position vergleichen
+      if (a.position != null && b.position != null) {
+        return a.position!.compareTo(b.position!);
+      }
+      // A selektiert, B nicht → A zuerst
+      if (a.position != null && b.position == null) {
+        return -1;
+      }
+      // A nicht selektiert, B selektiert → B zuerst
+      if (a.position == null && b.position != null) {
+        return 1;
+      }
+      // Beide nicht selektiert
+      return 0;
+    });
+    return elements;
   }
 }

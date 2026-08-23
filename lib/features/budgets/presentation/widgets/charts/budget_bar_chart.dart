@@ -186,21 +186,51 @@ class _BudgetBarChartState extends State<BudgetBarChart> with SingleTickerProvid
                   enabled: true,
                   handleBuiltInTouches: true,
                   touchTooltipData: BarTouchTooltipData(
+                    fitInsideHorizontally: true,
+                    fitInsideVertically: true,
                     getTooltipColor: (_) => Colors.grey.shade800,
+                    tooltipPadding: const EdgeInsets.symmetric(
+                      horizontal: 14.0,
+                      vertical: 10.0,
+                    ),
+                    maxContentWidth: 240.0,
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
                       final monthIndex = group.x.toInt();
-                      final List<String> months = getAllMonthNames('de_DE');
+                      final List<String> months = getAllMonthNames(Localizations.localeOf(context).toString());
+
+                      final budget = CurrencyHelper.instance.formatCurrency(widget.totalBudgets[monthIndex], context);
+                      final consumed = CurrencyHelper.instance.formatCurrency(widget.usedAmounts[monthIndex], context);
+                      final balance =
+                          CurrencyHelper.instance.formatCurrency(widget.totalBudgets[monthIndex] - widget.usedAmounts[monthIndex], context);
 
                       return BarTooltipItem(
-                        '${months[monthIndex]}:\n'
-                        '${t.translate('budget')}: ${CurrencyHelper.instance.formatCurrency(widget.totalBudgets[monthIndex], context)}\n'
-                        '${t.translate('consumed')}: ${CurrencyHelper.instance.formatCurrency(widget.usedAmounts[monthIndex], context)}\n'
-                        '${t.translate('balance')}: ${CurrencyHelper.instance.formatCurrency(widget.totalBudgets[monthIndex] - widget.usedAmounts[monthIndex], context)}',
-                        textAlign: TextAlign.start,
+                        '',
                         const TextStyle(
                           color: Colors.white,
                           fontSize: 11.0,
                         ),
+                        textAlign: TextAlign.left,
+                        children: [
+                          TextSpan(
+                            text: '${months[monthIndex]}:\n',
+                            style: const TextStyle(color: Colors.white, fontSize: 11.0, fontWeight: FontWeight.bold),
+                          ),
+                          TextSpan(
+                            text: '● ',
+                            style: const TextStyle(color: Colors.green, fontSize: 14.0),
+                          ),
+                          TextSpan(text: '${t.translate('budget')}: $budget\n'),
+                          TextSpan(
+                            text: '● ',
+                            style: const TextStyle(color: Colors.redAccent, fontSize: 14.0),
+                          ),
+                          TextSpan(text: '${t.translate('consumed')}: $consumed\n'),
+                          TextSpan(
+                            text: '● ',
+                            style: const TextStyle(color: Colors.cyanAccent, fontSize: 14.0),
+                          ),
+                          TextSpan(text: '${t.translate('balance')}: $balance'),
+                        ],
                       );
                     },
                   ),

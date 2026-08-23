@@ -34,6 +34,7 @@ class UpdateDashboardPage extends StatefulWidget {
 class _UpdateDashboardPageState extends State<UpdateDashboardPage> with SingleTickerProviderStateMixin {
   final RoundedLoadingButtonController _updateDashboardButtonController = RoundedLoadingButtonController();
   late DashboardElementType _selectedDashboardElementType = DashboardElementType.general;
+  List<DashboardElement> dashboardElementList = [];
   List<DashboardElement> filteredDashboardElementList = [];
   late final DashboardElementBloc _dashboardElementBloc;
   late TabController _tabController;
@@ -43,15 +44,10 @@ class _UpdateDashboardPageState extends State<UpdateDashboardPage> with SingleTi
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     _tabController.index = 0;
-    _tabController.addListener(() {
-      if (_tabController.indexIsChanging == false) {
-        _onTabChanged(filteredDashboardElementList);
-      }
-    });
     _dashboardElementBloc = DashboardElementBloc(DashboardElementRepository())..add(LoadDashboardElementsWithUserSelection());
   }
 
-  void _onTabChanged(List<DashboardElement> dashboardElements) {
+  void _onTabChanged() {
     setState(() {
       if (_tabController.index == 0) {
         _selectedDashboardElementType = DashboardElementType.general;
@@ -60,20 +56,40 @@ class _UpdateDashboardPageState extends State<UpdateDashboardPage> with SingleTi
       } else {
         _selectedDashboardElementType = DashboardElementType.year;
       }
-      selectedOnboardingDashboardElements = dashboardElements.where((element) => element.isSelected == true).toList();
-      filteredDashboardElementList = dashboardElements.where((element) => element.dashboardElementType == _selectedDashboardElementType).toList();
+      filteredDashboardElementList = _getFilteredDashboardElements();
     });
   }
 
   void _updateUsersDashboard(List<DashboardElement> dashboardElements, BuildContext context) {
-    // TODO hier weitermachen und Widget robust implementieren siehe ChatGPT Chat.
-    final updatedList = [
-      ...dashboardElements.where(
-        (e) => e.dashboardElementType != _selectedDashboardElementType,
-      ),
-      ...filteredDashboardElementList,
-    ];
-    context.read<DashboardElementBloc>().add(UpdateUsersDashboardElements(dashboardElements: updatedList));
+    int position = 1;
+
+    for (final dashboardElement in dashboardElements) {
+      if (dashboardElement.isSelected) {
+        dashboardElement.position = position++;
+      } else {
+        dashboardElement.position = null;
+      }
+    }
+    context.read<DashboardElementBloc>().add(UpdateUsersDashboardElements(dashboardElements: dashboardElements));
+  }
+
+  List<DashboardElement> _getFilteredDashboardElements() {
+    final filtered = dashboardElementList.where((element) => element.dashboardElementType == _selectedDashboardElementType).toList();
+
+    filtered.sort((a, b) {
+      if (a.position != null && b.position != null) {
+        return a.position!.compareTo(b.position!);
+      }
+
+      if (a.position != null) {
+        return -1;
+      }
+      if (b.position != null) {
+        return 1;
+      }
+      return 0;
+    });
+    return filtered;
   }
 
   @override
@@ -81,16 +97,48 @@ class _UpdateDashboardPageState extends State<UpdateDashboardPage> with SingleTi
     final t = AppLocalizations.of(context);
     return BlocProvider.value(
       value: _dashboardElementBloc,
-      child: BlocBuilder<DashboardElementBloc, DashboardElementState>(
+      child: BlocConsumer<DashboardElementBloc, DashboardElementState>(
+        listener: (context, state) {
+          if (state is UsersDashboardElementsUpdated) {
+            _updateDashboardButtonController.success();
+
+            Future.delayed(const Duration(milliseconds: 800), () {
+              if (!context.mounted) return;
+
+              Navigator.popAndPushNamed(
+                context,
+                homeRoute,
+                arguments: HomePageArguments(0),
+              );
+            });
+          }
+
+          if (state is DashboardElementError) {
+            AppFlushbar.show(
+              context,
+              message: t.translate(state.message),
+            );
+            _updateDashboardButtonController.error();
+
+            Timer(
+              const Duration(milliseconds: buttonResetAnimationInMs),
+              () {
+                if (context.mounted) {
+                  _updateDashboardButtonController.reset();
+                }
+              },
+            );
+          }
+        },
         builder: (context, state) {
           if (state is DashboardElementLoading) {
             return CircularLoadingIndicator();
           } else if (state is DashboardElementsLoaded) {
-            if (filteredDashboardElementList.isEmpty) {
-              selectedOnboardingDashboardElements = state.dashboardElements.where((element) => element.isSelected == true).toList();
-              filteredDashboardElementList =
-                  state.dashboardElements.where((element) => element.dashboardElementType == _selectedDashboardElementType).toList();
+            if (dashboardElementList.isEmpty) {
+              dashboardElementList = List.from(state.dashboardElements);
+              filteredDashboardElementList = _getFilteredDashboardElements();
             }
+            selectedOnboardingDashboardElements = state.dashboardElements.where((element) => element.isSelected == true).toList();
             return SafeArea(
               child: Scaffold(
                 appBar: AppBar(
@@ -109,7 +157,7 @@ class _UpdateDashboardPageState extends State<UpdateDashboardPage> with SingleTi
                       TabBar(
                         controller: _tabController,
                         onTap: (index) {
-                          _onTabChanged(state.dashboardElements);
+                          _onTabChanged();
                         },
                         tabs: <Widget>[
                           Padding(
@@ -161,11 +209,30 @@ class _UpdateDashboardPageState extends State<UpdateDashboardPage> with SingleTi
                           ),
                           onReorder: (oldIndex, newIndex) {
                             setState(() {
-                              if (newIndex > oldIndex) {
-                                newIndex -= 1;
-                              }
                               final movedItem = filteredDashboardElementList.removeAt(oldIndex);
                               filteredDashboardElementList.insert(newIndex, movedItem);
+
+                              int position = 1;
+
+                              for (final element in filteredDashboardElementList) {
+                                if (element.isSelected) {
+                                  element.position = position++;
+                                } else {
+                                  element.position = null;
+                                }
+                              }
+
+                              for (final element in filteredDashboardElementList) {
+                                final index = dashboardElementList.indexWhere(
+                                  (e) => e.id == element.id,
+                                );
+
+                                if (index != -1) {
+                                  dashboardElementList[index] = element;
+                                }
+                              }
+
+                              filteredDashboardElementList = _getFilteredDashboardElements();
                             });
                           },
                           itemBuilder: (context, index) {
@@ -218,17 +285,6 @@ class _UpdateDashboardPageState extends State<UpdateDashboardPage> with SingleTi
                 ),
               ),
             );
-          } else if (state is UsersDashboardElementsUpdated) {
-            _updateDashboardButtonController.success();
-            Future.delayed(Duration(milliseconds: 800), () {
-              Navigator.popAndPushNamed(context, homeRoute, arguments: HomePageArguments(0));
-            });
-          } else if (state is DashboardElementError) {
-            AppFlushbar.show(context, message: t.translate(state.message));
-            _updateDashboardButtonController.error();
-            Timer(const Duration(milliseconds: buttonResetAnimationInMs), () {
-              _updateDashboardButtonController.reset();
-            });
           }
           return CircularLoadingIndicator();
         },

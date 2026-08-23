@@ -19,6 +19,7 @@ import '../../../../../data/repositories/booking_repository.dart';
 import '../../../../../l10n/app_localizations.dart';
 import '../../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../../../../shared/presentation/widgets/deco/empty_list.dart';
+import '../../../../shared/presentation/widgets/deco/expansion_tile.dart';
 import '../cards/booking_card.dart';
 import '../deco/booking_list_daily_header.dart';
 import '../deco/booking_list_overview.dart';
@@ -201,51 +202,34 @@ class _MonthlyBookingListState extends State<MonthlyBookingList> {
                   averageText: 'per_day',
                 ),
                 widget.showBookingChart
-                    ? Card(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 6.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                child: MonthlyBarChart(
-                                  bookings: bookingsByDay,
-                                  currentSelectedDate: widget.currentSelectedDate,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                    ? MonthlyBarChart(
+                        bookings: bookingsByDay,
+                        currentSelectedDate: widget.currentSelectedDate,
                       )
                     : SizedBox.shrink(),
                 _upcomingBookings.isNotEmpty
-                    ? TextButton(
-                        onPressed: () {
-                          setState(() {
-                            widget.onShowUpcomingBookingsChanged?.call(!widget.showUpcomingBookings);
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 6.0),
+                        child: DashboardExpansionTile(
+                          context: context,
+                          icon: Icons.upcoming_outlined,
+                          title: '${t.translate('upcoming_bookings')} (${_upcomingBookings.length})',
+                          tilePaddingVertical: 0.0,
+                          expanded: widget.showUpcomingBookings,
+                          onExpansionChanged: (_) {
+                            setState(() {
+                              widget.onShowUpcomingBookingsChanged?.call(!widget.showUpcomingBookings);
 
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              _scrollController.animateTo(
-                                0,
-                                duration: const Duration(milliseconds: 500),
-                                curve: Curves.easeInOut,
-                              );
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                _scrollController.animateTo(
+                                  0,
+                                  duration: const Duration(milliseconds: 500),
+                                  curve: Curves.easeInOut,
+                                );
+                              });
                             });
-                          });
-                        },
-                        child: Row(
-                          children: [
-                            Icon(
-                              widget.showUpcomingBookings ? Icons.keyboard_arrow_down_rounded : Icons.keyboard_arrow_up_rounded,
-                              color: Colors.white70,
-                            ),
-                            SizedBox(width: 4.0),
-                            Text(
-                              '${t.translate('upcoming_bookings')} (${_upcomingBookings.length})',
-                              style: TextStyle(color: Colors.white70),
-                            ),
-                          ],
+                          },
+                          child: SizedBox.shrink(),
                         ),
                       )
                     : SizedBox.shrink(),

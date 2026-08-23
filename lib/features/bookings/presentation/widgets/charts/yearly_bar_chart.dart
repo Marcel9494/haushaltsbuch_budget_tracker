@@ -237,18 +237,51 @@ class _YearlyBarChartState extends State<YearlyBarChart> with SingleTickerProvid
                         enabled: true,
                         handleBuiltInTouches: true,
                         touchTooltipData: BarTouchTooltipData(
+                          fitInsideHorizontally: true,
+                          fitInsideVertically: true,
                           getTooltipColor: (_) => Colors.grey.shade800,
+                          tooltipPadding: const EdgeInsets.symmetric(
+                            horizontal: 14.0,
+                            vertical: 10.0,
+                          ),
+                          maxContentWidth: 240.0,
                           getTooltipItem: (group, groupIndex, rod, rodIndex) {
                             final monthIndex = group.x.toInt();
-                            final List<String> months = getAllMonthNames('de_DE');
+                            final List<String> months = getAllMonthNames(Localizations.localeOf(context).toString());
+
+                            final revenue = CurrencyHelper.instance.formatCurrency(_monthlyRevenue[monthIndex], context);
+                            final expenses = CurrencyHelper.instance.formatCurrency(_monthlyExpenses[monthIndex], context);
+                            final balance =
+                                CurrencyHelper.instance.formatCurrency(_monthlyRevenue[monthIndex] - _monthlyExpenses[monthIndex], context);
 
                             return BarTooltipItem(
-                              '${months[monthIndex]}:\n'
-                              '${t.translate('revenue')}: ${CurrencyHelper.instance.formatCurrency(_monthlyRevenue[monthIndex], context)}\n'
-                              '${t.translate('expenses')}: ${CurrencyHelper.instance.formatCurrency(_monthlyExpenses[monthIndex], context)}\n'
-                              '${t.translate('balance')}: ${CurrencyHelper.instance.formatCurrency(_monthlyRevenue[monthIndex] - _monthlyExpenses[monthIndex], context)}',
-                              textAlign: TextAlign.start,
-                              const TextStyle(color: Colors.white, fontSize: 11.0),
+                              '',
+                              const TextStyle(
+                                color: Colors.white,
+                                fontSize: 11.0,
+                              ),
+                              textAlign: TextAlign.left,
+                              children: [
+                                TextSpan(
+                                  text: '${months[monthIndex]}:\n',
+                                  style: const TextStyle(color: Colors.white, fontSize: 11.0, fontWeight: FontWeight.bold),
+                                ),
+                                TextSpan(
+                                  text: '● ',
+                                  style: const TextStyle(color: Colors.green, fontSize: 14.0),
+                                ),
+                                TextSpan(text: '${t.translate('revenue')}: $revenue\n'),
+                                TextSpan(
+                                  text: '● ',
+                                  style: const TextStyle(color: Colors.red, fontSize: 14.0),
+                                ),
+                                TextSpan(text: '${t.translate('expenses')}: $expenses\n'),
+                                TextSpan(
+                                  text: '● ',
+                                  style: const TextStyle(color: Colors.cyanAccent, fontSize: 14.0),
+                                ),
+                                TextSpan(text: '${t.translate('balance')}: $balance'),
+                              ],
                             );
                           },
                         ),
