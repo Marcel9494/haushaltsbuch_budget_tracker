@@ -92,4 +92,5 @@ Haushaltsbuch, Budgetplaner, Finanzmanager, Ausgaben Tracker, Einnahmen-Ausgaben
 - Android Studio
 - Supabase
 - Github
+- RevenueCat
 - Google Play Store
