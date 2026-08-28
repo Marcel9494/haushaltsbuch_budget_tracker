@@ -14,7 +14,7 @@ class OnboardingProgressContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 8,
-      width: MediaQuery.of(context).size.width / 3 - 20,
+      width: MediaQuery.of(context).size.width / 2 - 20,
       decoration: BoxDecoration(
         color: progressBarState.color,
         borderRadius: BorderRadius.circular(8),

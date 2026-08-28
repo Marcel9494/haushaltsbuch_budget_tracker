@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:haushaltsbuch_budget_tracker/blocs/on_boarding/on_boarding_bloc.dart';
+import 'package:haushaltsbuch_budget_tracker/core/utils/premium_service.dart';
 import 'package:haushaltsbuch_budget_tracker/data/repositories/category_repository.dart';
 import 'package:haushaltsbuch_budget_tracker/features/auth/presentation/pages/forgot_password_page.dart';
 import 'package:haushaltsbuch_budget_tracker/features/budgets/presentation/pages/budget_bookings_page.dart';
@@ -103,6 +104,9 @@ void main() async {
       autoRefreshToken: true,
     ),
   );
+
+  PremiumService.configure();
+  PremiumService.initializeRevenueCat();
 
   Supabase.instance.client.auth.onAuthStateChange.listen(
     (data) async {

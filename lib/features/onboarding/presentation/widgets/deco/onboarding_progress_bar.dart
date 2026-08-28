@@ -6,13 +6,11 @@ import 'onboarding_progress_container.dart';
 class OnboardingProgressBar extends StatelessWidget {
   final OnboardingProgressbarType progressBar1State;
   final OnboardingProgressbarType progressBar2State;
-  final OnboardingProgressbarType progressBar3State;
 
   const OnboardingProgressBar({
     super.key,
     required this.progressBar1State,
     required this.progressBar2State,
-    required this.progressBar3State,
   });
 
   @override
@@ -24,7 +22,6 @@ class OnboardingProgressBar extends StatelessWidget {
         children: [
           OnboardingProgressContainer(progressBarState: progressBar1State),
           OnboardingProgressContainer(progressBarState: progressBar2State),
-          OnboardingProgressContainer(progressBarState: progressBar3State),
         ],
       ),
     );

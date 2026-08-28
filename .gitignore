@@ -121,3 +121,4 @@ app.*.symbols
 # Other
 .env
 lib/core/consts/github_consts.dart
+lib/core/consts/revenueCat_consts.dart
