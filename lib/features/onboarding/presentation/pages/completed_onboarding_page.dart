@@ -26,10 +26,11 @@ class CompletedOnboardingPage extends StatefulWidget {
 
 class _CompletedOnboardingPageState extends State<CompletedOnboardingPage> {
   final List<DashboardElement> startDashboardElements = [];
+  bool _onboardingStarted = false;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
 
     startDashboardElements.addAll(
       selectedOnboardingDashboardElements.map(
@@ -47,85 +48,133 @@ class _CompletedOnboardingPageState extends State<CompletedOnboardingPage> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    context.read<OnboardingAccountBloc>().add(LoadOnboardingAccounts(context: context));
+  }
+
+  void _startOnboarding(OnboardingCategoriesLoaded categoryState, OnboardingAccountsLoaded accountState) {
+    if (_onboardingStarted) {
+      return;
+    }
+
+    _onboardingStarted = true;
+
+    final userId = Supabase.instance.client.auth.currentUser!.id;
+
+    final accounts = accountState.onboardingAccounts
+        .where((account) => account.isSelected)
+        .map(
+          (account) => Account(
+            userId: userId,
+            name: account.accountName,
+            accountType: account.accountType,
+            balance: account.balance,
+          ),
+        )
+        .toList();
+
+    final categories = categoryState.onboardingCategories
+        .where((category) => category.isSelected)
+        .map(
+          (category) => Category(
+            userId: userId,
+            categoryName: category.categoryName,
+            categoryType: category.categoryType,
+          ),
+        )
+        .toList();
+
+    context.read<OnboardingBloc>().add(
+          RunOnboarding(
+            startCategories: categories,
+            startAccounts: accounts,
+            startDashboardElements: startDashboardElements,
+            userId: userId,
+          ),
+        );
+  }
+
+  @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
-    final categoryState = context.read<OnboardingCategoryBloc>().state;
-    final accountState = context.read<OnboardingAccountBloc>().state;
 
-    if (categoryState is OnboardingCategoriesLoaded && accountState is OnboardingAccountsLoaded) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.read<OnboardingBloc>().add(RunOnboarding(
-              startCategories: categoryState.onboardingCategories
-                  .where((startCategory) => startCategory.isSelected)
-                  .map(
-                    (startCategory) => Category(
-                      userId: Supabase.instance.client.auth.currentUser!.id,
-                      categoryName: startCategory.categoryName,
-                      categoryType: startCategory.categoryType,
-                    ),
-                  )
-                  .toList(),
-              startAccounts: accountState.onboardingAccounts
-                  .where((startAccount) => startAccount.isSelected)
-                  .map(
-                    (startAccount) => Account(
-                      userId: Supabase.instance.client.auth.currentUser!.id,
-                      name: startAccount.accountName,
-                      accountType: startAccount.accountType,
-                      balance: startAccount.balance,
-                    ),
-                  )
-                  .toList(),
-              startDashboardElements: startDashboardElements,
-              userId: Supabase.instance.client.auth.currentUser!.id,
-            ));
-      });
-      return BlocConsumer<OnboardingBloc, OnboardingState>(
-        listener: (context, state) async {
-          if (state.finished) {
-            await Future.delayed(const Duration(milliseconds: 1800));
-            if (!context.mounted) {
-              return;
-            }
-            Navigator.of(context).pushNamedAndRemoveUntil(
-              homeRoute,
-              (route) => false,
-              arguments: HomePageArguments(0),
-            );
-          }
-        },
-        builder: (context, state) {
-          return Scaffold(
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  t.translate(state.message),
-                  style: TextStyle(fontSize: 22.0),
-                ),
-                SizedBox(height: 32.0),
-                Center(
-                  child: CircularPercentIndicator(
-                    radius: 124.0,
-                    lineWidth: 12.0,
-                    animation: true,
-                    percent: state.progress,
-                    animateFromLastPercent: true,
-                    center: AppIcon(),
-                    circularStrokeCap: CircularStrokeCap.round,
-                    progressColor: Colors.cyanAccent.shade700,
-                  ),
-                ),
-              ],
-            ),
+    return BlocBuilder<OnboardingCategoryBloc, OnboardingCategoryState>(
+      builder: (context, categoryState) {
+        if (categoryState is OnboardingCategoryError) {
+          return Center(
+            child: Text(t.translate(categoryState.message)),
           );
-        },
-      );
-    } else if (categoryState is OnboardingCategoryError) {
-      return Center(child: Text(t.translate(categoryState.message)));
-    } else if (accountState is OnboardingAccountError) {
-      return Center(child: Text(t.translate(accountState.message)));
-    }
-    return SizedBox.shrink();
+        }
+        return BlocBuilder<OnboardingAccountBloc, OnboardingAccountState>(
+          builder: (context, accountState) {
+            if (accountState is OnboardingAccountError) {
+              return Center(
+                child: Text(t.translate(accountState.message)),
+              );
+            }
+            if (categoryState is OnboardingCategoriesLoaded && accountState is OnboardingAccountsLoaded) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (!mounted) {
+                  return;
+                }
+                _startOnboarding(
+                  categoryState,
+                  accountState,
+                );
+              });
+              return BlocConsumer<OnboardingBloc, OnboardingState>(
+                listener: (context, state) async {
+                  if (state.finished) {
+                    await Future.delayed(
+                      const Duration(milliseconds: 1500),
+                    );
+
+                    if (!context.mounted) {
+                      return;
+                    }
+
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                      homeRoute,
+                      (route) => false,
+                      arguments: HomePageArguments(0),
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  return Scaffold(
+                    body: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          t.translate(state.message),
+                          style: const TextStyle(
+                            fontSize: 22.0,
+                          ),
+                        ),
+                        const SizedBox(height: 32.0),
+                        Center(
+                          child: CircularPercentIndicator(
+                            radius: 124.0,
+                            lineWidth: 12.0,
+                            animation: true,
+                            percent: state.progress,
+                            animateFromLastPercent: true,
+                            center: AppIcon(),
+                            circularStrokeCap: CircularStrokeCap.round,
+                            progressColor: Colors.cyanAccent.shade700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
+            }
+            return const SizedBox.shrink();
+          },
+        );
+      },
+    );
   }
 }

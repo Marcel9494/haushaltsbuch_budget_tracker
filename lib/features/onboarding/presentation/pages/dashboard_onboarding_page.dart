@@ -77,7 +77,6 @@ class _DashboardOnboardingPageState extends State<DashboardOnboardingPage> with 
                 OnboardingProgressBar(
                   progressBar1State: OnboardingProgressbarType.completed,
                   progressBar2State: OnboardingProgressbarType.active,
-                  progressBar3State: OnboardingProgressbarType.notCompleted,
                 ),
                 OnboardingDescriptionCard(
                   title: t.translate('configure_dashboard'),
@@ -179,10 +178,10 @@ class _DashboardOnboardingPageState extends State<DashboardOnboardingPage> with 
                   },
                 ),
                 OnboardingNavigation(
-                  nextRoute: accountOnboardingRoute,
-                  nextButtonText: 'continue',
+                  nextRoute: completedOnboardingRoute,
+                  nextButtonText: 'complete',
                   showBackRoute: true,
-                  backRoute: categoryOnboardingRoute,
+                  backRoute: dashboardOnboardingRoute,
                   backButtonText: 'back',
                 ),
               ],

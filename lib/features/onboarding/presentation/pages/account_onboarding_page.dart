@@ -59,8 +59,7 @@ class _AccountOnboardingPageState extends State<AccountOnboardingPage> {
                 children: [
                   OnboardingProgressBar(
                     progressBar1State: OnboardingProgressbarType.completed,
-                    progressBar2State: OnboardingProgressbarType.completed,
-                    progressBar3State: OnboardingProgressbarType.active,
+                    progressBar2State: OnboardingProgressbarType.active,
                   ),
                   OnboardingDescriptionCard(
                     title: t.translate('select_accounts'),

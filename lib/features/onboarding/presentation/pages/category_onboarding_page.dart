@@ -92,7 +92,6 @@ class _CategoryOnboardingPageState extends State<CategoryOnboardingPage> with Si
                     OnboardingProgressBar(
                       progressBar1State: OnboardingProgressbarType.active,
                       progressBar2State: OnboardingProgressbarType.notCompleted,
-                      progressBar3State: OnboardingProgressbarType.notCompleted,
                     ),
                     OnboardingDescriptionCard(
                       title: t.translate('select_categories'),

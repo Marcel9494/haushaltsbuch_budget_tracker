@@ -7,9 +7,13 @@ import 'package:haushaltsbuch_budget_tracker/blocs/dashboard_element/dashboard_e
 import 'package:haushaltsbuch_budget_tracker/blocs/dashboard_element/dashboard_element_event.dart';
 import 'package:haushaltsbuch_budget_tracker/core/consts/route_consts.dart';
 import 'package:haushaltsbuch_budget_tracker/core/page_arguments/category_list_page_arguments.dart';
+import 'package:haushaltsbuch_budget_tracker/core/utils/premium_service.dart';
 import 'package:haushaltsbuch_budget_tracker/data/enums/category_type.dart';
 import 'package:haushaltsbuch_budget_tracker/features/budgets/presentation/pages/budget_list_page.dart';
 import 'package:haushaltsbuch_budget_tracker/features/goals/presentation/pages/goal_list_page.dart';
+import 'package:haushaltsbuch_budget_tracker/features/home/presentation/widgets/buttons/create_account_button.dart';
+import 'package:haushaltsbuch_budget_tracker/features/home/presentation/widgets/buttons/create_budget_button.dart';
+import 'package:haushaltsbuch_budget_tracker/features/home/presentation/widgets/buttons/create_goal_button.dart';
 
 import '../../../../blocs/account/account_bloc.dart';
 import '../../../../blocs/account/account_event.dart';
@@ -20,19 +24,15 @@ import '../../../../blocs/category/category_bloc.dart';
 import '../../../../blocs/goal/goal_bloc.dart';
 import '../../../../blocs/goal/goal_event.dart';
 import '../../../../core/utils/app_review_service.dart';
-import '../../../../core/utils/slow_hero_animation.dart';
 import '../../../../data/enums/period_of_time_type.dart';
 import '../../../../data/repositories/account_repository.dart';
 import '../../../../data/repositories/budget_repository.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../accounts/presentation/pages/account_list_page.dart';
-import '../../../accounts/presentation/pages/create_account_page.dart';
 import '../../../bookings/presentation/pages/booking_list_page.dart';
 import '../../../bookings/presentation/pages/create_booking_page.dart';
 import '../../../bookings/presentation/widgets/deco/booking_list_actions.dart';
-import '../../../budgets/presentation/pages/create_budget_page.dart';
 import '../../../dashboard/presentation/pages/dashboard_page.dart';
-import '../../../goals/presentation/pages/create_goal_page.dart';
 import '../widgets/navigation/date_picker_bar.dart';
 
 class HomePage extends StatefulWidget {
@@ -248,60 +248,11 @@ class _HomePageState extends State<HomePage> {
               icon: FontAwesomeIcons.chartColumn,
             )
           else if (_selectedPageIndex == 2)
-            Hero(
-              tag: 'create_account_fab',
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                child: TextButton.icon(
-                  onPressed: () {
-                    Navigator.push(context, slowHeroRoute(CreateAccountPage()));
-                  },
-                  label: Text(t.translate('create_account')),
-                ),
-              ),
-            )
+            CreateAccountButton()
           else if (_selectedPageIndex == 3)
-            Hero(
-              tag: 'create_budget_fab',
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                child: TextButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      slowHeroRoute(
-                        BlocProvider.value(
-                          value: context.read<CategoryBloc>(),
-                          child: CreateBudgetPage(),
-                        ),
-                      ),
-                    );
-                  },
-                  label: Text(t.translate('create_budget')),
-                ),
-              ),
-            )
+            CreateBudgetButton()
           else if (_selectedPageIndex == 4)
-            Hero(
-              tag: 'create_goal_fab',
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                child: TextButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      slowHeroRoute(
-                        BlocProvider.value(
-                          value: context.read<GoalBloc>(),
-                          child: CreateGoalPage(),
-                        ),
-                      ),
-                    );
-                  },
-                  label: Text(t.translate('create_goal')),
-                ),
-              ),
-            ),
+            CreateGoalButton()
         ],
       ),
       drawer: Drawer(
@@ -380,7 +331,10 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               leading: Icon(Icons.stars_rounded, color: Colors.white),
               title: Text(t.translate('premium'), style: TextStyle(color: Colors.white)),
-              onTap: () {},
+              onTap: () {
+                Navigator.pop(context);
+                PremiumService.openPaywall();
+              },
             ),
             ListTile(
               leading: Icon(Icons.star_rounded, color: Colors.white),
