@@ -15,6 +15,7 @@ class DashboardElement {
   final String icon;
   final DashboardElementType dashboardElementType;
   final Map<String, dynamic> elementConfig;
+  int defaultOrder;
   int? position;
   bool isSelected;
 
@@ -26,6 +27,7 @@ class DashboardElement {
     required this.icon,
     required this.dashboardElementType,
     required this.isSelected,
+    this.defaultOrder = 0,
     this.position,
     this.elementConfig = const {},
   });
@@ -39,6 +41,7 @@ class DashboardElement {
       icon: map['icon'],
       dashboardElementType: DashboardElementType.fromString(map['dashboard_element_type']),
       isSelected: map['default_is_selected'],
+      defaultOrder: map['default_order'],
       elementConfig: Map<String, dynamic>.from(map['element_config'] ?? {}),
     );
   }
@@ -54,6 +57,7 @@ class DashboardElement {
       icon: element['icon'],
       dashboardElementType: DashboardElementType.fromString(element['dashboard_element_type']),
       isSelected: element['default_is_selected'],
+      defaultOrder: element['default_order'],
       elementConfig: Map<String, dynamic>.from(element['element_config'] ?? {}),
       position: map['position'],
     );
@@ -70,6 +74,7 @@ class DashboardElement {
         map['dashboard_element_type'],
       ),
       isSelected: map['is_selected'] ?? false,
+      defaultOrder: map['default_order'],
       elementConfig: Map<String, dynamic>.from(map['element_config'] ?? {}),
       position: map['position'],
     );
@@ -83,6 +88,7 @@ class DashboardElement {
       'icon': icon,
       'dashboard_element_type': dashboardElementType.name,
       'default_is_selected': isSelected,
+      'default_order': defaultOrder,
       'element_config': elementConfig,
     };
   }

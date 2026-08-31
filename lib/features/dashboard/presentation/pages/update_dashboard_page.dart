@@ -103,8 +103,11 @@ class _UpdateDashboardPageState extends State<UpdateDashboardPage> with SingleTi
             _updateDashboardButtonController.success();
 
             Future.delayed(const Duration(milliseconds: 800), () {
-              if (!context.mounted) return;
+              if (!context.mounted) {
+                return;
+              }
 
+              Navigator.pop(context);
               Navigator.popAndPushNamed(
                 context,
                 homeRoute,

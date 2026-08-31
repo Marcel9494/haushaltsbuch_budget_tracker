@@ -32,11 +32,15 @@ class GoalInfoRow extends StatelessWidget {
               lineWidth: 6.0,
               animation: true,
               percent: ((goal.currentAmount ?? 0.0) / goal.goalAmount).clamp(0.0, 1.0),
-              center: Text(
-                '${(NumberFormat('#,##0.0', locale).format(((goal.currentAmount ?? 0.0) / goal.goalAmount) * 100))}%',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 13.0,
+              center: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text(
+                  '${(NumberFormat('#,##0.0', locale).format(((goal.currentAmount ?? 0.0) / goal.goalAmount) * 100))}%',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13.0,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               circularStrokeCap: CircularStrokeCap.round,

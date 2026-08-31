@@ -30,11 +30,15 @@ class BudgetInfoRow extends StatelessWidget {
           lineWidth: 6.0,
           animation: true,
           percent: (overallUsedBudgetPercent).clamp(0.0, 1.0),
-          center: Text(
-            '${NumberFormat('#,##0.0', locale).format(overallUsedBudgetPercent)}%',
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 13.0,
+          center: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Text(
+              '${NumberFormat('#,##0.0', locale).format(overallUsedBudgetPercent)}%',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 13.0,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
           circularStrokeCap: CircularStrokeCap.round,

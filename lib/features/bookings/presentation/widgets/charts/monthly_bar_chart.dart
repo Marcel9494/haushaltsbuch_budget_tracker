@@ -83,10 +83,6 @@ class _MonthlyBarChartState extends State<MonthlyBarChart> with SingleTickerProv
         day,
       );
 
-      final isFutureDay = currentDate.isAfter(
-        DateTime(today.year, today.month, today.day),
-      );
-
       const delayPerItem = 0.08;
 
       final start = index * delayPerItem / _daysInMonth * 12;
@@ -109,6 +105,7 @@ class _MonthlyBarChartState extends State<MonthlyBarChart> with SingleTickerProv
       if (showRevenue) {
         rods.add(
           BarChartRodData(
+            fromY: 0,
             toY: _dailyRevenue[index] * progress,
             color: Colors.green,
             width: 6,
@@ -120,6 +117,7 @@ class _MonthlyBarChartState extends State<MonthlyBarChart> with SingleTickerProv
       if (showExpenses) {
         rods.add(
           BarChartRodData(
+            fromY: 0,
             toY: _dailyExpenses[index] * progress,
             color: Colors.red,
             width: 6,
@@ -136,7 +134,7 @@ class _MonthlyBarChartState extends State<MonthlyBarChart> with SingleTickerProv
     });
   }
 
-  double getInterval() {
+  double getMaxY() {
     double maxRevenue = 0.0;
     double maxExpenses = 0.0;
     if (_dailyRevenue.isNotEmpty) {
@@ -145,11 +143,15 @@ class _MonthlyBarChartState extends State<MonthlyBarChart> with SingleTickerProv
     if (_dailyExpenses.isNotEmpty) {
       maxExpenses = _dailyExpenses.reduce(max);
     }
-    final double maxValue = max(maxRevenue, maxExpenses);
-    if (maxValue == 0.0) {
-      return 1.0;
+    return max(maxRevenue, maxExpenses);
+  }
+
+  double getInterval() {
+    final maxY = getMaxY();
+    if (maxY == 0) {
+      return 1;
     }
-    return maxValue / 3;
+    return maxY / 3;
   }
 
   @override

@@ -18,6 +18,7 @@ class AmountInputField extends StatefulWidget {
   final String text;
   final bool showMinus;
   final bool autofocus;
+  final bool zeroIsAllowed;
 
   const AmountInputField({
     super.key,
@@ -29,6 +30,7 @@ class AmountInputField extends StatefulWidget {
     this.text = 'amount',
     this.showMinus = false,
     this.autofocus = false,
+    this.zeroIsAllowed = true,
   });
 
   @override
@@ -83,6 +85,8 @@ class _AmountInputFieldState extends State<AmountInputField> {
     String amountInput = widget.amountController.text.trim();
     if (amountInput.isEmpty) {
       return t.translate('empty_${widget.text}_error');
+    } else if (widget.zeroIsAllowed == false && CurrencyHelper.instance.parseAmount(amountInput, context) == 0) {
+      return t.translate('zero_amount_error');
     }
     return null;
   }

@@ -153,10 +153,10 @@ const Map<String, String> de = {
   'upgrade_account': 'Konto upgraden',
   'user_logout_description': 'Möchtest du dich wirklich abmelden?',
   'guest_logout_description_important':
-      'WICHTIG: Vorübergehende Gästekontos verlieren alle ihre Daten, wenn du dich abmeldest. Diese Aktion kann nicht rückgängig gemacht werden. Wenn du dich trotzdem abmelden möchtest bestätige bitte mit dem Wort: Logout',
+      'WICHTIG: Vorübergehende Gästekontos verlieren alle ihre Daten, wenn du dich abmeldest. Diese Aktion kann nicht rückgängig gemacht werden. Wenn du dich trotzdem abmelden möchtest bestätige bitte mit dem Wort: Verstanden',
   'guest_logout_description_notice':
       'HINWEIS: Wenn du ein dauerhaftes Konto erstellen möchten, kannst du dein Gästekonto in den Einstellungen zu einem kostenlosen Konto upgraden. Anschließend sind deine Daten sicher gespeichert.',
-  'guest_logout_confirmation_failed': 'Die Bestätigung ist fehlgeschlagen. Bitte bestätige mit dem Wort: Logout, wenn du dich abmelden möchten.',
+  'guest_logout_confirmation_failed': 'Die Bestätigung ist fehlgeschlagen. Bitte bestätige mit dem Wort: Verstanden, wenn du dich abmelden möchtest.',
   'confirm': 'Bestätigen',
   'upgrade': 'Upgraden',
   'upgrade_with_google': 'Mit Google upgraden',
@@ -268,7 +268,7 @@ const Map<String, String> de = {
   'feedback_long_description_title': 'Feedback',
   'bug_report': 'Bug melden',
   'bug_report_description':
-      'Wenn du einen Fehler in der App gefunden hast, freue ich mich über deine Meldung. Bitte beschreibe den Fehler so detailliert wie möglich, damit ich ihn schnellstmöglich untersuchen und beheben kann.',
+      'Fehler gefunden? Bitte beschreibe den Fehler möglichst genau, damit ich ihn schnell untersuchen und beheben kann. Vielen Dank.',
   'bug_report_sended_successfully': 'Vielen Dank für deine Meldung.',
   'bug_report_long_description_title': 'Detaillierte Fehlerbeschreibung',
   'send': 'Senden',
@@ -361,7 +361,7 @@ const Map<String, String> de = {
   'de_DE': 'Deutsch',
   'en_US': 'Englisch',
   // Spezial Strings
-  'guest_logout_confirmation_word': 'Logout',
+  'guest_logout_confirmation_word': 'Verstanden',
   'delete_user_account_confirmation_word': 'Löschen',
   // Error Messages
   'empty_email_error': 'Bitte geben Sie eine E-Mail Adresse ein.',
@@ -372,6 +372,7 @@ const Map<String, String> de = {
   'short_password_error': 'Passwort muss mindestens 6 Zeichen lang sein.',
   'passwords_do_not_match_error': 'Passwörter stimmen nicht überein.',
   'empty_amount_error': 'Bitte geben Sie einen Betrag ein.',
+  'zero_amount_error': 'Der Betrag darf nicht 0 sein.',
   'empty_goal_amount_error': 'Bitte geben Sie einen Zielbetrag ein.',
   'empty_title_error': 'Bitte geben Sie einen Titel ein.',
   'empty_account_name_error': 'Bitte geben Sie einen Kontoname ein.',

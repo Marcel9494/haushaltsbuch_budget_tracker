@@ -116,7 +116,11 @@ class _CreateGoalPageState extends State<CreateGoalPage> {
             if (state is GoalCreated) {
               _createGoalButtonController.success();
               Future.delayed(Duration(milliseconds: 1000), () {
-                Navigator.popAndPushNamed(context, homeRoute, arguments: HomePageArguments(4));
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  homeRoute,
+                  (route) => false,
+                  arguments: HomePageArguments(4),
+                );
               });
             } else if (state is GoalError) {
               AppFlushbar.show(context, message: t.translate(state.message));
@@ -158,6 +162,7 @@ class _CreateGoalPageState extends State<CreateGoalPage> {
                           bookingType: BookingType.transfer,
                           onAmountTypeChanged: (_) {},
                           text: 'goal_amount',
+                          zeroIsAllowed: false,
                         ),
                         DateSelectionButtons(
                           startDateController: _startDateController,
