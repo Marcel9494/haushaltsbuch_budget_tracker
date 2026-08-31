@@ -137,11 +137,11 @@ class _DashboardOnboardingPageState extends State<DashboardOnboardingPage> with 
                       selectedOnboardingDashboardElements = state.dashboardElements.where((element) => element.isSelected == true).toList();
                       final filteredDashboardElementList =
                           state.dashboardElements.where((element) => element.dashboardElementType == _selectedDashboardElementType).toList();
+                      filteredDashboardElementList.sort((a, b) => a.defaultOrder.compareTo(b.defaultOrder));
                       return Expanded(
                         child: GridView.builder(
                           itemCount: filteredDashboardElementList.length,
                           shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
                           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             mainAxisSpacing: 16,

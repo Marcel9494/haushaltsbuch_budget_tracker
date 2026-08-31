@@ -146,7 +146,11 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
             if (state is BookingCreated) {
               _createBookingButtonController.success();
               Future.delayed(Duration(milliseconds: 800), () {
-                Navigator.popAndPushNamed(context, homeRoute, arguments: HomePageArguments(1));
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  homeRoute,
+                  (route) => false,
+                  arguments: HomePageArguments(1),
+                );
               });
             } else if (state is BookingError) {
               AppFlushbar.show(context, message: t.translate(state.message));

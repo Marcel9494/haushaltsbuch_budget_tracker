@@ -155,10 +155,10 @@ const Map<String, String> en = {
   'upgrade_account': 'Upgrade account',
   'user_logout_description': 'Are you sure you want to logout?',
   'guest_logout_description_important':
-      'IMPORTANT: Guest accounts will lose all their data when you log out. This action cannot be undone. If you still want to log out, please confirm by entering the word: Logout',
+      'IMPORTANT: Guest accounts will lose all their data when you log out. This action cannot be undone. If you still want to log out, please confirm by entering the word: Understood',
   'guest_logout_description_notice':
       'NOTE: If you would like to create a permanent account, you can upgrade your guest account to a free account in the settings. Your data will then be securely stored.',
-  'guest_logout_confirmation_failed': 'Confirmation failed. Please enter the word “Logout” if you want to log out.',
+  'guest_logout_confirmation_failed': 'Confirmation failed. Please enter the word “Understood” if you want to log out.',
   'confirm': 'Confirm',
   'upgrade': 'Upgrade',
   'upgrade_with_google': 'Upgrade with Google',
@@ -356,7 +356,7 @@ const Map<String, String> en = {
   'de_DE': 'German',
   'en_US': 'English',
   // Spezial Strings (Special strings)
-  'guest_logout_confirmation_word': 'Logout',
+  'guest_logout_confirmation_word': 'Understood',
   // Error Messages
   'empty_email_error': 'Please enter an email address.',
   'invalid_email_error': 'Please enter a valid email address.',
@@ -366,6 +366,7 @@ const Map<String, String> en = {
   'short_password_error': 'The password must be at least 6 characters long.',
   'passwords_do_not_match_error': 'The passwords do not match.',
   'empty_amount_error': 'Please enter an amount.',
+  'zero_amount_error': 'The amount must be greater than zero.',
   'empty_goal_amount_error': 'Please enter a goal amount.',
   'empty_account_name_error': 'Please enter an account name.',
   'empty_goal_error': 'Please select a goal.',

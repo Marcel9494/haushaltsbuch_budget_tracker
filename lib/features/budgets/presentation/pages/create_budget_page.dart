@@ -94,7 +94,11 @@ class _CreateBudgetPageState extends State<CreateBudgetPage> {
             if (state is BudgetCreated) {
               _createBudgetButtonController.success();
               Future.delayed(Duration(milliseconds: 1000), () {
-                Navigator.popAndPushNamed(context, homeRoute, arguments: HomePageArguments(3));
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  homeRoute,
+                  (route) => false,
+                  arguments: HomePageArguments(3),
+                );
               });
             } else if (state is BudgetError) {
               AppFlushbar.show(context, message: t.translate(state.message));
@@ -137,6 +141,7 @@ class _CreateBudgetPageState extends State<CreateBudgetPage> {
                             });
                           },
                           text: 'monthly_budget',
+                          zeroIsAllowed: false,
                         ),
                         SizedBox(height: 30.0),
                         BudgetPeriodSelectionButton(currentBudgetAmount: _currentBudgetAmount),

@@ -95,7 +95,11 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
             if (state is AccountCreated) {
               _createAccountButtonController.success();
               Future.delayed(Duration(milliseconds: 1000), () {
-                Navigator.popAndPushNamed(context, homeRoute, arguments: HomePageArguments(2));
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  homeRoute,
+                  (route) => false,
+                  arguments: HomePageArguments(2),
+                );
               });
             } else if (state is AccountError) {
               AppFlushbar.show(context, message: t.translate(state.message));

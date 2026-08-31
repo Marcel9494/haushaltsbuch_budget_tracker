@@ -166,6 +166,7 @@ class _UpdateBudgetPageState extends State<UpdateBudgetPage> {
                             });
                           },
                           text: 'monthly_budget',
+                          zeroIsAllowed: false,
                         ),
                         SizedBox(height: 30.0),
                         BudgetPeriodSelectionButton(currentBudgetAmount: _currentBudgetAmount),

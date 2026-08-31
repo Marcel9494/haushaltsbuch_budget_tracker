@@ -33,6 +33,7 @@ import '../../../bookings/presentation/pages/booking_list_page.dart';
 import '../../../bookings/presentation/pages/create_booking_page.dart';
 import '../../../bookings/presentation/widgets/deco/booking_list_actions.dart';
 import '../../../dashboard/presentation/pages/dashboard_page.dart';
+import '../widgets/deco/sidebar_header.dart';
 import '../widgets/navigation/date_picker_bar.dart';
 
 class HomePage extends StatefulWidget {
@@ -259,13 +260,7 @@ class _HomePageState extends State<HomePage> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            SizedBox(
-              height: 120.0,
-              child: DrawerHeader(
-                decoration: BoxDecoration(color: Colors.cyan),
-                child: Text(t.translate('app_name')),
-              ),
-            ),
+            SidebarHeader(),
             ListTile(
               leading: Icon(Icons.dashboard_rounded, color: _selectedPageIndex == 0 ? Colors.cyanAccent : Colors.white),
               title: Text(t.translate('dashboard'), style: TextStyle(color: _selectedPageIndex == 0 ? Colors.cyanAccent : Colors.white)),

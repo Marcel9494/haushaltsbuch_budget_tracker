@@ -36,7 +36,7 @@ class DashboardElementRepository {
   }
 
   Future<List<DashboardElement>> loadDashboardElements() async {
-    final dashboardElements = await Supabase.instance.client.from('dashboard_elements').select().order('created_at', ascending: false);
+    final dashboardElements = await Supabase.instance.client.from('dashboard_elements').select().order('default_order');
     return (dashboardElements as List).map((data) => DashboardElement.fromMap(data)).toList();
   }
 
@@ -51,7 +51,8 @@ class DashboardElementRepository {
         icon,
         dashboard_element_type,
         show_value,
-        default_is_selected
+        default_is_selected,
+        default_order
       )
     ''').eq('user_id', supabase.auth.currentUser!.id).order('position');
     return (response as List).map((e) => DashboardElement.fromUserElementsMap(e)).toList();
@@ -68,6 +69,7 @@ class DashboardElementRepository {
         dashboard_element_type,
         show_value,
         default_is_selected,
+        default_order,
         created_at,
         users_dashboard_elements (
           user_id,

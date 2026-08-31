@@ -90,7 +90,7 @@ class _UpdateGoalPageState extends State<UpdateGoalPage> {
       final Goal updatedGoal = Goal(
         id: widget.goal.id,
         userId: supabase.auth.currentUser!.id,
-        goalAmount: amount!,
+        goalAmount: amount,
         currentAmount: widget.goal.currentAmount,
         goalName: _goalNameController.text.trim(),
         goalType: _selectedGoalType,
@@ -178,6 +178,7 @@ class _UpdateGoalPageState extends State<UpdateGoalPage> {
                           bookingType: BookingType.transfer,
                           onAmountTypeChanged: (_) {},
                           text: 'goal_amount',
+                          zeroIsAllowed: false,
                         ),
                         DateSelectionButtons(
                           startDateController: _startDateController,
