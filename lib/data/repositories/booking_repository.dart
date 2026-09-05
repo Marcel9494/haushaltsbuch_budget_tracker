@@ -51,24 +51,100 @@ class BookingRepository {
     }
   }
 
-  Future<Booking> updateBooking(Booking booking) async {
+  Future<List<Booking>> updateBooking(Booking booking) async {
     final SupabaseClient supabase = Supabase.instance.client;
-    final updatedBooking = await supabase
+
+    if (booking.repetitionType == RepetitionType.noRepetition) {
+      // Normales Buchungsupdate
+      final updatedBooking = await supabase
+          .from('bookings')
+          .update(booking.toMap())
+          .eq('id', booking.id!)
+          .eq('user_id', supabase.auth.currentUser!.id)
+          .select()
+          .single();
+      return [Booking.fromMap(updatedBooking)];
+    }
+
+    // Wiederholungsbuchungen updaten
+    final repetitionBookingId = const Uuid().v4();
+
+    // Bestehende Buchung zur ersten Buchung der Serie machen
+    final updatedFirstBooking = await supabase
         .from('bookings')
-        .update(booking.toMap())
+        .update({
+          ...booking.toMap(),
+          'repetition_id': repetitionBookingId,
+          'booking_date': booking.bookingDate.toUtc().toIso8601String(),
+        })
         .eq('id', booking.id!)
-        .eq(
-          'user_id',
-          supabase.auth.currentUser!.id,
-        )
+        .eq('user_id', supabase.auth.currentUser!.id)
         .select()
         .single();
-    return Booking.fromMap(updatedBooking);
+
+    final updatedBooking = Booking.fromMap(updatedFirstBooking);
+
+    // Weitere Wiederholungsbuchungen erzeugen
+    final bookingRepetitions = await _createBookingRepetitions(
+      booking,
+      skipFirst: true,
+      repetitionId: repetitionBookingId,
+    );
+
+    return [updatedBooking, ...bookingRepetitions];
+  }
+
+  Future<List<Booking>> _createBookingRepetitions(Booking booking, {bool skipFirst = false, String? repetitionId}) async {
+    final SupabaseClient supabase = Supabase.instance.client;
+    final createdBookingsMap = <Map<String, dynamic>>[];
+    final repetitionBookingId = repetitionId ?? const Uuid().v4();
+    final baseBookingMap = Map<String, dynamic>.from(
+      booking.toMap(),
+    )..['repetition_id'] = repetitionBookingId;
+
+    DateTime currentBookingDate = DateTime(
+      booking.bookingDate.year,
+      booking.bookingDate.month,
+      booking.bookingDate.day,
+    );
+
+    final DateTime endDate = DateTime(
+      currentBookingDate.year + bookingRepetitionNumberInYears,
+      currentBookingDate.month,
+      currentBookingDate.day,
+    );
+
+    // Die bereits existierende Buchung überspringen
+    if (skipFirst) {
+      currentBookingDate = RepetitionType.getNextBookingDate(
+        currentBookingDate,
+        booking.repetitionType,
+      );
+    }
+
+    while (currentBookingDate.isBefore(endDate)) {
+      createdBookingsMap.add({
+        ...baseBookingMap,
+        'booking_date': currentBookingDate.toUtc().toIso8601String(),
+        'is_booked': getIsBookingDateBefore(currentBookingDate),
+      });
+
+      currentBookingDate = RepetitionType.getNextBookingDate(
+        currentBookingDate,
+        booking.repetitionType,
+      );
+    }
+
+    if (createdBookingsMap.isEmpty) {
+      return [];
+    }
+
+    final createdBookings = await supabase.from('bookings').insert(createdBookingsMap).select();
+    return createdBookings.map<Booking>((e) => Booking.fromMap(e)).toList();
   }
 
   Future<List<Booking>> updateFutureRepetitionBookings(Booking updatedBooking) async {
     final supabase = Supabase.instance.client;
-
     final repetitionId = updatedBooking.repetitionId!;
     final startDate = DateTime(
       updatedBooking.bookingDate.year,
@@ -76,10 +152,37 @@ class BookingRepository {
       updatedBooking.bookingDate.day,
     );
 
-    // 1. Lösche alle zukünftigen Buchungen
-    await supabase.from('bookings').delete().eq('repetition_id', repetitionId).gte('booking_date', startDate.toUtc().toIso8601String());
+    // ==========================================================
+    // Keine Wiederholung
+    // ==========================================================
+    if (updatedBooking.repetitionType == RepetitionType.noRepetition) {
+      // 1. Alle zukünftigen Buchungen der Serie löschen,
+      //    außer der aktuell bearbeiteten Buchung
+      await supabase.from('bookings').delete().eq('repetition_id', repetitionId).gt(
+            'booking_date',
+            startDate.toUtc().toIso8601String(),
+          );
 
-    // 2. Neue Buchungen generieren (wie bei createBooking)
+      // 2. Aktuelle Buchung in eine normale Einzelbuchung umwandeln
+      final updatedBookingMap = Map<String, dynamic>.from(
+        updatedBooking.toMap(),
+      )..['repetition_id'] = null;
+
+      final result = await supabase.from('bookings').update(updatedBookingMap).eq('id', updatedBooking.id!).select();
+      return result.map<Booking>((e) => Booking.fromMap(e)).toList();
+    }
+
+    // ==========================================================
+    // Normale Änderung der zukünftigen Wiederholungen
+    // ==========================================================
+
+    // 1. Alle zukünftigen Buchungen löschen
+    await supabase.from('bookings').delete().eq('repetition_id', repetitionId).gte(
+          'booking_date',
+          startDate.toUtc().toIso8601String(),
+        );
+
+    // 2. Neue zukünftige Buchungen generieren
     final createdBookingsMap = <Map<String, dynamic>>[];
 
     final baseBookingMap = Map<String, dynamic>.from(
@@ -116,10 +219,28 @@ class BookingRepository {
     final supabase = Supabase.instance.client;
     final repetitionId = updatedBooking.repetitionId!;
 
+    // Benutzer setzt die Wiederholung auf "Keine Wiederholung"
+    if (updatedBooking.repetitionType == RepetitionType.noRepetition) {
+      // 1. Alle anderen Buchungen der Serie löschen
+      await supabase.from('bookings').delete().eq('repetition_id', repetitionId).neq('id', updatedBooking.id!);
+
+      // 2. Die aktuelle Buchung aktualisieren
+      final updatedBookingMap = Map<String, dynamic>.from(
+        updatedBooking.toMap(),
+      )..['repetition_id'] = null;
+
+      final result = await supabase.from('bookings').update(updatedBookingMap).eq('id', updatedBooking.id!).select();
+      return result.map<Booking>((e) => Booking.fromMap(e)).toList();
+    }
+
+    // ----------------------------------------------------------
+    // Normale Änderung einer Wiederholungsbuchung
+    // ----------------------------------------------------------
+
     // 1. Alle Buchungen dieser Serie löschen
     await supabase.from('bookings').delete().eq('repetition_id', repetitionId);
 
-    // 2. Neue Serie generieren (wie bei createBooking)
+    // 2. Neue Serie generieren
     final createdBookingsMap = <Map<String, dynamic>>[];
 
     final baseBookingMap = Map<String, dynamic>.from(
@@ -193,6 +314,7 @@ class BookingRepository {
   }
 
   Future<List<Booking>> loadRepetitionBookings(String repetitionId) async {
+    print('Loading repetition bookings for repetitionId: $repetitionId');
     final repetitionBookings = await Supabase.instance.client.from('bookings').select().eq('repetition_id', repetitionId).order('booking_date');
     return (repetitionBookings as List).map((data) => Booking.fromMap(data)).toList();
   }

@@ -82,12 +82,20 @@ List<String> getAllShortMonthNames(String locale) {
 // TODO Code könnte hier noch verbessert werden bzgl. Mehrsprachigkeit
 DateTime tryParseSelectedDate(String date) {
   try {
-    return DateFormat(
-      '(E) dd.MM.yyyy',
-      WidgetsBinding.instance.platformDispatcher.locale.toString(),
-    ).parseStrict(date);
-  } catch (_) {
-    return DateTime.now();
+    // "Mo., 4.1.2027" -> "4.1.2027"
+    final dateWithoutWeekday = date.replaceFirst(RegExp(r'^[^,]+,\s*'), '');
+
+    final parsedDate = DateFormat(
+      'd.M.yyyy',
+    ).parseStrict(dateWithoutWeekday);
+
+    return DateTime.utc(
+      parsedDate.year,
+      parsedDate.month,
+      parsedDate.day,
+    );
+  } catch (e) {
+    return DateTime.now().toUtc();
   }
 }
 
@@ -95,7 +103,9 @@ String setDateForRepetitionType(String currentDate, RepetitionType repetitionTyp
   String dateString = '';
   final DateTime date = tryParseSelectedDate(currentDate);
 
-  if (repetitionType == RepetitionType.beginningOfMonth) {
+  if (repetitionType == RepetitionType.noRepetition) {
+    dateString = DateFormat.yMEd(Localizations.localeOf(context).toString()).format(date);
+  } else if (repetitionType == RepetitionType.beginningOfMonth) {
     dateString = DateFormat.yMEd(Localizations.localeOf(context).toString()).format(DateTime(date.year, date.month + 1, 1));
   } else if (repetitionType == RepetitionType.endOfMonth) {
     dateString = DateFormat.yMEd(Localizations.localeOf(context).toString()).format(DateTime(date.year, date.month + 1, 0));

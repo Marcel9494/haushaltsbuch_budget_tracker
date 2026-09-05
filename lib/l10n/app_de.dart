@@ -366,6 +366,7 @@ const Map<String, String> de = {
   // Error Messages
   'empty_email_error': 'Bitte geben Sie eine E-Mail Adresse ein.',
   'invalid_email_error': 'Bitte geben Sie eine gültige E-Mail Adresse ein.',
+  'email_validation_error': 'Die E-Mail Adresse enthält ungültige Zeichen. Bitte verwenden Sie nur Buchstaben, Zahlen und die Zeichen . _ - @.',
   'email_already_exists': 'Diese E-Mail Adresse ist bereits registriert.',
   'invalid_login_credentials': 'Ungültige E-Mail Adresse oder Passwort.',
   'empty_password_error': 'Bitte geben Sie ein Passwort ein.',

@@ -60,6 +60,8 @@ class _LoginPageState extends State<LoginPage> {
     } on AuthException catch (e) {
       if (e.code == 'invalid_credentials') {
         AppFlushbar.show(context, message: t.translate('invalid_login_credentials'));
+      } else if (e.code == 'validation_failed') {
+        AppFlushbar.show(context, message: t.translate('email_validation_error'));
       } else {
         AppFlushbar.show(context, message: e.message);
       }
