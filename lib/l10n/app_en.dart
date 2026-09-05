@@ -360,6 +360,7 @@ const Map<String, String> en = {
   // Error Messages
   'empty_email_error': 'Please enter an email address.',
   'invalid_email_error': 'Please enter a valid email address.',
+  'email_validation_error': 'The email address is not valid. Please use only letters, numbers, and the characters . _ - @.',
   'email_already_exists': 'This email address is already registered.',
   'invalid_login_credentials': 'Invalid email address or password.',
   'empty_password_error': 'Please enter a password.',

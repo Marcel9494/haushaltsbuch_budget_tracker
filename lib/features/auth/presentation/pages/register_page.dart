@@ -67,6 +67,8 @@ class _RegisterPageState extends State<RegisterPage> {
     } on AuthException catch (e) {
       if (e.code == 'user_already_exists') {
         AppFlushbar.show(context, message: t.translate('email_already_exists'));
+      } else if (e.code == 'validation_failed') {
+        AppFlushbar.show(context, message: t.translate('email_validation_error'));
       } else {
         AppFlushbar.show(context, message: t.translate('authentication_error'));
       }

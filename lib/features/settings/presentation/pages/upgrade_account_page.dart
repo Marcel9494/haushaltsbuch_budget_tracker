@@ -55,6 +55,8 @@ class _UpgradeAccountPageState extends State<UpgradeAccountPage> {
     } on AuthApiException catch (e) {
       if (e.code == 'email_exists') {
         AppFlushbar.show(context, message: t.translate('email_already_exists'));
+      } else if (e.code == 'validation_failed') {
+        AppFlushbar.show(context, message: t.translate('email_validation_error'));
       } else {
         AppFlushbar.show(context, message: t.translate('database_error'));
       }

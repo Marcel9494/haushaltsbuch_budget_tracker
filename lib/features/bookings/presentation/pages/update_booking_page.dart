@@ -163,7 +163,6 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
         isBooked: _bookingRepository.getIsBookingDateBefore(parsedDate),
       );
 
-      // TODO Bugfixen, wenn von keine Wiederholung auf Wiederholung geändert wird, dann auch Serienbuchungen erstellen + repetition_Id vergeben
       contextForBloc.read<BookingBloc>().add(UpdateBooking(
             oldBooking: oldBooking,
             newBooking: updatedBooking,
