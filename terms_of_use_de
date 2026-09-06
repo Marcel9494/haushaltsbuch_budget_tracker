@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Nutzungsbedingungen – Haushaltsbuch</title>
+
+    <meta name="description"
+          content="Nutzungsbedingungen für die Haushaltsbuch-App.">
+
+    <style>
+        :root {
+            color-scheme: light;
+            --background: #f7f7f8;
+            --surface: #ffffff;
+            --text: #202124;
+            --secondary: #5f6368;
+            --border: #e0e0e0;
+            --accent: #2563eb;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--background);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                         Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.65;
+        }
+
+        main {
+            max-width: 850px;
+            margin: 40px auto;
+            padding: 40px;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 2rem;
+        }
+
+        h2 {
+            margin-top: 2.5rem;
+            padding-bottom: 0.4rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 1.35rem;
+        }
+
+        h3 {
+            margin-top: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        p {
+            margin: 0.8rem 0;
+        }
+
+        ul {
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .date {
+            color: var(--secondary);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+        .notice {
+            padding: 16px;
+            margin: 20px 0;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #fafafa;
+        }
+
+        footer {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            main {
+                margin: 0;
+                padding: 24px 18px;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            h1 {
+                font-size: 1.7rem;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<main>
+
+    <h1>Nutzungsbedingungen</h1>
+
+    <p class="date">
+        Stand: 6. September 2026
+    </p>
+
+    <div class="notice">
+        <strong>Hinweis:</strong>
+        Diese Nutzungsbedingungen gelten für die Nutzung der
+        Haushaltsbuch-App.
+    </div>
+
+    <h2>1. Geltungsbereich</h2>
+
+    <p>
+        Diese Nutzungsbedingungen regeln die Nutzung der Haushaltsbuch-App
+        sowie die damit verbundenen Leistungen.
+    </p>
+
+    <p>
+        Anbieter der App ist:
+    </p>
+
+    <p>
+        <strong>[Vorname Nachname]</strong><br>
+        [Anschrift]<br>
+        [PLZ Ort]<br>
+        Deutschland
+    </p>
+
+    <p>
+        E-Mail:
+        <a href="mailto:[E-MAIL-ADRESSE]">[E-MAIL-ADRESSE]</a>
+    </p>
+
+    <h2>2. Gegenstand der App</h2>
+
+    <p>
+        Die Haushaltsbuch-App ermöglicht es Nutzern, ihre persönlichen
+        Einnahmen, Ausgaben, Konten, Budgets, finanziellen Ziele und weitere
+        finanzbezogene Informationen zu verwalten und zu organisieren.
+    </p>
+
+    <p>
+        Die App dient ausschließlich der persönlichen Organisation und
+        Übersicht über die eigenen Finanzen.
+    </p>
+
+    <p>
+        Die in der App bereitgestellten Funktionen und Informationen stellen
+        keine Finanz-, Anlage-, Steuer- oder Rechtsberatung dar.
+    </p>
+
+    <h2>3. Registrierung und Benutzerkonto</h2>
+
+    <p>
+        Für die Nutzung bestimmter Funktionen kann die Erstellung eines
+        Benutzerkontos erforderlich sein.
+    </p>
+
+    <p>
+        Der Nutzer ist verpflichtet, bei der Registrierung wahrheitsgemäße
+        Angaben zu machen und seine Zugangsdaten vertraulich zu behandeln.
+    </p>
+
+    <p>
+        Der Nutzer ist für alle Aktivitäten verantwortlich, die über sein
+        Benutzerkonto vorgenommen werden, soweit er diese zu vertreten hat.
+    </p>
+
+    <h2>4. Kostenlose Nutzung</h2>
+
+    <p>
+        Die Haushaltsbuch-App kann grundsätzlich kostenlos genutzt werden.
+        Der kostenlose Funktionsumfang kann gegenüber dem Premium-Angebot
+        eingeschränkt sein.
+    </p>
+
+    <p>
+        Der Anbieter behält sich vor, den kostenlosen Funktionsumfang
+        weiterzuentwickeln oder zu verändern, soweit dies gesetzlich zulässig
+        ist.
+    </p>
+
+    <h2>5. Premium-Abonnement</h2>
+
+    <h3>5.1 Premium-Leistungen</h3>
+
+    <p>
+        Für bestimmte zusätzliche Funktionen kann ein kostenpflichtiges
+        Premium-Abonnement angeboten werden.
+    </p>
+
+    <p>
+        Je nach gewähltem Premium-Angebot können insbesondere folgende
+        Funktionen enthalten sein:
+    </p>
+
+    <ul>
+        <li>unbegrenzte Budgets</li>
+        <li>unbegrenzte finanzielle Ziele</li>
+        <li>unbegrenzte abgeschlossene finanzielle Ziele</li>
+        <li>unbegrenzte Konten</li>
+        <li>weitere Premium-Funktionen, die innerhalb der App ausgewiesen werden</li>
+    </ul>
+
+    <p>
+        Der konkrete Leistungsumfang ergibt sich aus dem jeweils zum
+        Zeitpunkt des Vertragsschlusses angezeigten Premium-Angebot.
+    </p>
+
+    <h3>5.2 Vertragsschluss</h3>
+
+    <p>
+        Das Premium-Abonnement wird über den jeweiligen App-Store
+        abgeschlossen. Bei der Android-Version erfolgt die Abrechnung über
+        Google Play.
+    </p>
+
+    <p>
+        Für den Zahlungsvorgang gelten ergänzend die Bedingungen des
+        jeweiligen App-Stores.
+    </p>
+
+    <h3>5.3 Preis und Abrechnungszeitraum</h3>
+
+    <p>
+        Der jeweils gültige Preis und der Abrechnungszeitraum werden vor dem
+        Abschluss des Premium-Abonnements innerhalb der App beziehungsweise
+        im jeweiligen App-Store angezeigt.
+    </p>
+
+    <p>
+        Die Abrechnung erfolgt über den vom jeweiligen App-Store
+        bereitgestellten Zahlungsdienst.
+    </p>
+
+    <h3>5.4 Automatische Verlängerung</h3>
+
+    <p>
+        Soweit beim Abschluss des Abonnements angegeben, verlängert sich das
+        Premium-Abonnement automatisch um den jeweils gebuchten
+        Abrechnungszeitraum, sofern es nicht rechtzeitig gekündigt wird.
+    </p>
+
+    <p>
+        Die Kündigung muss über den jeweiligen App-Store beziehungsweise
+        dessen Abonnementverwaltung erfolgen.
+    </p>
+
+    <p>
+        Das Löschen der App beendet ein bestehendes Abonnement nicht
+        automatisch.
+    </p>
+
+    <h3>5.5 Kündigung</h3>
+
+    <p>
+        Ein Premium-Abonnement kann jederzeit über die
+        Abonnementverwaltung des jeweiligen App-Stores gekündigt werden.
+    </p>
+
+    <p>
+        Nach der Kündigung kann das Premium-Angebot grundsätzlich bis zum
+        Ende des bereits bezahlten Abrechnungszeitraums genutzt werden,
+        sofern der jeweilige App-Store nichts Abweichendes vorsieht.
+    </p>
+
+    <h2>6. Widerrufsrecht</h2>
+
+    <p>
+        Verbrauchern steht bei Abschluss eines entsprechenden
+        Fernabsatzvertrags grundsätzlich ein gesetzliches Widerrufsrecht zu.
+    </p>
+
+    <p>
+        Einzelheiten zum Widerrufsrecht, zur Widerrufsfrist und zur Ausübung
+        des Widerrufsrechts ergeben sich aus der gesonderten
+        <a href="/widerruf.html">Widerrufsbelehrung</a>.
+    </p>
+
+    <p>
+        Bei digitalen Inhalten können gesetzliche Besonderheiten hinsichtlich
+        des Erlöschens des Widerrufsrechts gelten, wenn der Nutzer ausdrücklich
+        zustimmt, dass mit der Ausführung vor Ablauf der Widerrufsfrist
+        begonnen wird, und die weiteren gesetzlichen Voraussetzungen erfüllt
+        sind.
+    </p>
+
+    <h2>7. Zahlungsabwicklung und Erstattungen</h2>
+
+    <p>
+        Die Zahlungsabwicklung für Premium-Abonnements erfolgt über den
+        jeweiligen App-Store.
+    </p>
+
+    <p>
+        Erstattungen werden grundsätzlich über den jeweiligen App-Store
+        beziehungsweise den dort vorgesehenen Prozess abgewickelt.
+    </p>
+
+    <p>
+        Gesetzliche Ansprüche des Nutzers bleiben hiervon unberührt.
+    </p>
+
+    <h2>8. Vom Nutzer eingegebene Daten</h2>
+
+    <p>
+        Der Nutzer kann innerhalb der App eigene Finanz- und sonstige Daten
+        eingeben und speichern.
+    </p>
+
+    <p>
+        Der Nutzer bleibt für die Richtigkeit und Vollständigkeit seiner
+        eingegebenen Daten selbst verantwortlich.
+    </p>
+
+    <p>
+        Der Anbieter übernimmt keine Verantwortung für finanzielle
+        Entscheidungen, die der Nutzer auf Grundlage seiner eigenen
+        Eingaben, Auswertungen oder Übersichten trifft.
+    </p>
+
+    <p>
+        Der Anbieter empfiehlt, regelmäßig geeignete Sicherungen der für den
+        Nutzer wichtigen Daten vorzunehmen, soweit entsprechende
+        Sicherungsmöglichkeiten angeboten werden.
+    </p>
+
+    <h2>9. Verfügbarkeit und technische Voraussetzungen</h2>
+
+    <p>
+        Für die Nutzung der App sind ein kompatibles Endgerät sowie eine
+        Internetverbindung erforderlich, soweit einzelne Funktionen eine
+        Internetverbindung benötigen.
+    </p>
+
+    <p>
+        Der Anbieter bemüht sich um eine möglichst zuverlässige
+        Verfügbarkeit der App.
+    </p>
+
+    <p>
+        Eine jederzeitige und unterbrechungsfreie Verfügbarkeit kann jedoch
+        nicht garantiert werden.
+    </p>
+
+    <p>
+        Vorübergehende Einschränkungen können insbesondere aufgrund von
+        Wartungsarbeiten, technischen Störungen, Sicherheitsmaßnahmen,
+        Updates oder Störungen bei Drittanbietern entstehen.
+    </p>
+
+    <h2>10. Updates und Weiterentwicklung</h2>
+
+    <p>
+        Die App kann regelmäßig weiterentwickelt, aktualisiert und technisch
+        angepasst werden.
+    </p>
+
+    <p>
+        Updates können insbesondere der Verbesserung der Sicherheit,
+        Stabilität, Benutzerfreundlichkeit oder Funktionalität dienen.
+    </p>
+
+    <p>
+        Gesetzliche Rechte des Nutzers hinsichtlich Änderungen digitaler
+        Produkte bleiben unberührt.
+    </p>
+
+    <h2>11. Pflichten des Nutzers</h2>
+
+    <p>
+        Der Nutzer verpflichtet sich, die App ausschließlich im Rahmen der
+        geltenden Gesetze und dieser Nutzungsbedingungen zu verwenden.
+    </p>
+
+    <p>Insbesondere ist es untersagt:</p>
+
+    <ul>
+        <li>
+            die App für rechtswidrige Zwecke zu verwenden;
+        </li>
+        <li>
+            Sicherheitsmechanismen der App zu umgehen;
+        </li>
+        <li>
+            die technische Infrastruktur der App vorsätzlich zu beeinträchtigen;
+        </li>
+        <li>
+            Schadsoftware oder andere schädliche Inhalte einzubringen;
+        </li>
+        <li>
+            die App ohne entsprechende Berechtigung zu kopieren,
+            zu verändern oder weiterzuverbreiten.
+        </li>
+    </ul>
+
+    <h2>12. Geistiges Eigentum</h2>
+
+    <p>
+        Die App sowie ihre Bestandteile, insbesondere Software, Designs,
+        Texte, Grafiken, Logos und sonstige Inhalte, sind urheberrechtlich
+        oder durch andere Schutzrechte geschützt.
+    </p>
+
+    <p>
+        Soweit nicht ausdrücklich etwas anderes vereinbart wurde, erhält der
+        Nutzer lediglich ein einfaches, nicht übertragbares Recht zur Nutzung
+        der App im Rahmen dieser Nutzungsbedingungen.
+    </p>
+
+    <h2>13. Haftung</h2>
+
+    <p>
+        Der Anbieter haftet nach den gesetzlichen Vorschriften.
+    </p>
+
+    <p>
+        Die Haftung für Schäden aus der Verletzung des Lebens, des Körpers
+        oder der Gesundheit sowie die Haftung für Vorsatz und grobe
+        Fahrlässigkeit bleiben unberührt.
+    </p>
+
+    <p>
+        Ebenso bleiben zwingende gesetzliche Haftungsregelungen und die
+        Haftung nach dem Produkthaftungsgesetz unberührt.
+    </p>
+
+    <p>
+        Für die Richtigkeit von Finanzdaten, die der Nutzer selbst eingibt,
+        sowie für finanzielle Entscheidungen des Nutzers übernimmt der
+        Anbieter keine Verantwortung.
+    </p>
+
+    <h2>14. Beendigung des Benutzerkontos</h2>
+
+    <p>
+        Der Nutzer kann sein Benutzerkonto grundsätzlich jederzeit löschen,
+        soweit die App eine entsprechende Funktion bereitstellt.
+    </p>
+
+    <p>
+        Die Löschung des Benutzerkontos kann zur Löschung der mit dem Konto
+        verbundenen Daten führen.
+    </p>
+
+    <p>
+        Ein bestehendes kostenpflichtiges Abonnement wird durch die Löschung
+        des Benutzerkontos oder die Deinstallation der App nicht automatisch
+        beendet. Das Abonnement muss gegebenenfalls separat über den
+        jeweiligen App-Store gekündigt werden.
+    </p>
+
+    <h2>15. Datenschutz</h2>
+
+    <p>
+        Informationen zur Verarbeitung personenbezogener Daten finden sich
+        in der gesonderten
+        <a href="/datenschutz.html">Datenschutzerklärung</a>.
+    </p>
+
+    <h2>16. Änderungen der Nutzungsbedingungen</h2>
+
+    <p>
+        Der Anbieter kann diese Nutzungsbedingungen ändern, soweit dies
+        aufgrund gesetzlicher, technischer oder organisatorischer
+        Entwicklungen erforderlich ist und die Änderung für den Nutzer
+        zumutbar ist.
+    </p>
+
+    <p>
+        Bei Änderungen bestehender Vertragsverhältnisse werden die
+        gesetzlichen Anforderungen berücksichtigt.
+    </p>
+
+    <p>
+        Die jeweils aktuelle Fassung der Nutzungsbedingungen wird innerhalb
+        der App beziehungsweise über die hierfür bereitgestellte Webseite
+        zugänglich gemacht.
+    </p>
+
+    <h2>17. Anwendbares Recht</h2>
+
+    <p>
+        Es gilt das Recht der Bundesrepublik Deutschland unter Ausschluss
+        des UN-Kaufrechts, soweit dem keine zwingenden gesetzlichen
+        Verbraucherschutzvorschriften entgegenstehen.
+    </p>
+
+    <h2>18. Gesetzliche Verbraucherrechte</h2>
+
+    <p>
+        Die gesetzlichen Rechte von Verbrauchern werden durch diese
+        Nutzungsbedingungen nicht eingeschränkt.
+    </p>
+
+    <p>
+        Insbesondere bleiben gesetzliche Gewährleistungs-, Widerrufs- und
+        sonstige Verbraucherrechte unberührt.
+    </p>
+
+    <footer>
+        <p>
+            © 2026 [Vorname Nachname]. Alle Rechte vorbehalten.
+        </p>
+
+        <p>
+            <a href="/impressum.html">Impressum</a>
+            &nbsp;·&nbsp;
+            <a href="/datenschutz.html">Datenschutz</a>
+            &nbsp;·&nbsp;
+            <a href="/widerruf.html">Widerrufsbelehrung</a>
+        </p>
+    </footer>
+
+</main>
+
+</body>
+</html>
