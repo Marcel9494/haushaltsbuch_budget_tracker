@@ -43,6 +43,7 @@ class BudgetInfoRow extends StatelessWidget {
           ),
           circularStrokeCap: CircularStrokeCap.round,
           progressColor: budgetAmount >= usedAmount ? Colors.green.shade400 : Colors.red.shade400,
+          backgroundColor: Colors.grey.shade200,
         ),
         const SizedBox(width: 16.0),
         Expanded(

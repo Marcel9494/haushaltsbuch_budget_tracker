@@ -52,7 +52,7 @@ class BudgetRepository {
             .update({'budget_amount': updatedBudget.budgetAmount})
             .eq('user_id', supabase.auth.currentUser!.id)
             .eq('category_id', updatedBudget.categoryId)
-            .gt('budget_date', DateFormat('yyyy-MM-dd').format(updatedBudget.budgetDate!));
+            .gte('budget_date', DateFormat('yyyy-MM-dd').format(updatedBudget.budgetDate!));
         break;
 
       case BudgetSelectionType.all:
@@ -85,7 +85,7 @@ class BudgetRepository {
             .delete()
             .eq('user_id', supabase.auth.currentUser!.id)
             .eq('category_id', deleteBudget.categoryId)
-            .gt('budget_date', DateFormat('yyyy-MM-dd').format(deleteBudget.budgetDate!));
+            .gte('budget_date', DateFormat('yyyy-MM-dd').format(deleteBudget.budgetDate!));
         break;
 
       case BudgetSelectionType.all:
@@ -176,6 +176,15 @@ class BudgetRepository {
       overallBudgetAmount += budget.budgetAmount;
     }
     return overallBudgetAmount;
+  }
+
+  double calculateOverallRemainingBudgetAmount(List<Budget> budgets, List<Booking> bookings) {
+    double overallRemainingBudgetAmount = 0.0;
+    double overallBudgetAmount = calculateOverallBudgetAmount(budgets);
+    double usedOverallBudgetAmount = calculateMonthlyUsedAmount(budgets, bookings);
+
+    overallRemainingBudgetAmount = overallBudgetAmount - usedOverallBudgetAmount;
+    return overallRemainingBudgetAmount;
   }
 
   double calculateOverallUsedBudgetPercent(double overallUsedBudgetAmount, double overallBudgetAmount) {

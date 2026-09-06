@@ -111,7 +111,7 @@ class _BudgetBookingsPageState extends State<BudgetBookingsPage> {
                 }
                 return Scaffold(
                   appBar: AppBar(
-                    title: Text('${widget.budget.category!.categoryName} ${t.translate('budgets')}'),
+                    title: Text(widget.budget.category!.categoryName),
                     actions: [
                       IconButton(
                         icon: Icon(Icons.edit_rounded),
