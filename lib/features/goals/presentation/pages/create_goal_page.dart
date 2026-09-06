@@ -151,10 +151,10 @@ class _CreateGoalPageState extends State<CreateGoalPage> {
                               _selectedGoalType = newGoalType;
                             });
                           },
-                          leftValue: GoalType.payOff,
-                          rightValue: GoalType.saving,
-                          leftText: 'pay_off',
-                          rightText: 'saving',
+                          leftValue: GoalType.saving,
+                          rightValue: GoalType.payOff,
+                          leftText: 'saving',
+                          rightText: 'pay_off',
                         ),
                         TitleInputField(titleController: _goalNameController, text: 'goal_name'),
                         AmountInputField(

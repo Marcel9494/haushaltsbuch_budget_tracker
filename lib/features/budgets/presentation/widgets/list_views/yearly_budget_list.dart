@@ -16,6 +16,8 @@ import '../../../../../data/enums/period_of_time_type.dart';
 import '../../../../../data/helper_models/budget_stats.dart';
 import '../../../../../data/models/booking.dart';
 import '../../../../../data/models/budget.dart';
+import '../../../../../data/repositories/account_repository.dart';
+import '../../../../../data/repositories/booking_repository.dart';
 import '../../../../../l10n/app_localizations.dart';
 import '../../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../../../../shared/presentation/widgets/deco/empty_list.dart';
@@ -47,156 +49,173 @@ class _YearlyBudgetListState extends State<YearlyBudgetList> with TickerProvider
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
-    return BlocProvider(
-      create: (context) => BudgetBloc(BudgetRepository())..add(LoadYearlyBudgets(widget.currentSelectedDate.year)),
-      child: BlocBuilder<BudgetBloc, BudgetState>(
-        builder: (context, state) {
-          if (state is BudgetLoading) {
-            return CircularLoadingIndicator();
-          } else if (state is YearlyBudgetListLoaded) {
-            return Column(
-              children: [
-                AnimationConfiguration.synchronized(
-                  child: SlideAnimation(
-                    verticalOffset: 40.0,
-                    child: FadeInAnimation(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          BlocSelector<BookingBloc, BookingState, List<Booking>>(
-                            selector: (state) {
-                              if (state is YearlyBookingListLoaded) {
-                                return state.yearlyBookings.values.expand((list) => list).toList();
-                              }
-                              return const [];
-                            },
-                            builder: (context, bookings) {
-                              final BudgetStats budgetStats = calculateBudgetStats(state.yearlyBudgets, bookings, widget.currentSelectedDate.year);
-                              return Card(
-                                child: AspectRatio(
-                                  aspectRatio: 1.33,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                                      children: <Widget>[
-                                        // TODO anschließend leere Listen Fehler abfangen
-                                        // TODO Bei Budget Stats nur bis aktuellem Monat berücksichtigen?
-                                        BudgetInfoRow(
-                                          budgetName: t.translate('yearly_budget'),
-                                          budgetAmount: budgetStats.overallBudgetAmount,
-                                          usedAmount: budgetStats.overallUsedAmount,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => BudgetBloc(BudgetRepository())..add(LoadYearlyBudgets(widget.currentSelectedDate.year)),
+        ),
+        BlocProvider(
+          key: ValueKey(widget.currentSelectedDate.year),
+          create: (_) =>
+              BookingBloc(BookingRepository(), AccountRepository())..add(LoadYearlyBookings(selectedYear: widget.currentSelectedDate.year)),
+        ),
+      ],
+      child: BlocBuilder<BookingBloc, BookingState>(
+        builder: (context, bookingState) {
+          return BlocBuilder<BudgetBloc, BudgetState>(
+            builder: (context, budgetState) {
+              if (budgetState is BudgetLoading || bookingState is BookingLoading) {
+                return CircularLoadingIndicator();
+              } else if (budgetState is YearlyBudgetListLoaded && bookingState is YearlyBookingListLoaded) {
+                return Column(
+                  children: [
+                    AnimationConfiguration.synchronized(
+                      child: SlideAnimation(
+                        verticalOffset: 40.0,
+                        child: FadeInAnimation(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              BlocSelector<BookingBloc, BookingState, List<Booking>>(
+                                selector: (state) {
+                                  if (state is YearlyBookingListLoaded) {
+                                    return state.yearlyBookings.values.expand((list) => list).toList();
+                                  }
+                                  return const [];
+                                },
+                                builder: (context, bookings) {
+                                  final BudgetStats budgetStats =
+                                      calculateBudgetStats(budgetState.yearlyBudgets, bookings, widget.currentSelectedDate.year);
+                                  return Card(
+                                    child: AspectRatio(
+                                      aspectRatio: 1.33,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(16),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                          children: <Widget>[
+                                            // TODO anschließend leere Listen Fehler abfangen
+                                            // TODO Bei Budget Stats nur bis aktuellem Monat berücksichtigen?
+                                            BudgetInfoRow(
+                                              budgetName: t.translate('yearly_budget'),
+                                              budgetAmount: budgetStats.overallBudgetAmount,
+                                              usedAmount: budgetStats.overallUsedAmount,
+                                            ),
+                                            const SizedBox(height: 22.0),
+                                            BudgetBarChart(
+                                              totalBudgets: budgetStats.totalBudgets,
+                                              usedAmounts: budgetStats.usedAmounts,
+                                              barGroups: budgetStats.barGroups,
+                                              currentSelectedYear: widget.currentSelectedDate.year,
+                                            ),
+                                            BudgetStatRow(
+                                              usedBudgetAmounts: budgetStats.usedAmounts,
+                                            ),
+                                          ],
                                         ),
-                                        const SizedBox(height: 22.0),
-                                        BudgetBarChart(
-                                          totalBudgets: budgetStats.totalBudgets,
-                                          usedAmounts: budgetStats.usedAmounts,
-                                          barGroups: budgetStats.barGroups,
-                                          currentSelectedYear: widget.currentSelectedDate.year,
-                                        ),
-                                        BudgetStatRow(
-                                          usedBudgetAmounts: budgetStats.usedAmounts,
-                                        ),
-                                      ],
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              );
-                            },
+                                  );
+                                },
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                state.yearlyBudgets.isEmpty
-                    ? EmptyList(
-                        text: 'no_budgets',
-                        icon: FaIcon(
-                          FontAwesomeIcons.book,
-                          size: 42.0,
-                          color: Colors.white70,
-                        ),
-                      )
-                    : Expanded(
-                        child: AnimationLimiter(
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: state.yearlyBudgets.length,
-                            itemBuilder: (context, index) {
-                              return AnimationConfiguration.staggeredList(
-                                position: index,
-                                duration: const Duration(milliseconds: listAnimationDurationInMs),
-                                child: SlideAnimation(
-                                  verticalOffset: 40.0,
-                                  child: FadeInAnimation(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        BlocSelector<BookingBloc, BookingState, List<Booking>>(
-                                          selector: (state) {
-                                            if (state is YearlyBookingListLoaded) {
-                                              final bookings = state.yearlyBookings.values.expand((list) => list).toList();
+                    budgetState.yearlyBudgets.isEmpty
+                        ? EmptyList(
+                            text: 'no_budgets',
+                            icon: FaIcon(
+                              FontAwesomeIcons.book,
+                              size: 42.0,
+                              color: Colors.white70,
+                            ),
+                          )
+                        : Expanded(
+                            child: AnimationLimiter(
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: budgetState.yearlyBudgets.length,
+                                itemBuilder: (context, index) {
+                                  return AnimationConfiguration.staggeredList(
+                                    position: index,
+                                    duration: const Duration(milliseconds: listAnimationDurationInMs),
+                                    child: SlideAnimation(
+                                      verticalOffset: 40.0,
+                                      child: FadeInAnimation(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            BlocSelector<BookingBloc, BookingState, List<Booking>>(
+                                              selector: (state) {
+                                                if (state is YearlyBookingListLoaded) {
+                                                  final bookings = state.yearlyBookings.values.expand((list) => list).toList();
 
-                                              bookings.sort((a, b) {
-                                                if (a.categoryId == null || b.categoryId == null) {
-                                                  return 0;
+                                                  bookings.sort((a, b) {
+                                                    if (a.categoryId == null || b.categoryId == null) {
+                                                      return 0;
+                                                    }
+                                                    return a.category!.categoryName.toLowerCase().compareTo(b.category!.categoryName.toLowerCase());
+                                                  });
+                                                  return bookings;
                                                 }
-                                                return a.category!.categoryName.toLowerCase().compareTo(b.category!.categoryName.toLowerCase());
-                                              });
-                                              return bookings;
-                                            }
-                                            return const [];
-                                          },
-                                          builder: (context, bookings) {
-                                            final List<double> budgetAmounts = [];
-                                            final List<double> usedAmounts = [];
-                                            double totalUsedAmount = 0.0;
-                                            double totalBudgetAmount = 0.0;
-                                            final List<Budget> budgetsForEntry = state.yearlyBudgets.values.elementAt(index)
-                                              ..sort((a, b) => a.budgetDate!.month.compareTo(b.budgetDate!.month));
+                                                return const [];
+                                              },
+                                              builder: (context, bookings) {
+                                                final List<double> budgetAmounts = [];
+                                                final List<double> usedAmounts = [];
+                                                double totalUsedAmount = 0.0;
+                                                double totalBudgetAmount = 0.0;
+                                                final List<Budget> budgetsForEntry = budgetState.yearlyBudgets.values.elementAt(index)
+                                                  ..sort((a, b) => a.budgetDate!.month.compareTo(b.budgetDate!.month));
 
-                                            final barGroups = <BarChartGroupData>[];
-                                            for (int i = 0; i < budgetsForEntry.length; i++) {
-                                              final double usedAmount = _budgetRepository.calculateUsedAmountForBudget(budgetsForEntry[i], bookings);
-                                              usedAmounts.add(usedAmount);
-                                              totalUsedAmount += usedAmount;
-                                              budgetAmounts.add(budgetsForEntry[i].budgetAmount);
-                                              totalBudgetAmount += budgetsForEntry[i].budgetAmount;
-                                              barGroups.add(makeGroupData(i, budgetsForEntry[i].budgetAmount, usedAmount));
-                                            }
-                                            Budget yearlyBudget = Budget(
-                                              budgetAmount: totalBudgetAmount,
-                                              budgetDate: state.yearlyBudgets.values.elementAt(index).first.budgetDate,
-                                              categoryId: state.yearlyBudgets.values.elementAt(index).first.categoryId,
-                                              category: state.yearlyBudgets.values.elementAt(index).first.category,
-                                            );
-                                            return BudgetCard(
-                                              budget: yearlyBudget,
-                                              bookings: bookings,
-                                              usedBudgetAmount: totalUsedAmount,
-                                              percentageUsed: totalUsedAmount / totalBudgetAmount,
-                                              currentSelectedDate: widget.currentSelectedDate,
-                                              currentPeriodOfTime: widget.currentPeriodOfTimeType,
-                                            );
-                                          },
+                                                final barGroups = <BarChartGroupData>[];
+                                                for (int i = 0; i < budgetsForEntry.length; i++) {
+                                                  final double usedAmount =
+                                                      _budgetRepository.calculateUsedAmountForBudget(budgetsForEntry[i], bookings);
+                                                  usedAmounts.add(usedAmount);
+                                                  totalUsedAmount += usedAmount;
+                                                  budgetAmounts.add(budgetsForEntry[i].budgetAmount);
+                                                  totalBudgetAmount += budgetsForEntry[i].budgetAmount;
+                                                  barGroups.add(makeGroupData(i, budgetsForEntry[i].budgetAmount, usedAmount));
+                                                }
+                                                Budget yearlyBudget = Budget(
+                                                  budgetAmount: totalBudgetAmount,
+                                                  budgetDate: budgetState.yearlyBudgets.values.elementAt(index).first.budgetDate,
+                                                  categoryId: budgetState.yearlyBudgets.values.elementAt(index).first.categoryId,
+                                                  category: budgetState.yearlyBudgets.values.elementAt(index).first.category,
+                                                );
+                                                return BudgetCard(
+                                                  budget: yearlyBudget,
+                                                  bookings: bookings,
+                                                  usedBudgetAmount: totalUsedAmount,
+                                                  percentageUsed: totalUsedAmount / totalBudgetAmount,
+                                                  currentSelectedDate: widget.currentSelectedDate,
+                                                  currentPeriodOfTime: widget.currentPeriodOfTimeType,
+                                                );
+                                              },
+                                            ),
+                                            index == budgetState.yearlyBudgets.length - 1 ? SizedBox(height: 54.0) : SizedBox.shrink(),
+                                          ],
                                         ),
-                                        index == state.yearlyBudgets.length - 1 ? SizedBox(height: 54.0) : SizedBox.shrink(),
-                                      ],
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              );
-                            },
+                                  );
+                                },
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-              ],
-            );
-          } else if (state is BudgetError) {
-            return ErrorText(errorMessage: state.message);
-          }
-          return SizedBox.shrink();
+                  ],
+                );
+              } else if (budgetState is BudgetError) {
+                return ErrorText(errorMessage: budgetState.message);
+              } else if (bookingState is BookingError) {
+                return ErrorText(errorMessage: bookingState.message);
+              }
+              return SizedBox.shrink();
+            },
+          );
         },
       ),
     );

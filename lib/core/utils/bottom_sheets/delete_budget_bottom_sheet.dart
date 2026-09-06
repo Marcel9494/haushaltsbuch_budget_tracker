@@ -58,7 +58,7 @@ void showDeleteBudgetBottomSheet(BuildContext context, Budget budget, BudgetBloc
                     ),
                     subtitle: Text(
                       '${t.translate(selectionType.getDeleteDescription())}'
-                      '${selectionType == BudgetSelectionType.single ? '(${formatMonthYear(context, budget.budgetDate!)})' : ''}',
+                      '${selectionType == BudgetSelectionType.single ? ' (${formatMonthYear(context, budget.budgetDate!)}).' : ''}',
                       style: const TextStyle(fontSize: 12.0, color: Colors.grey),
                     ),
                     trailing: const Icon(Icons.keyboard_arrow_right_rounded, size: 24.0),

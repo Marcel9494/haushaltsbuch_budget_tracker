@@ -111,7 +111,7 @@ class DashboardElement {
       return revenue - expenses;
     } else if (dashboardElement.title.trim() == 'overall_remaining_budget' &&
         (dashboardElement.shortDescription.trim() == 'this_year' || dashboardElement.shortDescription.trim() == 'this_month')) {
-      return budgetRepository.calculateOverallBudgetAmount(budgets);
+      return budgetRepository.calculateOverallRemainingBudgetAmount(budgets, bookings);
     } else if (dashboardElement.title.trim() == 'number_of_revenue_bookings') {
       return bookingRepository.getNumberOfRevenueBookings(bookings);
     } else if (dashboardElement.title.trim() == 'number_of_expense_bookings') {

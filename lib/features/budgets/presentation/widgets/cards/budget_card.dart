@@ -100,6 +100,7 @@ class BudgetCard extends StatelessWidget {
                         ),
                         circularStrokeCap: CircularStrokeCap.round,
                         progressColor: color,
+                        backgroundColor: Colors.grey.shade200,
                       ),
                       const SizedBox(width: 12.0),
                       Container(

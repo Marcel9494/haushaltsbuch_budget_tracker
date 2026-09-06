@@ -56,7 +56,7 @@ void showUpdateBudgetBottomSheet(BuildContext parentContext, Budget budget) {
                     ),
                     subtitle: Text(
                       '${t.translate(selectionType.updateDescription(budget.category!.categoryName))} '
-                      '${selectionType == BudgetSelectionType.single ? '(${formatMonthYear(sheetContext, budget.budgetDate!)})' : ''}',
+                      '${selectionType == BudgetSelectionType.single ? ' (${formatMonthYear(sheetContext, budget.budgetDate!)}).' : ''}',
                       style: const TextStyle(fontSize: 12.0, color: Colors.grey),
                     ),
                     trailing: const Icon(Icons.keyboard_arrow_right_rounded, size: 24.0),

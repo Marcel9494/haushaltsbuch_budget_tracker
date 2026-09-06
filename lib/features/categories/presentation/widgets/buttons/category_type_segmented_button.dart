@@ -35,12 +35,12 @@ class _TypeSegmentedButtonState<T> extends State<TypeSegmentedButton<T>> {
           ButtonSegment<T>(
             value: widget.leftValue,
             label: Text(t.translate(widget.leftText)),
-            icon: Icon(Icons.remove_rounded),
+            icon: Icon(Icons.add_rounded),
           ),
           ButtonSegment<T>(
             value: widget.rightValue,
             label: Text(t.translate(widget.rightText)),
-            icon: Icon(Icons.add_rounded),
+            icon: Icon(Icons.remove_rounded),
           ),
         ],
         selected: <T>{widget.type},
