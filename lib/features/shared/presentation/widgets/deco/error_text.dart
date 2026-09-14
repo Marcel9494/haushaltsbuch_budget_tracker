@@ -4,10 +4,12 @@ import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 
 class ErrorText extends StatelessWidget {
   final String errorMessage;
+  final double iconSize;
 
   const ErrorText({
     super.key,
     required this.errorMessage,
+    this.iconSize = 50.0,
   });
 
   @override

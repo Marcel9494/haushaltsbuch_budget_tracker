@@ -11,6 +11,7 @@ import '../../../../../l10n/app_localizations.dart';
 import '../../../../shared/presentation/widgets/deco/bottom_sheet_line.dart';
 import '../../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../../../../shared/presentation/widgets/deco/empty_list.dart';
+import '../../../../shared/presentation/widgets/deco/error_text.dart';
 import '../buttons/grid_item_button.dart';
 
 class CategorieInputField extends StatefulWidget {
@@ -205,7 +206,7 @@ class _CategorieInputFieldState extends State<CategorieInputField> {
             ],
           );
         } else if (state is CategoryError) {
-          return Center(child: Text(state.message));
+          return ErrorText(errorMessage: state.message, iconSize: 32.0);
         }
         return SizedBox.shrink();
       },

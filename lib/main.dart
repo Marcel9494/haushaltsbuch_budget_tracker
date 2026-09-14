@@ -75,6 +75,7 @@ import 'features/onboarding/presentation/pages/account_onboarding_page.dart';
 import 'features/onboarding/presentation/pages/completed_onboarding_page.dart';
 import 'features/onboarding/presentation/pages/dashboard_onboarding_page.dart';
 import 'features/settings/presentation/pages/above_page.dart';
+import 'features/settings/presentation/pages/cancellation_policy_page.dart';
 import 'features/settings/presentation/pages/change_password_page.dart';
 import 'features/settings/presentation/pages/imprint_page.dart';
 import 'features/settings/presentation/pages/issue_page.dart';
@@ -434,6 +435,7 @@ class _MyAppState extends State<MyApp> {
           accountOnboardingRoute: (context) => const AccountOnboardingPage(),
           aboveRoute: (context) => const AbovePage(),
           imprintRoute: (context) => const ImprintPage(),
+          cancellationPolicyRoute: (context) => const CancellationPolicyPage(),
           completedOnboardingRoute: (context) => MultiBlocProvider(
                 providers: [
                   BlocProvider(

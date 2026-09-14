@@ -15,6 +15,7 @@ import '../../../shared/presentation/widgets/input_fields/email_auth_input_field
 import '../../../shared/presentation/widgets/input_fields/password_input_field.dart';
 import '../widgets/buttons/google_sign_in_button.dart';
 import '../widgets/deco/divider_with_text.dart';
+import '../widgets/deco/legal_links_footer.dart';
 import '../widgets/deco/title_text.dart';
 
 class LoginPage extends StatefulWidget {
@@ -85,72 +86,109 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
-    return SafeArea(
-      child: PopScope(
-        canPop: false,
-        onPopInvokedWithResult: (bool didPop, Object? result) {
-          if (didPop) {
-            return;
-          }
-          Navigator.of(context).pushNamedAndRemoveUntil(
-            registerRoute,
-            (route) => false,
-          );
-        },
+
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (bool didPop, Object? result) {
+        if (didPop) {
+          return;
+        }
+
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          registerRoute,
+          (route) => false,
+        );
+      },
+      child: SafeArea(
         child: Scaffold(
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: AnimatedOpacity(
-                duration: const Duration(milliseconds: fadeInAnimationDurationInMs),
-                curve: Curves.easeOut,
-                opacity: _cardOpacity,
-                child: Column(
-                  children: [
-                    AppIcon(),
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
-                        child: Form(
-                          key: _loginFormKey,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              TitleText(text: t.translate('login')),
-                              SizedBox(height: 24),
-                              EmailAuthInputField(emailController: _emailController),
-                              SizedBox(height: 16),
-                              PasswordInputField(passwordController: _passwordController),
-                              SizedBox(height: 6),
-                              ForgotPasswordLinkButton(),
-                              SizedBox(height: 24),
-                              AnimatedLoadingButton(
-                                controller: _loginButtonController,
-                                text: t.translate('login'),
-                                onPressed: () => _loginUser(),
+          body: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.only(
+                    left: 24.0,
+                    right: 24.0,
+                    bottom: 24.0,
+                  ),
+                  child: AnimatedOpacity(
+                    duration: const Duration(
+                      milliseconds: fadeInAnimationDurationInMs,
+                    ),
+                    curve: Curves.easeOut,
+                    opacity: _cardOpacity,
+                    child: Column(
+                      children: [
+                        AppIcon(),
+                        Card(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical: 20.0,
+                            ),
+                            child: Form(
+                              key: _loginFormKey,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  TitleText(
+                                    text: t.translate('login'),
+                                  ),
+                                  const SizedBox(height: 24),
+                                  EmailAuthInputField(
+                                    emailController: _emailController,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  PasswordInputField(
+                                    passwordController: _passwordController,
+                                  ),
+                                  const SizedBox(height: 6),
+                                  ForgotPasswordLinkButton(),
+                                  const SizedBox(height: 24),
+                                  AnimatedLoadingButton(
+                                    controller: _loginButtonController,
+                                    text: t.translate('login'),
+                                    onPressed: () => _loginUser(),
+                                  ),
+                                  const SizedBox(height: 24),
+                                  DividerWithText(
+                                    text: t.translate('or'),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  GoogleSignInButton(
+                                    text: t.translate('login_with_google'),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context).pushNamedAndRemoveUntil(
+                                        registerRoute,
+                                        (route) => false,
+                                      );
+                                    },
+                                    child: Text(
+                                      t.translate('no_account_yet'),
+                                    ),
+                                  ),
+                                ],
                               ),
-                              SizedBox(height: 24),
-                              DividerWithText(text: t.translate('or')),
-                              SizedBox(height: 20),
-                              GoogleSignInButton(text: t.translate('login_with_google')),
-                              SizedBox(height: 20),
-                              GestureDetector(
-                                onTap: () => Navigator.of(context).pushNamedAndRemoveUntil(
-                                  registerRoute,
-                                  (route) => false,
-                                ),
-                                child: Text(t.translate('no_account_yet')),
-                              ),
-                            ],
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 16,
+                  right: 16,
+                  bottom: 12,
+                ),
+                child: LegalLinksFooter(),
+              ),
+            ],
           ),
         ),
       ),

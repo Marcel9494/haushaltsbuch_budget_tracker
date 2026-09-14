@@ -7,14 +7,15 @@ import 'package:haushaltsbuch_budget_tracker/features/settings/presentation/widg
 import 'package:haushaltsbuch_budget_tracker/features/settings/presentation/widgets/deco/settings_title.dart';
 import 'package:haushaltsbuch_budget_tracker/features/settings/presentation/widgets/dialogs/show_user_logout_dialog.dart';
 import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
+import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../blocs/user/user_bloc.dart';
 import '../../../../blocs/user/user_state.dart';
 import '../../../../core/consts/route_consts.dart';
 import '../../../../core/page_arguments/issue_page_arguments.dart';
 import '../../../../core/utils/currency_helper.dart';
+import '../../../../core/utils/legal_helper.dart';
 import '../../../../main.dart';
 import '../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../../../shared/presentation/widgets/deco/error_text.dart';
@@ -54,15 +55,6 @@ class _SettingsPageState extends State<SettingsPage> {
     confirmed = await showDeleteUserAccountDialog(context);
     if (confirmed == true) {
       UserRepository().deleteUserAccount();
-    }
-  }
-
-  Future<void> _openPrivacyPolicy() async {
-    final uri =
-        Uri.parse('https://marcel9494.github.io/haushaltsbuch_budget_tracker/privacyPolicy_${Localizations.localeOf(context).languageCode}.html');
-
-    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-      throw Exception('privacy_policy_open_error');
     }
   }
 
@@ -181,6 +173,13 @@ class _SettingsPageState extends State<SettingsPage> {
                           );
                         },
                       ),
+                      SettingsCard(
+                        leading: Icon(Icons.assignment_rounded),
+                        title: t.translate('manage_subscription'),
+                        onTap: () async {
+                          await RevenueCatUI.presentCustomerCenter();
+                        },
+                      ),
                       SettingsTitle(title: 'legal'),
                       SettingsCard(
                         leading: Icon(Icons.description_rounded),
@@ -193,21 +192,21 @@ class _SettingsPageState extends State<SettingsPage> {
                         leading: Icon(Icons.security_rounded),
                         title: t.translate('privacy_policy'),
                         onTap: () {
-                          _openPrivacyPolicy();
+                          openPrivacyPolicy(context);
                         },
                       ),
                       SettingsCard(
                         leading: Icon(Icons.receipt_long_rounded),
                         title: t.translate('terms_of_use'),
                         onTap: () {
-                          // TODO
+                          openTermsOfUse(context);
                         },
                       ),
                       SettingsCard(
                         leading: Icon(Icons.assignment_rounded),
                         title: t.translate('right_of_withdrawal_information'),
                         onTap: () {
-                          // TODO
+                          Navigator.pushNamed(context, cancellationPolicyRoute);
                         },
                       ),
                       SettingsCard(

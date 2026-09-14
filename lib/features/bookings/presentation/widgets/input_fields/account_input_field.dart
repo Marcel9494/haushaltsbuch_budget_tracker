@@ -9,6 +9,7 @@ import '../../../../../l10n/app_localizations.dart';
 import '../../../../shared/presentation/widgets/deco/bottom_sheet_line.dart';
 import '../../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../../../../shared/presentation/widgets/deco/empty_list.dart';
+import '../../../../shared/presentation/widgets/deco/error_text.dart';
 import '../buttons/grid_item_button.dart';
 
 class AccountInputField extends StatefulWidget {
@@ -192,7 +193,7 @@ class _AccountInputFieldState extends State<AccountInputField> {
             ],
           );
         } else if (state is AccountError) {
-          return Center(child: Text(state.message));
+          return ErrorText(errorMessage: state.message, iconSize: 32.0);
         }
         return SizedBox.shrink();
       },

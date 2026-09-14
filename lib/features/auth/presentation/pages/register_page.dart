@@ -15,8 +15,10 @@ import '../../../../core/consts/animation_consts.dart';
 import '../../../../core/consts/route_consts.dart';
 import '../../../../core/utils/app_flushbar.dart';
 import '../../../../core/utils/app_icon.dart';
+import '../../../../core/utils/dialogs/show_terms_of_use_dialog.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../shared/presentation/widgets/buttons/animated_loading_button.dart';
+import '../widgets/deco/legal_links_footer.dart';
 import '../widgets/deco/title_text.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -56,6 +58,15 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
 
+    final accepted = await showTermsOfUseDialog(context);
+    if (!accepted) {
+      _registerButtonController.error();
+      Timer(const Duration(milliseconds: buttonResetAnimationInMs), () {
+        _registerButtonController.reset();
+      });
+      return;
+    }
+
     try {
       await Supabase.instance.client.auth.signUp(
         email: _emailController.text.trim(),
@@ -90,6 +101,15 @@ class _RegisterPageState extends State<RegisterPage> {
   Future<void> _continueAsGuest(BuildContext contextForBloc) async {
     final t = AppLocalizations.of(context);
     try {
+      final accepted = await showTermsOfUseDialog(context);
+      if (!accepted) {
+        _continueAsGuestButtonController.error();
+        Timer(const Duration(milliseconds: buttonResetAnimationInMs), () {
+          _continueAsGuestButtonController.reset();
+        });
+        return;
+      }
+
       final AuthResponse response = await Supabase.instance.client.auth.signInAnonymously();
       if (response.user != null) {
         _continueAsGuestButtonController.success();
@@ -109,70 +129,95 @@ class _RegisterPageState extends State<RegisterPage> {
     final t = AppLocalizations.of(context);
     return BlocProvider(
       create: (context) => UserBloc(UserRepository()),
-      child: Builder(builder: (context) {
-        return SafeArea(
-          child: Scaffold(
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: AnimatedOpacity(
-                  duration: const Duration(milliseconds: fadeInAnimationDurationInMs),
-                  curve: Curves.easeOut,
-                  opacity: _cardOpacity,
-                  child: Column(
-                    children: [
-                      AppIcon(),
-                      Card(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
-                          child: Form(
-                            key: _registerFormKey,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                TitleText(text: t.translate('create_account')),
-                                SizedBox(height: 24),
-                                EmailAuthInputField(emailController: _emailController),
-                                SizedBox(height: 16),
-                                PasswordInputField(passwordController: _passwordController),
-                                SizedBox(height: 24),
-                                AnimatedLoadingButton(
-                                  controller: _registerButtonController,
-                                  text: t.translate('register'),
-                                  onPressed: () => _registerUser(),
+      child: Builder(
+        builder: (context) {
+          return SafeArea(
+            child: Scaffold(
+              body: Stack(
+                children: [
+                  SingleChildScrollView(
+                    padding: const EdgeInsets.only(
+                      left: 24.0,
+                      right: 24.0,
+                      bottom: 80.0,
+                    ),
+                    child: AnimatedOpacity(
+                      duration: const Duration(
+                        milliseconds: fadeInAnimationDurationInMs,
+                      ),
+                      curve: Curves.easeOut,
+                      opacity: _cardOpacity,
+                      child: Column(
+                        children: [
+                          AppIcon(),
+                          Card(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                                vertical: 20.0,
+                              ),
+                              child: Form(
+                                key: _registerFormKey,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    TitleText(
+                                      text: t.translate('create_account'),
+                                    ),
+                                    const SizedBox(height: 24),
+                                    EmailAuthInputField(emailController: _emailController),
+                                    const SizedBox(height: 16),
+                                    PasswordInputField(passwordController: _passwordController),
+                                    const SizedBox(height: 24),
+                                    AnimatedLoadingButton(
+                                      controller: _registerButtonController,
+                                      text: t.translate('register'),
+                                      onPressed: () => _registerUser(),
+                                    ),
+                                    const SizedBox(height: 24),
+                                    DividerWithText(text: t.translate('or')),
+                                    const SizedBox(height: 20),
+                                    GoogleSignInButton(
+                                      text: t.translate('register_with_google'),
+                                    ),
+                                    const SizedBox(height: 16),
+                                    AnimatedLoadingButton(
+                                      controller: _continueAsGuestButtonController,
+                                      text: t.translate('continue_as_guest'),
+                                      onPressed: () => _continueAsGuest(context),
+                                    ),
+                                    const SizedBox(height: 20),
+                                    GestureDetector(
+                                      onTap: () => Navigator.of(context).pushNamedAndRemoveUntil(
+                                        loginRoute,
+                                        (route) => false,
+                                      ),
+                                      child: Text(
+                                        t.translate('already_have_account'),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(height: 24),
-                                DividerWithText(text: t.translate('or')),
-                                SizedBox(height: 20),
-                                GoogleSignInButton(text: t.translate('register_with_google')),
-                                SizedBox(height: 16),
-                                AnimatedLoadingButton(
-                                  controller: _continueAsGuestButtonController,
-                                  text: t.translate('continue_as_guest'),
-                                  onPressed: () => _continueAsGuest(context),
-                                ),
-                                SizedBox(height: 20),
-                                GestureDetector(
-                                  onTap: () => Navigator.of(context).pushNamedAndRemoveUntil(
-                                    loginRoute,
-                                    (route) => false,
-                                  ),
-                                  child: Text(t.translate('already_have_account')),
-                                ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                  Positioned(
+                    left: 16,
+                    right: 16,
+                    bottom: 12,
+                    child: LegalLinksFooter(),
+                  ),
+                ],
               ),
             ),
-          ),
-        );
-      }),
+          );
+        },
+      ),
     );
   }
 }

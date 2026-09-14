@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../../core/utils/app_flushbar.dart';
+import '../../../../../core/utils/dialogs/show_terms_of_use_dialog.dart';
 import '../../../../../l10n/app_localizations.dart';
 
 class GoogleSignInButton extends StatelessWidget {
@@ -18,6 +19,11 @@ class GoogleSignInButton extends StatelessWidget {
   Future<void> _signInWithGoogle(BuildContext context) async {
     final t = AppLocalizations.of(context);
     try {
+      final accepted = await showTermsOfUseDialog(context);
+      if (!accepted) {
+        return;
+      }
+
       await Supabase.instance.client.auth.signInWithOAuth(
         OAuthProvider.google,
         redirectTo: 'io.supabase.flutter://login-callback/',
