@@ -6,8 +6,8 @@ class AppIcon extends StatelessWidget {
 
   const AppIcon({
     super.key,
-    this.width = 200,
-    this.height = 200,
+    this.width = 160,
+    this.height = 160,
   });
 
   @override

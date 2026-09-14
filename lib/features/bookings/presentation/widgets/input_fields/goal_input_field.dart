@@ -9,6 +9,7 @@ import '../../../../../data/models/goal.dart';
 import '../../../../../l10n/app_localizations.dart';
 import '../../../../shared/presentation/widgets/deco/bottom_sheet_line.dart';
 import '../../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
+import '../../../../shared/presentation/widgets/deco/error_text.dart';
 
 class GoalInputField extends StatefulWidget {
   final TextEditingController goalController;
@@ -163,7 +164,7 @@ class _GoalInputFieldState extends State<GoalInputField> {
             ],
           );
         } else if (state is GoalError) {
-          return Center(child: Text(state.message));
+          return ErrorText(errorMessage: state.message, iconSize: 32.0);
         }
         return SizedBox.shrink();
       },

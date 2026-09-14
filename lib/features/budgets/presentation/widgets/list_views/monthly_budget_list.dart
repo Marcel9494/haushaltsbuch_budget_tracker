@@ -99,6 +99,7 @@ class _MonthlyBudgetListState extends State<MonthlyBudgetList> {
                                                 );
                                               },
                                             ),
+                                            index == budgetState.budgets.length - 1 ? SizedBox(height: 54.0) : SizedBox.shrink(),
                                           ],
                                         ),
                                       ),
