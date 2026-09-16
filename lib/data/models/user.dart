@@ -6,6 +6,7 @@ class User {
   final String currencyCode;
   final String timezone;
   final bool hasOnboardingCompleted;
+  final bool premiumOverride;
 
   User({
     this.id,
@@ -13,6 +14,7 @@ class User {
     required this.currencyCode,
     required this.timezone,
     required this.hasOnboardingCompleted,
+    this.premiumOverride = false,
   });
 
   factory User.fromMap(Map<String, dynamic> map) {
@@ -22,6 +24,7 @@ class User {
       currencyCode: map['currency_code'],
       timezone: map['timezone'],
       hasOnboardingCompleted: map['has_onboarding_completed'],
+      premiumOverride: map['premium_override'],
     );
   }
 
@@ -31,6 +34,7 @@ class User {
       'currency_code': currencyCode,
       'timezone': timezone,
       'has_onboarding_completed': hasOnboardingCompleted,
+      'premium_override': premiumOverride,
     };
   }
 }
