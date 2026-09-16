@@ -525,8 +525,9 @@ class BookingRepository {
   }
 
   bool getIsBookingDateBefore(DateTime bookingDate) {
-    final DateTime today = DateTime.now();
-    return bookingDate.isBefore(DateTime(today.year, today.month, today.day));
+    final today = DateTime.now();
+    final tomorrow = DateTime(today.year, today.month, today.day + 1);
+    return bookingDate.isBefore(tomorrow);
   }
 
   int getNumberOfRevenueBookings(List<Booking> bookings) {
