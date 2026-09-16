@@ -40,6 +40,9 @@ class _CategoryBookingsPageState extends State<CategoryBookingsPage> {
   final ScrollController _scrollController = ScrollController();
 
   List<Booking> _filterCategoryBookings(List<Booking> bookings) {
+    if (widget.category == 'no_category') {
+      return bookings.where((booking) => booking.category == null && booking.bookingType == widget.bookingType).toList();
+    }
     List<Booking> categoryBookings = bookings.where((booking) {
       return booking.category?.categoryName == widget.category && booking.bookingType == widget.bookingType;
     }).toList();
