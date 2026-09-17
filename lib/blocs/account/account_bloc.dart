@@ -47,7 +47,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
   Future<void> _onLoadAccounts(LoadAccounts event, Emitter<AccountState> emit) async {
     emit(AccountLoading());
     try {
-      final List<Account> accounts = await _accountRepository.loadAccounts();
+      final List<Account> accounts = await _accountRepository.loadAccounts(filteredAccountIds: event.filterAccountIds);
       emit(AccountListLoaded(accounts));
     } catch (e) {
       emit(AccountError('load_accounts_error'));

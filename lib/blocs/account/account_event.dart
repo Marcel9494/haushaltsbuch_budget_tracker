@@ -19,7 +19,11 @@ class CreateAccounts extends AccountEvent {
 }
 
 class LoadAccounts extends AccountEvent {
-  LoadAccounts();
+  final List<String> filterAccountIds;
+
+  LoadAccounts({
+    this.filterAccountIds = const [],
+  });
 }
 
 class UpdateAccount extends AccountEvent {

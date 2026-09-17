@@ -192,6 +192,7 @@ class _UpdateAccountPageState extends State<UpdateAccountPage> {
                             _selectedAccount = newAccount!;
                           });
                         },
+                        widget.account.id!,
                       );
                     } else {
                       confirmed = await showDeleteDialog(
