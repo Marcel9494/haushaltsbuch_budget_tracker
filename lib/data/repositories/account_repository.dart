@@ -74,9 +74,12 @@ class AccountRepository {
     return Account.fromMap(deletedAccount);
   }
 
-  Future<List<Account>> loadAccounts() async {
-    final accounts =
-        await Supabase.instance.client.from('accounts').select().order('account_type', ascending: true).order('balance', ascending: false);
+  Future<List<Account>> loadAccounts({List<String> filteredAccountIds = const []}) async {
+    var query = Supabase.instance.client.from('accounts').select();
+    if (filteredAccountIds.isNotEmpty) {
+      query = query.not('id', 'in', filteredAccountIds); // filtert die übergebenen Ids heraus, wichtig bei z.B. Kontotransfer bei Kontolöschung.
+    }
+    final accounts = await query.order('account_type', ascending: true).order('balance', ascending: false);
     return (accounts as List).map((data) => Account.fromMap(data)).toList();
   }
 

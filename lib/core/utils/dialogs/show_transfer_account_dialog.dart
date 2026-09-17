@@ -12,12 +12,13 @@ Future<bool> showTransferAccountDialog(
   BuildContext context,
   TextEditingController accountController,
   final ValueChanged<Account?> onAccountChanged,
+  String selectedAccountId,
 ) async {
   final t = AppLocalizations.of(context);
   final bool? confirmed = await showDialog<bool>(
     context: context,
     builder: (context) => BlocProvider(
-      create: (context) => AccountBloc(AccountRepository())..add(LoadAccounts()),
+      create: (context) => AccountBloc(AccountRepository())..add(LoadAccounts(filterAccountIds: [selectedAccountId])),
       child: AlertDialog(
         title: Text(t.translate('transfer_account')),
         content: Column(
