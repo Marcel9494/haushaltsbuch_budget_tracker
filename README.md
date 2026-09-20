@@ -94,3 +94,7 @@ Haushaltsbuch, Budgetplaner, Finanzmanager, Ausgaben Tracker, Einnahmen-Ausgaben
 - Github
 - RevenueCat
 - Google Play Store
+
+# Softwarearchitektur:
+ 
+<img width="6553" height="4883" alt="HaushaltsbuchAppArchitekturDark" src="https://github.com/user-attachments/assets/f9547604-2d47-47fe-b26d-23e49c35441c" />
