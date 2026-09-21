@@ -49,3 +49,13 @@ class UpdateUserHasOnboardingCompleted extends UserEvent {
     required this.hasOnboardingCompleted,
   });
 }
+
+class UpdateUserAmountsWithExchangeRate extends UserEvent {
+  final String userId;
+  final double exchangeRate;
+
+  UpdateUserAmountsWithExchangeRate({
+    required this.userId,
+    required this.exchangeRate,
+  });
+}

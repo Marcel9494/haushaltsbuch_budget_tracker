@@ -26,6 +26,10 @@ class UserHasOnboardingCompletedUpdated extends UserState {
   UserHasOnboardingCompletedUpdated();
 }
 
+class UserAmountsWithExchangeRateUpdated extends UserState {
+  UserAmountsWithExchangeRateUpdated();
+}
+
 class UserLoading extends UserState {}
 
 class UserError extends UserState {

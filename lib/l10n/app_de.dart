@@ -291,6 +291,13 @@ const Map<String, String> de = {
   'your_monthly_financial_overview': 'Deine monatliche Finanzübersicht',
   'your_yearly_financial_overview': 'Deine jährliche Finanzübersicht',
   'manage_subscription': 'Abonnement verwalten',
+  'apply_exchange_rate': 'Wechselkurs anwenden?',
+  'you_are_switching_from': 'Du wechselst von',
+  'to': 'zu',
+  'current_exchange_rate': 'Aktueller Wechselkurs',
+  'exchange_rate_description': 'Sollen alle bestehenden Beträge mit dem Wechselkurs umgerechnet oder unverändert übernommen werden?',
+  'convert': 'Umrechnen',
+  'keep': 'Beibehalten',
   // Startausgabekategorien
   'groceries': 'Lebensmittel',
   'household_goods': 'Haushaltswaren',

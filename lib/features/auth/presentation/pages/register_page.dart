@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:haushaltsbuch_budget_tracker/data/repositories/account_repository.dart';
+import 'package:haushaltsbuch_budget_tracker/data/repositories/booking_repository.dart';
 import 'package:haushaltsbuch_budget_tracker/data/repositories/user_repository.dart';
 import 'package:haushaltsbuch_budget_tracker/features/auth/presentation/widgets/buttons/google_sign_in_button.dart';
 import 'package:haushaltsbuch_budget_tracker/features/auth/presentation/widgets/deco/divider_with_text.dart';
@@ -128,7 +130,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
     return BlocProvider(
-      create: (context) => UserBloc(UserRepository()),
+      create: (context) => UserBloc(UserRepository(), BookingRepository(), AccountRepository()),
       child: Builder(
         builder: (context) {
           return SafeArea(

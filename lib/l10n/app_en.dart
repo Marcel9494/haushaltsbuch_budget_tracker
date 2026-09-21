@@ -291,6 +291,13 @@ const Map<String, String> en = {
   'your_monthly_financial_overview': 'Your monthly financial overview',
   'your_yearly_financial_overview': 'Your yearly financial overview',
   'manage_subscription': 'Manage subscription',
+  'apply_exchange_rate': 'Apply exchange rate?',
+  'you_are_switching_from': 'You are switching from',
+  'to': 'to',
+  'current_exchange_rate': 'Current exchange rate',
+  'exchange_rate_description': 'Should all existing amounts be converted using the exchange rate or carried over unchanged?',
+  'convert': 'Convert',
+  'keep': 'Keep',
   // Startausgabekategorien (Start expense categories)
   'groceries': 'Groceries',
   'household_goods': 'Household goods',

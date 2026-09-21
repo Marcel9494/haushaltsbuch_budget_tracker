@@ -21,17 +21,15 @@ class ShowSelectableCurrencyBottomSheet {
     ),
   ];
 
-  static Future<void> show(
-    BuildContext context, {
-    required String title,
-    required ValueChanged<String> onChanged,
-  }) {
+  static Future<String?> show(BuildContext context, {required String title}) {
     final t = AppLocalizations.of(context);
-    return showModalBottomSheet(
+    return showModalBottomSheet<String>(
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(28),
+        ),
       ),
       builder: (_) => SafeArea(
         child: SingleChildScrollView(
@@ -47,10 +45,16 @@ class ShowSelectableCurrencyBottomSheet {
                   children: [
                     Text(
                       '${t.translate(title)}:',
-                      style: const TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        fontSize: 22.0,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.close, size: 28.0),
+                      icon: const Icon(
+                        Icons.close,
+                        size: 28.0,
+                      ),
                       onPressed: () => Navigator.pop(context),
                     ),
                   ],
@@ -58,37 +62,48 @@ class ShowSelectableCurrencyBottomSheet {
                 const SizedBox(height: 16),
                 ListView.separated(
                   shrinkWrap: true,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  itemCount: AppLocalizations.supportedLocales.length,
-                  itemBuilder: (BuildContext context, int index) {
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: supportedCurrencies.length,
+                  itemBuilder: (context, index) {
+                    final currency = supportedCurrencies[index];
+
                     return ListTile(
                       leading: Flag.fromString(
-                        supportedCurrencies[index].locale.split('_').last,
+                        currency.locale.split('_').last,
                         height: 32.0,
                         width: 46.0,
                         borderRadius: 8.0,
                       ),
                       title: Text(
-                        supportedCurrencies[index].code,
-                        style: TextStyle(fontSize: 18.0, color: Colors.white),
+                        currency.code,
+                        style: const TextStyle(
+                          fontSize: 18.0,
+                          color: Colors.white,
+                        ),
                       ),
                       subtitle: Text(
-                        supportedCurrencies[index].name,
-                        style: TextStyle(fontSize: 14.0, color: Colors.white60),
+                        currency.name,
+                        style: const TextStyle(
+                          fontSize: 14.0,
+                          color: Colors.white60,
+                        ),
                       ),
                       trailing: Text(
-                        supportedCurrencies[index].symbol,
-                        style: TextStyle(fontSize: 24.0, color: Colors.white),
+                        currency.symbol,
+                        style: const TextStyle(
+                          fontSize: 24.0,
+                          color: Colors.white,
+                        ),
                       ),
                       onTap: () {
-                        onChanged(supportedCurrencies[index].code);
-                        Navigator.pop(context);
+                        Navigator.pop(
+                          context,
+                          currency.code,
+                        );
                       },
                     );
                   },
-                  separatorBuilder: (BuildContext context, int index) {
-                    return Divider();
-                  },
+                  separatorBuilder: (_, __) => const Divider(),
                 ),
               ],
             ),
