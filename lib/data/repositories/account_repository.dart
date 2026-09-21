@@ -83,6 +83,15 @@ class AccountRepository {
     return (accounts as List).map((data) => Account.fromMap(data)).toList();
   }
 
+  Future<void> updateAccountBalancesWithExchangeRate(String userId, double exchangeRate) async {
+    final supabase = Supabase.instance.client;
+    final accounts = await supabase.from('accounts').select('id, balance').eq('user_id', userId);
+    for (final account in accounts) {
+      final balance = (account['balance'] as num?)?.toDouble() ?? 0;
+      await supabase.from('accounts').update({'balance': balance * exchangeRate}).eq('id', account['id']).eq('user_id', userId);
+    }
+  }
+
   double calculateAssets(List<Account> accounts) {
     double totalAssets = 0.0;
     for (Account account in accounts) {

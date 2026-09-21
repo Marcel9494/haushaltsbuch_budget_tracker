@@ -83,7 +83,7 @@ import 'features/settings/presentation/pages/settings_page.dart';
 import 'l10n/app_localizations.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-final userBloc = UserBloc(UserRepository());
+final userBloc = UserBloc(UserRepository(), BookingRepository(), AccountRepository());
 
 void main() async {
   Locale? initialLocale;

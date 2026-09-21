@@ -277,6 +277,15 @@ class BookingRepository {
     return createdBookings.map<Booking>((e) => Booking.fromMap(e)).toList();
   }
 
+  Future<void> updateBookingAmountsWithExchangeRate(String userId, double exchangeRate) async {
+    final supabase = Supabase.instance.client;
+    final bookings = await supabase.from('bookings').select('id, amount').eq('user_id', userId);
+    for (final booking in bookings) {
+      final amount = (booking['amount'] as num?)?.toDouble() ?? 0;
+      await supabase.from('bookings').update({'amount': amount * exchangeRate}).eq('id', booking['id']).eq('user_id', userId);
+    }
+  }
+
   Future<void> deleteBooking(String bookingId) async {
     final SupabaseClient supabase = Supabase.instance.client;
     await supabase.from('bookings').delete().eq('id', bookingId).eq('user_id', supabase.auth.currentUser!.id).select().single();
@@ -314,7 +323,6 @@ class BookingRepository {
   }
 
   Future<List<Booking>> loadRepetitionBookings(String repetitionId) async {
-    print('Loading repetition bookings for repetitionId: $repetitionId');
     final repetitionBookings = await Supabase.instance.client.from('bookings').select().eq('repetition_id', repetitionId).order('booking_date');
     return (repetitionBookings as List).map((data) => Booking.fromMap(data)).toList();
   }
