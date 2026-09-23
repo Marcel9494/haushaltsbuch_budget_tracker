@@ -85,6 +85,7 @@ Haushaltsbuch, Budgetplaner, Finanzmanager, Ausgaben Tracker, Einnahmen-Ausgaben
   - Email ändern
   - Passwort ändern
 - SQL (Schema Entwurf, CRUD Operationen)
+- API-Anbindung
 - Git
 
 ## Tools & Plattformen
