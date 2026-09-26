@@ -51,23 +51,10 @@ class GoalInfoRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      goal.goalName,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-                    ),
-                    goal.goalState == GoalStateType.active
-                        ? GestureDetector(
-                            onTap: () {
-                              // TODO Buchungsziel erstellen implementieren
-                            },
-                            child: const Icon(Icons.add_circle, color: Colors.cyanAccent, size: 26.0),
-                          )
-                        : SizedBox.shrink(),
-                  ],
+                Text(
+                  goal.goalName,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 10.0),
                 Text(

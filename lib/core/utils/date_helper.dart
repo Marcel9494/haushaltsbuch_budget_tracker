@@ -85,9 +85,7 @@ DateTime tryParseSelectedDate(String date) {
     // "Mo., 4.1.2027" -> "4.1.2027"
     final dateWithoutWeekday = date.replaceFirst(RegExp(r'^[^,]+,\s*'), '');
 
-    final parsedDate = DateFormat(
-      'd.M.yyyy',
-    ).parseStrict(dateWithoutWeekday);
+    final parsedDate = DateFormat('d.M.yyyy').parseStrict(dateWithoutWeekday);
 
     return DateTime.utc(
       parsedDate.year,
