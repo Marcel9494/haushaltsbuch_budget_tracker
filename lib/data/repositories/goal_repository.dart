@@ -49,7 +49,9 @@ class GoalRepository {
           .eq('goals.user_id', Supabase.instance.client.auth.currentUser!.id)
           .eq('goal_id', goals[i]['id']);
       for (int j = 0; j < bookings.length; j++) {
-        totalGoalAmount += bookings[j]['amount'];
+        if (bookings[j]['is_booked'] == true) {
+          totalGoalAmount += bookings[j]['amount'];
+        }
       }
       goals[i]['current_amount'] = totalGoalAmount;
     }
@@ -67,7 +69,9 @@ class GoalRepository {
           .eq('goals.user_id', Supabase.instance.client.auth.currentUser!.id)
           .eq('goal_id', goals[i]['id']);
       for (int j = 0; j < bookings.length; j++) {
-        totalGoalAmount += bookings[j]['amount'];
+        if (bookings[j]['is_booked'] == true) {
+          totalGoalAmount += bookings[j]['amount'];
+        }
       }
       goals[i]['current_amount'] = totalGoalAmount;
     }

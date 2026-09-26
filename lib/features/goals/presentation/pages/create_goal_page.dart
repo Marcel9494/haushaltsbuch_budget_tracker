@@ -22,7 +22,6 @@ import '../../../../data/models/goal.dart';
 import '../../../../data/repositories/goal_repository.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../bookings/presentation/widgets/input_fields/title_input_field.dart';
-import '../../../categories/presentation/widgets/buttons/category_type_segmented_button.dart';
 import '../../../shared/presentation/widgets/buttons/animated_loading_button.dart';
 import '../../../shared/presentation/widgets/input_fields/amount_input_field.dart';
 
@@ -40,11 +39,11 @@ class _CreateGoalPageState extends State<CreateGoalPage> {
   final TextEditingController _startDateController = TextEditingController();
   final TextEditingController _endDateController = TextEditingController();
   final RoundedLoadingButtonController _createGoalButtonController = RoundedLoadingButtonController();
-  GoalType _selectedGoalType = GoalType.saving;
 
   @override
   void initState() {
     super.initState();
+    // TODO passt das auch für Englisch
     _startDateController.text = DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(DateTime.now());
     _endDateController.text = DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString())
         .format(DateTime.now().add(const Duration(days: 30)));
@@ -67,6 +66,7 @@ class _CreateGoalPageState extends State<CreateGoalPage> {
 
       final double amount = CurrencyHelper.instance.parseAmount(_goalAmountController.text, context);
 
+      // TODO passt das auch für Englisch
       final DateTime parsedStartDate =
           DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).parse(_startDateController.text);
       final DateTime parsedEndDate =
@@ -77,7 +77,7 @@ class _CreateGoalPageState extends State<CreateGoalPage> {
         goalAmount: amount,
         currentAmount: 0.0,
         goalName: _goalNameController.text.trim(),
-        goalType: _selectedGoalType,
+        goalType: GoalType.saving,
         goalState: goalStateEnum.GoalStateType.active,
         startDate: parsedStartDate,
         endDate: parsedEndDate,
@@ -144,18 +144,6 @@ class _CreateGoalPageState extends State<CreateGoalPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        TypeSegmentedButton(
-                          type: _selectedGoalType,
-                          onChanged: (GoalType newGoalType) {
-                            setState(() {
-                              _selectedGoalType = newGoalType;
-                            });
-                          },
-                          leftValue: GoalType.saving,
-                          rightValue: GoalType.payOff,
-                          leftText: 'saving',
-                          rightText: 'pay_off',
-                        ),
                         TitleInputField(titleController: _goalNameController, text: 'goal_name'),
                         AmountInputField(
                           amountController: _goalAmountController,

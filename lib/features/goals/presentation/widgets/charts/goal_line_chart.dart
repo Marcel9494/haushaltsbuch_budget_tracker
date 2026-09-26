@@ -65,13 +65,19 @@ class _GoalLineChartState extends State<GoalLineChart> {
   List<FlSpot> buildCurrentProgressLine(List<Booking> bookings) {
     bookings.sort((a, b) => a.bookingDate.compareTo(b.bookingDate));
     final spots = <FlSpot>[];
+    final startDate = widget.goal.startDate;
+    final endDate = widget.goal.endDate;
+    final maxDay = endDate.difference(startDate).inDays.toDouble();
 
     if (widget.goal.goalType == GoalType.payOff) {
       double remaining = widget.goal.goalAmount.toDouble();
       for (final booking in bookings) {
-        final day = booking.bookingDate.difference(widget.goal.startDate).inDays.toDouble();
+        final day = booking.bookingDate.difference(startDate).inDays.toDouble();
+        // Buchungen außerhalb des Zielzeitraums ignorieren
+        if (day < 0 || day > maxDay) {
+          continue;
+        }
         remaining -= booking.amount;
-
         if (remaining < 0) {
           remaining = 0;
         }
@@ -79,11 +85,13 @@ class _GoalLineChartState extends State<GoalLineChart> {
       }
     } else {
       double cumulative = 0;
-
       for (final booking in bookings) {
-        final day = booking.bookingDate.difference(widget.goal.startDate).inDays.toDouble();
+        final day = booking.bookingDate.difference(startDate).inDays.toDouble();
+        // Buchungen außerhalb des Zielzeitraums ignorieren
+        if (day < 0 || day > maxDay) {
+          continue;
+        }
         cumulative += booking.amount;
-
         if (cumulative > widget.goal.goalAmount) {
           cumulative = widget.goal.goalAmount.toDouble();
         }
@@ -113,37 +121,36 @@ class _GoalLineChartState extends State<GoalLineChart> {
   }
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 12,
-    );
-
+    const style = TextStyle(fontWeight: FontWeight.bold, fontSize: 12);
     final totalDays = widget.goal.endDate.difference(widget.goal.startDate).inDays;
+    final middleDay = totalDays / 2;
 
-    const int labelCount = 5;
-    final step = totalDays / (labelCount - 1);
+    // Nur Start, Mitte und Ende anzeigen
+    final isStart = value.abs() < 0.5;
+    final isMiddle = (value - middleDay).abs() < 0.5;
+    final isEnd = (value - totalDays).abs() < 0.5;
 
-    // Prüfen ob value nahe an einem Schritt ist
-    bool shouldShow = false;
-
-    for (int i = 0; i < labelCount; i++) {
-      if ((value - (i * step)).abs() < step / 2) {
-        shouldShow = true;
-        break;
-      }
-    }
-
-    if (!shouldShow) {
+    if (!isStart && !isMiddle && !isEnd) {
       return const SizedBox.shrink();
     }
 
-    final date = widget.goal.startDate.add(Duration(days: value.toInt()));
+    final DateTime date;
+    if (isStart) {
+      date = widget.goal.startDate;
+    } else if (isEnd) {
+      date = widget.goal.endDate;
+    } else {
+      date = widget.goal.startDate.add(
+        Duration(days: middleDay.round()),
+      );
+    }
 
-    // Format dynamisch je nach Dauer
-    String text;
+    final locale = Localizations.localeOf(context).toString();
+
     if (totalDays > 365) {
-      final month = DateFormat.MMM(Localizations.localeOf(context).toString()).format(date);
-      final year = DateFormat.y(Localizations.localeOf(context).toString()).format(date);
+      final month = DateFormat.MMM(locale).format(date);
+      final year = DateFormat.y(locale).format(date);
+
       return SideTitleWidget(
         meta: meta,
         child: Column(
@@ -166,19 +173,27 @@ class _GoalLineChartState extends State<GoalLineChart> {
           ],
         ),
       );
-    } else if (totalDays > 60) {
-      text = DateFormat.MMM(Localizations.localeOf(context).toString()).format(date); // "Jan"
+    }
+
+    if (totalDays > 60) {
+      final crossesYear = widget.goal.startDate.year != widget.goal.endDate.year;
+      final text = crossesYear ? DateFormat('MMM yy', locale).format(date) : DateFormat.MMM(locale).format(date);
       return SideTitleWidget(
         meta: meta,
-        child: Text(text, style: style),
-      );
-    } else {
-      text = DateFormat('Md', Localizations.localeOf(context).languageCode).format(DateTime(date.year, date.month, value.toInt()));
-      return SideTitleWidget(
-        meta: meta,
-        child: Text(text, style: style),
+        child: Text(
+          text,
+          style: style,
+        ),
       );
     }
+
+    return SideTitleWidget(
+      meta: meta,
+      child: Text(
+        DateFormat.Md(locale).format(date),
+        style: style,
+      ),
+    );
   }
 
   LineChartData mainData() {
@@ -223,7 +238,7 @@ class _GoalLineChartState extends State<GoalLineChart> {
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: 40,
-            interval: totalDays / 5,
+            interval: totalDays / 2,
             getTitlesWidget: bottomTitleWidgets,
           ),
         ),

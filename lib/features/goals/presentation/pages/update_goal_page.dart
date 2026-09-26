@@ -21,7 +21,6 @@ import '../../../../data/models/goal.dart';
 import '../../../../data/repositories/goal_repository.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../bookings/presentation/widgets/input_fields/title_input_field.dart';
-import '../../../categories/presentation/widgets/buttons/category_type_segmented_button.dart';
 import '../../../shared/presentation/widgets/buttons/animated_loading_button.dart';
 import '../../../shared/presentation/widgets/input_fields/amount_input_field.dart';
 
@@ -44,7 +43,6 @@ class _UpdateGoalPageState extends State<UpdateGoalPage> {
   final TextEditingController _startDateController = TextEditingController();
   final TextEditingController _endDateController = TextEditingController();
   final RoundedLoadingButtonController _updateGoalButtonController = RoundedLoadingButtonController();
-  late GoalType _selectedGoalType;
 
   @override
   void initState() {
@@ -56,7 +54,6 @@ class _UpdateGoalPageState extends State<UpdateGoalPage> {
     _startDateController.text =
         DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(widget.goal.startDate);
     _endDateController.text = DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(widget.goal.endDate);
-    _selectedGoalType = widget.goal.goalType;
   }
 
   @override
@@ -82,6 +79,7 @@ class _UpdateGoalPageState extends State<UpdateGoalPage> {
 
       final double amount = CurrencyHelper.instance.parseAmount(_goalAmountController.text, context);
 
+      // TODO passt das auch für Englisch
       final DateTime parsedStartDate =
           DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).parse(_startDateController.text);
       final DateTime parsedEndDate =
@@ -93,7 +91,7 @@ class _UpdateGoalPageState extends State<UpdateGoalPage> {
         goalAmount: amount,
         currentAmount: widget.goal.currentAmount,
         goalName: _goalNameController.text.trim(),
-        goalType: _selectedGoalType,
+        goalType: GoalType.saving,
         goalState: widget.goal.goalState,
         startDate: parsedStartDate,
         endDate: parsedEndDate,
@@ -160,18 +158,6 @@ class _UpdateGoalPageState extends State<UpdateGoalPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        TypeSegmentedButton(
-                          type: _selectedGoalType,
-                          onChanged: (GoalType newGoalType) {
-                            setState(() {
-                              _selectedGoalType = newGoalType;
-                            });
-                          },
-                          leftValue: GoalType.saving,
-                          rightValue: GoalType.payOff,
-                          leftText: 'saving',
-                          rightText: 'pay_off',
-                        ),
                         TitleInputField(titleController: _goalNameController, text: 'goal_name'),
                         AmountInputField(
                           amountController: _goalAmountController,

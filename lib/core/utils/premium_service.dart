@@ -41,7 +41,7 @@ class PremiumService {
 
     try {
       final response = await _supabase.from('users').select('premium_override').eq('id', user.id).single();
-      _premiumOverride = response['premium_override'] == true;
+      _premiumOverride = response['premium_override'];
     } catch (e) {
       _premiumOverride = false;
     }

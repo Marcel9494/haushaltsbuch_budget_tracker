@@ -286,14 +286,16 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
                                   });
                                 },
                               ),
-                        GoalInputField(
-                          goalController: _goalController,
-                          onGoalChanged: (Goal newGoal) {
-                            setState(() {
-                              _selectedGoal = newGoal;
-                            });
-                          },
-                        ),
+                        _bookingType == BookingType.transfer
+                            ? GoalInputField(
+                                goalController: _goalController,
+                                onGoalChanged: (Goal newGoal) {
+                                  setState(() {
+                                    _selectedGoal = newGoal;
+                                  });
+                                },
+                              )
+                            : SizedBox.shrink(),
                         SizedBox(height: 30.0),
                         Hero(
                           tag: 'create_booking_fab',
