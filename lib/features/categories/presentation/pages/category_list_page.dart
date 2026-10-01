@@ -6,12 +6,24 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:haushaltsbuch_budget_tracker/data/repositories/category_repository.dart';
 import 'package:haushaltsbuch_budget_tracker/l10n/app_localizations.dart';
 
+import '../../../../blocs/account/account_bloc.dart';
+import '../../../../blocs/booking/booking_bloc.dart';
+import '../../../../blocs/budget/budget_bloc.dart';
 import '../../../../blocs/category/category_bloc.dart';
 import '../../../../blocs/category/category_event.dart';
 import '../../../../blocs/category/category_state.dart';
+import '../../../../blocs/dashboard_element/dashboard_element_bloc.dart';
+import '../../../../blocs/goal/goal_bloc.dart';
 import '../../../../core/consts/animation_consts.dart';
 import '../../../../data/enums/category_type.dart';
 import '../../../../data/models/category.dart';
+import '../../../../data/repositories/account_repository.dart';
+import '../../../../data/repositories/booking_repository.dart';
+import '../../../../data/repositories/budget_repository.dart';
+import '../../../../data/repositories/dashboard_element_repository.dart';
+import '../../../../data/repositories/goal_repository.dart';
+import '../../../../main.dart';
+import '../../../home/presentation/pages/home_page.dart';
 import '../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
 import '../../../shared/presentation/widgets/deco/empty_list.dart';
 import '../../../shared/presentation/widgets/deco/error_text.dart';
@@ -72,6 +84,28 @@ class _CategoryListPageState extends State<CategoryListPage> with SingleTickerPr
         child: Scaffold(
           appBar: AppBar(
             title: Text(t.translate('categories')),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                    builder: (_) => MultiBlocProvider(
+                      providers: [
+                        BlocProvider.value(value: userBloc),
+                        BlocProvider(create: (context) => BookingBloc(BookingRepository(), AccountRepository())),
+                        BlocProvider(create: (context) => DashboardElementBloc(DashboardElementRepository())),
+                        BlocProvider(create: (context) => CategoryBloc(CategoryRepository())),
+                        BlocProvider(create: (context) => AccountBloc(AccountRepository())),
+                        BlocProvider(create: (context) => BudgetBloc(BudgetRepository())),
+                        BlocProvider(create: (context) => GoalBloc(GoalRepository())),
+                      ],
+                      child: HomePage(currentPageIndex: 0),
+                    ),
+                  ),
+                  (route) => false,
+                );
+              },
+            ),
             actions: [
               IconButton(
                 icon: FaIcon(_ascendingOrder ? FontAwesomeIcons.arrowDownAZ : FontAwesomeIcons.arrowUpZA),

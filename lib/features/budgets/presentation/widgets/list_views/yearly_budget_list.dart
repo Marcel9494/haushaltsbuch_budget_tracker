@@ -94,8 +94,6 @@ class _YearlyBudgetListState extends State<YearlyBudgetList> with TickerProvider
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.stretch,
                                           children: <Widget>[
-                                            // TODO anschließend leere Listen Fehler abfangen
-                                            // TODO Bei Budget Stats nur bis aktuellem Monat berücksichtigen?
                                             BudgetInfoRow(
                                               budgetName: t.translate('yearly_budget'),
                                               budgetAmount: budgetStats.overallBudgetAmount,

@@ -10,59 +10,82 @@ import '../models/budget.dart';
 
 class BudgetRepository {
   Future<void> createBudgets(Budget newBudget) async {
-    // TODO hier noch auf doppelte Budgets prüfen, auch dort noch repetitionId mit beachten + update Methode.
-    final budgetMap = <Map<String, dynamic>>[];
-    DateTime currentBudgetDate = DateTime(DateTime.now().year, DateTime.now().month, 1);
-    final budgetId = const Uuid().v4();
+    try {
+      final budgetMap = <Map<String, dynamic>>[];
+      DateTime currentBudgetDate = DateTime(DateTime.now().year, DateTime.now().month, 1);
+      final budgetId = const Uuid().v4();
 
-    for (int i = 0; i < budgetRepetitionNumberInMonths; i++) {
-      budgetMap.add({
-        'budget_id': budgetId,
-        'user_id': newBudget.userId,
-        'category_id': newBudget.categoryId,
-        'budget_date': DateFormat('yyyy-MM-dd').format(currentBudgetDate),
-        'budget_amount': newBudget.budgetAmount,
-      });
+      for (int i = 0; i < budgetRepetitionNumberInMonths; i++) {
+        budgetMap.add({
+          'budget_id': budgetId,
+          'user_id': newBudget.userId,
+          'category_id': newBudget.categoryId,
+          'budget_date': DateFormat('yyyy-MM-dd').format(currentBudgetDate),
+          'budget_amount': newBudget.budgetAmount,
+        });
 
-      currentBudgetDate = DateTime(
-        currentBudgetDate.month == 12 ? currentBudgetDate.year + 1 : currentBudgetDate.year,
-        currentBudgetDate.month == 12 ? 1 : currentBudgetDate.month + 1,
-        1,
-      );
+        currentBudgetDate = DateTime(
+          currentBudgetDate.month == 12 ? currentBudgetDate.year + 1 : currentBudgetDate.year,
+          currentBudgetDate.month == 12 ? 1 : currentBudgetDate.month + 1,
+          1,
+        );
+      }
+      await Supabase.instance.client.from('budgets').insert(budgetMap).select();
+    } on PostgrestException catch (e) {
+      // Postgresql Fehlercode für unique_violation
+      if (e.code == '23505') {
+        throw Exception('duplicated_budget');
+      }
+      rethrow;
     }
-    await Supabase.instance.client.from('budgets').insert(budgetMap).select();
   }
 
-  void updateBudget(Budget updatedBudget, BudgetSelectionType budgetSelectionType) async {
+  Future<void> updateBudget(Budget oldBudget, Budget updatedBudget, BudgetSelectionType budgetSelectionType) async {
     final supabase = Supabase.instance.client;
+    try {
+      switch (budgetSelectionType) {
+        case BudgetSelectionType.single:
+          await supabase
+              .from('budgets')
+              .update({
+                'budget_amount': updatedBudget.budgetAmount,
+                'category_id': updatedBudget.categoryId,
+              })
+              .eq('id', updatedBudget.id!)
+              .eq('user_id', supabase.auth.currentUser!.id)
+              .eq('category_id', oldBudget.categoryId);
+          break;
 
-    switch (budgetSelectionType) {
-      case BudgetSelectionType.single:
-        await supabase
-            .from('budgets')
-            .update({'budget_amount': updatedBudget.budgetAmount})
-            .eq('id', updatedBudget.id!)
-            .eq('user_id', supabase.auth.currentUser!.id)
-            .eq('category_id', updatedBudget.categoryId);
-        break;
+        case BudgetSelectionType.onlyFuture:
+          await supabase
+              .from('budgets')
+              .update({
+                'budget_amount': updatedBudget.budgetAmount,
+                'category_id': updatedBudget.categoryId,
+              })
+              .eq('user_id', supabase.auth.currentUser!.id)
+              .eq('category_id', oldBudget.categoryId)
+              .gte('budget_date', DateFormat('yyyy-MM-dd').format(updatedBudget.budgetDate!));
+          break;
 
-      case BudgetSelectionType.onlyFuture:
-        await supabase
-            .from('budgets')
-            .update({'budget_amount': updatedBudget.budgetAmount})
-            .eq('user_id', supabase.auth.currentUser!.id)
-            .eq('category_id', updatedBudget.categoryId)
-            .gte('budget_date', DateFormat('yyyy-MM-dd').format(updatedBudget.budgetDate!));
-        break;
-
-      case BudgetSelectionType.all:
-        await supabase
-            .from('budgets')
-            .update({'budget_amount': updatedBudget.budgetAmount})
-            .eq('budget_id', updatedBudget.budgetId!)
-            .eq('user_id', supabase.auth.currentUser!.id)
-            .eq('category_id', updatedBudget.categoryId);
-        break;
+        case BudgetSelectionType.all:
+          await supabase
+              .from('budgets')
+              .update({
+                'budget_amount': updatedBudget.budgetAmount,
+                'category_id': updatedBudget.categoryId,
+              })
+              .eq('budget_id', updatedBudget.budgetId!)
+              .eq('user_id', supabase.auth.currentUser!.id)
+              .eq('category_id', oldBudget.categoryId);
+          break;
+      }
+    } on PostgrestException catch (e) {
+      // Postgresql Fehlercode für unique_violation
+      if (e.code == '23505') {
+        throw Exception('duplicated_budget');
+      }
+      rethrow;
     }
   }
 

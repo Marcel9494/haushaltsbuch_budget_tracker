@@ -48,18 +48,14 @@ class _UpdateGoalPageState extends State<UpdateGoalPage> {
   void initState() {
     super.initState();
     _goalNameController.text = widget.goal.goalName;
-    // TODO hier locale richtig setzen, damit die Datumsanzeige korrekt ist (WidgetsBinding.instance.platformDispatcher.locale) ist falsch,
-    // TODO weil dies immer die platform locale auswählt und nicht die vom Benutzer + Datumsformat auch hier Mehrsprachig machen.
-    // TODO Auch bei createGoalPage
-    _startDateController.text =
-        DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(widget.goal.startDate);
-    _endDateController.text = DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(widget.goal.endDate);
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _goalAmountController.text = CurrencyHelper.instance.formatCurrency(widget.goal.goalAmount, context);
+    _startDateController.text = DateFormat.yMEd(Localizations.localeOf(context).toString()).format(widget.goal.startDate);
+    _endDateController.text = DateFormat.yMEd(Localizations.localeOf(context).toString()).format(widget.goal.endDate);
   }
 
   void _updateGoal(BuildContext context) {
@@ -79,11 +75,9 @@ class _UpdateGoalPageState extends State<UpdateGoalPage> {
 
       final double amount = CurrencyHelper.instance.parseAmount(_goalAmountController.text, context);
 
-      // TODO passt das auch für Englisch
-      final DateTime parsedStartDate =
-          DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).parse(_startDateController.text);
-      final DateTime parsedEndDate =
-          DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).parse(_endDateController.text);
+      final locale = Localizations.localeOf(context).toString();
+      final DateTime parsedStartDate = DateFormat.yMEd(locale).parse(_startDateController.text);
+      final DateTime parsedEndDate = DateFormat.yMEd(locale).parse(_endDateController.text);
 
       final Goal updatedGoal = Goal(
         id: widget.goal.id,

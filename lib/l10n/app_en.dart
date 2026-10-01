@@ -166,6 +166,8 @@ const Map<String, String> en = {
   'upgrade_with_google': 'Upgrade with Google',
   'update_booking': 'Edit booking',
   'account_upgrade_successful': 'Your account has been successfully upgraded.',
+  'account_upgrade_successful_description':
+      'Your guest account has been successfully converted into a full account. Your data is now available across devices.',
   'current_email': 'Current email',
   'important': 'IMPORTANT',
   'change_email_description':
@@ -401,6 +403,7 @@ const Map<String, String> en = {
   'empty_account_error': 'Please select an account.',
   'empty_monthly_budget_error': 'Please enter a monthly budget.',
   'create_booking_error': 'Database error while creating the booking. Please try again later.',
+  'update_booking_error': 'The booking could not be processed. Please try again. If the error persists, delete the booking and create it again.',
   'delete_booking_error': 'Database error while deleting the booking. Please try again later.',
   'load_bookings_error': 'Database error while loading the bookings. Please try again later.',
   'create_account_error': 'Database error while creating the account. Please try again later.',
@@ -415,6 +418,7 @@ const Map<String, String> en = {
   'duplicated_category_error': 'A category with that name already exists.',
   'load_categories_error': 'Database error while loading the categories. Please try again later.',
   'load_budgets_error': 'Database error while loading the budgets. Please try again later.',
+  'duplicated_budget_error': 'A budget for this category already exists. Please select a different category.',
   'create_goal_error': 'Database error while creating the goal. Please try again later.',
   'update_goal_error': 'Database error while editing the goal. Please try again later.',
   'create_dashboard_elements_error': 'Database error while creating dashboard elements. Please try again later.',

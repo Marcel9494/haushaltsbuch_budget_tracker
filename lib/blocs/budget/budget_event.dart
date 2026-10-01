@@ -13,11 +13,13 @@ class CreateBudget extends BudgetEvent {
 }
 
 class UpdateBudget extends BudgetEvent {
-  final Budget budget;
+  final Budget oldBudget;
+  final Budget newBudget;
   final BudgetSelectionType budgetSelectionType;
 
   UpdateBudget({
-    required this.budget,
+    required this.oldBudget,
+    required this.newBudget,
     required this.budgetSelectionType,
   });
 }

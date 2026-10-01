@@ -39,6 +39,7 @@ class UpdateBudgetPage extends StatefulWidget {
 }
 
 class _UpdateBudgetPageState extends State<UpdateBudgetPage> {
+  late Budget oldBudget;
   late Category _selectedCategory;
   late double _currentBudgetAmount = 0.0;
   final GlobalKey<FormState> _updateBudgetFormKey = GlobalKey<FormState>();
@@ -52,6 +53,11 @@ class _UpdateBudgetPageState extends State<UpdateBudgetPage> {
     _selectedCategory = widget.budget.category!;
     _categoryController.text = widget.budget.category!.categoryName;
     _currentBudgetAmount = widget.budget.budgetAmount;
+    _backupOldBudget();
+  }
+
+  void _backupOldBudget() {
+    oldBudget = widget.budget;
   }
 
   @override
@@ -86,7 +92,11 @@ class _UpdateBudgetPageState extends State<UpdateBudgetPage> {
         budgetDate: widget.budget.budgetDate,
       );
 
-      contextForBudget.read<BudgetBloc>().add(UpdateBudget(budget: updatedBudget, budgetSelectionType: widget.budgetSelectionType));
+      contextForBudget.read<BudgetBloc>().add(UpdateBudget(
+            oldBudget: oldBudget,
+            newBudget: updatedBudget,
+            budgetSelectionType: widget.budgetSelectionType,
+          ));
     } on PostgrestException catch (_) {
       AppFlushbar.show(context, message: t.translate('database_error'));
       _updateBudgetButtonController.error();

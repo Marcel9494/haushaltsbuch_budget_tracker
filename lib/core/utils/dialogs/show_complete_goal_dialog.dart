@@ -26,5 +26,5 @@ Future<bool> showCompleteGoalDialog(BuildContext context) async {
       ],
     ),
   );
-  return confirmed!;
+  return confirmed ?? false;
 }

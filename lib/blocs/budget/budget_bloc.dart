@@ -20,20 +20,28 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
   Future<void> _onCreateBudget(CreateBudget event, Emitter<BudgetState> emit) async {
     emit(BudgetLoading());
     try {
-      _budgetRepository.createBudgets(event.budget);
+      await _budgetRepository.createBudgets(event.budget);
       emit(BudgetCreated());
     } catch (e) {
-      emit(BudgetError('create_budget_error'));
+      if (e.toString().contains('duplicated_budget')) {
+        emit(BudgetError('duplicated_budget_error'));
+      } else {
+        emit(BudgetError('create_budget_error'));
+      }
     }
   }
 
   Future<void> _onUpdateBudget(UpdateBudget event, Emitter<BudgetState> emit) async {
     emit(BudgetLoading());
     try {
-      _budgetRepository.updateBudget(event.budget, event.budgetSelectionType);
+      await _budgetRepository.updateBudget(event.oldBudget, event.newBudget, event.budgetSelectionType);
       emit(BudgetUpdated());
     } catch (e) {
-      emit(BudgetError('update_budget_error'));
+      if (e.toString().contains('duplicated_budget')) {
+        emit(BudgetError('duplicated_budget_error'));
+      } else {
+        emit(BudgetError('update_budget_error'));
+      }
     }
   }
 

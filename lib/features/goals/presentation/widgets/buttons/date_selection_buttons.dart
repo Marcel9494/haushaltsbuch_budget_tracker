@@ -36,10 +36,11 @@ class _DateSelectionButtonsState extends State<DateSelectionButtons> {
             children: [
               GestureDetector(
                 onTap: () async {
+                  final locale = Localizations.localeOf(context);
                   DateTime? pickedDate = await showDatePicker(
                     context: context,
-                    locale: Localizations.localeOf(context),
-                    initialDate: DateFormat('(E) dd.MM.yyyy', Localizations.localeOf(context).languageCode).parse(widget.startDateController.text),
+                    locale: locale,
+                    initialDate: DateFormat.yMEd(locale.toString()).parse(widget.startDateController.text),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
                     confirmText: t.translate('ok'),
@@ -47,7 +48,7 @@ class _DateSelectionButtonsState extends State<DateSelectionButtons> {
                   );
 
                   if (pickedDate != null) {
-                    String formattedDate = DateFormat('(E) dd.MM.yyyy', Localizations.localeOf(context).languageCode).format(pickedDate);
+                    String formattedDate = DateFormat.yMEd(locale.toString()).format(pickedDate);
                     setState(() {
                       widget.startDateController.text = formattedDate;
                     });
@@ -77,10 +78,11 @@ class _DateSelectionButtonsState extends State<DateSelectionButtons> {
               const FaIcon(FontAwesomeIcons.arrowRight, size: 24.0),
               GestureDetector(
                 onTap: () async {
+                  final locale = Localizations.localeOf(context);
                   DateTime? pickedDate = await showDatePicker(
                     context: context,
-                    locale: Localizations.localeOf(context),
-                    initialDate: DateFormat('(E) dd.MM.yyyy', Localizations.localeOf(context).languageCode).parse(widget.endDateController.text),
+                    locale: locale,
+                    initialDate: DateFormat.yMEd(locale.toString()).parse(widget.endDateController.text),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
                     confirmText: t.translate('ok'),
@@ -88,7 +90,7 @@ class _DateSelectionButtonsState extends State<DateSelectionButtons> {
                   );
 
                   if (pickedDate != null) {
-                    String formattedDate = DateFormat('(E) dd.MM.yyyy', Localizations.localeOf(context).languageCode).format(pickedDate);
+                    String formattedDate = DateFormat.yMEd(locale.toString()).format(pickedDate);
                     setState(() {
                       widget.endDateController.text = formattedDate;
                     });
@@ -121,8 +123,8 @@ class _DateSelectionButtonsState extends State<DateSelectionButtons> {
             builder: (context) {
               try {
                 final locale = Localizations.localeOf(context).languageCode;
-                DateTime startDate = DateFormat('(E) dd.MM.yyyy', locale).parse(widget.startDateController.text);
-                DateTime endDate = DateFormat('(E) dd.MM.yyyy', locale).parse(widget.endDateController.text);
+                DateTime startDate = DateFormat.yMEd(locale).parse(widget.startDateController.text);
+                DateTime endDate = DateFormat.yMEd(locale).parse(widget.endDateController.text);
                 String duration = formatDateDuration(startDate, endDate);
 
                 return Column(

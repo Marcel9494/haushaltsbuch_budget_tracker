@@ -50,7 +50,6 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
   Category? _selectedCategory;
   Account? _selectedDebitAccount;
   Account? _selectedTargetAccount;
-  // TODO Kein Ziel auf Mehrsprachigkeit erweitern
   late Goal _selectedGoal = Goal(
       goalAmount: 0.0,
       goalName: '',
@@ -100,7 +99,7 @@ class _CreateBookingPageState extends State<CreateBookingPage> {
         amount: amount,
         amountType: _amountType,
         bookingDate: bookingDate,
-        repetitionType: _repetitionType, // TODO
+        repetitionType: _repetitionType,
         categoryId: _selectedCategory?.id,
         debitAccountId: _selectedDebitAccount?.id,
         targetAccountId: _bookingType == BookingType.transfer ? _selectedTargetAccount?.id : null,

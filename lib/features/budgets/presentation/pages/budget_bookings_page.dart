@@ -17,7 +17,6 @@ import '../../../../core/consts/animation_consts.dart';
 import '../../../../core/utils/bottom_sheets/update_budget_bottom_sheet.dart';
 import '../../../../core/utils/date_helper.dart';
 import '../../../../core/utils/helper_functions.dart';
-import '../../../../data/enums/period_of_time_type.dart';
 import '../../../../data/helper_models/budget_stats.dart';
 import '../../../../data/models/booking.dart';
 import '../../../../data/models/budget.dart';
@@ -32,16 +31,12 @@ import '../widgets/deco/budget_stat_row.dart';
 
 class BudgetBookingsPage extends StatefulWidget {
   final Budget budget;
-  final List<Booking> bookings;
   final DateTime currentSelectedDate;
-  final PeriodOfTimeType currentPeriodOfTimeType;
 
   const BudgetBookingsPage({
     super.key,
     required this.budget,
-    required this.bookings,
     required this.currentSelectedDate,
-    required this.currentPeriodOfTimeType,
   });
 
   @override
@@ -52,7 +47,7 @@ class _BudgetBookingsPageState extends State<BudgetBookingsPage> {
   final ScrollController _scrollController = ScrollController();
 
   List<Booking> _filterBudgetBookings(List<Booking> bookings) {
-    List<Booking> budgetBookings = widget.bookings
+    List<Booking> budgetBookings = bookings
         .where((booking) => booking.category?.categoryName == widget.budget.category?.categoryName && booking.bookingType == BookingType.expense)
         .toList();
     return budgetBookings;
@@ -72,25 +67,13 @@ class _BudgetBookingsPageState extends State<BudgetBookingsPage> {
         BlocProvider(
           create: (_) => BudgetBloc(BudgetRepository())
             ..add(
-              LoadYearlyBudgetsFromCategory(
-                widget.currentSelectedDate.year,
-                widget.budget.categoryId,
-              ),
+              LoadYearlyBudgetsFromCategory(widget.currentSelectedDate.year, widget.budget.categoryId),
             ),
         ),
         BlocProvider(
           create: (_) {
-            final bookingBloc = BookingBloc(
-              BookingRepository(),
-              AccountRepository(),
-            );
-
-            if (widget.currentPeriodOfTimeType == PeriodOfTimeType.yearly) {
-              bookingBloc.add(LoadYearlyBookings(selectedYear: widget.currentSelectedDate.year));
-            } else {
-              bookingBloc.add(LoadMonthlyBookings(selectedDate: widget.currentSelectedDate));
-            }
-
+            final bookingBloc = BookingBloc(BookingRepository(), AccountRepository());
+            bookingBloc.add(LoadYearlyBookings(selectedYear: widget.currentSelectedDate.year));
             return bookingBloc;
           },
         ),
@@ -101,141 +84,165 @@ class _BudgetBookingsPageState extends State<BudgetBookingsPage> {
             builder: (context, budgetState) {
               if (budgetState is BudgetLoading || bookingState is BookingLoading) {
                 return CircularLoadingIndicator();
-              } else if (budgetState is YearlyBudgetFromCategoryListLoaded &&
-                  (bookingState is YearlyBookingListLoaded || bookingState is BookingListLoaded)) {
-                List<Booking> filteredBookings = [];
-                if (bookingState is BookingListLoaded) {
-                  filteredBookings = _filterBudgetBookings(bookingState.bookings);
-                } else if (bookingState is YearlyBookingListLoaded) {
-                  filteredBookings = _filterBudgetBookings(bookingState.yearlyBookings.values.expand((bookingList) => bookingList).toList());
-                }
+              } else if (budgetState is YearlyBudgetFromCategoryListLoaded && bookingState is YearlyBookingListLoaded) {
                 return Scaffold(
                   appBar: AppBar(
                     title: Text(widget.budget.category!.categoryName),
                     actions: [
                       IconButton(
-                        icon: Icon(Icons.edit_rounded),
+                        icon: const Icon(Icons.edit_rounded),
                         onPressed: () {
                           showUpdateBudgetBottomSheet(context, widget.budget);
                         },
                       ),
                       IconButton(
-                        icon: Icon(Icons.delete_forever_rounded),
+                        icon: const Icon(Icons.delete_forever_rounded),
                         onPressed: () {
                           final budgetBloc = context.read<BudgetBloc>();
-                          showDeleteBudgetBottomSheet(context, widget.budget, budgetBloc);
+                          showDeleteBudgetBottomSheet(
+                            context,
+                            widget.budget,
+                            budgetBloc,
+                          );
                         },
                       ),
                     ],
                   ),
-                  body: Builder(builder: (innerContext) {
-                    final BudgetStats budgetStats =
-                        calculateBudgetStats(budgetState.yearlyBudgetsFromCategory, widget.bookings, widget.currentSelectedDate.year);
-                    return Column(
-                      children: [
-                        Card(
-                          child: AspectRatio(
-                            aspectRatio: 1.33,
-                            child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: <Widget>[
-                                  // TODO anschließend leere Listen Fehler abfangen
-                                  // TODO Bei Budget Stats nur bis aktuellem Monat berücksichtigen?
-                                  BudgetInfoRow(
-                                    budgetName: t.translate(widget.budget.category!.categoryName),
-                                    budgetAmount: budgetStats.overallBudgetAmount,
-                                    usedAmount: budgetStats.overallUsedAmount,
-                                  ),
-                                  const SizedBox(height: 22.0),
-                                  BudgetBarChart(
-                                    totalBudgets: budgetStats.totalBudgets,
-                                    usedAmounts: budgetStats.usedAmounts,
-                                    barGroups: budgetStats.barGroups,
-                                    currentSelectedYear: widget.currentSelectedDate.year,
-                                  ),
-                                  BudgetStatRow(
-                                    usedBudgetAmounts: budgetStats.usedAmounts,
-                                  ),
-                                ],
+                  body: Builder(
+                    builder: (innerContext) {
+                      List<Booking> yearlyBookings = bookingState.yearlyBookings.values.expand((bookingList) => bookingList).toList();
+                      final BudgetStats budgetStats = calculateBudgetStats(
+                        budgetState.yearlyBudgetsFromCategory,
+                        yearlyBookings,
+                        widget.currentSelectedDate.year,
+                      );
+                      yearlyBookings = _filterBudgetBookings(yearlyBookings);
+
+                      return Column(
+                        children: [
+                          Card(
+                            child: AspectRatio(
+                              aspectRatio: 1.33,
+                              child: Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  children: <Widget>[
+                                    BudgetInfoRow(
+                                      budgetName: t.translate(
+                                        widget.budget.category!.categoryName,
+                                      ),
+                                      budgetAmount: budgetStats.overallBudgetAmount,
+                                      usedAmount: budgetStats.overallUsedAmount,
+                                    ),
+                                    const SizedBox(height: 22.0),
+                                    BudgetBarChart(
+                                      totalBudgets: budgetStats.totalBudgets,
+                                      usedAmounts: budgetStats.usedAmounts,
+                                      barGroups: budgetStats.barGroups,
+                                      currentSelectedYear: widget.currentSelectedDate.year,
+                                    ),
+                                    BudgetStatRow(
+                                      usedBudgetAmounts: budgetStats.usedAmounts,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        filteredBookings.isEmpty
-                            ? EmptyList(
-                                text: 'no_bookings_for_budget',
-                                icon: FaIcon(
-                                  FontAwesomeIcons.book,
-                                  size: 42.0,
-                                  color: Colors.white70,
-                                ),
-                              )
-                            : Expanded(
-                                child: AnimationLimiter(
-                                  child: ListView.builder(
-                                    controller: _scrollController,
-                                    shrinkWrap: true,
-                                    itemCount: filteredBookings.length,
-                                    itemBuilder: (context, index) {
-                                      final bookingDate = filteredBookings[index].bookingDate;
-                                      final bool showHeader = index == 0
-                                          ? true
-                                          : !isSameDay(
-                                              bookingDate,
-                                              filteredBookings[index - 1].bookingDate,
-                                            );
-                                      final bool isDividerPosition = index == 0 && index != 0;
-                                      final blockContent = Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          isDividerPosition
-                                              ? Padding(
-                                                  padding: const EdgeInsets.symmetric(vertical: 12.0),
-                                                  child: Row(
-                                                    children: [
-                                                      const Expanded(child: Divider(indent: 10.0, endIndent: 18.0)),
-                                                      Text(t.translate('past_bookings')),
-                                                      const Expanded(child: Divider(indent: 18.0, endIndent: 10.0)),
-                                                    ],
-                                                  ),
-                                                )
-                                              : const SizedBox.shrink(),
-                                          showHeader
-                                              ? BookingListDailyHeader(bookings: filteredBookings, bookingDate: bookingDate, index: index)
-                                              : const SizedBox.shrink(),
-                                          BookingCard(
-                                            booking: filteredBookings[index],
-                                            onUpdateSuccess: () {
-                                              Navigator.pop(context);
-                                              if (widget.currentPeriodOfTimeType == PeriodOfTimeType.monthly) {
-                                                context.read<BookingBloc>().add(LoadMonthlyBookings(selectedDate: widget.currentSelectedDate));
-                                              } else if (widget.currentPeriodOfTimeType == PeriodOfTimeType.yearly) {
-                                                context.read<BookingBloc>().add(LoadYearlyBookings(selectedYear: widget.currentSelectedDate.year));
-                                              }
-                                            },
+                          yearlyBookings.isEmpty
+                              ? EmptyList(
+                                  text: 'no_bookings_for_budget',
+                                  icon: const FaIcon(
+                                    FontAwesomeIcons.book,
+                                    size: 42.0,
+                                    color: Colors.white70,
+                                  ),
+                                )
+                              : Expanded(
+                                  child: AnimationLimiter(
+                                    child: ListView.builder(
+                                      controller: _scrollController,
+                                      shrinkWrap: true,
+                                      itemCount: yearlyBookings.length,
+                                      itemBuilder: (context, index) {
+                                        final bookingDate = yearlyBookings[index].bookingDate;
+                                        final bool showHeader = index == 0
+                                            ? true
+                                            : !isSameDay(
+                                                bookingDate,
+                                                yearlyBookings[index - 1].bookingDate,
+                                              );
+                                        final bool isDividerPosition = index == 0 && index != 0;
+
+                                        final blockContent = Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            isDividerPosition
+                                                ? Padding(
+                                                    padding: const EdgeInsets.symmetric(
+                                                      vertical: 12.0,
+                                                    ),
+                                                    child: Row(
+                                                      children: [
+                                                        const Expanded(
+                                                          child: Divider(
+                                                            indent: 10.0,
+                                                            endIndent: 18.0,
+                                                          ),
+                                                        ),
+                                                        Text(t.translate('past_bookings')),
+                                                        const Expanded(
+                                                          child: Divider(
+                                                            indent: 18.0,
+                                                            endIndent: 10.0,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
+                                                : const SizedBox.shrink(),
+                                            showHeader
+                                                ? BookingListDailyHeader(
+                                                    bookings: yearlyBookings,
+                                                    bookingDate: bookingDate,
+                                                    index: index,
+                                                  )
+                                                : const SizedBox.shrink(),
+                                            BookingCard(
+                                              booking: yearlyBookings[index],
+                                              onUpdateSuccess: () {
+                                                Navigator.pop(context);
+                                                context.read<BookingBloc>().add(
+                                                      LoadYearlyBookings(
+                                                        selectedYear: widget.currentSelectedDate.year,
+                                                      ),
+                                                    );
+                                              },
+                                            ),
+                                            yearlyBookings.length - 1 == index ? const SizedBox(height: 42.0) : const SizedBox.shrink(),
+                                          ],
+                                        );
+                                        return AnimationConfiguration.staggeredList(
+                                          position: index,
+                                          duration: const Duration(
+                                            milliseconds: listAnimationDurationInMs,
                                           ),
-                                          filteredBookings.length - 1 == index ? SizedBox(height: 42.0) : SizedBox.shrink(),
-                                        ],
-                                      );
-                                      return AnimationConfiguration.staggeredList(
-                                        position: index,
-                                        duration: const Duration(milliseconds: listAnimationDurationInMs),
-                                        child: SlideAnimation(
-                                          verticalOffset: 40.0,
-                                          child: FadeInAnimation(
-                                            child: blockContent,
+                                          child: SlideAnimation(
+                                            verticalOffset: 40.0,
+                                            child: FadeInAnimation(
+                                              child: blockContent,
+                                            ),
                                           ),
-                                        ),
-                                      );
-                                    },
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ),
-                              ),
-                      ],
-                    );
-                  }),
+                        ],
+                      );
+                    },
+                  ),
                 );
               } else if (budgetState is BudgetError) {
                 return ErrorText(errorMessage: budgetState.message);

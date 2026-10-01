@@ -41,12 +41,11 @@ class _CreateGoalPageState extends State<CreateGoalPage> {
   final RoundedLoadingButtonController _createGoalButtonController = RoundedLoadingButtonController();
 
   @override
-  void initState() {
-    super.initState();
-    // TODO passt das auch für Englisch
-    _startDateController.text = DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).format(DateTime.now());
-    _endDateController.text = DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString())
-        .format(DateTime.now().add(const Duration(days: 30)));
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final locale = Localizations.localeOf(context).toString();
+    _startDateController.text = DateFormat.yMEd(locale).format(DateTime.now());
+    _endDateController.text = DateFormat.yMEd(locale).format(DateTime.now().add(const Duration(days: 30)));
   }
 
   void _createGoal(BuildContext context) {
@@ -66,11 +65,9 @@ class _CreateGoalPageState extends State<CreateGoalPage> {
 
       final double amount = CurrencyHelper.instance.parseAmount(_goalAmountController.text, context);
 
-      // TODO passt das auch für Englisch
-      final DateTime parsedStartDate =
-          DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).parse(_startDateController.text);
-      final DateTime parsedEndDate =
-          DateFormat('(E) dd.MM.yyyy', WidgetsBinding.instance.platformDispatcher.locale.toString()).parse(_endDateController.text);
+      final locale = Localizations.localeOf(context).toString();
+      final DateTime parsedStartDate = DateFormat.yMEd(locale).parse(_startDateController.text);
+      final DateTime parsedEndDate = DateFormat.yMEd(locale).parse(_endDateController.text);
 
       final Goal newGoal = Goal(
         userId: supabase.auth.currentUser!.id,

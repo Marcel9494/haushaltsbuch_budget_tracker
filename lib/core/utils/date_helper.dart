@@ -79,7 +79,6 @@ List<String> getAllShortMonthNames(String locale) {
   return shortMonthNames;
 }
 
-// TODO Code könnte hier noch verbessert werden bzgl. Mehrsprachigkeit
 DateTime tryParseSelectedDate(String date) {
   try {
     // "Mo., 4.1.2027" -> "4.1.2027"
