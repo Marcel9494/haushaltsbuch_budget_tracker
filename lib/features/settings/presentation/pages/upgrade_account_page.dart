@@ -51,7 +51,6 @@ class _UpgradeAccountPageState extends State<UpgradeAccountPage> {
         ),
       );
       _upgradeButtonController.success();
-      // TODO schauen das noch eine AppBar angezeigt wird für bessere UX AppFlushbar.show(context, message: t.translate('account_upgrade_successful'));
     } on AuthApiException catch (e) {
       if (e.code == 'email_exists') {
         AppFlushbar.show(context, message: t.translate('email_already_exists'));

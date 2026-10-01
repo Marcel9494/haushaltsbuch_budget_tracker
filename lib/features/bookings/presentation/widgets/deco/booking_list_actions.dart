@@ -76,51 +76,6 @@ class _BookingListActionsState extends State<BookingListActions> with SingleTick
             ),
           ),
         ),
-        // TODO hinzufügen, wenn Buchungsliste Filter implementiert wird siehe:
-        /*child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                const SizedBox(width: 8.0),
-                InkWell(
-                  onTap: () {},
-                  customBorder: const CircleBorder(),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(
-                      Icons.filter_list_alt,
-                      size: 24,
-                      color: Colors.white70,
-                    ),
-                  ),
-                ),
-                Container(
-                  height: 28,
-                  width: 1.2,
-                  color: Colors.white70,
-                  margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                ),
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      widget.onShowBookingChartChanged?.call(!widget.showBookingChart);
-                    });
-                  },
-                  customBorder: const CircleBorder(),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: FaIcon(
-                      widget.icon,
-                      size: 20,
-                      color: Colors.white70,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),*/
       ),
     );
   }

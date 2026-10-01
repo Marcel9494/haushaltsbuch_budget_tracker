@@ -192,6 +192,29 @@ void main() async {
           }
         }
       } else if (event == AuthChangeEvent.userUpdated) {
+        final context = navigatorKey.currentContext;
+        if (context == null) {
+          return;
+        }
+        final t = AppLocalizations.of(context);
+        await showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => AlertDialog(
+            title: Text(
+              t.translate('account_upgrade_successful'),
+            ),
+            content: Text(
+              t.translate('account_upgrade_successful_description'),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(t.translate('ok')),
+              ),
+            ],
+          ),
+        );
         navigatorKey.currentState?.pushAndRemoveUntil(
           MaterialPageRoute(
             builder: (_) => MultiBlocProvider(
@@ -502,9 +525,7 @@ class _MyAppState extends State<MyApp> {
               return MaterialPageRoute<String>(
                 builder: (context) => BudgetBookingsPage(
                   budget: args.budget,
-                  bookings: args.bookings,
                   currentSelectedDate: args.currentSelectedDate,
-                  currentPeriodOfTimeType: args.currentPeriodOfTimeType,
                 ),
                 settings: settings,
               );

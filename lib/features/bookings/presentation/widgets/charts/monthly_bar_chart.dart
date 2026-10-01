@@ -252,8 +252,9 @@ class _MonthlyBarChartState extends State<MonthlyBarChart> with SingleTickerProv
                         enabled: true,
                         handleBuiltInTouches: true,
                         touchTooltipData: BarTouchTooltipData(
+                          tooltipMargin: 20.0,
                           fitInsideHorizontally: true,
-                          fitInsideVertically: true,
+                          fitInsideVertically: false,
                           getTooltipColor: (_) => Colors.grey.shade800,
                           tooltipPadding: const EdgeInsets.symmetric(
                             horizontal: 14.0,

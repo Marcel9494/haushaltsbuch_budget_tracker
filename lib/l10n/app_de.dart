@@ -164,6 +164,8 @@ const Map<String, String> de = {
   'upgrade_with_google': 'Mit Google upgraden',
   'update_booking': 'Buchung bearbeiten',
   'account_upgrade_successful': 'Dein Konto wurde erfolgreich geupgradet.',
+  'account_upgrade_successful_description':
+      'Dein Gästekonto wurde erfolgreich in ein vollständiges Konto umgewandelt. Deine Daten sind nun geräteübergreifend verfügbar.',
   'current_email': 'Aktuelle E-Mail Adresse',
   'important': 'WICHTIG',
   'change_email_description':
@@ -402,6 +404,8 @@ const Map<String, String> de = {
   'empty_account_error': 'Bitte wähle ein Konto aus.',
   'empty_monthly_budget_error': 'Bitte gib ein monatliches Budget ein.',
   'create_booking_error': 'Datenbankfehler beim Erstellen der Buchung. Bitte versuche es später erneut.',
+  'update_booking_error':
+      'Buchung konnte nicht bearbeitet werden. Bitte versuche es erneut. Falls der Fehler weiterhin auftritt, lösche die Buchung und erstelle sie neu.',
   'delete_booking_error': 'Datenbankfehler beim Löschen der Buchung. Bitte versuche es später erneut.',
   'load_bookings_error': 'Datenbankfehler beim Laden der Buchungen. Bitte versuche es später erneut.',
   'create_account_error': 'Datenbankfehler beim Erstellen des Kontos. Bitte versuche es später erneut.',
@@ -416,6 +420,7 @@ const Map<String, String> de = {
   'duplicated_category_error': 'Eine Kategorie mit diesem Namen existiert bereits.',
   'load_categories_error': 'Datenbankfehler beim Laden der Kategorien. Bitte versuche es später erneut.',
   'load_budgets_error': 'Datenbankfehler beim Laden der Budgets. Bitte versuche es später erneut.',
+  'duplicated_budget_error': 'Ein Budget für diese Kategorie existiert bereits. Bitte wähle eine andere Kategorie.',
   'create_goal_error': 'Datenbankfehler beim Erstellen des Ziels. Bitte versuche es später erneut.',
   'update_goal_error': 'Datenbankfehler beim Bearbeiten des Ziels. Bitte versuche es später erneut.',
   'load_goals_error': 'Datenbankfehler beim Laden der Ziele. Bitte versuche es später erneut.',

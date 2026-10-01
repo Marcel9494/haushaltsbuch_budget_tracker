@@ -238,7 +238,7 @@ class _YearlyBarChartState extends State<YearlyBarChart> with SingleTickerProvid
                         handleBuiltInTouches: true,
                         touchTooltipData: BarTouchTooltipData(
                           fitInsideHorizontally: true,
-                          fitInsideVertically: true,
+                          fitInsideVertically: false,
                           getTooltipColor: (_) => Colors.grey.shade800,
                           tooltipPadding: const EdgeInsets.symmetric(
                             horizontal: 14.0,

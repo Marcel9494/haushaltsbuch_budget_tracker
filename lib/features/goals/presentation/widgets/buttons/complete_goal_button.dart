@@ -22,9 +22,6 @@ class CompleteGoalButton extends StatefulWidget {
 }
 
 class _CompleteGoalButtonState extends State<CompleteGoalButton> {
-  // TODO confirmed Exception verhindern
-  bool confirmed = false;
-
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
@@ -46,7 +43,7 @@ class _CompleteGoalButtonState extends State<CompleteGoalButton> {
                         if (allowed == false) {
                           return;
                         }
-                        confirmed = await showCompleteGoalDialog(context);
+                        final bool confirmed = await showCompleteGoalDialog(context);
                         if (confirmed) {
                           context.read<GoalBloc>().add(CompleteGoal(goalId: widget.goalId));
                         }

@@ -54,9 +54,7 @@ class BudgetCard extends StatelessWidget {
                 ],
                 child: BudgetBookingsPage(
                   budget: budget,
-                  bookings: bookings,
                   currentSelectedDate: currentSelectedDate,
-                  currentPeriodOfTimeType: currentPeriodOfTime,
                 ),
               ),
             ),

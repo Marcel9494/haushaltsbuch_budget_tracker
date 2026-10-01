@@ -7,7 +7,6 @@ import 'package:haushaltsbuch_budget_tracker/core/consts/route_consts.dart';
 import 'package:haushaltsbuch_budget_tracker/core/page_arguments/home_page_arguments.dart';
 import 'package:haushaltsbuch_budget_tracker/core/utils/currency_helper.dart';
 import 'package:haushaltsbuch_budget_tracker/data/enums/booking_selection_type.dart';
-import 'package:haushaltsbuch_budget_tracker/data/enums/goal_type.dart';
 import 'package:haushaltsbuch_budget_tracker/data/repositories/booking_repository.dart';
 import 'package:haushaltsbuch_budget_tracker/features/bookings/presentation/widgets/input_fields/categorie_input_field.dart';
 import 'package:haushaltsbuch_budget_tracker/features/bookings/presentation/widgets/input_fields/goal_input_field.dart';
@@ -25,8 +24,8 @@ import '../../../../core/utils/dialogs/show_delete_dialog.dart';
 import '../../../../data/enums/account_type.dart';
 import '../../../../data/enums/amount_type.dart';
 import '../../../../data/enums/booking_type.dart';
-import '../../../../data/enums/category_type.dart';
 import '../../../../data/enums/goal_state_type.dart';
+import '../../../../data/enums/goal_type.dart';
 import '../../../../data/enums/repetition_type.dart';
 import '../../../../data/models/account.dart';
 import '../../../../data/models/booking.dart';
@@ -78,26 +77,17 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
   @override
   void initState() {
     super.initState();
-    _bookingType = widget.booking.bookingType;
-    _amountType = widget.booking.amountType;
-    _repetitionType = widget.booking.repetitionType;
-    if (widget.booking.category != null) {
-      _selectedCategory = widget.booking.category!;
-    } else {
-      // TODO hier weitermachen und Gelöschte Kategorie behandeln
-      _selectedCategory = Category(categoryName: '', categoryType: CategoryType.expense);
-    }
-    if (widget.booking.debitAccount != null) {
-      _selectedDebitAccount = widget.booking.debitAccount!;
-    } else {
-      // TODO hier weitermachen und Gelöschtes Konto und Gelöschtes Ziel behandeln
-      _selectedDebitAccount = Account(name: '', accountType: AccountType.noAccountType, balance: 0.0);
-    }
-    if (_bookingType == BookingType.transfer) {
-      _selectedTargetAccount = widget.booking.targetAccount!;
-    }
-    if (widget.booking.goal != null) {
-      _selectedGoal = widget.booking.goal!;
+    final booking = widget.booking;
+
+    _bookingType = booking.bookingType;
+    _amountType = booking.amountType;
+    _repetitionType = booking.repetitionType;
+
+    _selectedCategory = booking.category;
+    _selectedDebitAccount = booking.debitAccount;
+    _selectedTargetAccount = booking.bookingType == BookingType.transfer ? booking.targetAccount : null;
+    if (booking.goal != null) {
+      _selectedGoal = booking.goal!;
     } else {
       _selectedGoal = Goal(
         goalAmount: 0.0,
@@ -108,11 +98,13 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
         endDate: DateTime.now(),
       );
     }
-    _titleController.text = widget.booking.title;
-    _categorieController.text = _selectedCategory!.categoryName;
-    _debitAccountController.text = _selectedDebitAccount!.name;
-    _targetAccountController.text = _selectedTargetAccount!.name;
-    _goalController.text = _selectedGoal.goalName;
+
+    _titleController.text = booking.title;
+    _categorieController.text = _selectedCategory?.categoryName ?? '';
+    _debitAccountController.text = _selectedDebitAccount?.name ?? '';
+    _targetAccountController.text = _selectedTargetAccount?.name ?? '';
+    _goalController.text = _selectedGoal.goalName ?? '';
+
     _backupOldBooking();
   }
 
@@ -155,7 +147,7 @@ class _UpdateBookingPageState extends State<UpdateBookingPage> {
         amountType: _amountType,
         bookingDate: bookingDate,
         repetitionId: widget.booking.repetitionId,
-        repetitionType: _repetitionType, // TODO
+        repetitionType: _repetitionType,
         categoryId: _bookingType == BookingType.transfer ? null : _selectedCategory?.id,
         debitAccountId: _selectedDebitAccount?.id,
         targetAccountId: _bookingType == BookingType.transfer ? _selectedTargetAccount?.id : null,
