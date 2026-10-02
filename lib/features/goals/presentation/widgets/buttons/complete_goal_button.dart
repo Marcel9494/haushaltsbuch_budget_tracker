@@ -39,7 +39,8 @@ class _CompleteGoalButtonState extends State<CompleteGoalButton> {
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () async {
-                        final bool allowed = await PremiumService.checkLimit(limitReached: state.goals.isNotEmpty);
+                        final bool allowed =
+                            await PremiumService.checkLimit(limitReached: state.goals.isNotEmpty, locale: Localizations.localeOf(context));
                         if (allowed == false) {
                           return;
                         }

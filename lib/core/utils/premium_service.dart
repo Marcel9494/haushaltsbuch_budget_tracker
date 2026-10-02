@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
@@ -60,7 +61,7 @@ class PremiumService {
     return customerInfo.entitlements.active.containsKey(revenueCatPremiumEntitlementId);
   }
 
-  static Future<bool> checkLimit({required bool limitReached}) async {
+  static Future<bool> checkLimit({required bool limitReached, required Locale locale}) async {
     if (limitReached == false) {
       return true;
     }
@@ -69,11 +70,18 @@ class PremiumService {
       return true;
     }
 
+    await Purchases.overridePreferredUILocale(
+      locale.toLanguageTag(),
+    );
+
     await RevenueCatUI.presentPaywallIfNeeded(revenueCatPremiumEntitlementId);
     return await isUserPremium();
   }
 
-  static Future<void> openPaywall() async {
+  static Future<void> openPaywall(Locale locale) async {
+    await Purchases.overridePreferredUILocale(
+      locale.toLanguageTag(),
+    );
     await RevenueCatUI.presentPaywall();
   }
 }

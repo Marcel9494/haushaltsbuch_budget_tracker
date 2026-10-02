@@ -328,7 +328,7 @@ class _HomePageState extends State<HomePage> {
               title: Text(t.translate('premium'), style: TextStyle(color: Colors.white)),
               onTap: () {
                 Navigator.pop(context);
-                PremiumService.openPaywall();
+                PremiumService.openPaywall(Localizations.localeOf(context));
               },
             ),
             ListTile(
