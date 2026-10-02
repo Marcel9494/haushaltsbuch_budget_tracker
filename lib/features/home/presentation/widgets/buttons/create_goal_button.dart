@@ -28,7 +28,7 @@ class CreateGoalButton extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: TextButton.icon(
               onPressed: () async {
-                final allowed = await PremiumService.checkLimit(limitReached: goalCount >= 1);
+                final allowed = await PremiumService.checkLimit(limitReached: goalCount >= 1, locale: Localizations.localeOf(context));
                 if (allowed == false) {
                   return;
                 }
