@@ -99,9 +99,10 @@ class _LoginPageState extends State<LoginPage> {
           (route) => false,
         );
       },
-      child: SafeArea(
-        child: Scaffold(
-          body: Column(
+      child: ColoredBox(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        child: SafeArea(
+          child: Column(
             children: [
               Expanded(
                 child: SingleChildScrollView(

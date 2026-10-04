@@ -129,13 +129,19 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
+
     return BlocProvider(
-      create: (context) => UserBloc(UserRepository(), BookingRepository(), AccountRepository()),
+      create: (context) => UserBloc(
+        UserRepository(),
+        BookingRepository(),
+        AccountRepository(),
+      ),
       child: Builder(
         builder: (context) {
           return SafeArea(
-            child: Scaffold(
-              body: Stack(
+            child: ColoredBox(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              child: Stack(
                 children: [
                   SingleChildScrollView(
                     padding: const EdgeInsets.only(
@@ -168,9 +174,13 @@ class _RegisterPageState extends State<RegisterPage> {
                                       text: t.translate('create_account'),
                                     ),
                                     const SizedBox(height: 24),
-                                    EmailAuthInputField(emailController: _emailController),
+                                    EmailAuthInputField(
+                                      emailController: _emailController,
+                                    ),
                                     const SizedBox(height: 16),
-                                    PasswordInputField(passwordController: _passwordController),
+                                    PasswordInputField(
+                                      passwordController: _passwordController,
+                                    ),
                                     const SizedBox(height: 24),
                                     AnimatedLoadingButton(
                                       controller: _registerButtonController,
@@ -178,7 +188,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                       onPressed: () => _registerUser(),
                                     ),
                                     const SizedBox(height: 24),
-                                    DividerWithText(text: t.translate('or')),
+                                    DividerWithText(
+                                      text: t.translate('or'),
+                                    ),
                                     const SizedBox(height: 20),
                                     GoogleSignInButton(
                                       text: t.translate('register_with_google'),
