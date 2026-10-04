@@ -23,18 +23,13 @@ class BookingListDailyHeader extends StatefulWidget {
 
 class _BookingListDailyHeaderState extends State<BookingListDailyHeader> {
   final BookingRepository _bookingRepository = BookingRepository();
-  late final double _revenue;
-  late final double _expenses;
-
-  @override
-  void initState() {
-    super.initState();
-    _revenue = _bookingRepository.calculateDailyRevenue(widget.bookings, widget.bookings[widget.index].bookingDate);
-    _expenses = _bookingRepository.calculateDailyExpenses(widget.bookings, widget.bookings[widget.index].bookingDate);
-  }
+  double _revenue = 0.0;
+  double _expenses = 0.0;
 
   @override
   Widget build(BuildContext context) {
+    _revenue = _bookingRepository.calculateDailyRevenue(widget.bookings, widget.bookings[widget.index].bookingDate);
+    _expenses = _bookingRepository.calculateDailyExpenses(widget.bookings, widget.bookings[widget.index].bookingDate);
     return Padding(
       padding: const EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 6.0),
       child: Row(

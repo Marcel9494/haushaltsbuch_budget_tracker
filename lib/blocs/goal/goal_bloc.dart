@@ -76,7 +76,7 @@ class GoalBloc extends Bloc<GoalEvent, GoalState> {
 
   Future<void> _onCompleteGoal(CompleteGoal event, Emitter<GoalState> emit) async {
     try {
-      Goal completedGoal = await _goalRepository.completeGoal(event.goalId);
+      final Goal completedGoal = await _goalRepository.completeGoal(event.goalId);
       emit(GoalCompleted(completedGoal));
     } catch (e) {
       emit(GoalError('complete_goal_error'));

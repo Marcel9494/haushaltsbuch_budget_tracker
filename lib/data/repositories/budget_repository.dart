@@ -12,23 +12,18 @@ class BudgetRepository {
   Future<void> createBudgets(Budget newBudget) async {
     try {
       final budgetMap = <Map<String, dynamic>>[];
-      DateTime currentBudgetDate = DateTime(DateTime.now().year, DateTime.now().month, 1);
+      final now = DateTime.now();
       final budgetId = const Uuid().v4();
 
-      for (int i = 0; i < budgetRepetitionNumberInMonths; i++) {
+      for (int i = -budgetRepetitionNumberInPastInMonths; i < budgetRepetitionNumberInMonths; i++) {
+        final budgetDate = DateTime(now.year, now.month + i, 1);
         budgetMap.add({
           'budget_id': budgetId,
           'user_id': newBudget.userId,
           'category_id': newBudget.categoryId,
-          'budget_date': DateFormat('yyyy-MM-dd').format(currentBudgetDate),
+          'budget_date': DateFormat('yyyy-MM-dd').format(budgetDate),
           'budget_amount': newBudget.budgetAmount,
         });
-
-        currentBudgetDate = DateTime(
-          currentBudgetDate.month == 12 ? currentBudgetDate.year + 1 : currentBudgetDate.year,
-          currentBudgetDate.month == 12 ? 1 : currentBudgetDate.month + 1,
-          1,
-        );
       }
       await Supabase.instance.client.from('budgets').insert(budgetMap).select();
     } on PostgrestException catch (e) {

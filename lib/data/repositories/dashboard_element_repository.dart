@@ -96,9 +96,10 @@ class DashboardElementRepository {
     }).toList();
 
     elements.sort((a, b) {
+      // TODO hier weitermachen und Sortierung richtig implementieren auch komibinierbar mit dem noch offenen Issue.
       // Beide selektiert → Position vergleichen
       if (a.position != null && b.position != null) {
-        return a.position!.compareTo(b.position!);
+        return b.position!.compareTo(a.position!);
       }
       // A selektiert, B nicht → A zuerst
       if (a.position != null && b.position == null) {

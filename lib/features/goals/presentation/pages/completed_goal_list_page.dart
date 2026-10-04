@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../../blocs/account/account_bloc.dart';
 import '../../../../blocs/booking/booking_bloc.dart';
+import '../../../../blocs/category/category_bloc.dart';
 import '../../../../blocs/goal/goal_bloc.dart';
 import '../../../../blocs/goal/goal_event.dart';
 import '../../../../blocs/goal/goal_state.dart';
@@ -11,6 +13,7 @@ import '../../../../core/consts/animation_consts.dart';
 import '../../../../data/models/goal.dart';
 import '../../../../data/repositories/account_repository.dart';
 import '../../../../data/repositories/booking_repository.dart';
+import '../../../../data/repositories/category_repository.dart';
 import '../../../../data/repositories/goal_repository.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../shared/presentation/widgets/deco/circular_loading_indicator.dart';
@@ -39,6 +42,8 @@ class _CompletedGoalListPageState extends State<CompletedGoalListPage> {
         providers: [
           BlocProvider(create: (context) => GoalBloc(GoalRepository())..add(LoadCompletedGoals())),
           BlocProvider(create: (context) => BookingBloc(BookingRepository(), AccountRepository())..add(LoadGoalBookings())),
+          BlocProvider(create: (context) => CategoryBloc(CategoryRepository())),
+          BlocProvider(create: (context) => AccountBloc(AccountRepository())),
         ],
         child: BlocBuilder<BookingBloc, BookingState>(
           builder: (context, bookingState) {
