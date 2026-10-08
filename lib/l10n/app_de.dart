@@ -300,6 +300,32 @@ const Map<String, String> de = {
   'exchange_rate_description': 'Sollen alle bestehenden Beträge mit dem Wechselkurs umgerechnet oder unverändert übernommen werden?',
   'convert': 'Umrechnen',
   'keep': 'Beibehalten',
+  'cancellation_policy_form': 'Widerrufsformular',
+  'cancellation_policy_form_description':
+      "Marcel Geirhos / [Unternehmensname]\nGartenstraße 8, 73550 Waldstetten\nE-Mail: Marcel.Geirhos@gmail.com\n\nHiermit widerrufe ich den von mir abgeschlossenen Vertrag über die Erbringung der folgenden digitalen Dienstleistung:\n\nHaushaltsbuch - Budget Tracker Premium\n\n",
+  'cancellation_email_subject': 'Widerruf meines Haushaltsbuch - Budget Tracker Premium Abos',
+  'copy': 'Kopieren',
+  'copied_content_sucessfully': 'Inhalt wurde erfolgreich kopiert.',
+  'right_of_withdrawal': 'Widerrufsbelehrung',
+  'cancellation_directly_via_email': 'Widerruf direkt per E-Mail',
+  'cancellation_directly_via_email_description': 'Sie können Ihren Widerruf auch direkt per E-Mail erklären.',
+  'declare_revocation_via_email': 'Widerruf per E-Mail erklären',
+  'right_of_withdrawal_date': '07.10.2026',
+  'right_of_withdrawal_content_1': 'Sie haben das Recht, innerhalb von vierzehn Tagen ohne Angabe von Gründen diesen Vertrag zu widerrufen.',
+  'right_of_withdrawal_content_2': 'Die Widerrufsfrist beträgt vierzehn Tage ab dem Tag des Vertragsschlusses.',
+  'right_of_withdrawal_content_3': 'Ausübung des Widerrufsrechts',
+  'right_of_withdrawal_content_4':
+      'Um Ihr Widerrufsrecht auszuüben, müssen Sie uns mittels einer eindeutigen Erklärung, z. B. per E-Mail über Ihren Entschluss informieren, diesen Vertrag zu widerrufen.',
+  'right_of_withdrawal_content_5': 'Sie können dafür das nachfolgende Widerrufsformular verwenden; dies ist jedoch nicht vorgeschrieben.',
+  'right_of_withdrawal_content_6':
+      'Zur Wahrung der Widerrufsfrist reicht es aus, dass Sie die Mitteilung über die Ausübung des Widerrufsrechts vor Ablauf der Widerrufsfrist absenden.',
+  'right_of_withdrawal_content_7': 'Folgen des Widerrufs',
+  'right_of_withdrawal_content_8':
+      'Wenn Sie diesen Vertrag widerrufen, haben wir Ihnen alle Zahlungen, die wir von Ihnen erhalten haben, unverzüglich und spätestens binnen vierzehn Tagen ab dem Tag zurückzuzahlen, an dem die Mitteilung über Ihren Widerruf dieses Vertrags bei uns eingegangen ist.',
+  'right_of_withdrawal_content_9':
+      'Für die Rückzahlung verwenden wir dasselbe Zahlungsmittel, das Sie bei der ursprünglichen Transaktion eingesetzt haben. In keinem Fall werden Ihnen wegen dieser Rückzahlung Entgelte berechnet.',
+  'right_of_withdrawal_content_10':
+      'Wenn Sie den Vertrag widerrufen wollen, können Sie dieses Formular verwenden. Die Verwendung des Formulars ist jedoch, nicht vorgeschrieben.',
   // Startausgabekategorien
   'groceries': 'Lebensmittel',
   'household_goods': 'Haushaltswaren',
@@ -433,6 +459,7 @@ const Map<String, String> de = {
       'Diese Google E-Mail ist bereits mit einem anderen Konto verknüpft. Bitte melde dich mit dem Gast Konto ab und logge dich mit deiner Google E-Mail ein.',
   'wrong_current_password_error': 'Das aktuelle Passwort ist nicht korrekt. Bitte gib dein aktuelles Passwort korrekt ein.',
   'privacy_policy_open_error': 'Fehler beim Öffnen der Datenschutzerklärung. Bitte überprüfe deine Internetverbindung und versuche es erneut.',
+  'open_email_provider_error': 'Es konnte keine E-Mail-App geöffnet werden. Bitte wende dich direkt an:',
   'empty_description_error': 'Bitte gib eine Beschreibung ein.',
   'database_error': 'Datenbankfehler. Bitte versuche es später erneut.',
   'unknown_error': 'Ein unbekannter Fehler ist aufgetreten. Bitte versuche es später erneut.',

@@ -300,6 +300,31 @@ const Map<String, String> en = {
   'exchange_rate_description': 'Should all existing amounts be converted using the exchange rate or carried over unchanged?',
   'convert': 'Convert',
   'keep': 'Keep',
+  'cancellation_policy_form': 'Cancellation policy form',
+  'cancellation_policy_form_description':
+      "Marcel Geirhos / [Company Name]\nGartenstraße 8, 73550 Waldstetten\nEmail: Marcel.Geirhos@gmail.com\n\nI hereby revoke the contract concluded by me for the provision of the following digital service:\n\nHaushaltsbuch - Budget Tracker Premium\n\n",
+  'cancellation_email_subject': 'Cancellation of my Haushaltsbuch - Budget Tracker Premium subscription',
+  'copy': 'Copy',
+  'copied_content_sucessfully': 'Content was successfully copied.',
+  'right_of_withdrawal': 'Right of withdrawal',
+  'cancellation_directly_via_email': 'Cancellation directly via email',
+  'cancellation_directly_via_email_description': 'You can also declare your revocation directly by email.',
+  'declare_revocation_via_email': 'Declare revocation via email',
+  'right_of_withdrawal_date': '10/07/2026',
+  'right_of_withdrawal_content_1': 'You have the right to withdraw from this contract within fourteen days without giving any reason.',
+  'right_of_withdrawal_content_2': 'The withdrawal period is fourteen days from the day the contract is concluded.',
+  'right_of_withdrawal_content_3': 'Exercise of the right of withdrawal',
+  'right_of_withdrawal_content_4':
+      'To exercise your right of withdrawal, you must inform us of your decision to withdraw from this contract by means of an unequivocal statement, e.g., by e-mail.',
+  'right_of_withdrawal_content_5': 'You can use the attached sample withdrawal form, but it is not mandatory.',
+  'right_of_withdrawal_content_6':
+      'To meet the withdrawal deadline, it is sufficient for you to send the notification regarding the exercise of the right of withdrawal before the withdrawal period expires.',
+  'right_of_withdrawal_content_7': 'Consequences of withdrawal',
+  'right_of_withdrawal_content_8':
+      'If you withdraw from this contract, we shall reimburse all payments received from you without undue delay and no later than fourteen days from the day on which we received notification of your withdrawal from this contract.',
+  'right_of_withdrawal_content_9':
+      'We will use the same means of payment for the refund that you used for the original transaction. You will not be charged any fees for this refund under any circumstances.',
+  'right_of_withdrawal_content_10': 'If you wish to withdraw from the contract, you may use this form. However, use of the form is not mandatory.',
   // Startausgabekategorien (Start expense categories)
   'groceries': 'Groceries',
   'household_goods': 'Household goods',
@@ -430,6 +455,8 @@ const Map<String, String> en = {
       'This Google email address is already linked to another account. Please sign out of the guest account and sign in with your Google email address.',
   'wrong_current_password_error': 'The current password is incorrect. Please enter your current password correctly.',
   'privacy_policy_open_error': 'Could not open the privacy policy. Please check your internet connection or try again later.',
+  'open_email_provider_error': 'No email app could be opened. Please contact the following e-mail directly:',
+  'empty_description_error': 'Please enter a description.',
   'database_error': 'Database error. Please try again later.',
   'unknown_error': 'An unknown error has occurred. Please try again later.',
 };
