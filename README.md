@@ -2,23 +2,29 @@
 
 Haushaltsbuch & Budget Tracker – Deine Finanzen einfach im Griff.
 
-<img style="width: 30%; height: auto;" alt="Screenshot_20260612_120318" src="https://github.com/user-attachments/assets/ce8fb89f-e6d1-4bf6-9654-32ce64fd261d" />
+<img style="width: 30%; height: auto;" alt="Screenshot_20261008_223751-portrait" src="https://github.com/user-attachments/assets/45f0cf07-9d33-4a70-adbd-dcb5165cbce9" />
 
-<img style="width: 30%; height: auto;" alt="Screenshot_20260612_120432" src="https://github.com/user-attachments/assets/3b59ffe8-cf4f-406b-84c4-291b04f276bd" />
+<img style="width: 30%; height: auto;" alt="Screenshot_20261008_223759-portrait" src="https://github.com/user-attachments/assets/c5dbadfd-91fc-48ff-8eed-78bdd812e178" />
 
-<img style="width: 30%; height: auto;" alt="Screenshot_20260612_120447" src="https://github.com/user-attachments/assets/3b8bbad4-c39c-448e-9c26-d3987a3f62e4" />
+<img style="width: 30%; height: auto;" alt="Screenshot_20261008_223953-portrait" src="https://github.com/user-attachments/assets/9053eeef-ba43-4c81-8676-6705163f5907" />
 
-<img style="width: 30%; height: auto;" alt="Screenshot_20260612_120458" src="https://github.com/user-attachments/assets/e58b90a5-1315-4d1f-9e37-d2d985ea0c08" />
+<img style="width: 30%; height: auto;" alt="Screenshot_20261008_224005-portrait" src="https://github.com/user-attachments/assets/6bde7b75-a712-4493-a60a-fb5cfc11a0e8" />
 
-<img style="width: 30%; height: auto;" alt="Screenshot_20260612_120514" src="https://github.com/user-attachments/assets/35980177-d263-4f61-8e70-7a71f16de83b" />
+<img style="width: 30%; height: auto;" alt="Screenshot_20261008_224058-portrait" src="https://github.com/user-attachments/assets/18d2a26d-43bc-4aaf-8b1f-4da06dcee0f3" />
 
-<img style="width: 30%; height: auto;" alt="Screenshot_20260612_120543" src="https://github.com/user-attachments/assets/c43405b9-abcb-452c-bc39-7032f127d959" />
+<img style="width: 30%; height: auto;" alt="Screenshot_20261008_224111-portrait" src="https://github.com/user-attachments/assets/fcf2048b-1475-438a-b0ea-ca675741a502" />
 
-<img style="width: 30%; height: auto;" alt="Screenshot_20260612_120555" src="https://github.com/user-attachments/assets/eaee98cd-7ebf-41eb-9c07-dad0ac081fa3" />
+<img style="width: 30%; height: auto;" alt="Screenshot_20261008_224126-portrait" src="https://github.com/user-attachments/assets/10768280-8d0a-4bee-a323-0c132bbd7b1c" />
 
-<img style="width: 30%; height: auto;" alt="Screenshot_20260612_120607" src="https://github.com/user-attachments/assets/e33adf6f-dd1b-41a6-9c41-c368ff5848d2" />
+<img style="width: 30%; height: auto;" alt="Screenshot_20261008_224254-portrait" src="https://github.com/user-attachments/assets/3ce293c3-0504-42d4-b0b5-f913a98f19d0" />
 
-<img style="width: 30%; height: auto;" alt="Screenshot_20260612_120626" src="https://github.com/user-attachments/assets/f35c936f-0083-41db-bc47-353b3fb75d71" />
+<img style="width: 30%; height: auto;" alt="Screenshot_20261008_224333-portrait" src="https://github.com/user-attachments/assets/c7831d09-2baa-4cab-bd1d-a697539ff2eb" />
+
+<img style="width: 30%; height: auto;" alt="Screenshot_20261008_223645-portrait" src="https://github.com/user-attachments/assets/161d4f54-596b-4510-a667-310980fc77b0" />
+
+<img style="width: 30%; height: auto;" alt="Screenshot_20261008_223705-portrait" src="https://github.com/user-attachments/assets/b1f1d325-54be-436a-b922-dffce82cd536" />
+
+<img style="width: 30%; height: auto;" alt="Screenshot_20261008_223724-portrait" src="https://github.com/user-attachments/assets/ea9be4a7-0c2c-4612-bc58-c57212a160e6" />
 
 # Haushaltsbuch - Budget Tracker
 
