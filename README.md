@@ -1,6 +1,23 @@
+
 # Haushaltsbuch - Budget Tracker App GUI
 
 Haushaltsbuch & Budget Tracker – Deine Finanzen einfach im Griff.
+
+<img style="width: 30%; height: auto;" alt="Dashboard_screenshot" src="https://github.com/user-attachments/assets/08c9886f-31e6-422f-98ff-8376ba8d69cf" />
+
+<img style="width: 30%; height: auto;" alt="Dashboard_screenshot_2" src="https://github.com/user-attachments/assets/26e8657c-9c5b-4e2e-a4cd-a29f91c167d3" />
+
+<img style="width: 30%; height: auto;" alt="Buchungsliste_screenshot" src="https://github.com/user-attachments/assets/973b1efd-a000-46bc-abfc-902aeee6b721" />
+
+<img style="width: 30%; height: auto;" alt="Kontoübersicht_screenshot" src="https://github.com/user-attachments/assets/4aa6134b-e2ea-43df-8441-baf43c3d3b68" />
+
+<img style="width: 30%; height: auto;" alt="Budgets_screenshot" src="https://github.com/user-attachments/assets/51c53dc8-0091-471b-aba2-18c1579d2293" />
+
+<img style="width: 30%; height: auto;" alt="Ziele_screenshot" src="https://github.com/user-attachments/assets/e9c59acb-e655-483c-9dd4-69e86ad499ec" />
+
+<img style="width: 30%; height: auto;" alt="Kategorien_screenshot" src="https://github.com/user-attachments/assets/3b12c983-558b-4d66-aadc-368f7566b0b7" />
+
+## Weitere App Screenshots:
 
 <img style="width: 30%; height: auto;" alt="Screenshot_20261008_223645-portrait" src="https://github.com/user-attachments/assets/161d4f54-596b-4510-a667-310980fc77b0" />
 
