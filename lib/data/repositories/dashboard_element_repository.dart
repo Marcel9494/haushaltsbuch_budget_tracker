@@ -17,21 +17,26 @@ class DashboardElementRepository {
 
   Future<void> updateUsersSelectedDashboardElements(List<DashboardElement> dashboardElements) async {
     final supabase = Supabase.instance.client;
+    final userId = supabase.auth.currentUser!.id;
 
-    for (int i = 0; i < dashboardElements.length; i++) {
-      final element = dashboardElements[i];
+    // Ausgewählte Dashboard Elemente mit der vom Benutzer festgelegten Position speichern
+    // (hinzufügen, falls noch nicht vorhanden, sonst Position aktualisieren).
+    final selectedElements = dashboardElements
+        .where((element) => element.isSelected)
+        .map((element) => {
+              'user_id': userId,
+              'dashboard_element_id': element.id,
+              'position': element.position,
+            })
+        .toList();
+    if (selectedElements.isNotEmpty) {
+      await supabase.from('users_dashboard_elements').upsert(selectedElements, onConflict: 'user_id, dashboard_element_id');
+    }
 
-      if (element.isSelected) {
-        // Dashboard Element hinzufügen (falls noch nicht vorhanden)
-        await supabase.from('users_dashboard_elements').upsert({
-          'user_id': supabase.auth.currentUser!.id,
-          'dashboard_element_id': element.id,
-          'position': i,
-        }, onConflict: 'user_id, dashboard_element_id');
-      } else {
-        // Dashboard Element entfernen
-        await supabase.from('users_dashboard_elements').delete().eq('user_id', supabase.auth.currentUser!.id).eq('dashboard_element_id', element.id!);
-      }
+    // Abgewählte Dashboard Elemente entfernen
+    final deselectedElementIds = dashboardElements.where((element) => !element.isSelected).map((element) => element.id!).toList();
+    if (deselectedElementIds.isNotEmpty) {
+      await supabase.from('users_dashboard_elements').delete().eq('user_id', userId).inFilter('dashboard_element_id', deselectedElementIds);
     }
   }
 
@@ -96,10 +101,9 @@ class DashboardElementRepository {
     }).toList();
 
     elements.sort((a, b) {
-      // TODO hier weitermachen und Sortierung richtig implementieren auch komibinierbar mit dem noch offenen Issue.
-      // Beide selektiert → Position vergleichen
+      // Beide selektiert → aufsteigend nach Position
       if (a.position != null && b.position != null) {
-        return b.position!.compareTo(a.position!);
+        return a.position!.compareTo(b.position!);
       }
       // A selektiert, B nicht → A zuerst
       if (a.position != null && b.position == null) {
@@ -109,8 +113,8 @@ class DashboardElementRepository {
       if (a.position == null && b.position != null) {
         return 1;
       }
-      // Beide nicht selektiert
-      return 0;
+      // Beide nicht selektiert → Standardreihenfolge
+      return a.defaultOrder.compareTo(b.defaultOrder);
     });
     return elements;
   }

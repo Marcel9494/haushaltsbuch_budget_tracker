@@ -94,11 +94,11 @@ class _DashboardPageState extends State<DashboardPage> {
                         List<DashboardElement?> generalDashboardElement = dashboardElementState.userDashboardElements
                             .where((element) => element.dashboardElementType == DashboardElementType.general)
                             .toList()
-                          ..sort((a, b) => b.position!.compareTo(a.position!));
+                          ..sort((a, b) => (a.position ?? 0).compareTo(b.position ?? 0));
                         List<DashboardElement?> monthlyDashboardElements = dashboardElementState.userDashboardElements
                             .where((element) => element.dashboardElementType == DashboardElementType.month)
                             .toList()
-                          ..sort((a, b) => b.position!.compareTo(a.position!));
+                          ..sort((a, b) => (a.position ?? 0).compareTo(b.position ?? 0));
                         return SingleChildScrollView(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -237,11 +237,11 @@ class _DashboardPageState extends State<DashboardPage> {
                         List<DashboardElement?> generalDashboardElement = dashboardElementState.userDashboardElements
                             .where((element) => element.dashboardElementType == DashboardElementType.general)
                             .toList()
-                          ..sort((a, b) => b.position!.compareTo(a.position!));
+                          ..sort((a, b) => (a.position ?? 0).compareTo(b.position ?? 0));
                         List<DashboardElement?> yearlyDashboardElements = dashboardElementState.userDashboardElements
                             .where((element) => element.dashboardElementType == DashboardElementType.year)
                             .toList()
-                          ..sort((a, b) => b.position!.compareTo(a.position!));
+                          ..sort((a, b) => (a.position ?? 0).compareTo(b.position ?? 0));
                         return SingleChildScrollView(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
