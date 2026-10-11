@@ -60,34 +60,48 @@ class _UpdateDashboardPageState extends State<UpdateDashboardPage> with SingleTi
     });
   }
 
-  void _updateUsersDashboard(List<DashboardElement> dashboardElements, BuildContext context) {
-    int position = 1;
+  // Speichert die Änderungen aller Tabs (Allgemein, Monat, Jahr) und nicht nur
+  // die des aktuell geöffneten Tabs. Die Positionen werden pro Tab in der
+  // Reihenfolge vergeben, in der der Benutzer die Elemente sortiert hat.
+  void _updateUsersDashboard(BuildContext context) {
+    final List<DashboardElement> allDashboardElements = [];
 
-    for (final dashboardElement in dashboardElements) {
-      if (dashboardElement.isSelected) {
-        dashboardElement.position = position++;
-      } else {
-        dashboardElement.position = null;
-      }
+    for (final dashboardElementType in DashboardElementType.values) {
+      final List<DashboardElement> elementsOfType =
+          dashboardElementType == _selectedDashboardElementType ? filteredDashboardElementList : _getFilteredDashboardElements(dashboardElementType);
+      _renumberPositions(elementsOfType);
+      allDashboardElements.addAll(elementsOfType);
     }
-    context.read<DashboardElementBloc>().add(UpdateUsersDashboardElements(dashboardElements: dashboardElements));
+    context.read<DashboardElementBloc>().add(UpdateUsersDashboardElements(dashboardElements: allDashboardElements));
   }
 
-  List<DashboardElement> _getFilteredDashboardElements() {
-    final filtered = dashboardElementList.where((element) => element.dashboardElementType == _selectedDashboardElementType).toList();
+  // Vergibt fortlaufende Positionen (ab 1) an alle ausgewählten Elemente in der
+  // übergebenen Reihenfolge. Nicht ausgewählte Elemente bekommen keine Position.
+  void _renumberPositions(List<DashboardElement> dashboardElements) {
+    int position = 1;
+    for (final dashboardElement in dashboardElements) {
+      dashboardElement.position = dashboardElement.isSelected ? position++ : null;
+    }
+  }
+
+  List<DashboardElement> _getFilteredDashboardElements([DashboardElementType? dashboardElementType]) {
+    final type = dashboardElementType ?? _selectedDashboardElementType;
+    final filtered = dashboardElementList.where((element) => element.dashboardElementType == type).toList();
 
     filtered.sort((a, b) {
+      // Beide ausgewählt → aufsteigend nach Position des Benutzers
       if (a.position != null && b.position != null) {
         return a.position!.compareTo(b.position!);
       }
-
+      // Ausgewählte Elemente immer vor nicht ausgewählten
       if (a.position != null) {
         return -1;
       }
       if (b.position != null) {
         return 1;
       }
-      return 0;
+      // Beide nicht ausgewählt → Standardreihenfolge
+      return a.defaultOrder.compareTo(b.defaultOrder);
     });
     return filtered;
   }
@@ -214,27 +228,7 @@ class _UpdateDashboardPageState extends State<UpdateDashboardPage> with SingleTi
                             setState(() {
                               final movedItem = filteredDashboardElementList.removeAt(oldIndex);
                               filteredDashboardElementList.insert(newIndex, movedItem);
-
-                              int position = 1;
-
-                              for (final element in filteredDashboardElementList) {
-                                if (element.isSelected) {
-                                  element.position = position++;
-                                } else {
-                                  element.position = null;
-                                }
-                              }
-
-                              for (final element in filteredDashboardElementList) {
-                                final index = dashboardElementList.indexWhere(
-                                  (e) => e.id == element.id,
-                                );
-
-                                if (index != -1) {
-                                  dashboardElementList[index] = element;
-                                }
-                              }
-
+                              _renumberPositions(filteredDashboardElementList);
                               filteredDashboardElementList = _getFilteredDashboardElements();
                             });
                           },
@@ -262,6 +256,7 @@ class _UpdateDashboardPageState extends State<UpdateDashboardPage> with SingleTi
                                         (element) => element.id == dashboardElement.id,
                                       );
                                     }
+                                    _renumberPositions(filteredDashboardElementList);
                                   });
                                 },
                               ),
@@ -279,7 +274,7 @@ class _UpdateDashboardPageState extends State<UpdateDashboardPage> with SingleTi
                     child: AnimatedLoadingButton(
                       text: t.translate('update'),
                       controller: _updateDashboardButtonController,
-                      onPressed: () => _updateUsersDashboard(filteredDashboardElementList, context),
+                      onPressed: () => _updateUsersDashboard(context),
                       horizontalPadding: 12.0,
                       buttonColor: Colors.cyanAccent,
                       textColor: Colors.black87,
