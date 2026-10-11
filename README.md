@@ -118,6 +118,9 @@ Haushaltsbuch, Budgetplaner, Finanzmanager, Ausgaben Tracker, Einnahmen-Ausgaben
 - Github
 - RevenueCat
 - Google Play Store
+- KI-Assistenten
+  - Claude Code
+  - ChatGPT
 
 # Softwarearchitektur:
  
