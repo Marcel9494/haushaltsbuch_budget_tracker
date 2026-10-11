@@ -1,7 +1,7 @@
 
 # Haushaltsbuch - Budget Tracker App GUI
 
-Haushaltsbuch & Budget Tracker – Deine Finanzen einfach im Griff.
+Haushaltsbuch & Budget Tracker – Deine Finanzen einfach im Blick.
 
 <img style="width: 30%; height: auto;" alt="Dashboard_screenshot" src="https://github.com/user-attachments/assets/08c9886f-31e6-422f-98ff-8376ba8d69cf" />
 
@@ -45,7 +45,7 @@ Haushaltsbuch & Budget Tracker – Deine Finanzen einfach im Griff.
 
 # Haushaltsbuch - Budget Tracker
 
-Haushaltsbuch & Budget Tracker – Deine Finanzen einfach im Griff.
+Haushaltsbuch & Budget Tracker – Deine Finanzen einfach im Blick.
 
 Behalte mit einem Haushaltsbuch den Überblick über deine persönlichen Finanzen. Verwalte Einnahmen und Ausgaben, plane Budgets, verfolge Sparziele und analysiere deine finanzielle Entwicklung – alles in einer übersichtlichen Finanzapp.
 
@@ -53,26 +53,19 @@ Egal ob du deine monatlichen Ausgaben kontrollieren, Geld sparen oder dein Verm�
 
 Die Haushaltsbuch - Budget Tracker App bietet dir folgende Funktionen:
 
-:heavy_check_mark: Einnahmen und Ausgaben erfassen
-Erstelle, bearbeite und lösche Buchungen mit wenigen Klicks.
+✔️ Einnahmen und Ausgaben erfassen Erstelle, bearbeite und lösche Buchungen mit wenigen Klicks.
 
-:repeat: Wiederholungsbuchungen
-Automatisiere regelmäßige Einnahmen und Ausgaben wie Gehalt, Miete, Versicherungen oder Abonnements.
+🔁 Wiederholungsbuchungen Automatisiere regelmäßige Einnahmen und Ausgaben wie Gehalt, Miete, Versicherungen oder Abonnements.
 
-:bar_chart: Dashboard für deine Finanzen
-Alle wichtigen Finanzdaten auf einen Blick – inklusive Ausgaben, Einnahmen, Vermögen, Schulden und Budgetstatus.
+📊 Dashboard für deine Finanzen Alle wichtigen Finanzdaten auf einen Blick – inklusive Ausgaben, Einnahmen, Vermögen, Schulden und Budgetstatus.
 
-:bank: Konto- und Vermögensübersicht
-Behalte den Überblick über Konten, Bargeld, Ersparnisse, Kapitalanlagen und dein gesamtes Vermögen.
+🏦 Konto- und Vermögensübersicht Behalte den Überblick über Konten, Bargeld, Ersparnisse, Kapitalanlagen und dein gesamtes Vermögen.
 
-:money_with_wings: Budgetplanung & Budgetkontrolle
-Lege individuelle monatliche und jährliche Budgets fest und verfolge jederzeit, wie viel Geld dir noch zur Verfügung steht.
+💸 Budgetplanung & Budgetkontrolle Lege individuelle monatliche und jährliche Budgets fest und verfolge jederzeit, wie viel Geld dir noch zur Verfügung steht.
 
-:dart: Finanzielle Ziele erreichen
-Definiere Sparziele und verfolge deinen Fortschritt Schritt für Schritt.
+🎯 Finanzielle Ziele erreichen Definiere Sparziele und verfolge deinen Fortschritt Schritt für Schritt.
 
-:label: Individuelle Kategorien
-Erstelle eigene Einnahmen- und Ausgabekategorien, die perfekt zu deinem Alltag passen.
+🏷️ Individuelle Kategorien Erstelle eigene Einnahmen- und Ausgabekategorien, die perfekt zu deinem Alltag passen.
 
 Warum diese Haushaltsbuch-App?
 
@@ -88,7 +81,7 @@ Warum diese Haushaltsbuch-App?
 
 Mit diesem Haushaltsbuch und Budget Tracker verwaltest du deine Einnahmen, Ausgaben, Budgets und Sparziele an einem Ort. Starte noch heute deine persönliche Finanzplanung und bringe Ordnung in deine Finanzen.
 
-Haushaltsbuch, Budgetplaner, Finanzmanager, Ausgaben Tracker, Einnahmen-Ausgaben-Rechner und Sparziel-App – alles in einer App.
+Haushaltsbuch, Budgetplaner, persönlicher Finanzmanager, Ausgaben Tracker, Einnahmen-Ausgaben-Übersicht und Sparziel-App – alles in einer App.
 
 # Verwendete Technologien & Tools:
 
