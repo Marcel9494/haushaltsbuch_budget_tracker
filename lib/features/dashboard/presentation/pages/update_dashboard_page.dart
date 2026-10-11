@@ -60,24 +60,23 @@ class _UpdateDashboardPageState extends State<UpdateDashboardPage> with SingleTi
     });
   }
 
-  /// Speichert die Änderungen aller Tabs (Allgemein, Monat, Jahr) und nicht nur
-  /// die des aktuell geöffneten Tabs. Die Positionen werden pro Tab in der
-  /// Reihenfolge vergeben, in der der Benutzer die Elemente sortiert hat.
+  // Speichert die Änderungen aller Tabs (Allgemein, Monat, Jahr) und nicht nur
+  // die des aktuell geöffneten Tabs. Die Positionen werden pro Tab in der
+  // Reihenfolge vergeben, in der der Benutzer die Elemente sortiert hat.
   void _updateUsersDashboard(BuildContext context) {
     final List<DashboardElement> allDashboardElements = [];
 
     for (final dashboardElementType in DashboardElementType.values) {
-      final List<DashboardElement> elementsOfType = dashboardElementType == _selectedDashboardElementType
-          ? filteredDashboardElementList
-          : _getFilteredDashboardElements(dashboardElementType);
+      final List<DashboardElement> elementsOfType =
+          dashboardElementType == _selectedDashboardElementType ? filteredDashboardElementList : _getFilteredDashboardElements(dashboardElementType);
       _renumberPositions(elementsOfType);
       allDashboardElements.addAll(elementsOfType);
     }
     context.read<DashboardElementBloc>().add(UpdateUsersDashboardElements(dashboardElements: allDashboardElements));
   }
 
-  /// Vergibt fortlaufende Positionen (ab 1) an alle ausgewählten Elemente in der
-  /// übergebenen Reihenfolge. Nicht ausgewählte Elemente bekommen keine Position.
+  // Vergibt fortlaufende Positionen (ab 1) an alle ausgewählten Elemente in der
+  // übergebenen Reihenfolge. Nicht ausgewählte Elemente bekommen keine Position.
   void _renumberPositions(List<DashboardElement> dashboardElements) {
     int position = 1;
     for (final dashboardElement in dashboardElements) {
@@ -229,8 +228,6 @@ class _UpdateDashboardPageState extends State<UpdateDashboardPage> with SingleTi
                             setState(() {
                               final movedItem = filteredDashboardElementList.removeAt(oldIndex);
                               filteredDashboardElementList.insert(newIndex, movedItem);
-                              // Die Elemente sind dieselben Objekte wie in dashboardElementList,
-                              // daher reicht es, die Positionen hier neu zu vergeben.
                               _renumberPositions(filteredDashboardElementList);
                               filteredDashboardElementList = _getFilteredDashboardElements();
                             });
@@ -259,8 +256,6 @@ class _UpdateDashboardPageState extends State<UpdateDashboardPage> with SingleTi
                                         (element) => element.id == dashboardElement.id,
                                       );
                                     }
-                                    // Positionen an die sichtbare Reihenfolge anpassen, damit beim
-                                    // Tab-Wechsel und beim Speichern dieselbe Sortierung gilt.
                                     _renumberPositions(filteredDashboardElementList);
                                   });
                                 },
