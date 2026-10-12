@@ -1,5 +1,6 @@
 import 'package:haushaltsbuch_budget_tracker/data/models/goal.dart';
 
+import '../../core/utils/date_helper.dart';
 import '../enums/amount_type.dart';
 import '../enums/booking_type.dart';
 import '../enums/repetition_type.dart';
@@ -58,7 +59,7 @@ class Booking {
       title: map['title'],
       amount: map['amount'],
       amountType: AmountType.fromString(map['amount_type']),
-      bookingDate: DateTime.parse(map['booking_date']).toLocal(),
+      bookingDate: parseDateOnly(map['booking_date']),
       repetitionType: RepetitionType.fromString(map['repetition_type']),
       repetitionId: map['repetition_id'],
       categoryId: map['category_id'],
@@ -80,7 +81,7 @@ class Booking {
       'title': title,
       'amount': amount,
       'amount_type': amountType.name,
-      'booking_date': bookingDate.toUtc().toIso8601String(),
+      'booking_date': toDateOnlyString(bookingDate),
       'repetition_type': repetitionType.name,
       'repetition_id': repetitionId,
       'category_id': categoryId,

@@ -4,6 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../core/consts/repeat_number_consts.dart';
+import '../../core/utils/date_helper.dart';
 import '../enums/amount_type.dart';
 import '../enums/booking_type.dart';
 import '../enums/repetition_type.dart';
@@ -25,25 +26,12 @@ class BookingRepository {
         newBooking.toMap(),
       )..['repetition_id'] = repetitionBookingId;
 
-      DateTime currentBookingDate = DateTime(
-        newBooking.bookingDate.year,
-        newBooking.bookingDate.month,
-        newBooking.bookingDate.day,
-      );
-
-      final DateTime endDate = DateTime(
-        currentBookingDate.year + bookingRepetitionNumberInYears,
-        currentBookingDate.month,
-        currentBookingDate.day,
-      );
-
-      while (currentBookingDate.isBefore(endDate)) {
+      for (final DateTime bookingDate in getRepetitionDates(newBooking.bookingDate, newBooking.repetitionType)) {
         createdBookingsMap.add({
           ...baseBookingMap,
-          'booking_date': currentBookingDate.toUtc().toIso8601String(),
-          'is_booked': getIsBookingDateBefore(currentBookingDate),
+          'booking_date': toDateOnlyString(bookingDate),
+          'is_booked': getIsBookingDateBefore(bookingDate),
         });
-        currentBookingDate = RepetitionType.getNextBookingDate(currentBookingDate, newBooking.repetitionType);
       }
 
       final createdBookings = await supabase.from('bookings').insert(createdBookingsMap).select();
@@ -75,7 +63,7 @@ class BookingRepository {
         .update({
           ...booking.toMap(),
           'repetition_id': repetitionBookingId,
-          'booking_date': booking.bookingDate.toUtc().toIso8601String(),
+          'booking_date': toDateOnlyString(booking.bookingDate),
         })
         .eq('id', booking.id!)
         .eq('user_id', supabase.auth.currentUser!.id)
@@ -102,37 +90,13 @@ class BookingRepository {
       booking.toMap(),
     )..['repetition_id'] = repetitionBookingId;
 
-    DateTime currentBookingDate = DateTime(
-      booking.bookingDate.year,
-      booking.bookingDate.month,
-      booking.bookingDate.day,
-    );
-
-    final DateTime endDate = DateTime(
-      currentBookingDate.year + bookingRepetitionNumberInYears,
-      currentBookingDate.month,
-      currentBookingDate.day,
-    );
-
-    // Die bereits existierende Buchung überspringen
-    if (skipFirst) {
-      currentBookingDate = RepetitionType.getNextBookingDate(
-        currentBookingDate,
-        booking.repetitionType,
-      );
-    }
-
-    while (currentBookingDate.isBefore(endDate)) {
+    // skipFirst: Die bereits existierende Buchung überspringen
+    for (final DateTime bookingDate in getRepetitionDates(booking.bookingDate, booking.repetitionType, skipFirst: skipFirst)) {
       createdBookingsMap.add({
         ...baseBookingMap,
-        'booking_date': currentBookingDate.toUtc().toIso8601String(),
-        'is_booked': getIsBookingDateBefore(currentBookingDate),
+        'booking_date': toDateOnlyString(bookingDate),
+        'is_booked': getIsBookingDateBefore(bookingDate),
       });
-
-      currentBookingDate = RepetitionType.getNextBookingDate(
-        currentBookingDate,
-        booking.repetitionType,
-      );
     }
 
     if (createdBookingsMap.isEmpty) {
@@ -160,7 +124,7 @@ class BookingRepository {
       //    außer der aktuell bearbeiteten Buchung
       await supabase.from('bookings').delete().eq('repetition_id', repetitionId).gt(
             'booking_date',
-            startDate.toUtc().toIso8601String(),
+            toDateOnlyString(startDate),
           );
 
       // 2. Aktuelle Buchung in eine normale Einzelbuchung umwandeln
@@ -179,7 +143,7 @@ class BookingRepository {
     // 1. Alle zukünftigen Buchungen löschen
     await supabase.from('bookings').delete().eq('repetition_id', repetitionId).gte(
           'booking_date',
-          startDate.toUtc().toIso8601String(),
+          toDateOnlyString(startDate),
         );
 
     // 2. Neue zukünftige Buchungen generieren
@@ -189,25 +153,12 @@ class BookingRepository {
       updatedBooking.toMap(),
     )..['repetition_id'] = repetitionId;
 
-    DateTime currentBookingDate = startDate;
-
-    final DateTime endDate = DateTime(
-      currentBookingDate.year + bookingRepetitionNumberInYears,
-      currentBookingDate.month,
-      currentBookingDate.day,
-    );
-
-    while (currentBookingDate.isBefore(endDate)) {
+    for (final DateTime bookingDate in getRepetitionDates(startDate, updatedBooking.repetitionType)) {
       createdBookingsMap.add({
         ...baseBookingMap,
-        'booking_date': currentBookingDate.toUtc().toIso8601String(),
-        'is_booked': getIsBookingDateBefore(currentBookingDate),
+        'booking_date': toDateOnlyString(bookingDate),
+        'is_booked': getIsBookingDateBefore(bookingDate),
       });
-
-      currentBookingDate = RepetitionType.getNextBookingDate(
-        currentBookingDate,
-        updatedBooking.repetitionType,
-      );
     }
 
     // 3. Neue Serie erstellen
@@ -247,29 +198,12 @@ class BookingRepository {
       updatedBooking.toMap(),
     )..['repetition_id'] = repetitionId;
 
-    DateTime currentBookingDate = DateTime(
-      updatedBooking.bookingDate.year,
-      updatedBooking.bookingDate.month,
-      updatedBooking.bookingDate.day,
-    );
-
-    final DateTime endDate = DateTime(
-      currentBookingDate.year + bookingRepetitionNumberInYears,
-      currentBookingDate.month,
-      currentBookingDate.day,
-    );
-
-    while (currentBookingDate.isBefore(endDate)) {
+    for (final DateTime bookingDate in getRepetitionDates(updatedBooking.bookingDate, updatedBooking.repetitionType)) {
       createdBookingsMap.add({
         ...baseBookingMap,
-        'booking_date': currentBookingDate.toUtc().toIso8601String(),
-        'is_booked': getIsBookingDateBefore(currentBookingDate),
+        'booking_date': toDateOnlyString(bookingDate),
+        'is_booked': getIsBookingDateBefore(bookingDate),
       });
-
-      currentBookingDate = RepetitionType.getNextBookingDate(
-        currentBookingDate,
-        updatedBooking.repetitionType,
-      );
     }
 
     // 3. Neue Serie erstellen
@@ -297,7 +231,7 @@ class BookingRepository {
         .from('bookings')
         .delete()
         .eq('repetition_id', repetitionId)
-        .gte('booking_date', fromDate.toUtc().toIso8601String())
+        .gte('booking_date', toDateOnlyString(fromDate))
         .eq('user_id', supabase.auth.currentUser!.id);
   }
 
@@ -317,7 +251,7 @@ class BookingRepository {
         .from('bookings')
         .select()
         .eq('repetition_id', repetitionId)
-        .gte('booking_date', fromDate.toUtc())
+        .gte('booking_date', toDateOnlyString(fromDate))
         .order('booking_date');
     return (futureRepetitionBookings as List).map((data) => Booking.fromMap(data)).toList();
   }
@@ -334,8 +268,8 @@ class BookingRepository {
         .from('bookings')
         .select(
             '*, categories(*), debit_account:accounts!bookings_debit_account_id_fkey(*), target_account:accounts!bookings_target_account_id_fkey(*), goals(*)')
-        .gte('booking_date', startOfMonth.toUtc())
-        .lt('booking_date', endOfMonth.toUtc())
+        .gte('booking_date', toDateOnlyString(startOfMonth))
+        .lt('booking_date', toDateOnlyString(endOfMonth))
         .order('booking_date', ascending: false);
     return (monthlyBookings as List).map((data) => Booking.fromMap(data)).toList();
   }
@@ -347,8 +281,8 @@ class BookingRepository {
         .from('bookings')
         .select(
             '*, categories(*), debit_account:accounts!bookings_debit_account_id_fkey(*), target_account:accounts!bookings_target_account_id_fkey(*), goals(*)')
-        .gte('booking_date', startOfYear.toUtc())
-        .lt('booking_date', endOfYear.toUtc())
+        .gte('booking_date', toDateOnlyString(startOfYear))
+        .lt('booking_date', toDateOnlyString(endOfYear))
         .order('booking_date', ascending: false);
     final List<Booking> allBookings = (yearlyBookings as List).map((data) => Booking.fromMap(data)).toList();
     final Map<int, List<Booking>> groupedMonthlyBookings = groupBy(allBookings, (booking) {
@@ -530,6 +464,37 @@ class BookingRepository {
     }
 
     return grouped;
+  }
+
+  // Liefert alle Buchungsdaten einer Wiederholungsserie für die nächsten bookingRepetitionNumberInYears Jahre.
+  // Der Starttag wird als anchorDay mitgegeben, damit z.B. eine Serie ab dem 31. nach dem Februar wieder am 31. bucht.
+  List<DateTime> getRepetitionDates(DateTime startDate, RepetitionType repetitionType, {bool skipFirst = false}) {
+    final DateTime firstBookingDate = DateTime(startDate.year, startDate.month, startDate.day);
+    if (repetitionType == RepetitionType.noRepetition) {
+      return skipFirst ? [] : [firstBookingDate];
+    }
+
+    final DateTime endDate = DateTime(
+      firstBookingDate.year + bookingRepetitionNumberInYears,
+      firstBookingDate.month,
+      firstBookingDate.day,
+    );
+
+    final List<DateTime> repetitionDates = [];
+    DateTime currentBookingDate = firstBookingDate;
+    while (currentBookingDate.isBefore(endDate)) {
+      repetitionDates.add(currentBookingDate);
+      currentBookingDate = RepetitionType.getNextBookingDate(
+        currentBookingDate,
+        repetitionType,
+        anchorDay: firstBookingDate.day,
+      );
+    }
+
+    if (skipFirst && repetitionDates.isNotEmpty) {
+      repetitionDates.removeAt(0);
+    }
+    return repetitionDates;
   }
 
   bool getIsBookingDateBefore(DateTime bookingDate) {
