@@ -49,6 +49,32 @@ String formatDateDuration(DateTime startDate, DateTime endDate) {
   return '$mainDatePart\n($totalDays Tage)';
 }
 
+// Buchungsdaten sind reine Kalenderdaten ohne Uhrzeit und Zeitzone.
+// Eine Buchung vom 01.03. bleibt damit in jeder Zeitzone (z.B. im Urlaub) am 01.03.
+
+// Beispielausgabe: "2028-03-01"
+String toDateOnlyString(DateTime date) {
+  final String year = date.year.toString().padLeft(4, '0');
+  final String month = date.month.toString().padLeft(2, '0');
+  final String day = date.day.toString().padLeft(2, '0');
+  return '$year-$month-$day';
+}
+
+// "2028-03-01" (oder "2028-03-01T...") -> DateTime(2028, 3, 1) in lokaler Zeit, 00:00 Uhr
+DateTime parseDateOnly(String value) {
+  final DateTime parsedDate = DateTime.parse(value.substring(0, 10));
+  return DateTime(parsedDate.year, parsedDate.month, parsedDate.day);
+}
+
+// Addiert Monate und begrenzt den Tag auf das Monatsende, z.B. 31.01. + 1 Monat = 28.02.
+// anchorDay ist der ursprüngliche Tag der Serie, damit z.B. aus 28.02. wieder der 31.03. wird.
+DateTime addMonthsClamped(DateTime date, int months, {int? anchorDay}) {
+  final int day = anchorDay ?? date.day;
+  final DateTime firstOfTargetMonth = DateTime(date.year, date.month + months, 1);
+  final int lastDayOfTargetMonth = DateTime(firstOfTargetMonth.year, firstOfTargetMonth.month + 1, 0).day;
+  return DateTime(firstOfTargetMonth.year, firstOfTargetMonth.month, day > lastDayOfTargetMonth ? lastDayOfTargetMonth : day);
+}
+
 bool isSameDay(DateTime a, DateTime b) {
   return a.year == b.year && a.month == b.month && a.day == b.day;
 }

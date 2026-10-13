@@ -1,3 +1,5 @@
+import '../../core/utils/date_helper.dart';
+
 enum RepetitionType {
   noRepetition,
   weekly,
@@ -26,75 +28,47 @@ enum RepetitionType {
         _ => RepetitionType.noRepetition
       };
 
+  // Berechnet das nächste Buchungsdatum einer Serie über den Kalender (nicht über Stunden),
+  // damit Zeitumstellungen (Sommer-/Winterzeit) das Datum nicht verschieben.
+  // anchorDay ist der Starttag der Serie, z.B. 31 -> 31.01., 28.02., 31.03., 30.04., ...
   static DateTime getNextBookingDate(
     DateTime current,
-    RepetitionType repetitionType,
-  ) {
+    RepetitionType repetitionType, {
+    int? anchorDay,
+  }) {
     switch (repetitionType) {
       case RepetitionType.noRepetition:
         return current;
 
       case RepetitionType.weekly:
-        return current.add(const Duration(days: 7));
+        return DateTime(current.year, current.month, current.day + 7);
 
       case RepetitionType.twoWeekly:
-        return current.add(const Duration(days: 14));
+        return DateTime(current.year, current.month, current.day + 14);
 
       case RepetitionType.beginningOfMonth:
-        return DateTime(
-          current.year,
-          current.month + 1,
-          1,
-        );
+        return DateTime(current.year, current.month + 1, 1);
 
       case RepetitionType.endOfMonth:
-        return DateTime(
-          current.year,
-          current.month + 2,
-          0,
-        );
+        return DateTime(current.year, current.month + 2, 0);
 
       case RepetitionType.monthly:
-        return DateTime(
-          current.year,
-          current.month + 1,
-          current.day,
-        );
+        return addMonthsClamped(current, 1, anchorDay: anchorDay);
 
       case RepetitionType.quarterly:
-        return DateTime(
-          current.year,
-          current.month + 3,
-          current.day,
-        );
+        return addMonthsClamped(current, 3, anchorDay: anchorDay);
 
       case RepetitionType.halfYearly:
-        return DateTime(
-          current.year,
-          current.month + 6,
-          current.day,
-        );
+        return addMonthsClamped(current, 6, anchorDay: anchorDay);
 
       case RepetitionType.yearly:
-        return DateTime(
-          current.year + 1,
-          current.month,
-          current.day,
-        );
+        return addMonthsClamped(current, 12, anchorDay: anchorDay);
 
       case RepetitionType.beginningOfYear:
-        return DateTime(
-          current.year + 1,
-          1,
-          1,
-        );
+        return DateTime(current.year + 1, 1, 1);
 
       case RepetitionType.endOfYear:
-        return DateTime(
-          current.year + 1,
-          12,
-          31,
-        );
+        return DateTime(current.year + 1, 12, 31);
     }
   }
 }
