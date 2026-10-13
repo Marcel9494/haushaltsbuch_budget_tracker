@@ -458,5 +458,16 @@ const Map<String, String> en = {
   'open_email_provider_error': 'No email app could be opened. Please contact the following e-mail directly:',
   'empty_description_error': 'Please enter a description.',
   'database_error': 'Database error. Please try again later.',
+  'net_worth_development': 'Net worth trend',
+  'net_worth_dialog_title': 'Net worth trend',
+  'net_worth_dialog_content':
+      'The chart shows how your balance (assets minus debts) has developed over the selected period. The trend is calculated from your current account balances and all income, expenses and transfers that have already been booked. Future bookings and bookings without an account are not included.',
+  'net_worth_period_1m': '1M',
+  'net_worth_period_3m': '3M',
+  'net_worth_period_6m': '6M',
+  'net_worth_period_1y': '1Y',
+  'net_worth_period_3y': '3Y',
+  'net_worth_period_max': 'Max',
+  'net_worth_change_in_period': 'in period',
   'unknown_error': 'An unknown error has occurred. Please try again later.',
 };

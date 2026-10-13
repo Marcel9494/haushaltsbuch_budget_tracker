@@ -14,6 +14,7 @@ import '../../../shared/presentation/widgets/deco/circular_loading_indicator.dar
 import '../../../shared/presentation/widgets/deco/empty_list.dart';
 import '../../../shared/presentation/widgets/deco/error_text.dart';
 import '../widgets/cards/account_card.dart';
+import '../widgets/charts/net_worth_chart.dart';
 import '../widgets/deco/account_list_header.dart';
 
 class AccountListPage extends StatefulWidget {
@@ -83,21 +84,36 @@ class _AccountListPageState extends State<AccountListPage> {
                           child: AnimationLimiter(
                             child: ListView.builder(
                               shrinkWrap: true,
-                              itemCount: state.accounts.length,
+                              // Erstes Element ist das Diagramm zur Vermögensentwicklung, danach folgen die Konten.
+                              itemCount: state.accounts.length + 1,
                               itemBuilder: (context, index) {
-                                final bool showHeader =
-                                    index == 0 ? true : state.accounts[index - 1].accountType != state.accounts[index].accountType;
+                                if (index == 0) {
+                                  return AnimationConfiguration.staggeredList(
+                                    position: index,
+                                    duration: const Duration(milliseconds: listAnimationDurationInMs),
+                                    child: SlideAnimation(
+                                      verticalOffset: 40.0,
+                                      child: FadeInAnimation(
+                                        child: NetWorthChart(accounts: state.accounts),
+                                      ),
+                                    ),
+                                  );
+                                }
+                                final int accountIndex = index - 1;
+                                final bool showHeader = accountIndex == 0
+                                    ? true
+                                    : state.accounts[accountIndex - 1].accountType != state.accounts[accountIndex].accountType;
                                 final blockContent = Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     showHeader
                                         ? AccountListHeader(
                                             accounts: state.accounts,
-                                            accountTypeBalance: _accountTypeBalances[state.accounts[index].accountType.name] ?? 0.0,
-                                            index: index)
+                                            accountTypeBalance: _accountTypeBalances[state.accounts[accountIndex].accountType.name] ?? 0.0,
+                                            index: accountIndex)
                                         : const SizedBox.shrink(),
-                                    AccountCard(account: state.accounts[index]),
-                                    state.accounts.length - 1 == index ? SizedBox(height: 54.0) : SizedBox.shrink(),
+                                    AccountCard(account: state.accounts[accountIndex]),
+                                    state.accounts.length - 1 == accountIndex ? SizedBox(height: 54.0) : SizedBox.shrink(),
                                   ],
                                 );
                                 return AnimationConfiguration.staggeredList(

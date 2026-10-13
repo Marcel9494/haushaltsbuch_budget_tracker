@@ -462,5 +462,16 @@ const Map<String, String> de = {
   'open_email_provider_error': 'Es konnte keine E-Mail-App geöffnet werden. Bitte wende dich direkt an:',
   'empty_description_error': 'Bitte gib eine Beschreibung ein.',
   'database_error': 'Datenbankfehler. Bitte versuche es später erneut.',
+  'net_worth_development': 'Vermögensentwicklung',
+  'net_worth_dialog_title': 'Vermögensentwicklung',
+  'net_worth_dialog_content':
+      'Das Diagramm zeigt, wie sich dein Saldo (Vermögen minus Schulden) über den gewählten Zeitraum entwickelt hat. Der Verlauf wird aus deinen aktuellen Kontoständen und allen bereits gebuchten Einnahmen, Ausgaben und Überträgen berechnet. Zukünftige Buchungen und Buchungen ohne Konto werden nicht berücksichtigt.',
+  'net_worth_period_1m': '1M',
+  'net_worth_period_3m': '3M',
+  'net_worth_period_6m': '6M',
+  'net_worth_period_1y': '1J',
+  'net_worth_period_3y': '3J',
+  'net_worth_period_max': 'Max',
+  'net_worth_change_in_period': 'im Zeitraum',
   'unknown_error': 'Ein unbekannter Fehler ist aufgetreten. Bitte versuche es später erneut.',
 };
