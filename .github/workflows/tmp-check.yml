@@ -1,0 +1,25 @@
+name: tmp-check
+on:
+  push:
+    branches: [ci/vermoegensentwicklung-check]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter --version
+      - run: flutter pub get
+      - name: analyze
+        run: |
+          flutter analyze --no-fatal-infos --no-fatal-warnings > analyze.txt 2>&1 || true
+          cat analyze.txt
+          E=$(grep -c " error " analyze.txt || true); W=$(grep -c " warning " analyze.txt || true)
+          echo "::notice title=counts::errors=$E warnings=$W"
+          grep -E " (error|warning) " analyze.txt | head -20 | while IFS= read -r l; do echo "::error title=analyze::$l"; done
+          grep -E "net_worth|account_list_page" analyze.txt | head -20 | while IFS= read -r l; do echo "::warning title=mine::$l"; done
+      - name: test
+        run: flutter test test/net_worth_calculator_test.dart --reporter github
