@@ -47,3 +47,6 @@ jobs:
           name: Testergebnis
           path: test-results.json
           reporter: flutter-json
+          # Eigener Check "Testergebnis" im PR (z. B. "11 passed, 0 failed")
+          # statt nur einer Zusammenfassung im Actions-Lauf.
+          use-actions-summary: 'false'
