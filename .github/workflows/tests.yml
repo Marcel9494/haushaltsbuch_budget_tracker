@@ -1,0 +1,52 @@
+name: Tests
+
+# Führt alle Tests im Ordner test/ bei jedem Pull Request aus
+# und zeigt das Ergebnis direkt im Pull Request an.
+on:
+  pull_request:
+  workflow_dispatch: # erlaubt zusätzlich einen manuellen Start im Actions-Tab
+
+permissions:
+  contents: read
+  checks: write # nötig, damit der Test-Report als Check im PR erscheint
+
+# Bei einem neuen Push in denselben PR wird der alte Lauf abgebrochen.
+concurrency:
+  group: tests-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Flutter-Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      # Die Datums-Tests prüfen die Zeitumstellung, daher deutsche Zeitzone.
+      TZ: Europe/Berlin
+
+    steps:
+      - name: Code auschecken
+        uses: actions/checkout@v7
+
+      - name: Flutter installieren
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Abhängigkeiten laden
+        run: flutter pub get
+
+      - name: Tests ausführen
+        run: flutter test --machine > test-results.json
+
+      - name: Testergebnis anzeigen
+        uses: dorny/test-reporter@v3
+        if: ${{ !cancelled() }}
+        with:
+          name: Testergebnis
+          path: test-results.json
+          reporter: flutter-json
+          # Eigener Check "Testergebnis" im PR (z. B. "11 passed, 0 failed")
+          # statt nur einer Zusammenfassung im Actions-Lauf.
+          use-actions-summary: 'false'
