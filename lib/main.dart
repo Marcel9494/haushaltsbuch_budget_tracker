@@ -106,8 +106,7 @@ void main() async {
     ),
   );
 
-  PremiumService.configure();
-  PremiumService.initializeRevenueCat();
+  await PremiumService.initialize();
 
   Supabase.instance.client.auth.onAuthStateChange.listen(
     (data) async {
@@ -116,6 +115,8 @@ void main() async {
       if (event == AuthChangeEvent.initialSession) {
         UserRepository userRepository = UserRepository();
         if (Supabase.instance.client.auth.currentUser != null) {
+          await PremiumService.onUserSignedIn(Supabase.instance.client.auth.currentUser!.id);
+
           User user = await userRepository.loadUser(Supabase.instance.client.auth.currentUser!.id);
           CurrencyHelper.instance.setCurrency(user.currencyCode);
 
@@ -129,6 +130,8 @@ void main() async {
           }
         }
       } else if (event == AuthChangeEvent.signedIn) {
+        await PremiumService.onUserSignedIn(Supabase.instance.client.auth.currentUser!.id);
+
         UserRepository userRepository = UserRepository();
         bool userExists = await userRepository.existsUser(Supabase.instance.client.auth.currentUser!.id);
 
@@ -237,6 +240,7 @@ void main() async {
           MaterialPageRoute(builder: (_) => const ResetPasswordPage()),
         );
       } else if (event == AuthChangeEvent.signedOut) {
+        await PremiumService.onUserSignedOut();
         navigatorKey.currentState?.pushAndRemoveUntil(
           MaterialPageRoute(builder: (_) => const RegisterPage()),
           (route) => false,

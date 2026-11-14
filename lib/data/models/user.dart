@@ -34,7 +34,6 @@ class User {
       'currency_code': currencyCode,
       'timezone': timezone,
       'has_onboarding_completed': hasOnboardingCompleted,
-      'premium_override': premiumOverride,
     };
   }
 }
