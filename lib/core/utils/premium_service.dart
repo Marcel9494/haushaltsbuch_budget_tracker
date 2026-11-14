@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -12,24 +13,51 @@ class PremiumService {
 
   static bool _premiumOverride = false;
 
-  static Future<void> configure() async {
-    await Purchases.configure(PurchasesConfiguration(revenueCatApiKey));
-  }
-
-  static Future<void> initializeRevenueCat() async {
-    String apiKey = '';
-
-    if (Platform.isIOS) {
-      apiKey = revenueCatApiKey;
-    } else if (Platform.isAndroid) {
-      apiKey = revenueCatApiKey;
-    } else {
+  // Richtet RevenueCat einmalig beim App-Start ein.
+  // Muss in main() mit await vor runApp() aufgerufen werden, damit das SDK
+  // fertig konfiguriert ist, bevor irgendwo der Premium-Status abgefragt wird.
+  static Future<void> initialize() async {
+    if (!Platform.isAndroid && !Platform.isIOS) {
       throw UnsupportedError('Platform not supported');
     }
 
-    await Purchases.configure(PurchasesConfiguration(apiKey));
+    if (await Purchases.isConfigured) {
+      return;
+    }
+
+    if (kDebugMode) {
+      await Purchases.setLogLevel(LogLevel.debug);
+    }
+
+    await Purchases.configure(PurchasesConfiguration(revenueCatApiKey));
+  }
+
+  // Verknüpft RevenueCat mit dem eingeloggten Supabase-Benutzer, damit Käufe
+  // am Haushaltsbuch-Konto hängen und nicht am Gerät.
+  // Käufe, die vorher unter der anonymen RevenueCat-ID gemacht wurden, werden
+  // dabei von RevenueCat auf den Benutzer übertragen.
+  static Future<void> onUserSignedIn(String userId) async {
+    try {
+      await Purchases.logIn(userId);
+    } catch (e) {
+      debugPrint('RevenueCat logIn fehlgeschlagen: $e');
+    }
 
     await _loadPremiumOverride();
+  }
+
+  // Trennt RevenueCat vom abgemeldeten Benutzer, damit ein anderer Benutzer
+  // auf demselben Gerät dessen Premium nicht übernimmt.
+  static Future<void> onUserSignedOut() async {
+    _premiumOverride = false;
+
+    try {
+      if (!await Purchases.isAnonymous) {
+        await Purchases.logOut();
+      }
+    } catch (e) {
+      debugPrint('RevenueCat logOut fehlgeschlagen: $e');
+    }
   }
 
   static Future<void> _loadPremiumOverride() async {

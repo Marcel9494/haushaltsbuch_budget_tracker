@@ -68,9 +68,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    PremiumService.configure();
-    PremiumService.initializeRevenueCat();
-
     _selectedPageIndex = widget.currentPageIndex;
 
     _bookingBloc = context.read<BookingBloc>();
