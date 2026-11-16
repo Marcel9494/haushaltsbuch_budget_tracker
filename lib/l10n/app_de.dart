@@ -153,7 +153,9 @@ const Map<String, String> de = {
   'guest_info_text':
       'Aktuell hast du ein vorübergehendes Gästekonto. Deine Daten gehen verloren, wenn du die App deinstallierst oder dein Gerät wechselst. Um deine Daten dauerhaft zu sichern und plattformübergreifend zu nutzen, erstelle bitte ein kostenloses Konto.',
   'upgrade_account': 'Konto upgraden',
-  'guest_paywall_hint_title': 'Du nutzt ein Gästekonto',
+  'guest_paywall_hint_title': 'Premium mit Gästekonto',
+  'guest_paywall_hint_intro':
+      'Du möchtest Premium freischalten. Bevor du fortfährst, beachte bitte: Du nutzt aktuell ein Gästekonto.',
   'guest_paywall_hint_text':
       'Deine Daten sind keinem Konto zugeordnet. Wenn du dein Gerät wechselst oder die App neu installierst, gehen alle deine Daten verloren. Verknüpfe dein Gästekonto mit einer E-Mail-Adresse, um deine Daten dauerhaft zu sichern.',
   'user_logout_description': 'Möchtest du dich wirklich abmelden?',

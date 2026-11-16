@@ -155,7 +155,9 @@ const Map<String, String> en = {
   'guest_info_text':
       'You currently have a guest account. Your data will be lost if you uninstall the app or switch devices. To permanently save your data and use it across platforms, please create a free account.',
   'upgrade_account': 'Upgrade account',
-  'guest_paywall_hint_title': 'You are using a guest account',
+  'guest_paywall_hint_title': 'Premium with a guest account',
+  'guest_paywall_hint_intro':
+      'You are about to unlock Premium. Before you continue, please note: you are currently using a guest account.',
   'guest_paywall_hint_text':
       'Your data is not linked to an account. If you switch devices or reinstall the app, all your data will be lost. Link your guest account to an email address to keep your data safe.',
   'user_logout_description': 'Are you sure you want to logout?',
