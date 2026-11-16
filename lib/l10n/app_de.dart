@@ -155,9 +155,9 @@ const Map<String, String> de = {
   'upgrade_account': 'Konto upgraden',
   'guest_paywall_hint_title': 'Premium mit Gästekonto',
   'guest_paywall_hint_intro':
-      'Du möchtest Premium freischalten. Bevor du fortfährst, beachte bitte: Du nutzt aktuell ein Gästekonto.',
+      'Mit Premium kannst du weitere Budgets, Konten und Ziele hinzufügen. Da du aktuell ein Gästekonto nutzt, beachte bitte den nachfolgenden Hinweis, bevor du fortfährst.',
   'guest_paywall_hint_text':
-      'Deine Daten sind keinem Konto zugeordnet. Wenn du dein Gerät wechselst oder die App neu installierst, gehen alle deine Daten verloren. Verknüpfe dein Gästekonto mit einer E-Mail-Adresse, um deine Daten dauerhaft zu sichern.',
+      'Deine Daten sind aktuell keinem Konto zugeordnet. Wenn du dein Gerät wechselst oder die App neu installierst, gehen alle deine Daten verloren. Verknüpfe deshalb dein Gästekonto mit einer E-Mail-Adresse, um deine Daten dauerhaft zu sichern. Dein Premium Abo ist jederzeit mit deinem im App Store hinterlegten Konto verknüpft.',
   'user_logout_description': 'Möchtest du dich wirklich abmelden?',
   'guest_logout_description_important':
       'WICHTIG: Vorübergehende Gästekontos verlieren alle ihre Daten, wenn du dich abmeldest. Diese Aktion kann nicht rückgängig gemacht werden. Wenn du dich trotzdem abmelden möchtest bestätige bitte mit dem Wort: Verstanden',
@@ -307,7 +307,7 @@ const Map<String, String> de = {
   'keep': 'Beibehalten',
   'cancellation_policy_form': 'Widerrufsformular',
   'cancellation_policy_form_description':
-      "Marcel Geirhos / [Unternehmensname]\nGartenstraße 8, 73550 Waldstetten\nE-Mail: Marcel.Geirhos@gmail.com\n\nHiermit widerrufe ich den von mir abgeschlossenen Vertrag über die Erbringung der folgenden digitalen Dienstleistung:\n\nHaushaltsbuch - Budget Tracker Premium\n\n",
+      "Marcel Geirhos \nGartenstraße 8, 73550 Waldstetten\nE-Mail: Marcel.Geirhos@gmail.com\n\nHiermit widerrufe ich den von mir abgeschlossenen Vertrag über die Erbringung der folgenden digitalen Dienstleistung:\n\nHaushaltsbuch - Budget Tracker Premium\n\n",
   'cancellation_email_subject': 'Widerruf meines Haushaltsbuch - Budget Tracker Premium Abos',
   'copy': 'Kopieren',
   'copied_content_sucessfully': 'Inhalt wurde erfolgreich kopiert.',
