@@ -155,7 +155,7 @@ const Map<String, String> de = {
   'upgrade_account': 'Konto upgraden',
   'guest_paywall_hint_title': 'Premium mit Gästekonto',
   'guest_paywall_hint_intro':
-      'Mit Premium kannst du weitere Budgets, Konten und Ziele hinzufügen. Da du aktuell ein Gästekonto nutzt, beachte bitte den nachfolgenden Hinweis, bevor du fortfährst.',
+      'Mit Premium kannst du weitere Budgets, Konten und Ziele hinzufügen. Ein Premium-Abo kannst du auch mit einem Gästekonto abschließen. Da du aktuell ein Gästekonto nutzt, beachte bitte den nachfolgenden Hinweis, bevor du fortfährst.',
   'guest_paywall_hint_text':
       'Deine Daten sind aktuell keinem Konto zugeordnet. Wenn du dein Gerät wechselst oder die App neu installierst, gehen alle deine Daten verloren. Verknüpfe deshalb dein Gästekonto mit einer E-Mail-Adresse, um deine Daten dauerhaft zu sichern. Dein Premium Abo ist jederzeit mit deinem im App Store hinterlegten Konto verknüpft.',
   'user_logout_description': 'Möchtest du dich wirklich abmelden?',

@@ -157,7 +157,7 @@ const Map<String, String> en = {
   'upgrade_account': 'Upgrade account',
   'guest_paywall_hint_title': 'Premium with a guest account',
   'guest_paywall_hint_intro':
-      'With Premium you can add more budgets, accounts and goals. Since you are currently using a guest account, please read the following notice before you continue.',
+      'With Premium you can add more budgets, accounts and goals. You can also subscribe to Premium with a guest account. Since you are currently using a guest account, please read the following notice before you continue.',
   'guest_paywall_hint_text':
       'Your data is currently not linked to an account. If you switch devices or reinstall the app, all your data will be lost. Please link your guest account to an email address to keep your data safe permanently. Your Premium subscription is always linked to the account you use in the app store.',
   'user_logout_description': 'Are you sure you want to logout?',
