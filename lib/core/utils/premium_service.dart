@@ -1,12 +1,15 @@
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../data/enums/guest_paywall_hint_choice.dart';
 import '../consts/revenueCat_consts.dart';
+import '../consts/route_consts.dart';
+import 'dialogs/show_guest_paywall_hint_dialog.dart';
 
 class PremiumService {
   static final SupabaseClient _supabase = Supabase.instance.client;
@@ -89,13 +92,24 @@ class PremiumService {
     return customerInfo.entitlements.active.containsKey(revenueCatPremiumEntitlementId);
   }
 
-  static Future<bool> checkLimit({required bool limitReached, required Locale locale}) async {
+  static Future<bool> checkLimit(BuildContext context, {required bool limitReached}) async {
     if (limitReached == false) {
       return true;
     }
 
+    final Locale locale = Localizations.localeOf(context);
+
     if (await isUserPremium()) {
       return true;
+    }
+
+    if (!context.mounted) {
+      return false;
+    }
+
+    final bool shouldOpenPaywall = await _confirmPaywallForGuest(context);
+    if (!shouldOpenPaywall) {
+      return false;
     }
 
     await Purchases.overridePreferredUILocale(
@@ -106,10 +120,46 @@ class PremiumService {
     return await isUserPremium();
   }
 
-  static Future<void> openPaywall(Locale locale) async {
+  static Future<void> openPaywall(BuildContext context) async {
+    final Locale locale = Localizations.localeOf(context);
+
+    final bool shouldOpenPaywall = await _confirmPaywallForGuest(context);
+    if (!shouldOpenPaywall) {
+      return;
+    }
+
     await Purchases.overridePreferredUILocale(
       locale.toLanguageTag(),
     );
     await RevenueCatUI.presentPaywall();
+  }
+
+  // Gibt zurück, ob der aktuelle Benutzer ein Gastkonto (anonymer Supabase-Benutzer) hat.
+  static bool _isGuestUser() {
+    return _supabase.auth.currentUser?.isAnonymous ?? false;
+  }
+
+  // Zeigt Gästen vor der Paywall einen Hinweis, dass ihre Daten keinem Konto
+  // zugeordnet sind. Gibt true zurück, wenn die Paywall geöffnet werden soll.
+  // Wählt der Gast "Konto upgraden", wird die Upgrade-Seite geöffnet und die
+  // Paywall bleibt geschlossen.
+  static Future<bool> _confirmPaywallForGuest(BuildContext context) async {
+    if (!_isGuestUser()) {
+      return true;
+    }
+
+    final GuestPaywallHintChoice choice = await showGuestPaywallHintDialog(context);
+
+    switch (choice) {
+      case GuestPaywallHintChoice.continueAsGuest:
+        return true;
+      case GuestPaywallHintChoice.upgradeAccount:
+        if (context.mounted) {
+          Navigator.pushNamed(context, upgradeAccountRoute);
+        }
+        return false;
+      case GuestPaywallHintChoice.cancel:
+        return false;
+    }
   }
 }

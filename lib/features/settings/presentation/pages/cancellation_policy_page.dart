@@ -152,7 +152,7 @@ class CancellationPolicyPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Marcel Geirhos / [Unternehmensname]',
+              'Marcel Geirhos',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 4),
