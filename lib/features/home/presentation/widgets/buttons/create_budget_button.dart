@@ -29,7 +29,7 @@ class CreateBudgetButton extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: TextButton.icon(
               onPressed: () async {
-                final allowed = await PremiumService.checkLimit(limitReached: budgetCount >= 3, locale: Localizations.localeOf(context));
+                final allowed = await PremiumService.checkLimit(context, limitReached: budgetCount >= 3);
                 if (allowed == false) {
                   return;
                 }
