@@ -18,6 +18,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide User;
 
 import 'blocs/account/account_bloc.dart';
+import 'blocs/auth/auth_bloc.dart';
 import 'blocs/booking/booking_bloc.dart';
 import 'blocs/budget/budget_bloc.dart';
 import 'blocs/category/category_bloc.dart';
@@ -31,6 +32,7 @@ import 'core/consts/route_consts.dart';
 import 'core/page_arguments/budget_bookings_page_arguments.dart';
 import 'core/page_arguments/category_bookings_page_arguments.dart';
 import 'core/page_arguments/category_list_page_arguments.dart';
+import 'core/page_arguments/forgot_password_page_arguments.dart';
 import 'core/page_arguments/goal_bookings_page_arguments.dart';
 import 'core/page_arguments/home_page_arguments.dart';
 import 'core/page_arguments/issue_page_arguments.dart';
@@ -43,6 +45,7 @@ import 'core/utils/app_flushbar.dart';
 import 'core/utils/currency_helper.dart';
 import 'data/models/user.dart';
 import 'data/repositories/account_repository.dart';
+import 'data/repositories/auth_repository.dart';
 import 'data/repositories/booking_repository.dart';
 import 'data/repositories/budget_repository.dart';
 import 'data/repositories/dashboard_element_repository.dart';
@@ -279,7 +282,12 @@ void main() async {
     },
   );
 
-  runApp(MyApp(initialLocale: initialLocale));
+  runApp(
+    RepositoryProvider(
+      create: (context) => AuthRepository(),
+      child: MyApp(initialLocale: initialLocale),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -320,6 +328,7 @@ class _MyAppState extends State<MyApp> {
       providers: [
         BlocProvider(create: (context) => OnboardingCategoryBloc(OnboardingCategoryRepository())),
         BlocProvider(create: (context) => OnboardingAccountBloc(OnboardingAccountRepository())),
+        BlocProvider(create: (context) => AuthBloc(context.read<AuthRepository>())),
       ],
       child: MaterialApp(
         title: 'Haushaltsbuch - Budget Tracker',
@@ -444,7 +453,12 @@ class _MyAppState extends State<MyApp> {
         navigatorKey: navigatorKey,
         home: const AuthenticationGatePage(),
         routes: {
-          forgotPasswordRoute: (context) => const ForgotPasswordPage(),
+          forgotPasswordRoute: (context) {
+            final args = ModalRoute.of(context)?.settings.arguments;
+            return ForgotPasswordPage(
+              initialEmail: args is ForgotPasswordPageArguments ? args.email : '',
+            );
+          },
           createBookingRoute: (context) => const CreateBookingPage(),
           createAccountRoute: (context) => const CreateAccountPage(),
           createBudgetRoute: (context) => const CreateBudgetPage(),

@@ -2,26 +2,29 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:haushaltsbuch_budget_tracker/data/repositories/account_repository.dart';
-import 'package:haushaltsbuch_budget_tracker/data/repositories/booking_repository.dart';
-import 'package:haushaltsbuch_budget_tracker/data/repositories/user_repository.dart';
-import 'package:haushaltsbuch_budget_tracker/features/auth/presentation/widgets/buttons/google_sign_in_button.dart';
-import 'package:haushaltsbuch_budget_tracker/features/auth/presentation/widgets/deco/divider_with_text.dart';
-import 'package:haushaltsbuch_budget_tracker/features/shared/presentation/widgets/input_fields/email_auth_input_field.dart';
-import 'package:haushaltsbuch_budget_tracker/features/shared/presentation/widgets/input_fields/password_input_field.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
-import 'package:supabase_flutter/supabase_flutter.dart' hide User;
 
-import '../../../../blocs/user/user_bloc.dart';
+import '../../../../blocs/auth/auth_bloc.dart';
+import '../../../../blocs/auth/auth_event.dart';
+import '../../../../blocs/auth/auth_state.dart';
 import '../../../../core/consts/animation_consts.dart';
 import '../../../../core/consts/route_consts.dart';
 import '../../../../core/utils/app_flushbar.dart';
-import '../../../../core/utils/app_icon.dart';
+import '../../../../core/utils/app_theme_colors.dart';
 import '../../../../core/utils/dialogs/show_terms_of_use_dialog.dart';
+import '../../../../core/utils/input_validators.dart';
+import '../../../../data/enums/auth_action_type.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../shared/presentation/widgets/buttons/animated_loading_button.dart';
+import '../../../shared/presentation/widgets/input_fields/email_auth_input_field.dart';
+import '../../../shared/presentation/widgets/input_fields/password_input_field.dart';
+import '../widgets/buttons/auth_loading_button.dart';
+import '../widgets/buttons/auth_switch_prompt.dart';
+import '../widgets/buttons/google_sign_in_button.dart';
+import '../widgets/cards/auth_form_card.dart';
+import '../widgets/deco/auth_header.dart';
+import '../widgets/deco/divider_with_text.dart';
 import '../widgets/deco/legal_links_footer.dart';
-import '../widgets/deco/title_text.dart';
+import '../widgets/layout/auth_scaffold.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -31,206 +34,193 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  static const Set<AuthActionType> _pageActions = {
+    AuthActionType.register,
+    AuthActionType.guestSignIn,
+    AuthActionType.googleSignIn,
+  };
+
   final GlobalKey<FormState> _registerFormKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final RoundedLoadingButtonController _registerButtonController = RoundedLoadingButtonController();
   final RoundedLoadingButtonController _continueAsGuestButtonController = RoundedLoadingButtonController();
-  double _cardOpacity = 0.0;
-  String localeString = '';
 
   @override
-  void initState() {
-    super.initState();
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
-    Future.delayed(const Duration(milliseconds: fadeInAnimationDelayInMs), () {
-      setState(() {
-        _cardOpacity = 1.0;
-      });
+  bool _isBusy(AuthState state) => state is AuthLoading && _pageActions.contains(state.action);
+
+  void _showButtonError(RoundedLoadingButtonController controller) {
+    controller.error();
+    Timer(const Duration(milliseconds: buttonResetAnimationInMs), () {
+      if (mounted) {
+        controller.reset();
+      }
     });
   }
 
+  RoundedLoadingButtonController? _controllerFor(AuthActionType? action) {
+    return switch (action) {
+      AuthActionType.register => _registerButtonController,
+      AuthActionType.guestSignIn => _continueAsGuestButtonController,
+      _ => null,
+    };
+  }
+
+  void _onPasswordSubmitted() {
+    _registerButtonController.start();
+    _registerUser();
+  }
+
   Future<void> _registerUser() async {
-    final t = AppLocalizations.of(context);
+    FocusScope.of(context).unfocus();
     if (_registerFormKey.currentState!.validate() == false) {
-      _registerButtonController.error();
-      Future.delayed(const Duration(milliseconds: buttonResetAnimationInMs), () {
-        _registerButtonController.reset();
-      });
+      _showButtonError(_registerButtonController);
       return;
     }
 
     final accepted = await showTermsOfUseDialog(context);
+    if (!mounted) {
+      return;
+    }
     if (!accepted) {
-      _registerButtonController.error();
-      Timer(const Duration(milliseconds: buttonResetAnimationInMs), () {
-        _registerButtonController.reset();
-      });
+      _showButtonError(_registerButtonController);
       return;
     }
 
-    try {
-      await Supabase.instance.client.auth.signUp(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
-      Timer(const Duration(milliseconds: buttonResetAnimationInMs), () {
-        _registerButtonController.success();
-      });
-    } on AuthException catch (e) {
-      if (e.code == 'user_already_exists') {
-        AppFlushbar.show(context, message: t.translate('email_already_exists'));
-      } else if (e.code == 'validation_failed') {
-        AppFlushbar.show(context, message: t.translate('email_validation_error'));
-      } else {
-        AppFlushbar.show(context, message: t.translate('authentication_error'));
-      }
-      _registerButtonController.error();
-      Timer(const Duration(milliseconds: buttonResetAnimationInMs), () {
-        _registerButtonController.reset();
-      });
-      return;
-    } catch (e) {
-      AppFlushbar.show(context, message: t.translate('unknown_error'));
-      _registerButtonController.error();
-      Timer(const Duration(milliseconds: buttonResetAnimationInMs), () {
-        _registerButtonController.reset();
-      });
-      return;
-    }
+    context.read<AuthBloc>().add(
+          AuthRegisterRequested(
+            email: _emailController.text,
+            password: _passwordController.text,
+          ),
+        );
   }
 
-  Future<void> _continueAsGuest(BuildContext contextForBloc) async {
-    final t = AppLocalizations.of(context);
-    try {
-      final accepted = await showTermsOfUseDialog(context);
-      if (!accepted) {
-        _continueAsGuestButtonController.error();
-        Timer(const Duration(milliseconds: buttonResetAnimationInMs), () {
-          _continueAsGuestButtonController.reset();
-        });
-        return;
-      }
-
-      final AuthResponse response = await Supabase.instance.client.auth.signInAnonymously();
-      if (response.user != null) {
-        _continueAsGuestButtonController.success();
-      }
-    } catch (e) {
-      AppFlushbar.show(context, message: t.translate('unknown_error'));
-      _continueAsGuestButtonController.error();
-      Timer(const Duration(milliseconds: buttonResetAnimationInMs), () {
-        _continueAsGuestButtonController.reset();
-      });
+  Future<void> _continueAsGuest() async {
+    FocusScope.of(context).unfocus();
+    final accepted = await showTermsOfUseDialog(context);
+    if (!mounted) {
       return;
+    }
+    if (!accepted) {
+      _showButtonError(_continueAsGuestButtonController);
+      return;
+    }
+
+    context.read<AuthBloc>().add(const AuthGuestSignInRequested());
+  }
+
+  void _onAuthStateChanged(BuildContext context, AuthState state) {
+    final controller = _controllerFor(state.action);
+    if (controller == null) {
+      return;
+    }
+
+    if (state is AuthSuccess) {
+      controller.success();
+    } else if (state is AuthFailure) {
+      final t = AppLocalizations.of(context);
+      AppFlushbar.show(context, message: state.serverMessage ?? t.translate(state.message));
+      _showButtonError(controller);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
+    final theme = Theme.of(context);
 
-    return BlocProvider(
-      create: (context) => UserBloc(
-        UserRepository(),
-        BookingRepository(),
-        AccountRepository(),
-      ),
-      child: Builder(
-        builder: (context) {
-          return SafeArea(
-            child: ColoredBox(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              child: Stack(
-                children: [
-                  SingleChildScrollView(
-                    padding: const EdgeInsets.only(
-                      left: 24.0,
-                      right: 24.0,
-                      bottom: 80.0,
-                    ),
-                    child: AnimatedOpacity(
-                      duration: const Duration(
-                        milliseconds: fadeInAnimationDurationInMs,
-                      ),
-                      curve: Curves.easeOut,
-                      opacity: _cardOpacity,
-                      child: Column(
-                        children: [
-                          AppIcon(),
-                          Card(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0,
-                                vertical: 20.0,
-                              ),
-                              child: Form(
-                                key: _registerFormKey,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    TitleText(
-                                      text: t.translate('create_account'),
-                                    ),
-                                    const SizedBox(height: 24),
-                                    EmailAuthInputField(
-                                      emailController: _emailController,
-                                    ),
-                                    const SizedBox(height: 16),
-                                    PasswordInputField(
-                                      passwordController: _passwordController,
-                                    ),
-                                    const SizedBox(height: 24),
-                                    AnimatedLoadingButton(
-                                      controller: _registerButtonController,
-                                      text: t.translate('register'),
-                                      onPressed: () => _registerUser(),
-                                    ),
-                                    const SizedBox(height: 24),
-                                    DividerWithText(
-                                      text: t.translate('or'),
-                                    ),
-                                    const SizedBox(height: 20),
-                                    GoogleSignInButton(
-                                      text: t.translate('register_with_google'),
-                                    ),
-                                    const SizedBox(height: 16),
-                                    AnimatedLoadingButton(
-                                      controller: _continueAsGuestButtonController,
-                                      text: t.translate('continue_as_guest'),
-                                      onPressed: () => _continueAsGuest(context),
-                                    ),
-                                    const SizedBox(height: 20),
-                                    GestureDetector(
-                                      onTap: () => Navigator.of(context).pushNamedAndRemoveUntil(
-                                        loginRoute,
-                                        (route) => false,
-                                      ),
-                                      child: Text(
-                                        t.translate('already_have_account'),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+    return BlocListener<AuthBloc, AuthState>(
+      listenWhen: (previous, current) => current is! AuthLoading && _controllerFor(current.action) != null,
+      listener: _onAuthStateChanged,
+      child: AuthScaffold(
+        footer: const LegalLinksFooter(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            AuthHeader(
+              title: t.translate('create_account'),
+              subtitle: t.translate('authRegisterSubtitle'),
+            ),
+            const SizedBox(height: 28.0),
+            BlocBuilder<AuthBloc, AuthState>(
+              buildWhen: (previous, current) => _isBusy(previous) != _isBusy(current),
+              builder: (context, state) {
+                return IgnorePointer(
+                  ignoring: _isBusy(state),
+                  child: AuthFormCard(
+                    child: Form(
+                      key: _registerFormKey,
+                      child: AutofillGroup(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            EmailAuthInputField(
+                              emailController: _emailController,
+                              textInputAction: TextInputAction.next,
+                              autofillHints: const [AutofillHints.email],
+                            ),
+                            const SizedBox(height: 16.0),
+                            PasswordInputField(
+                              passwordController: _passwordController,
+                              textInputAction: TextInputAction.done,
+                              autofillHints: const [AutofillHints.newPassword],
+                              helperText: t.translate('authPasswordHelper').replaceAll('{count}', '$minPasswordLength'),
+                              onFieldSubmitted: (_) => _onPasswordSubmitted(),
+                            ),
+                            const SizedBox(height: 24.0),
+                            AuthLoadingButton(
+                              controller: _registerButtonController,
+                              text: t.translate('register'),
+                              onPressed: _registerUser,
+                            ),
+                            const SizedBox(height: 20.0),
+                            DividerWithText(text: t.translate('or')),
+                            const SizedBox(height: 20.0),
+                            GoogleSignInButton(
+                              text: t.translate('register_with_google'),
+                              height: AuthLoadingButton.height,
+                            ),
+                            const SizedBox(height: 12.0),
+                            AuthLoadingButton(
+                              controller: _continueAsGuestButtonController,
+                              text: t.translate('continue_as_guest'),
+                              onPressed: _continueAsGuest,
+                              isPrimary: false,
+                            ),
+                            const SizedBox(height: 10.0),
+                            Text(
+                              t.translate('authGuestHint'),
+                              textAlign: TextAlign.center,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.appMutedTextColor,
+                                height: 1.4,
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                  Positioned(
-                    left: 16,
-                    right: 16,
-                    bottom: 12,
-                    child: LegalLinksFooter(),
-                  ),
-                ],
+                );
+              },
+            ),
+            const SizedBox(height: 16.0),
+            AuthSwitchPrompt(
+              question: t.translate('authAlreadyRegisteredQuestion'),
+              actionText: t.translate('authGoToLogin'),
+              onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
+                loginRoute,
+                (route) => false,
               ),
             ),
-          );
-        },
+          ],
+        ),
       ),
     );
   }

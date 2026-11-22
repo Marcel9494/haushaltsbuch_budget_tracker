@@ -1,22 +1,28 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:haushaltsbuch_budget_tracker/core/consts/route_consts.dart';
-import 'package:haushaltsbuch_budget_tracker/features/auth/presentation/widgets/buttons/forgot_password_link_button.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../../blocs/auth/auth_bloc.dart';
+import '../../../../blocs/auth/auth_event.dart';
+import '../../../../blocs/auth/auth_state.dart';
 import '../../../../core/consts/animation_consts.dart';
+import '../../../../core/consts/route_consts.dart';
 import '../../../../core/utils/app_flushbar.dart';
-import '../../../../core/utils/app_icon.dart';
+import '../../../../data/enums/auth_action_type.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../shared/presentation/widgets/buttons/animated_loading_button.dart';
 import '../../../shared/presentation/widgets/input_fields/email_auth_input_field.dart';
 import '../../../shared/presentation/widgets/input_fields/password_input_field.dart';
+import '../widgets/buttons/auth_loading_button.dart';
+import '../widgets/buttons/auth_switch_prompt.dart';
+import '../widgets/buttons/forgot_password_link_button.dart';
 import '../widgets/buttons/google_sign_in_button.dart';
+import '../widgets/cards/auth_form_card.dart';
+import '../widgets/deco/auth_header.dart';
 import '../widgets/deco/divider_with_text.dart';
 import '../widgets/deco/legal_links_footer.dart';
-import '../widgets/deco/title_text.dart';
+import '../widgets/layout/auth_scaffold.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -26,61 +32,69 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  static const Set<AuthActionType> _pageActions = {
+    AuthActionType.login,
+    AuthActionType.googleSignIn,
+  };
+
   final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final RoundedLoadingButtonController _loginButtonController = RoundedLoadingButtonController();
-  double _cardOpacity = 0.0;
 
   @override
-  void initState() {
-    super.initState();
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
-    Future.delayed(const Duration(milliseconds: fadeInAnimationDelayInMs), () {
-      setState(() {
-        _cardOpacity = 1.0;
-      });
+  bool _isBusy(AuthState state) => state is AuthLoading && _pageActions.contains(state.action);
+
+  void _showButtonError() {
+    _loginButtonController.error();
+    Timer(const Duration(milliseconds: buttonResetAnimationInMs), () {
+      if (mounted) {
+        _loginButtonController.reset();
+      }
     });
   }
 
-  Future<void> _loginUser() async {
-    final t = AppLocalizations.of(context);
+  void _onPasswordSubmitted() {
+    _loginButtonController.start();
+    _loginUser();
+  }
+
+  void _loginUser() {
+    FocusScope.of(context).unfocus();
     if (_loginFormKey.currentState!.validate() == false) {
-      _loginButtonController.error();
-      Future.delayed(const Duration(milliseconds: buttonResetAnimationInMs), () {
-        _loginButtonController.reset();
-      });
+      _showButtonError();
       return;
     }
 
-    try {
-      await Supabase.instance.client.auth.signInWithPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
-    } on AuthException catch (e) {
-      if (e.code == 'invalid_credentials') {
-        AppFlushbar.show(context, message: t.translate('invalid_login_credentials'));
-      } else if (e.code == 'validation_failed') {
-        AppFlushbar.show(context, message: t.translate('email_validation_error'));
-      } else {
-        AppFlushbar.show(context, message: e.message);
-      }
-      _loginButtonController.error();
-      Timer(const Duration(milliseconds: buttonResetAnimationInMs), () {
-        _loginButtonController.reset();
-      });
-      return;
-    } catch (e) {
-      AppFlushbar.show(context, message: t.translate('unknown_error'));
-      _loginButtonController.error();
-      Timer(const Duration(milliseconds: buttonResetAnimationInMs), () {
-        _loginButtonController.reset();
-      });
-      return;
-    }
+    context.read<AuthBloc>().add(
+          AuthLoginRequested(
+            email: _emailController.text,
+            password: _passwordController.text,
+          ),
+        );
+  }
 
-    _loginButtonController.success();
+  void _onAuthStateChanged(BuildContext context, AuthState state) {
+    if (state is AuthSuccess) {
+      _loginButtonController.success();
+    } else if (state is AuthFailure) {
+      final t = AppLocalizations.of(context);
+      AppFlushbar.show(context, message: state.serverMessage ?? t.translate(state.message));
+      _showButtonError();
+    }
+  }
+
+  void _goToRegister() {
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      registerRoute,
+      (route) => false,
+    );
   }
 
   @override
@@ -93,101 +107,73 @@ class _LoginPageState extends State<LoginPage> {
         if (didPop) {
           return;
         }
-
-        Navigator.of(context).pushNamedAndRemoveUntil(
-          registerRoute,
-          (route) => false,
-        );
+        _goToRegister();
       },
-      child: ColoredBox(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        child: SafeArea(
+      child: BlocListener<AuthBloc, AuthState>(
+        listenWhen: (previous, current) => current is! AuthLoading && current.action == AuthActionType.login,
+        listener: _onAuthStateChanged,
+        child: AuthScaffold(
+          footer: const LegalLinksFooter(),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.only(
-                    left: 24.0,
-                    right: 24.0,
-                    bottom: 24.0,
-                  ),
-                  child: AnimatedOpacity(
-                    duration: const Duration(
-                      milliseconds: fadeInAnimationDurationInMs,
-                    ),
-                    curve: Curves.easeOut,
-                    opacity: _cardOpacity,
-                    child: Column(
-                      children: [
-                        AppIcon(),
-                        Card(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0,
-                              vertical: 20.0,
-                            ),
-                            child: Form(
-                              key: _loginFormKey,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  TitleText(
-                                    text: t.translate('login'),
-                                  ),
-                                  const SizedBox(height: 24),
-                                  EmailAuthInputField(
-                                    emailController: _emailController,
-                                  ),
-                                  const SizedBox(height: 16),
-                                  PasswordInputField(
-                                    passwordController: _passwordController,
-                                  ),
-                                  const SizedBox(height: 6),
-                                  ForgotPasswordLinkButton(),
-                                  const SizedBox(height: 24),
-                                  AnimatedLoadingButton(
-                                    controller: _loginButtonController,
-                                    text: t.translate('login'),
-                                    onPressed: () => _loginUser(),
-                                  ),
-                                  const SizedBox(height: 24),
-                                  DividerWithText(
-                                    text: t.translate('or'),
-                                  ),
-                                  const SizedBox(height: 20),
-                                  GoogleSignInButton(
-                                    text: t.translate('login_with_google'),
-                                  ),
-                                  const SizedBox(height: 20),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context).pushNamedAndRemoveUntil(
-                                        registerRoute,
-                                        (route) => false,
-                                      );
-                                    },
-                                    child: Text(
-                                      t.translate('no_account_yet'),
-                                    ),
-                                  ),
-                                ],
+              AuthHeader(
+                title: t.translate('authLoginTitle'),
+                subtitle: t.translate('authLoginSubtitle'),
+              ),
+              const SizedBox(height: 28.0),
+              BlocBuilder<AuthBloc, AuthState>(
+                buildWhen: (previous, current) => _isBusy(previous) != _isBusy(current),
+                builder: (context, state) {
+                  return IgnorePointer(
+                    ignoring: _isBusy(state),
+                    child: AuthFormCard(
+                      child: Form(
+                        key: _loginFormKey,
+                        child: AutofillGroup(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              EmailAuthInputField(
+                                emailController: _emailController,
+                                textInputAction: TextInputAction.next,
+                                autofillHints: const [AutofillHints.email],
                               ),
-                            ),
+                              const SizedBox(height: 16.0),
+                              PasswordInputField(
+                                passwordController: _passwordController,
+                                textInputAction: TextInputAction.done,
+                                autofillHints: const [AutofillHints.password],
+                                onFieldSubmitted: (_) => _onPasswordSubmitted(),
+                              ),
+                              const SizedBox(height: 4.0),
+                              ForgotPasswordLinkButton(emailController: _emailController),
+                              const SizedBox(height: 16.0),
+                              AuthLoadingButton(
+                                controller: _loginButtonController,
+                                text: t.translate('login'),
+                                onPressed: _loginUser,
+                              ),
+                              const SizedBox(height: 20.0),
+                              DividerWithText(text: t.translate('or')),
+                              const SizedBox(height: 20.0),
+                              GoogleSignInButton(
+                                text: t.translate('login_with_google'),
+                                height: AuthLoadingButton.height,
+                              ),
+                            ],
                           ),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 16,
-                  right: 16,
-                  bottom: 12,
-                ),
-                child: LegalLinksFooter(),
+              const SizedBox(height: 16.0),
+              AuthSwitchPrompt(
+                question: t.translate('authNoAccountQuestion'),
+                actionText: t.translate('authGoToRegister'),
+                onPressed: _goToRegister,
               ),
             ],
           ),

@@ -5,3 +5,5 @@ const listAnimationDurationInMs = 600;
 const createBookingPageAnimationDurationInMs = 800;
 const createBookingPageReverseAnimationDurationInMs = 400;
 const statisticAnimationDurationInMs = 1000;
+const authSuccessViewDelayInMs = 600;
+const authViewSwitchDurationInMs = 400;

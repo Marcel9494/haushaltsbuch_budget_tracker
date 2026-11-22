@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../core/utils/input_validators.dart';
 import '../../../../../l10n/app_localizations.dart';
 
 class PasswordInputField extends StatefulWidget {
   final TextEditingController passwordController;
   final String text;
+  final TextInputAction? textInputAction;
+  final ValueChanged<String>? onFieldSubmitted;
+  final Iterable<String>? autofillHints;
+  final String? helperText;
 
   const PasswordInputField({
     super.key,
     required this.passwordController,
     this.text = 'password',
+    this.textInputAction,
+    this.onFieldSubmitted,
+    this.autofillHints,
+    this.helperText,
   });
 
   @override
@@ -21,13 +30,8 @@ class _PasswordInputFieldState extends State<PasswordInputField> {
 
   String? _checkPasswordInput() {
     final t = AppLocalizations.of(context);
-    String passwordInput = widget.passwordController.text.trim();
-    if (passwordInput.isEmpty) {
-      return t.translate('empty_password_error');
-    } else if (passwordInput.length < 6) {
-      return t.translate('short_password_error');
-    }
-    return null;
+    final String? errorKey = validatePasswordInput(widget.passwordController.text);
+    return errorKey == null ? null : t.translate(errorKey);
   }
 
   @override
@@ -36,6 +40,9 @@ class _PasswordInputFieldState extends State<PasswordInputField> {
     return TextFormField(
       controller: widget.passwordController,
       keyboardType: TextInputType.visiblePassword,
+      textInputAction: widget.textInputAction,
+      onFieldSubmitted: widget.onFieldSubmitted,
+      autofillHints: widget.autofillHints,
       maxLength: 50,
       obscureText: _obscureText,
       validator: (passwordInput) => _checkPasswordInput(),
@@ -43,6 +50,7 @@ class _PasswordInputFieldState extends State<PasswordInputField> {
         border: OutlineInputBorder(),
         labelText: t.translate(widget.text),
         hintText: '${t.translate(widget.text)}...',
+        helperText: widget.helperText,
         prefixIcon: const Icon(Icons.lock_rounded),
         suffixIcon: IconButton(
           onPressed: () {

@@ -1,51 +1,52 @@
 import 'package:auth_buttons/auth_buttons.dart';
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../blocs/auth/auth_bloc.dart';
+import '../../../../../blocs/auth/auth_event.dart';
+import '../../../../../blocs/auth/auth_state.dart';
 import '../../../../../core/utils/app_flushbar.dart';
 import '../../../../../core/utils/dialogs/show_terms_of_use_dialog.dart';
+import '../../../../../data/enums/auth_action_type.dart';
 import '../../../../../l10n/app_localizations.dart';
 
 class GoogleSignInButton extends StatelessWidget {
   final String text;
   final bool upgradeAccount;
 
+  /// Wenn gesetzt, nimmt der Button die volle Breite mit dieser Höhe ein.
+  final double? height;
+
   const GoogleSignInButton({
     super.key,
     required this.text,
     this.upgradeAccount = false,
+    this.height,
   });
 
-  Future<void> _signInWithGoogle(BuildContext context) async {
-    final t = AppLocalizations.of(context);
-    try {
-      final accepted = await showTermsOfUseDialog(context);
-      if (!accepted) {
-        return;
-      }
+  AuthActionType get _action => upgradeAccount ? AuthActionType.googleIdentityLink : AuthActionType.googleSignIn;
 
-      await Supabase.instance.client.auth.signInWithOAuth(
-        OAuthProvider.google,
-        redirectTo: 'io.supabase.flutter://login-callback/',
-      );
-    } catch (e) {
-      AppFlushbar.show(context, message: t.translate('unknown_error'));
+  Future<void> _onPressed(BuildContext context) async {
+    final authBloc = context.read<AuthBloc>();
+    if (upgradeAccount) {
+      authBloc.add(const AuthGoogleIdentityLinkRequested());
       return;
     }
-  }
 
-  Future<void> _upgradeAccountWithGoogle(BuildContext context) async {
-    await Supabase.instance.client.auth.linkIdentity(
-      OAuthProvider.google,
-      redirectTo: 'io.supabase.flutter://login-callback/',
-    );
+    final accepted = await showTermsOfUseDialog(context);
+    if (!accepted) {
+      return;
+    }
+    authBloc.add(const AuthGoogleSignInRequested());
   }
 
   @override
   Widget build(BuildContext context) {
-    return GoogleAuthButton(
+    final t = AppLocalizations.of(context);
+
+    Widget button = GoogleAuthButton(
       text: text,
-      onPressed: () => upgradeAccount == false ? _signInWithGoogle(context) : _upgradeAccountWithGoogle(context),
+      onPressed: () => _onPressed(context),
       style: AuthButtonStyle(
         buttonType: AuthButtonType.secondary,
         borderRadius: 12.0,
@@ -54,6 +55,24 @@ class GoogleSignInButton extends StatelessWidget {
           fontWeight: FontWeight.w600,
         ),
       ),
+    );
+
+    if (height != null) {
+      button = SizedBox(
+        width: double.infinity,
+        height: height,
+        child: button,
+      );
+    }
+
+    return BlocListener<AuthBloc, AuthState>(
+      listenWhen: (previous, current) => current is AuthFailure && current.action == _action,
+      listener: (context, state) {
+        if (state is AuthFailure) {
+          AppFlushbar.show(context, message: t.translate(state.message));
+        }
+      },
+      child: button,
     );
   }
 }

@@ -1,16 +1,22 @@
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../../core/utils/input_validators.dart';
 import '../../../../../l10n/app_localizations.dart';
 
 class EmailAuthInputField extends StatefulWidget {
   final TextEditingController emailController;
   final String text;
+  final TextInputAction? textInputAction;
+  final ValueChanged<String>? onFieldSubmitted;
+  final Iterable<String>? autofillHints;
 
   const EmailAuthInputField({
     super.key,
     required this.emailController,
     this.text = 'email',
+    this.textInputAction,
+    this.onFieldSubmitted,
+    this.autofillHints,
   });
 
   @override
@@ -28,13 +34,8 @@ class _EmailAuthInputFieldState extends State<EmailAuthInputField> {
 
   String? _checkEmailInput() {
     final t = AppLocalizations.of(context);
-    String emailInput = widget.emailController.text.trim();
-    if (emailInput.isEmpty) {
-      return t.translate('empty_email_error');
-    } else if (EmailValidator.validate(emailInput) == false) {
-      return t.translate('invalid_email_error');
-    }
-    return null;
+    final String? errorKey = validateEmailInput(widget.emailController.text);
+    return errorKey == null ? null : t.translate(errorKey);
   }
 
   @override
@@ -49,6 +50,10 @@ class _EmailAuthInputFieldState extends State<EmailAuthInputField> {
     return TextFormField(
       controller: widget.emailController,
       keyboardType: TextInputType.emailAddress,
+      textInputAction: widget.textInputAction,
+      onFieldSubmitted: widget.onFieldSubmitted,
+      autofillHints: widget.autofillHints,
+      autocorrect: false,
       maxLength: 50,
       focusNode: _focusNode,
       validator: (emailInput) => _checkEmailInput(),
