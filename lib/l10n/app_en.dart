@@ -22,7 +22,6 @@ const Map<String, String> en = {
   'authLoginSubtitle': 'Log in to continue with your budget book.',
   'authForgotPasswordSubtitle': 'No problem! Enter the email address of your account and we will send you a link to set a new password.',
   'authPasswordHelper': 'At least {count} characters',
-  'authGuestHint': 'You can upgrade your guest account to a free account in the settings at any time.',
   'authAlreadyRegisteredQuestion': 'Already have an account?',
   'authGoToLogin': 'Log in now',
   'authNoAccountQuestion': 'No account yet?',

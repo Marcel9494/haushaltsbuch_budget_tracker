@@ -2,37 +2,40 @@ import 'package:flutter/material.dart';
 
 import '../../../../../core/utils/app_icon.dart';
 import '../../../../../core/utils/app_theme_colors.dart';
+import '../layout/auth_scaffold.dart';
 
 /// Kopfbereich der Authentifizierungsseiten mit App Icon, Titel und Untertitel.
+///
+/// Die Icongröße kommt vom [AuthScaffold], damit die Seite ohne Scrollen auf den Bildschirm passt.
 class AuthHeader extends StatelessWidget {
   static const String _appIconHeroTag = 'auth_app_icon';
 
   final String title;
   final String subtitle;
 
-  /// Ersetzt das App Icon, z. B. durch ein Status-Icon.
-  final Widget? leading;
+  /// Ersetzt das App Icon durch ein Status-Icon, z. B. nach dem Versand einer E-Mail.
+  final IconData? statusIcon;
 
   const AuthHeader({
     super.key,
     required this.title,
     required this.subtitle,
-    this.leading,
+    this.statusIcon,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final double iconSize = AuthScaffold.iconSizeOf(context);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        leading ??
-            const Hero(
-              tag: _appIconHeroTag,
-              child: AppIcon(width: 96.0, height: 96.0),
-            ),
-        const SizedBox(height: 16.0),
+        SizedBox.square(
+          dimension: iconSize,
+          child: statusIcon == null ? _buildAppIcon(iconSize) : _buildStatusIcon(theme, iconSize),
+        ),
+        const SizedBox(height: 12.0),
         Text(
           title,
           textAlign: TextAlign.center,
@@ -41,7 +44,7 @@ class AuthHeader extends StatelessWidget {
             letterSpacing: -0.2,
           ),
         ),
-        const SizedBox(height: 8.0),
+        const SizedBox(height: 6.0),
         Text(
           subtitle,
           textAlign: TextAlign.center,
@@ -51,6 +54,32 @@ class AuthHeader extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildAppIcon(double iconSize) {
+    return Hero(
+      tag: _appIconHeroTag,
+      child: AppIcon(width: iconSize, height: iconSize),
+    );
+  }
+
+  Widget _buildStatusIcon(ThemeData theme, double iconSize) {
+    final double circleSize = iconSize * 0.8;
+    return Center(
+      child: Container(
+        width: circleSize,
+        height: circleSize,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: theme.appAccentColor.withValues(alpha: 0.14),
+        ),
+        child: Icon(
+          statusIcon,
+          size: circleSize * 0.5,
+          color: theme.appAccentColor,
+        ),
+      ),
     );
   }
 }

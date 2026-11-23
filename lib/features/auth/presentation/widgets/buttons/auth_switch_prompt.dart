@@ -34,6 +34,8 @@ class AuthSwitchPrompt extends StatelessWidget {
           style: TextButton.styleFrom(
             foregroundColor: theme.appAccentColor,
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            minimumSize: const Size(0.0, 40.0),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             textStyle: const TextStyle(
               fontSize: 14.0,
               fontWeight: FontWeight.w700,

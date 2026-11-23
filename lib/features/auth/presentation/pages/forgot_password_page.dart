@@ -148,7 +148,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           title: t.translate('reset_password'),
           subtitle: t.translate('authForgotPasswordSubtitle'),
         ),
-        const SizedBox(height: 28.0),
+        const SizedBox(height: 20.0),
         BlocBuilder<AuthBloc, AuthState>(
           buildWhen: (previous, current) => _isBusy(previous) != _isBusy(current),
           builder: (context, state) {
@@ -166,7 +166,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         autofillHints: const [AutofillHints.email],
                         onFieldSubmitted: (_) => _onEmailSubmitted(),
                       ),
-                      const SizedBox(height: 24.0),
+                      const SizedBox(height: 16.0),
                       AuthLoadingButton(
                         controller: _forgotPasswordButtonController,
                         text: t.translate('send_link'),
@@ -179,7 +179,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             );
           },
         ),
-        const SizedBox(height: 16.0),
+        const SizedBox(height: 4.0),
         AuthSwitchPrompt(
           question: t.translate('authRememberedPasswordQuestion'),
           actionText: t.translate('authBackToLogin'),
@@ -199,23 +199,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         AuthHeader(
-          leading: Container(
-            width: 88.0,
-            height: 88.0,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: accentColor.withValues(alpha: 0.14),
-            ),
-            child: Icon(
-              Icons.mark_email_read_rounded,
-              size: 44.0,
-              color: accentColor,
-            ),
-          ),
+          statusIcon: Icons.mark_email_read_rounded,
           title: t.translate('authResetEmailSentTitle'),
           subtitle: t.translate('authResetEmailSentDescription').replaceAll('{email}', _emailController.text.trim()),
         ),
-        const SizedBox(height: 28.0),
+        const SizedBox(height: 20.0),
         SizedBox(
           height: AuthLoadingButton.height,
           child: FilledButton(
@@ -234,13 +222,13 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             child: Text(t.translate('authBackToLogin')),
           ),
         ),
-        const SizedBox(height: 12.0),
+        const SizedBox(height: 4.0),
         BlocBuilder<AuthBloc, AuthState>(
           buildWhen: (previous, current) => _isBusy(previous) != _isBusy(current),
           builder: (context, state) {
             if (_isBusy(state)) {
               return SizedBox(
-                height: 48.0,
+                height: 40.0,
                 child: Center(
                   child: SizedBox.square(
                     dimension: 20.0,

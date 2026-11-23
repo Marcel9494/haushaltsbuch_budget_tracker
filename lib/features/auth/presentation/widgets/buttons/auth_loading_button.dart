@@ -8,7 +8,7 @@ import '../../../../../core/utils/app_theme_colors.dart';
 /// [isPrimary] hebt die Hauptaktion der Seite in der Akzentfarbe hervor,
 /// alle weiteren Aktionen werden zurückhaltender dargestellt.
 class AuthLoadingButton extends StatelessWidget {
-  static const double height = 50.0;
+  static const double height = 48.0;
 
   final String text;
   final RoundedLoadingButtonController controller;

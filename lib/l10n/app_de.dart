@@ -22,7 +22,6 @@ const Map<String, String> de = {
   'authLoginSubtitle': 'Melde dich an, um mit deinem Haushaltsbuch weiterzumachen.',
   'authForgotPasswordSubtitle': 'Kein Problem! Gib die E-Mail Adresse deines Kontos ein und wir senden dir einen Link, mit dem du ein neues Passwort festlegen kannst.',
   'authPasswordHelper': 'Mindestens {count} Zeichen',
-  'authGuestHint': 'Du kannst dein Gästekonto später jederzeit in den Einstellungen zu einem kostenlosen Konto upgraden.',
   'authAlreadyRegisteredQuestion': 'Bereits registriert?',
   'authGoToLogin': 'Jetzt anmelden',
   'authNoAccountQuestion': 'Noch kein Konto?',

@@ -24,7 +24,7 @@ class AuthFormCard extends StatelessWidget {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(20.0, 24.0, 20.0, 20.0),
+        padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 16.0),
         child: child,
       ),
     );

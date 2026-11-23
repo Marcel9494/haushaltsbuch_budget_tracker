@@ -10,7 +10,6 @@ import '../../../../blocs/auth/auth_state.dart';
 import '../../../../core/consts/animation_consts.dart';
 import '../../../../core/consts/route_consts.dart';
 import '../../../../core/utils/app_flushbar.dart';
-import '../../../../core/utils/app_theme_colors.dart';
 import '../../../../core/utils/dialogs/show_terms_of_use_dialog.dart';
 import '../../../../core/utils/input_validators.dart';
 import '../../../../data/enums/auth_action_type.dart';
@@ -133,7 +132,6 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context);
-    final theme = Theme.of(context);
 
     return BlocListener<AuthBloc, AuthState>(
       listenWhen: (previous, current) => current is! AuthLoading && _controllerFor(current.action) != null,
@@ -147,7 +145,7 @@ class _RegisterPageState extends State<RegisterPage> {
               title: t.translate('create_account'),
               subtitle: t.translate('authRegisterSubtitle'),
             ),
-            const SizedBox(height: 28.0),
+            const SizedBox(height: 20.0),
             BlocBuilder<AuthBloc, AuthState>(
               buildWhen: (previous, current) => _isBusy(previous) != _isBusy(current),
               builder: (context, state) {
@@ -165,7 +163,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               textInputAction: TextInputAction.next,
                               autofillHints: const [AutofillHints.email],
                             ),
-                            const SizedBox(height: 16.0),
+                            const SizedBox(height: 12.0),
                             PasswordInputField(
                               passwordController: _passwordController,
                               textInputAction: TextInputAction.done,
@@ -173,34 +171,25 @@ class _RegisterPageState extends State<RegisterPage> {
                               helperText: t.translate('authPasswordHelper').replaceAll('{count}', '$minPasswordLength'),
                               onFieldSubmitted: (_) => _onPasswordSubmitted(),
                             ),
-                            const SizedBox(height: 24.0),
+                            const SizedBox(height: 16.0),
                             AuthLoadingButton(
                               controller: _registerButtonController,
                               text: t.translate('register'),
                               onPressed: _registerUser,
                             ),
-                            const SizedBox(height: 20.0),
+                            const SizedBox(height: 12.0),
                             DividerWithText(text: t.translate('or')),
-                            const SizedBox(height: 20.0),
+                            const SizedBox(height: 12.0),
                             GoogleSignInButton(
                               text: t.translate('register_with_google'),
                               height: AuthLoadingButton.height,
                             ),
-                            const SizedBox(height: 12.0),
+                            const SizedBox(height: 10.0),
                             AuthLoadingButton(
                               controller: _continueAsGuestButtonController,
                               text: t.translate('continue_as_guest'),
                               onPressed: _continueAsGuest,
                               isPrimary: false,
-                            ),
-                            const SizedBox(height: 10.0),
-                            Text(
-                              t.translate('authGuestHint'),
-                              textAlign: TextAlign.center,
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.appMutedTextColor,
-                                height: 1.4,
-                              ),
                             ),
                           ],
                         ),
@@ -210,7 +199,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 );
               },
             ),
-            const SizedBox(height: 16.0),
+            const SizedBox(height: 4.0),
             AuthSwitchPrompt(
               question: t.translate('authAlreadyRegisteredQuestion'),
               actionText: t.translate('authGoToLogin'),

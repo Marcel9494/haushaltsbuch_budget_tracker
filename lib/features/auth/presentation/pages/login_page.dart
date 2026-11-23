@@ -121,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
                 title: t.translate('authLoginTitle'),
                 subtitle: t.translate('authLoginSubtitle'),
               ),
-              const SizedBox(height: 28.0),
+              const SizedBox(height: 20.0),
               BlocBuilder<AuthBloc, AuthState>(
                 buildWhen: (previous, current) => _isBusy(previous) != _isBusy(current),
                 builder: (context, state) {
@@ -139,7 +139,7 @@ class _LoginPageState extends State<LoginPage> {
                                 textInputAction: TextInputAction.next,
                                 autofillHints: const [AutofillHints.email],
                               ),
-                              const SizedBox(height: 16.0),
+                              const SizedBox(height: 12.0),
                               PasswordInputField(
                                 passwordController: _passwordController,
                                 textInputAction: TextInputAction.done,
@@ -148,15 +148,15 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               const SizedBox(height: 4.0),
                               ForgotPasswordLinkButton(emailController: _emailController),
-                              const SizedBox(height: 16.0),
+                              const SizedBox(height: 12.0),
                               AuthLoadingButton(
                                 controller: _loginButtonController,
                                 text: t.translate('login'),
                                 onPressed: _loginUser,
                               ),
-                              const SizedBox(height: 20.0),
+                              const SizedBox(height: 12.0),
                               DividerWithText(text: t.translate('or')),
-                              const SizedBox(height: 20.0),
+                              const SizedBox(height: 12.0),
                               GoogleSignInButton(
                                 text: t.translate('login_with_google'),
                                 height: AuthLoadingButton.height,
@@ -169,7 +169,7 @@ class _LoginPageState extends State<LoginPage> {
                   );
                 },
               ),
-              const SizedBox(height: 16.0),
+              const SizedBox(height: 4.0),
               AuthSwitchPrompt(
                 question: t.translate('authNoAccountQuestion'),
                 actionText: t.translate('authGoToRegister'),
