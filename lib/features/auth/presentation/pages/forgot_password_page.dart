@@ -145,7 +145,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         AuthHeader(
-          title: t.translate('reset_password'),
+          title: t.translate('forgot_password'),
           subtitle: t.translate('authForgotPasswordSubtitle'),
         ),
         const SizedBox(height: 20.0),
