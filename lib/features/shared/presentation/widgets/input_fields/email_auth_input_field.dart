@@ -29,7 +29,11 @@ class _EmailAuthInputFieldState extends State<EmailAuthInputField> {
   @override
   void initState() {
     super.initState();
+
     _focusNode = FocusNode();
+    _focusNode.addListener(() {
+      setState(() {});
+    });
   }
 
   String? _checkEmailInput() {
@@ -59,7 +63,7 @@ class _EmailAuthInputFieldState extends State<EmailAuthInputField> {
       validator: (emailInput) => _checkEmailInput(),
       decoration: InputDecoration(
         border: OutlineInputBorder(),
-        labelText: t.translate(widget.text),
+        labelText: _focusNode.hasFocus ? t.translate(widget.text) : '${t.translate(widget.text)}...',
         hintText: '${t.translate(widget.text)}...',
         prefixIcon: const Icon(Icons.email_rounded),
         suffixIcon: IconButton(

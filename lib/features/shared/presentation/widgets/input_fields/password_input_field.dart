@@ -27,11 +27,28 @@ class PasswordInputField extends StatefulWidget {
 
 class _PasswordInputFieldState extends State<PasswordInputField> {
   bool _obscureText = true;
+  late FocusNode _focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _focusNode = FocusNode();
+    _focusNode.addListener(() {
+      setState(() {});
+    });
+  }
 
   String? _checkPasswordInput() {
     final t = AppLocalizations.of(context);
     final String? errorKey = validatePasswordInput(widget.passwordController.text);
     return errorKey == null ? null : t.translate(errorKey);
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -44,11 +61,12 @@ class _PasswordInputFieldState extends State<PasswordInputField> {
       onFieldSubmitted: widget.onFieldSubmitted,
       autofillHints: widget.autofillHints,
       maxLength: 50,
+      focusNode: _focusNode,
       obscureText: _obscureText,
       validator: (passwordInput) => _checkPasswordInput(),
       decoration: InputDecoration(
         border: OutlineInputBorder(),
-        labelText: t.translate(widget.text),
+        labelText: _focusNode.hasFocus ? t.translate(widget.text) : '${t.translate(widget.text)}...',
         hintText: '${t.translate(widget.text)}...',
         helperText: widget.helperText,
         prefixIcon: const Icon(Icons.lock_rounded),

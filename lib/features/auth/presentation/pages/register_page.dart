@@ -163,7 +163,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               textInputAction: TextInputAction.next,
                               autofillHints: const [AutofillHints.email],
                             ),
-                            const SizedBox(height: 12.0),
+                            const SizedBox(height: 16.0),
                             PasswordInputField(
                               passwordController: _passwordController,
                               textInputAction: TextInputAction.done,

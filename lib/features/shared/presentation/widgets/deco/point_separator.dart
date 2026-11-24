@@ -8,6 +8,7 @@ class PointSeparator extends StatelessWidget {
     return Text(
       '·',
       style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            fontSize: 16.0,
             color: Theme.of(context).colorScheme.onSurfaceVariant.withAlpha(150),
           ),
     );
