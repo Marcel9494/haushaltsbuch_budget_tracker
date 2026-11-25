@@ -95,6 +95,9 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
+  // Helle Symbole in Status- und Navigationsleiste, passend zum dunklen Modus.
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+
   const supabaseUrl = String.fromEnvironment('SUPABASE_URL');
   const supabaseKey = String.fromEnvironment('SUPABASE_KEY');
 
@@ -340,10 +343,7 @@ class _MyAppState extends State<MyApp> {
             child: child!,
           );
         },
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyanAccent),
-          useMaterial3: true,
-        ),
+        // Die App wird immer im dunklen Modus angezeigt, unabhängig von den Geräteeinstellungen (#236).
         darkTheme: ThemeData.dark().copyWith(
           appBarTheme: AppBarTheme(
             backgroundColor: Colors.transparent,
@@ -440,7 +440,7 @@ class _MyAppState extends State<MyApp> {
             indicatorSize: TabBarIndicatorSize.tab,
           ),
         ),
-        themeMode: ThemeMode.system,
+        themeMode: ThemeMode.dark,
         navigatorKey: navigatorKey,
         home: const AuthenticationGatePage(),
         routes: {
