@@ -45,6 +45,8 @@
 		<true/>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true/>
+		<key>UIUserInterfaceStyle</key>
+		<string>Dark</string>
 		<key>UIStatusBarHidden</key>
 		<false/>
 	</dict>
