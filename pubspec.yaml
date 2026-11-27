@@ -64,6 +64,9 @@ dependencies:
   purchases_ui_flutter: ^10.9.1
   shared_preferences: ^2.5.5
   http: ^1.6.0
+  # Moneybook Import: Sicherungsdatei auswählen und als SQLite-Datenbank lesen
+  file_picker: ^10.2.0
+  sqflite: ^2.4.0
 
 flutter_launcher_icons:
   android: "launcher_icon"

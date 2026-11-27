@@ -196,6 +196,11 @@ class _SettingsPageState extends State<SettingsPage> {
                                 onTap: () => Navigator.pushNamed(context, upgradeAccountRoute),
                               )
                             : SizedBox.shrink(),
+                        SettingsCard(
+                          leading: Icon(Icons.upload_file_rounded),
+                          title: t.translate('dataImportSettingsTitle'),
+                          onTap: () => Navigator.pushNamed(context, moneybookImportRoute),
+                        ),
                         SettingsTitle(title: 'general'),
                         SettingsCard(
                           leading: Icon(Icons.info_outline_rounded),

@@ -23,6 +23,7 @@ import 'blocs/budget/budget_bloc.dart';
 import 'blocs/category/category_bloc.dart';
 import 'blocs/dashboard_element/dashboard_element_bloc.dart';
 import 'blocs/goal/goal_bloc.dart';
+import 'blocs/moneybook_import/moneybook_import_bloc.dart';
 import 'blocs/onboarding_account/onboarding_account_bloc.dart';
 import 'blocs/onboarding_category/onboarding_category_bloc.dart';
 import 'blocs/user/user_bloc.dart';
@@ -47,6 +48,8 @@ import 'data/repositories/booking_repository.dart';
 import 'data/repositories/budget_repository.dart';
 import 'data/repositories/dashboard_element_repository.dart';
 import 'data/repositories/goal_repository.dart';
+import 'data/repositories/moneybook_backup_repository.dart';
+import 'data/repositories/moneybook_import_repository.dart';
 import 'data/repositories/onboarding_account_repository.dart';
 import 'data/repositories/onboarding_category_repository.dart';
 import 'data/repositories/user_repository.dart';
@@ -64,6 +67,7 @@ import 'features/budgets/presentation/pages/update_budget_page.dart';
 import 'features/categories/presentation/pages/category_bookings_page.dart';
 import 'features/categories/presentation/pages/category_list_page.dart';
 import 'features/categories/presentation/pages/update_category_page.dart';
+import 'features/data_import/presentation/pages/moneybook_import_page.dart';
 import 'features/dashboard/presentation/pages/update_dashboard_page.dart';
 import 'features/goals/presentation/pages/completed_goal_list_page.dart';
 import 'features/goals/presentation/pages/create_goal_page.dart';
@@ -463,6 +467,10 @@ class _MyAppState extends State<MyApp> {
           aboveRoute: (context) => const AbovePage(),
           imprintRoute: (context) => const ImprintPage(),
           cancellationPolicyRoute: (context) => const CancellationPolicyPage(),
+          moneybookImportRoute: (context) => BlocProvider(
+                create: (context) => MoneybookImportBloc(MoneybookBackupRepository(), MoneybookImportRepository()),
+                child: const MoneybookImportPage(),
+              ),
           completedOnboardingRoute: (context) => MultiBlocProvider(
                 providers: [
                   BlocProvider(

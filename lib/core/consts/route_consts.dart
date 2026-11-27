@@ -32,3 +32,4 @@ const aboveRoute = 'above';
 const imprintRoute = 'imprint';
 const cancellationPolicyRoute = 'cancellation_policy';
 const issueRoute = 'issue';
+const moneybookImportRoute = 'moneybook_import';
